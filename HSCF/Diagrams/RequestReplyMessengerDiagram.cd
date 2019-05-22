@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="HSCF.Communication.ScsServices.Communication.RequestReplyMessenger&lt;T&gt;">
+    <Position X="4" Y="0.5" Width="6.25" />
+    <Members>
+      <Field Name="DefaultTimeout" Hidden="true" />
+      <Method Name="IncomingMessageQueue_ProcessItem" Hidden="true" />
+      <Property Name="LastReceivedMessageTime" Hidden="true" />
+      <Property Name="LastSentMessageTime" Hidden="true" />
+      <Event Name="MessageReceived" Hidden="true" />
+      <Property Name="Messenger" Hidden="true" />
+      <Method Name="Messenger_MessageReceived" Hidden="true" />
+      <Method Name="OnMessageReceived" Hidden="true" />
+      <Method Name="RequestReplyMessenger" Hidden="true" />
+      <Method Name="SendMessage" Hidden="true" />
+      <Property Name="WireProtocol" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="HSCF.Communication.ScsServices.Communication.RequestReplyMessenger&lt;T&gt;.WaitingMessage" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Communication\ScsServices\Communication\RequestReplyMessenger.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Enum Name="HSCF.Communication.ScsServices.Communication.RequestReplyMessenger&lt;T&gt;.WaitingMessageStates">
+        <TypeIdentifier>
+          <NewMemberFileName>Communication\ScsServices\Communication\RequestReplyMessenger.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ABAAABAgQDAAJAAQACACACQAAAAAAAIAIAAAAAAAAgA=</HashCode>
+      <FileName>Communication\ScsServices\Communication\RequestReplyMessenger.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="HSCF.Communication.Scs.Communication.IMessenger">
+    <Position X="0.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAIAAQACAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Scs\Communication\IMessenger.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

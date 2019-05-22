@@ -36,9 +36,6 @@
 		<Reference Include="HomeSeerAPI, Version=1.0.2.1, Culture=neutral, PublicKeyToken=null">
 		  <HintPath>HomeSeerAPI.dll</HintPath>
 		</Reference>
-		<Reference Include="HSCF, Version=1.0.0.2, Culture=neutral, PublicKeyToken=null">
-		  <HintPath>HSCF.dll</HintPath>
-		</Reference>
 		<Reference Include="Jui, Version=0.4.1.0, Culture=neutral, PublicKeyToken=null">
 		  <HintPath>Jui.dll</HintPath>
 		</Reference>
@@ -52,8 +49,84 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="AbstractPlugin.cs" />
+		<Compile Include="HSCF\Collections\ThreadSafeSortedList.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Client\IScsServiceClient.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Client\ScsServiceClient.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Client\ScsServiceClientBuilder.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Communication\Messages\ScsRemoteException.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Communication\Messages\ScsRemoteInvokeMessage.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Communication\Messages\ScsRemoteInvokeReturnMessage.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Communication\RemoteInvokeProxy.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Communication\RequestReplyMessenger.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\IScsServiceApplication.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\IScsServiceClient.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ScsService.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ScsServiceApplication.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ScsServiceAttribute.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ScsServiceBuilder.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ScsServiceClient.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ScsServiceClientFactory.cs" />
+		<Compile Include="HSCF\Communication\ScsServices\Service\ServiceClientEventArgs.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\ClientReConnecter.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\IConnectableClient.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\IScsClient.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\ScsClientBase.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\ScsClientFactory.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\Tcp\ScsTcpClient.cs" />
+		<Compile Include="HSCF\Communication\Scs\Client\Tcp\TcpHelper.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\CommunicationChannelBase.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\CommunicationChannelEventArgs.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\ConnectionListenerBase.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\ICommunicationChannel.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\IConnectionListener.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\Tcp\TcpCommunicationChannel.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Channels\Tcp\TcpConnectionListener.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\CommunicationStates.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\EndPoints\ScsEndPoint.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\EndPoints\Tcp\ScsTcpEndPoint.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\IMessenger.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Messages\IScsMessage.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Messages\MessageEventArgs.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Messages\PingMessage.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Messages\ScsMessage.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Messages\ScsRawDataMessage.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Messages\ScsTextMessage.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Protocols\BinarySerializationProtocol.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Protocols\IScsWireProtocol.cs" />
+		<Compile Include="HSCF\Communication\Scs\Communication\Protocols\WireProtocolManager.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\IScsServer.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\IScsServerClient.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\ScsServerBase.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\ScsServerClient.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\ScsServerFactory.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\ScsServerManager.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\ServerClientEventArgs.cs" />
+		<Compile Include="HSCF\Communication\Scs\Server\Tcp\ScsTcpServer.cs" />
+		<Compile Include="HSCF\Threading\IRunnable.cs" />
+		<Compile Include="HSCF\Threading\ProcessQueueItemEventArgs.cs" />
+		<Compile Include="HSCF\Threading\ProcessQueueItemHandler.cs" />
+		<Compile Include="HSCF\Threading\QueueProcessorThread.cs" />
+		<Compile Include="HSCF\Threading\Timer.cs" />
 		<Compile Include="InstanceComManager.cs" />
 		<Compile Include="Properties\AssemblyInfo.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="HSCF" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="HSCF\Diagrams\ChannelsDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ConnListenerDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\EndPointsDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\MessageObjectsDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\RequestReplyMessengerDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\RmiMessagesDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ScsClientDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ScsServerClientDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ScsServerDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ScsServiceClientDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ScsServiceDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\ServiceSideClientDiagram.cd" />
+	  <Content Include="HSCF\Diagrams\WireProtocolsDiagram.cd" />
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

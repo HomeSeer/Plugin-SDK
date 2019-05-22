@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PluginSdk")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("PluginSDK")]
+[assembly: AssemblyDescription("HomeSeer Plugin SDK")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PluginSdk")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("HomeSeer Technologies")]
+[assembly: AssemblyProduct("HomeSeer PluginSDK")]
+[assembly: AssemblyCopyright("Copyright© 2019 HomeSeer Technologies, LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
