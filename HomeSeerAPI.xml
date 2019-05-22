@@ -1,0 +1,399 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+HomeSeerAPI
+</name>
+</assembly>
+<members>
+<member name="T:HomeSeerAPI.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:HomeSeerAPI.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:HomeSeerAPI.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="M:HomeSeerAPI.IHSApplication.RegisterHelpLink(HomeSeerAPI.WebPageDesc)">
+ <summary>
+ Register the web address for the help documentation for this plugin.
+ </summary>
+ <param name="cbo"></param>
+</member>
+<member name="M:HomeSeerAPI.IHSApplication.RegisterHtmlFeaturePages(System.Collections.Generic.List{System.String},System.String)">
+ <summary>
+ Register a list of HTML feature page names for this plugin instance
+ </summary>
+ <param name="pageNames">A list of page names. Their order in this list is the order they will be presented in</param>
+ <param name="id">unique id of the plugin</param>
+</member>
+<member name="M:HomeSeerAPI.IHSApplication.RegisterJuiDeviceIncPage(System.String,System.String,System.String)">
+ <summary>
+ Register a device inclusion wizard for this plugin instance
+ </summary>
+ <param name="pageId">The ID of the page</param>
+ <param name="pageName">The title of the page displayed to users</param>
+ <param name="id">unique id of the plugin</param>
+</member>
+<member name="M:HomeSeerAPI.IHSApplication.RegisterJuiFeaturePages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+ <summary>
+ Register a list of HS-JUI feature pages for this plugin instance
+ </summary>
+ <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
+ <param name="id">unique id of the plugin</param>
+</member>
+<member name="M:HomeSeerAPI.IHSApplication.RegisterJuiSettingsPages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
+ <summary>
+ Register a list of HS-JUI settings pages for this plugin instance
+ </summary>
+ <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
+ <param name="id">unique id of the plugin</param>
+</member>
+<member name="M:HomeSeerAPI.IHSApplication.UnregisterJuiPagesByType(System.Int32,System.String)">
+ <summary>
+ Unregister all pages of a certain type for a plugin instance
+ </summary>
+ <param name="pageType">The type of page to unregister. See HomeSeer.Jui.Types.EPageType for a list of values</param>
+ <param name="id">unique id of the plugin</param>
+</member>
+<member name="T:HomeSeerAPI.IPluginApi2">
+ <summary>
+ The primary interface that all HS4+ plugins must implement.  
+ HomeSeer calls these methods to communicate with the plugin.
+ </summary>
+ <remarks>
+ While this API is in VB, it is case sensitive! Plugins must implement the procedures exactly
+ </remarks>
+</member>
+<member name="P:HomeSeerAPI.IPluginApi2.ID">
+ <summary>
+ Unique ID for this plugin, needs to be unique for all plugins
+ </summary>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.ExecuteActionById(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+ <summary>
+ Called by the HomeSeer software to run a particular procedure based on the action ID specified.  
+ This is called when a user clicks a button on one of the HS-JUI pages.
+ </summary>
+ <param name="actionId">The ID of the action to execute</param>
+ <param name="params">A map of view IDs and values</param>
+ <returns>A JSON serialized Jui.Message or Jui.Form</returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.GetJuiPagePlugin(System.String)">
+ <summary>
+ Called by the HomeSeer software to obtain a HS-JUI page by ID serialized into a JSON string
+ </summary>
+ <param name="pageId">The ID of the page to get</param>
+ <returns>A JSON serialized Jui.Page</returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.GetJuiDeviceConfigPage(System.String)">
+ <summary>
+ Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device
+ </summary>
+ <param name="deviceRef">The device reference to get the page for</param>
+ <returns>A JSON serialized Jui.Page</returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.GetJuiSettingsPages">
+ <summary>
+ Called by the HomeSeer software to obtain a list of settings pages
+ </summary>
+ <returns>
+ A List of Pages serialized to JSON strings
+ </returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.SaveJuiDeviceConfigPage(System.String,System.Int32)">
+ <summary>
+ Save updated values for a HS-JUI formatted device config page
+ </summary>
+ <param name="pageContent">A JSON serialized Jui.Page describing what has changed about the page</param>
+ <param name="deviceRef">The reference of the device the config page is for</param>
+ <returns></returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.SaveJuiPage(System.String)">
+ <summary>
+ Save updated values for a HS-JUI formatted page
+ </summary>
+ <param name="pageContent">A JSON serialized Jui.Page describing what has changed about the page</param>
+ <returns></returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.SaveJuiSettingsPages(System.Collections.Generic.List{System.String})">
+ <summary>
+ Save changes to settings pages
+ </summary>
+ <param name="pages">A List of Jui.Pages containing views that have changed, serialized as JSON strings</param>
+ <returns>
+ A List of the current state of all of the settings pages serialized as JSON strings
+ <para>
+ Return a Jui.Message serialized as a JSON string instead, for each page, if an error occured while saving. 
+ </para>
+ </returns>
+</member>
+<member name="M:HomeSeerAPI.IPluginApi2.SupportsConfigDeviceJui">
+ <summary>
+ Called by the HomeSeer software to determine if this plugin allows for device configuration, in HS-JUI format, via the device utility page
+ </summary>
+ <returns>
+ TRUE if the plugin supports a HS-JUI device configuration page
+ FALSE if the plugin does not support a HS-JUI device configuration page
+ </returns>
+</member>
+<member name="T:HomeSeerAPI.IPlugInAPI">
+ <summary>
+ The primary interface that all HS3 plugins must implement.  
+ HomeSeer calls these methods to communicate with the plugin.
+ <para>
+ DO NOT USE this interface if you are developing a plugin for HS4.  Use the <see cref="T:HomeSeerAPI.IPluginApi2"/> interface instead.
+ </para>
+ </summary>
+ <remarks>
+ While this API is in VB, it is case sensitive! Plugins must implement the procedures exactly
+ </remarks>
+</member>
+<member name="T:HomeSeerAPI.IPlugInAPI.strTrigActInfo">
+ <summary>
+ Describes trigger or action information
+ </summary>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strTrigActInfo.evRef">
+ <summary>
+ This is the unique event reference ID number for the event that this trigger is a part of.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strTrigActInfo.UID">
+ <summary>
+ This is the unique ID for this trigger or action.  When the trigger is true, the plug-in will pass this 
+ to HomeSeer to trigger to cause HomeSeer to check the conditions and trigger the event if appropriate.
+ When the action needs to be carried out, HomeSeer will invoke the Handle procedure in the action, and 
+ if there is action information stored by the plug-in, this property can be used to retrieve it.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strTrigActInfo.TANumber">
+ <summary>
+ This is for plug-ins only since plug-ins can support multiple types of different triggers or actions.
+ This identifies which, out of the triggers or actions offered by the plug-in, that this trigger
+ or action is.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strTrigActInfo.SubTANumber">
+ <summary>
+ When a trigger or action has sub-types, this is used to identify which sub-trigger or trigger sub-type,
+ sub-action or action sub-type this trigger or action is set to.  For example, in HomeSeer there is a 
+ TIME trigger - the sub-ID might identify whether it is the type AT, BEFORE, or AFTER a time value.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strTrigActInfo.DataIn">
+ <summary>
+ This is exclusively for plug-ins.  Using a serialization procedure, the data for this plug-in 
+ can be stored and managed within the HomeSeer database by the plug-in storing the serialized 
+ object here.  When HomeSeer is calling into the plug-in and wants to provide the trigger object
+ for the plug-in to analyze, it provides the serialized object data here in this byte array which
+ the plug-in can use to de-serialize back into an object that holds the trigger info.  Since 
+ parameters cannot be passed through the interface ByRef, this is read-only, but the plug-in is
+ allowed to RETURN a structure that includes Data or DataOut, which is a byte array, and contains
+ the serialized object after the plug-in updated it or made changes to it.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strTrigActInfo.Instance">
+ <summary>
+ If the plug-in supports multiple instances and this trigger or action is for one of the instances, 
+ then this field will have the instance name in it.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strMultiReturn.sResult">
+ <summary>
+ When plug-in calls such as ...BuildUI, ...ProcessPostUI, or ...FormatUI are called and there is
+ feedback or an error condition that needs to be reported back to the user, this string field 
+ can contain the message to be displayed to the user in HomeSeer UI.  This field is cleared by
+ HomeSeer after it is displayed to the user.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strMultiReturn.TrigActInfo">
+ <summary>
+ This is the trigger or action info from HomeSeer - see the structure for more information.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:HomeSeerAPI.IPlugInAPI.strMultiReturn.DataOut">
+ <summary>
+ (Also see DataIn of strTrigInfo) The serialization data for the plug-in object cannot be 
+ passed ByRef which means it can be passed only one-way through the interface to HomeSeer.
+ If the plug-in receives DataIn, de-serializes it into an object, and then makes a change 
+ to the object, this is where the object can be serialized again and passed back to HomeSeer
+ for storage in the HomeSeer database.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.HSCOMPort">
+ <summary>
+ Return True if HomeSeer is to manage the communications (COM) port for this plug-in
+ </summary>
+ <remarks>
+ A COM port selection box will be displayed on the interfaces page so the user can enter a COM port number. 
+ If the plug-in supports multiple instances, the COM port will be managed for each instance. 
+ When InitIO is called in the plug-in the selected COM port will passed as a parameter.
+ </remarks>
+ <returns>TRUE if HomeSeer should manage the COM port for this plugin, FALSE if not</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.Name">
+ <summary>
+ The name of the plugin
+ <para>
+ Do NOT use special characters in your plug-in name with the exception of "-", ".", and " " (space).
+ </para>
+ <para>
+ This is used to identify your plug-in to HomeSeer and your users. 
+ Keep the name to 16 characters or less. 
+ </para>
+ </summary>
+ <remarks>
+ Do not access any hardware in this function as HomeSeer will call this function using 
+ .NET reflection when it scans all plug-in EXE files so it should only return the 
+ text string of your plug-in.
+ </remarks>
+ <returns>The name of the plugin</returns>
+</member>
+<member name="M:HomeSeerAPI.IPlugInAPI.AccessLevel">
+ <summary>
+ Return the access level of this plug-in. Access level is the licensing mode.
+ </summary>
+ <returns>
+ 1 = Plug-in is not licensed and may be enabled and run without purchasing a license. Use this value for free plug-ins.
+ 2 = Plug-in Is licensed And a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days.
+ </returns>
+</member>
+<member name="M:HomeSeerAPI.IPlugInAPI.HSEvent(HomeSeerAPI.Enums.HSEvent,System.Object[])">
+ <summary>
+ When you wish to have HomeSeer call back in to your plug-in or application when certain events 
+ happen in the system, call the RegisterEventCB procedure and provide it with event you wish to monitor.  
+ See RegisterEventCB for more information and an example and event types.
+ <para>
+ The parameters are passed in an array of objects.  Each entry in the array is a parameter.  
+ The number of entries depends on the type of event and are described below.  
+ The event type is always present in the first entry or parms(0).
+ </para>
+ </summary>
+ <param name="EventType"></param>
+ <param name="parms"></param>
+</member>
+<member name="M:HomeSeerAPI.IPlugInAPI.PluginFunction(System.String,System.Object[])">
+ <summary>
+ Interface for plugin specific calls
+ </summary>
+ <param name="procName"></param>
+ <param name="parms"></param>
+ <returns></returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.ActionAdvancedMode">
+ <summary>
+ Whether this plugin supports advanced edit mode or not
+ <para>
+ Set to TRUE to enable advanced mode, you should display advanced controls.
+ </para>
+ </summary>
+ <remarks>
+ The HomeSeer events page has an option to set the editing mode to "Advanced Mode."  
+ This is typically used to enable options that may only be of interest to advanced users or programmers. 
+ The Set in this function is called when advanced mode is enabled. 
+ Your plug-in can also enable this mode if an advanced selection was saved and needs to be displayed.
+ </remarks>
+ <returns>TRUE if advanced mode is set, you may enable this mode if you detect advanced selections have already been made.</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.ActionName(System.Int32)">
+ <summary>
+ Return the name of the action given an action number
+ <para>The name of the action will be displayed in the HomeSeer events actions list.</para>
+ </summary>
+ <param name="ActionNumber">The number of the action to get the name for</param>
+ <returns>The name of the action associated with the action number</returns>
+</member>
+<member name="M:HomeSeerAPI.IPlugInAPI.HandleAction(HomeSeerAPI.IPlugInAPI.strTrigActInfo)">
+ <summary>
+ 
+ </summary>
+ <param name="ActInfo"></param>
+ <returns>true = OK, false = error</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.Condition(HomeSeerAPI.IPlugInAPI.strTrigActInfo)">
+ <summary>
+ HomeSeer will set this to TRUE if the trigger is being used as a CONDITION
+ <para>
+ Check this value in BuildUI and other procedures to change how the trigger is rendered if it is being used as a condition or a trigger.
+ </para>
+ </summary>
+ <param name="TrigInfo"></param>
+ <returns></returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.HasConditions(System.Int32)">
+ <summary>
+ Called by HomeSeer to determine if a given trigger can also be used as a condition
+ </summary>
+ <param name="TriggerNumber">The number of the trigger to check</param>
+ <returns>TRUE if the given trigger can also be used as a condition, for the given trigger number.</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.HasTriggers">
+ <summary>
+ Whether the plugin has triggers or not
+ </summary>
+ <returns>True if your plugin contains any triggers, else return false</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.SubTriggerCount(System.Int32)">
+ <summary>
+ Returns the number of sub triggers the plugin supports for the specified trigger number
+ </summary>
+ <param name="TriggerNumber">The number of the trigger to check</param>
+ <returns>The number of sub triggers the specified trigger number supports</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.SubTriggerName(System.Int32,System.Int32)">
+ <summary>
+ The name of the sub trigger with the specified number of the trigger with the specified number
+ </summary>
+ <param name="TriggerNumber">The number of the trigger to check</param>
+ <param name="SubTriggerNumber">The number of the sub trigger to check</param>
+ <returns>The name of the sub trigger</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.TriggerConfigured(HomeSeerAPI.IPlugInAPI.strTrigActInfo)">
+ <summary>
+ Given a strTrigActInfo object, detect if this trigger is configured properly
+ </summary>
+ <param name="TrigInfo">The trigger info to validate</param>
+ <returns>TRUE if the trigger is configured properly, FALSE otherwise</returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.TriggerCount">
+ <summary>
+ Returns the number of triggers the plugin supports
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:HomeSeerAPI.IPlugInAPI.TriggerName(System.Int32)">
+ <summary>
+ Return the name of the given trigger based on the specified trigger number
+ </summary>
+ <param name="TriggerNumber">The trigger number to get the name for</param>
+ <returns>The name of the trigger</returns>
+</member>
+<member name="T:HomeSeerAPI.VSVGPairs.VSVGPairType">
+ <summary>
+ Pair Type: Indicates whether a Value/Status/Graphics pair is for a single value or a range of values.
+ </summary>
+ <remarks>
+ <param name="SingleValue"><c>1</c>Pair is for a single value.</param>
+ <param name="Range"><c>2</c>Pair is for a range of values.</param>
+ </remarks>
+</member>
+</members>
+</doc>
