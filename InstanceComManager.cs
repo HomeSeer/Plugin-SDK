@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using HomeSeerAPI;
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
 using HSCF.Communication.ScsServices.Client;
@@ -11,7 +10,7 @@ namespace HomeSeer.PluginSdk {
 
         private const int HomeSeerPort = 10400;
         
-        private static IScsServiceClient<IHSApplication>  Client;
+        private static IScsServiceClient<IHsController>  Client;
         private static IScsServiceClient<IAppCallbackAPI> ClientCallback;
 
         private string _ipAddress = "127.0.0.1";
@@ -33,7 +32,7 @@ namespace HomeSeer.PluginSdk {
                 }
             }
             
-            Client         = ScsServiceClientBuilder.CreateClient<IHSApplication>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), _plugin);
+            Client         = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), _plugin);
             ClientCallback = ScsServiceClientBuilder.CreateClient<IAppCallbackAPI>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), _plugin);
         }
 
