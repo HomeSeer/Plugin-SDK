@@ -53,6 +53,10 @@ namespace HomeSeer.PluginSdk {
         
         #region Startup and Shutdown
 
+        public bool RegisterWithController() {
+            return HomeSeerSystem.RegisterPlugin(ID, Name);
+        }
+
         protected abstract void Initialize();
 
         public virtual string InitIO(string port) {

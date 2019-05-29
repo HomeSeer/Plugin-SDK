@@ -80,6 +80,48 @@ namespace HomeSeer.Jui {
 		    HelpPage = null;
 		    Pages = new List<Page>();
 	    }
-    }
+
+	    /// <inheritdoc />
+	    /// <summary>
+	    /// Compares the Id, Version, Name, and the number of pages
+	    /// </summary>
+	    public override bool Equals(object obj) {
+		    if (ReferenceEquals(null, obj)) return false;
+		    if (ReferenceEquals(this, obj)) return true;
+		    if (obj.GetType() != GetType()) return false;
+		    
+		    if (!(obj is Plugin otherPlugin)) {
+			    return false;
+		    }
+			
+		    if (Id != otherPlugin.Id) {
+			    return false;
+		    }
+
+		    if (Version != otherPlugin.Version) {
+			    return false;
+		    }
+		    
+		    if (Name != otherPlugin.Name) {
+			    return false;
+		    }
+		    
+		    if (Pages.Count != otherPlugin.Pages.Count) {
+			    return false;
+		    }
+
+		    return true;
+	    }
+
+	    /// <inheritdoc />
+	    /// <summary>
+	    /// Compares the Id, Version, Name, and the number of pages
+	    /// </summary>
+	    public override int GetHashCode() {
+		    
+		    return Id.GetHashCode() * Version.GetHashCode() * Name.GetHashCode() * Pages.Count.GetHashCode();
+	    }
+
+	}
 
 }

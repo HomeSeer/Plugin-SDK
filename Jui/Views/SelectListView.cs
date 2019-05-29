@@ -103,7 +103,7 @@ namespace HomeSeer.Jui.Views {
 				case ESelectListType.DropDown:
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append("<select class=\"mdb-select md-form\">");
+					sb.Append("<select class=\"mdb-select md-form jui-input\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
 					sb.Append("<option value=\"\" disabled selected>");

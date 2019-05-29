@@ -208,6 +208,82 @@ namespace HomeSeer.Jui.Views {
 			ViewCollectionHelper.AddView(view, ref _views, ref _viewIds);
 		}
 
+		/// <summary>
+		/// Add a view change to the page
+		/// <para>
+		/// Used to log value changes for views on settings pages.  All names are left blank
+		/// </para>
+		/// </summary>
+		/// <param name="id">The id of the view</param>
+		/// <param name="type">The EViewType of the view</param>
+		/// <param name="value">The new value for the view</param>
+		/// <exception cref="ArgumentNullException">A valid ID was not specified</exception>
+		/// <exception cref="ArgumentOutOfRangeException">The type or integer value is invalid</exception>
+		/// <exception cref="ArgumentException">The value type doesn't match the view type</exception>
+		public void AddViewDelta(string id, int type, object value) {
+
+			if (string.IsNullOrWhiteSpace(id)) {
+				throw new ArgumentNullException(nameof(id), "ID cannot be blank");
+			}
+
+			if (type < 0) {
+				throw new ArgumentOutOfRangeException(nameof(type));
+			}
+
+			AbstractView view = null;
+
+			switch (value) {
+				case string valueString:
+					if (type == (int) EViewType.SelectList) {
+						try {
+							var intValue = int.Parse(valueString);
+							if (intValue < 0) {
+								throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
+							}
+							view = new SelectListView(id, "", new List<string>(intValue+1), ESelectListType.DropDown, intValue);
+							break;
+						}
+						catch (Exception exception) {
+							throw new ArgumentException("Value type does not match the view type", exception);
+						}
+					}
+					
+					if (type != (int) EViewType.Input) {
+						throw new ArgumentException("The view type does not match the value type");
+					}
+					
+					view = new InputView(id, "", valueString);
+					break;
+				
+				case int valueInt:
+					
+					if (type != (int) EViewType.SelectList) {
+						throw new ArgumentException("The view type does not match the value type");
+					}
+					
+					if (valueInt < 0) {
+						throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
+					}
+					
+					view = new SelectListView(id, "", new List<string>(valueInt+1), ESelectListType.DropDown, valueInt);
+					break;
+				
+				case bool valueBool:
+					if (type != (int) EViewType.Toggle) {
+						throw new ArgumentException("The view type does not match the value type");
+					}
+            
+					view = new ToggleView(id, "", valueBool);
+					break;
+			}
+
+			if (view == null) {
+				throw new ArgumentException("Unable to build a view from the data provided");
+			}
+			
+			AddView(view);
+		}
+
 		/// <inheritdoc cref="ViewCollectionHelper.AddViews"/>
 		/// <summary>
 		/// Add multiple views to the page
@@ -283,11 +359,10 @@ namespace HomeSeer.Jui.Views {
 		
 		#endregion
 
+		/// <inheritdoc />
 		/// <summary>
-		/// 
+		/// Compares the Id, Name, and the number of views
 		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
 		public override bool Equals(object obj) {
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
@@ -300,6 +375,10 @@ namespace HomeSeer.Jui.Views {
 			if (Id != otherPage.Id) {
 				return false;
 			}
+			
+			if (Name != otherPage.Name) {
+				return false;
+			}
 
 			if (ViewCount != otherPage.ViewCount) {
 				return false;
@@ -308,12 +387,12 @@ namespace HomeSeer.Jui.Views {
 			return true;
 		}
 
+		/// <inheritdoc />
 		/// <summary>
-		/// 
+		/// Compares the Id, Name, and the number of views
 		/// </summary>
-		/// <returns></returns>
 		public override int GetHashCode() {
-			return Id.GetHashCode();
+			return Id.GetHashCode() * Name.GetHashCode() * ViewCount.GetHashCode();
 		}
 
 		/// <summary>

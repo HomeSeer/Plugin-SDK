@@ -88,7 +88,7 @@ namespace HomeSeer.PluginSdk {
             Thread.Sleep(4000); //?
 
             try {
-                _plugin.HomeSeerSystem.Connect(_plugin.Name, "primary");
+                _plugin.RegisterWithController();
                 do {
                     Thread.Sleep(10);
                 } while (Client.CommunicationState == CommunicationStates.Connected && !_plugin.IsShutdown);

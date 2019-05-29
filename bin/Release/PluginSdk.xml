@@ -85,11 +85,12 @@
             pane_color_bottom,pane_color_top,pane_color_right
             </summary>
         </member>
-        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterHelpLink(HomeSeer.PluginSdk.WebPageDesc)">
+        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterJuiSettingsPages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
             <summary>
-                ''' Register the web address for the help documentation for this plugin.
+                ''' Register a list of HS-JUI settings pages for this plugin instance
                 ''' </summary>
-                ''' <param name="cbo"></param>
+                ''' <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
+                ''' <param name="id">unique id of the plugin</param>
         </member>
         <member name="M:HomeSeer.PluginSdk.IHsController.RegisterHtmlFeaturePages(System.Collections.Generic.List{System.String},System.String)">
             <summary>
@@ -109,13 +110,6 @@
         <member name="M:HomeSeer.PluginSdk.IHsController.RegisterJuiFeaturePages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
             <summary>
                 ''' Register a list of HS-JUI feature pages for this plugin instance
-                ''' </summary>
-                ''' <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
-                ''' <param name="id">unique id of the plugin</param>
-        </member>
-        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterJuiSettingsPages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
-            <summary>
-                ''' Register a list of HS-JUI settings pages for this plugin instance
                 ''' </summary>
                 ''' <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
                 ''' <param name="id">unique id of the plugin</param>
@@ -692,6 +686,18 @@
             <param name="name">The name of the plugin; the title shown to the user</param>
             <exception cref="T:System.ArgumentNullException">Thrown if a Plugin is created with an invalid ID or Name</exception>
         </member>
+        <member name="M:HomeSeer.Jui.Plugin.Equals(System.Object)">
+            <inheritdoc />
+            <summary>
+            Compares the Id, Version, Name, and the number of pages
+            </summary>
+        </member>
+        <member name="M:HomeSeer.Jui.Plugin.GetHashCode">
+            <inheritdoc />
+            <summary>
+            Compares the Id, Version, Name, and the number of pages
+            </summary>
+        </member>
         <member name="T:HomeSeer.Jui.Types.EFormType">
             <summary>
             The type that a form is set to determines what class a client application should deserialize it as.
@@ -1249,6 +1255,20 @@
             Add a view to the page
             </summary>
         </member>
+        <member name="M:HomeSeer.Jui.Views.Page.AddViewDelta(System.String,System.Int32,System.Object)">
+            <summary>
+            Add a view change to the page
+            <para>
+            Used to log value changes for views on settings pages.  All names are left blank
+            </para>
+            </summary>
+            <param name="id">The id of the view</param>
+            <param name="type">The EViewType of the view</param>
+            <param name="value">The new value for the view</param>
+            <exception cref="T:System.ArgumentNullException">A valid ID was not specified</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">The type or integer value is invalid</exception>
+            <exception cref="T:System.ArgumentException">The value type doesn't match the view type</exception>
+        </member>
         <member name="M:HomeSeer.Jui.Views.Page.AddViews(System.Collections.Generic.IEnumerable{HomeSeer.Jui.Views.AbstractView})">
             <inheritdoc cref="M:HomeSeer.Jui.Views.ViewCollectionHelper.AddViews(System.Collections.Generic.IEnumerable{HomeSeer.Jui.Views.AbstractView},System.Collections.Generic.List{HomeSeer.Jui.Views.AbstractView}@,System.Collections.Generic.Dictionary{System.String,System.Int32}@,System.Boolean)"/>
             <summary>
@@ -1288,17 +1308,16 @@
             <inheritdoc cref="M:HomeSeer.Jui.Views.ViewCollectionHelper.RemoveAllViews(System.Collections.Generic.List{HomeSeer.Jui.Views.AbstractView}@,System.Collections.Generic.Dictionary{System.String,System.Int32}@)"/>
         </member>
         <member name="M:HomeSeer.Jui.Views.Page.Equals(System.Object)">
+            <inheritdoc />
             <summary>
-            
+            Compares the Id, Name, and the number of views
             </summary>
-            <param name="obj"></param>
-            <returns></returns>
         </member>
         <member name="M:HomeSeer.Jui.Views.Page.GetHashCode">
+            <inheritdoc />
             <summary>
-            
+            Compares the Id, Name, and the number of views
             </summary>
-            <returns></returns>
         </member>
         <member name="T:HomeSeer.Jui.Views.Page.Factory">
             <summary>

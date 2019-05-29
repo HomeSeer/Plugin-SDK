@@ -66,8 +66,8 @@
 		<Compile Include="EventData.cs" />
 		<Compile Include="EventGroupData.cs" />
 		<Compile Include="EventTriggerGroupData.cs" />
+		<Compile Include="HsController.cs" />
 		<Compile Include="IAppCallbackAPI.cs" />
-		<Compile Include="IHSApplication2.cs" />
 		<Compile Include="IHsController.cs" />
 		<Compile Include="InstanceComManager.cs" />
 		<Compile Include="InterfaceStatus.cs" />
