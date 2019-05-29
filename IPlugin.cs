@@ -238,12 +238,12 @@ namespace HomeSeer.PluginSdk {
     /// </summary>
     /// <param name="pages">A List of Jui.Pages containing views that have changed, serialized as JSON strings</param>
     /// <returns>
-    /// A List of the current state of all of the settings pages serialized as JSON strings
+    /// TRUE if the save was successful; FALSE if it was unsuccessful. 
     /// <para>
-    /// Return a Jui.Message serialized as a JSON string instead, for each page, if an error occured while saving. 
+    /// An exception should be thrown with details about the error if it was unsuccessful
     /// </para>
     /// </returns>
-    List<string> SaveJuiSettingsPages(List<string> pages);
+    bool SaveJuiSettingsPages(List<string> pages);
 
     /// <summary>
     /// Called by the HomeSeer software to determine if this plugin allows for device configuration, in HS-JUI format, via the device utility page

@@ -87,7 +87,7 @@ namespace HomeSeer.PluginSdk {
 
         public abstract List<string> GetJuiSettingsPages();
 
-        public abstract List<string> SaveJuiSettingsPages(List<string> pages);
+        public abstract bool SaveJuiSettingsPages(List<string> pages);
         
         #endregion
         
@@ -338,8 +338,9 @@ namespace HomeSeer.PluginSdk {
                         HomeSeerSystem.SaveINISetting(SettingsSectionName, settingPair.Key, settingPair.Value, SettingsFileName);
                         continue;
                     }
-                            
-                    settingsPage.UpdateViewValueById(settingPair.Key, savedValue);
+
+                    settingsPage.UpdateViewValueById(settingPair.Key, savedValue);       
+                    
                 }
             }
         }

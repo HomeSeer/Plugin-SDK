@@ -228,14 +228,17 @@ namespace HomeSeer.Jui.Views {
 				var foundView = viewList[viewIndex];
 				if (foundView.Id == view.Id) {
 					foundView.Update(view);
+					return;
 				}
-				else if (foundView.Type == EViewType.Group) {
+				
+				if (foundView.Type == EViewType.Group) {
 					
 					if (!(foundView is ViewGroup viewGroup)) {
 						throw new ViewTypeMismatchException();
 					}
 
 					viewGroup.UpdateViewById(view);
+					return;
 				}
 
 			}
@@ -264,14 +267,17 @@ namespace HomeSeer.Jui.Views {
 				var foundView = viewList[viewIndex];
 				if (foundView.Id == id) {
 					foundView.UpdateValue(value);
+					return;
 				}
-				else if (foundView.Type == EViewType.Group) {
+				
+				if (foundView.Type == EViewType.Group) {
 					
 					if (!(foundView is ViewGroup viewGroup)) {
 						throw new ViewTypeMismatchException();
 					}
 
 					viewGroup.UpdateViewValueById(id, value);
+					return;
 				}
 
 			}
