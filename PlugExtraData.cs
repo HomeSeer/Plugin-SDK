@@ -2,7 +2,9 @@ using System;
 
 namespace HomeSeer.PluginSdk {
 
-    public class clsPlugExtraData {
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
+    public class PlugExtraData {
 
         private System.Collections.SortedList Ncol = null;
         private System.Collections.ArrayList UNcol = null;

@@ -85,41 +85,56 @@
             pane_color_bottom,pane_color_top,pane_color_right
             </summary>
         </member>
+        <member name="T:HomeSeer.PluginSdk.IHsController">
+            <summary>
+            The interface used by plugins to communicate with the HomeSeer software
+            <para>
+            An instance of this interface is automatically provided to an AbstractPlugin when AbstractPlugin.Connect(string[]) is called.
+            </para>
+            </summary>
+        </member>
+        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterPlugin(System.String,System.String)">
+            <summary>
+            Register a new plugin with HomeSeer
+            <para>
+            This will add the specified ID/Name pair to HomeSeer's list of plugins to check when it runs through
+             the plugin initialization process.
+            </para>
+            </summary>
+            <param name="pluginId">The ID of the plugin to register</param>
+            <param name="pluginName">The name of the plugin to register</param>
+            <returns>
+            TRUE if the plugin was registered successfully;
+             FALSE if there was a problem with registration
+            </returns>
+        </member>
+        <member name="M:HomeSeer.PluginSdk.IHsController.ClearINISection(System.String,System.String)">
+            <summary>
+            Clear all of the settings saved in a section in a specific file
+            </summary>
+            <param name="sectionName">The section to clear</param>
+            <param name="fileName">The name of the INI file to edit</param>
+        </member>
         <member name="M:HomeSeer.PluginSdk.IHsController.RegisterJuiSettingsPages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
             <summary>
-                ''' Register a list of HS-JUI settings pages for this plugin instance
-                ''' </summary>
-                ''' <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
-                ''' <param name="id">unique id of the plugin</param>
+            Register a list of HS-JUI settings pages for this plugin instance
+            </summary>
+            <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
+            <param name="id">unique id of the plugin</param>
         </member>
-        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterHtmlFeaturePages(System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:HomeSeer.PluginSdk.IHsController.UnRegisterHelpLinks(System.String,System.String)">
             <summary>
-                ''' Register a list of HTML feature page names for this plugin instance
-                ''' </summary>
-                ''' <param name="pageNames">A list of page names. Their order in this list is the order they will be presented in</param>
-                ''' <param name="id">unique id of the plugin</param>
-        </member>
-        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterJuiDeviceIncPage(System.String,System.String,System.String)">
-            <summary>
-                ''' Register a device inclusion wizard for this plugin instance
-                ''' </summary>
-                ''' <param name="pageId">The ID of the page</param>
-                ''' <param name="pageName">The title of the page displayed to users</param>
-                ''' <param name="id">unique id of the plugin</param>
-        </member>
-        <member name="M:HomeSeer.PluginSdk.IHsController.RegisterJuiFeaturePages(System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
-            <summary>
-                ''' Register a list of HS-JUI feature pages for this plugin instance
-                ''' </summary>
-                ''' <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
-                ''' <param name="id">unique id of the plugin</param>
+            Register a list of HS-JUI feature pages for this plugin instance
+            </summary>
+            <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
+            <param name="id">unique id of the plugin</param>
         </member>
         <member name="M:HomeSeer.PluginSdk.IHsController.UnregisterJuiPagesByType(System.Int32,System.String)">
             <summary>
-                ''' Unregister all pages of a certain type for a plugin instance
-                ''' </summary>
-                ''' <param name="pageType">The type of page to unregister. See HomeSeer.Jui.Types.EPageType for a list of values</param>
-                ''' <param name="id">unique id of the plugin</param>
+            Unregister all pages of a certain type for a plugin instance
+            </summary>
+            <param name="pageType">The type of page to unregister. See HomeSeer.Jui.Types.EPageType for a list of values</param>
+            <param name="id">unique id of the plugin</param>
         </member>
         <member name="P:HomeSeer.PluginSdk.IPlugin.HSCOMPort">
             <summary>

@@ -1,5 +1,9 @@
+using System;
+
 namespace HomeSeer.PluginSdk {
 
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public class VGPair {
 
         public  Constants.VSVGPairType PairType;

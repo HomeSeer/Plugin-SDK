@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Reflection;
 using HomeSeer.Jui.Views;
-
+using HSCF.Communication.Scs.Communication;
+using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
+using HSCF.Communication.ScsServices.Client;
 
 namespace HomeSeer.PluginSdk {
 
@@ -37,10 +40,17 @@ namespace HomeSeer.PluginSdk {
         public string TriggerName { get; }
 
         public IHsController HomeSeerSystem { get; set; }
-        public IAppCallbackAPI ClientCallback { get; set; }
+        public IAppCallbackAPI AppCallback { get; set; }
 
         protected const string SettingsSectionName = "Settings";
         protected abstract string SettingsFileName { get; }
+        
+        private const int HomeSeerPort = 10400;
+        
+        private static IScsServiceClient<IHsController>   Client;
+        private static IScsServiceClient<IAppCallbackAPI> ClientCallback;
+
+        private string _ipAddress = "127.0.0.1";
 
         #endregion
         
@@ -54,9 +64,89 @@ namespace HomeSeer.PluginSdk {
         #endregion
         
         #region Startup and Shutdown
+        
+        public void Connect(string[] args) {
+            
+            foreach (var arg in args) {
+                var parts = arg.Split('=');
+                switch (parts[0].ToLower()) {
+                    case "server":
+                        _ipAddress = parts[1];
+                        break;
+                    case "instance":
+                        //TODO no more instances
+                        break;
+                }
+            }
+            
+            Client         = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), this);
+            ClientCallback = ScsServiceClientBuilder.CreateClient<IAppCallbackAPI>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), this);
+            
+            Connect(1);
+        }
+        
+        private void Connect(int attempts) {
 
-        public bool RegisterWithController() {
-            return HomeSeerSystem.RegisterPlugin(ID, Name);
+            try {
+                Client.Connect();
+                ClientCallback.Connect();
+                var apiVersion = 0D;
+
+                try {
+                    HomeSeerSystem       = Client.ServiceProxy;
+                    apiVersion = HomeSeerSystem.APIVersion;
+                    Console.WriteLine("Host API Version: " + apiVersion);
+                }
+                catch (Exception exception) {
+                    Console.WriteLine(exception);
+                }
+
+                try {
+                    AppCallback = ClientCallback.ServiceProxy;
+                    apiVersion = AppCallback.APIVersion;
+                }
+                catch (Exception exception) {
+                    Console.WriteLine(exception);
+                    return;
+                }
+
+
+            }
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                Console.WriteLine("Cannot connect attempt " + attempts);
+                if (exception.Message.ToLower().Contains("timeout occurred.") && attempts < 6) {
+                    Connect(attempts + 1);
+                    if (Client != null) {
+                        Client.Dispose();
+                        Client = null;
+                    }
+
+                    if (ClientCallback != null) {
+                        ClientCallback.Dispose();
+                        ClientCallback = null;
+                    }
+                    return;
+                }
+            }
+			
+            Thread.Sleep(4000); //?
+
+            try {
+                HomeSeerSystem.RegisterPlugin(ID, Name);
+                do {
+                    Thread.Sleep(10);
+                } while (Client.CommunicationState == CommunicationStates.Connected && !IsShutdown);
+				
+                Client.Disconnect();
+                ClientCallback.Disconnect();
+				
+                Thread.Sleep(2000); //?
+            }
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                throw;
+            }
         }
 
         protected abstract void Initialize();
@@ -293,7 +383,6 @@ namespace HomeSeer.PluginSdk {
 
         #region Dynamic Method/Property Calls
 
-        //TODO all of these methods should be default implementations only
         public object PluginFunction(string procName, object[] parms) {
             try
             {

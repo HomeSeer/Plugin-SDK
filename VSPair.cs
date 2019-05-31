@@ -3,6 +3,8 @@ using HomeSeer.PluginSdk.CAPI;
 
 namespace HomeSeer.PluginSdk {
 
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public class VSPair {
 
         public Constants.VSVGPairType PairType;
@@ -100,6 +102,7 @@ namespace HomeSeer.PluginSdk {
                 else
                     mvarStatus = value;
             }
+            get => mvarStatus;
         }
         internal string intStatus
         {

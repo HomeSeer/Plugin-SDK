@@ -56,7 +56,7 @@
 		<Compile Include="CAPI\CAPIStatus.cs" />
 		<Compile Include="CAPI\ValueRange.cs" />
 		<Compile Include="CAPI\ICAPIStatus.cs" />
-		<Compile Include="clsPlugExtraData.cs" />
+		<Compile Include="PlugExtraData.cs" />
 		<Compile Include="Constants.cs" />
 		<Compile Include="DeviceTypeInfo.cs" />
 		<Compile Include="Energy\EnergyCalcData.cs" />
@@ -69,7 +69,6 @@
 		<Compile Include="HsController.cs" />
 		<Compile Include="IAppCallbackAPI.cs" />
 		<Compile Include="IHsController.cs" />
-		<Compile Include="InstanceComManager.cs" />
 		<Compile Include="InterfaceStatus.cs" />
 		<Compile Include="IPlugin.cs" />
 		<Compile Include="Jui\Forms\AbstractFormView.cs" />

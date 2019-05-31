@@ -45,9 +45,8 @@ namespace HomeSeer.PluginSdk {
     int Capabilities();
     string ConfigDevice(int @ref, string user, int userRights, bool newDevice);   // changed name and parameter
     Constants.ConfigDevicePostReturn ConfigDevicePost(int @ref, string data, string user, int userRights);  // changed paramters
-    [Obsolete("This method should not be used.  Use GetPagePlugin() instead.")]
-    string GenPage(string link);
     string GetPagePlugin(string page, string user, int userRights, string queryString);
+    
     /// <summary>
     /// When you wish to have HomeSeer call back in to your plug-in or application when certain events 
     /// happen in the system, call the RegisterEventCB procedure and provide it with event you wish to monitor.  
@@ -64,8 +63,6 @@ namespace HomeSeer.PluginSdk {
     string InitIO(string port);
     string InstanceFriendlyName();
     InterfaceStatus InterfaceStatus();
-    [Obsolete("This method should not be used.")]
-    string PagePut(string data);
     /// <summary>
     /// Interface for plugin specific calls
     /// </summary>
