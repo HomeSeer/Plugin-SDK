@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using HomeSeer.Jui.Views;
+
 
 namespace HomeSeer.PluginSdk {
 
@@ -293,18 +295,62 @@ namespace HomeSeer.PluginSdk {
 
         //TODO all of these methods should be default implementations only
         public object PluginFunction(string procName, object[] parms) {
-            //TODO PluginFunction
+            try
+            {
+                Type ty = this.GetType();
+                MethodInfo mi = ty.GetMethod(procName);
+                if (mi == null)
+                {
+                    //Log("Method " + proc + " does not exist in this plugin.", LogType.LOG_TYPE_ERROR);
+                    return null;
+                }
+                return (mi.Invoke(this, parms));
+            }
+            catch (Exception ex)
+            {
+                //Log("Error in PluginProc: " + ex.Message, LogType.LOG_TYPE_ERROR);
+            }
+
             return null;
         }
 
         public object PluginPropertyGet(string procName, object[] parms) {
-            //TODO PluginPropertyGet
+            try
+            {
+                Type ty = this.GetType();
+                PropertyInfo mi = ty.GetProperty(procName);
+                if (mi == null)
+                {
+                    //Log("Method " + proc + " does not exist in this plugin.", LogType.LOG_TYPE_ERROR);
+                    return null;
+                }
+                return mi.GetValue(this, null);
+            }
+            catch (Exception ex)
+            {
+                //Log("Error in PluginProc: " + ex.Message, LogType.LOG_TYPE_ERROR);
+            }
             return null;
         }
 
         public void PluginPropertySet(string procName, object value) {
-            //TODO PluginPropertySet
-            return;
+            try
+            {
+                Type ty = this.GetType();
+                PropertyInfo mi = ty.GetProperty(procName);
+                if (mi == null)
+                {
+                    //Log("Property " + proc + " does not exist in this plugin.", LogType.LOG_TYPE_ERROR);
+                }
+                else
+                {
+                    mi.SetValue(this, value, null);
+                }                
+            }
+            catch (Exception ex)
+            {
+                //Log("Error in PluginPropertySet: " + ex.Message, LogType.LOG_TYPE_ERROR);
+            }
         }
 
         #endregion
