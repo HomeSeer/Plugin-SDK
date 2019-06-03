@@ -25,12 +25,8 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		/// <param name="id">The unique ID for the View</param>
 		/// <param name="name">The name of the View; the text displayed by the label</param>
-		/// <exception cref="ArgumentNullException">Thrown if a label was created with an invalid name</exception>
 		[JsonConstructor]
-		public LabelView(string id, string name) : base(id, name) {
-			if (string.IsNullOrWhiteSpace(name)) {
-				throw new ArgumentNullException(nameof(name));
-			}
+		public LabelView(string id, string name) : base(id, name ?? "") {
 			
 			Type = EViewType.Label;
 		}

@@ -171,7 +171,7 @@ namespace HomeSeer.Jui.Views {
 					settingMap.Add(view.Id, viewValue);
 				}
 				catch (InvalidOperationException exception) {
-					Console.WriteLine(exception);
+					//Console.WriteLine(exception);
 					if (!(view is ViewGroup vg)) {
 						continue;
 					}

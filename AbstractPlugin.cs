@@ -154,9 +154,12 @@ namespace HomeSeer.PluginSdk {
         public virtual string InitIO(string port) {
             var result = "";
             try {
+                Console.WriteLine("InitIO");
                 LoadSettingsFromIni();
                 //register settings pages
+                Console.WriteLine("Registering JUI Settings Pages");
                 HomeSeerSystem.RegisterJuiSettingsPages(SettingsPages.ToDictionary(p => p.Id, p => p.Name), ID);
+                Console.WriteLine("Initializing");
                 Initialize();
             }
             catch (Exception exception) {
@@ -457,7 +460,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         protected void LoadSettingsFromIni() {
-            
+            Console.WriteLine("Loading settings from INI");
             //TODO optimize this so that if no settings are saved, the process is skipped and default settings are written
             foreach (var settingsPage in SettingsPages) {
                 var pageValueMap = settingsPage.ToValueMap();
