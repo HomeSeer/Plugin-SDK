@@ -17,6 +17,8 @@ namespace HomeSeer.PluginSdk {
         
         public bool IsShutdown { get; protected set; }
 
+        public abstract bool HasSettings { get; }
+
         protected List<Page> SettingsPages;
         protected Dictionary<string, int> SettingsPageIndexes;
         //TODO feature pages
@@ -158,7 +160,7 @@ namespace HomeSeer.PluginSdk {
                 LoadSettingsFromIni();
                 //register settings pages
                 Console.WriteLine("Registering JUI Settings Pages");
-                HomeSeerSystem.RegisterJuiSettingsPages(SettingsPages.ToDictionary(p => p.Id, p => p.Name), ID);
+                //HomeSeerSystem.RegisterJuiSettingsPages(SettingsPages.ToDictionary(p => p.Id, p => p.Name), ID);
                 Console.WriteLine("Initializing");
                 Initialize();
             }
@@ -182,7 +184,13 @@ namespace HomeSeer.PluginSdk {
 
         public abstract List<string> GetJuiSettingsPages();
 
-        public abstract bool SaveJuiSettingsPages(List<string> pages);
+        public bool SaveJuiSettingsPages(string jsonString) {
+
+            var deserializedPages = Page.Factory.ListFromJson(jsonString);
+            return OnSettingsChange(deserializedPages);
+        }
+
+        protected abstract bool OnSettingsChange(List<Page> pages);
         
         #endregion
         

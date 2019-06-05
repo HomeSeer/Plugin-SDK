@@ -33,6 +33,8 @@ namespace HomeSeer.PluginSdk {
     /// </remarks>
     /// <returns>The name of the plugin</returns>
     string Name { get; }
+    
+    bool HasSettings { get; }
 
     /// <summary>
     /// Return the access level of this plug-in. Access level is the licensing mode.
@@ -233,14 +235,14 @@ namespace HomeSeer.PluginSdk {
     /// <summary>
     /// Save changes to settings pages
     /// </summary>
-    /// <param name="pages">A List of Jui.Pages containing views that have changed, serialized as JSON strings</param>
+    /// <param name="jsonString">A List of Jui.Pages containing views that have changed, serialized as JSON</param>
     /// <returns>
     /// TRUE if the save was successful; FALSE if it was unsuccessful. 
     /// <para>
     /// An exception should be thrown with details about the error if it was unsuccessful
     /// </para>
     /// </returns>
-    bool SaveJuiSettingsPages(List<string> pages);
+    bool SaveJuiSettingsPages(string jsonString);
 
     /// <summary>
     /// Called by the HomeSeer software to determine if this plugin allows for device configuration, in HS-JUI format, via the device utility page

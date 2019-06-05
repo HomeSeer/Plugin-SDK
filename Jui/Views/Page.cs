@@ -417,7 +417,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="id">The ID for the page</param>
 			/// <param name="name">The name of the page</param>
 			/// <returns>A new Page with its type set to EPageType.Feature</returns>
-			public static Page CreateFeaturePage(string id, string name) {
+			internal static Page CreateFeaturePage(string id, string name) {
 				
 				return new Page(id, name, EPageType.Feature);
 			}
@@ -428,7 +428,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="id">The ID for the page</param>
 			/// <param name="name">The name of the page</param>
 			/// <returns>A new Page with its type set to EPageType.DeviceInclude</returns>
-			public static Page CreateDeviceIncPage(string id, string name) {
+			internal static Page CreateDeviceIncPage(string id, string name) {
 				
 				return new Page(id, name, EPageType.DeviceInclude);
 			}
@@ -450,7 +450,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="id">The ID for the page</param>
 			/// <param name="name">The name of the page</param>
 			/// <returns>A new Page with its type set to EPageType.Guide</returns>
-			public static Page CreateGuidedProcessPage(string id, string name) {
+			internal static Page CreateGuidedProcessPage(string id, string name) {
 				
 				return new Page(id, name, EPageType.Guide);
 			}
@@ -461,7 +461,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="id">The ID for the page</param>
 			/// <param name="name">The name of the page</param>
 			/// <returns>A new Page with its type set to EPageType.FeatureHtml</returns>
-			public static Page CreateHtmlFeaturePage(string id, string name) {
+			internal static Page CreateHtmlFeaturePage(string id, string name) {
 				
 				return new Page(id, name, EPageType.FeatureHtml);
 			}
@@ -501,6 +501,49 @@ namespace HomeSeer.Jui.Views {
 				
 					page.MapViewIds();
 					return page;
+				}
+				catch (JsonSerializationException exception) {
+					
+					throw new JsonDataException(exception);
+				}
+			}
+
+			/// <summary>
+			/// Serialize a list of pages to a JSON string
+			/// </summary>
+			/// <param name="pages">the List of Pages to serialize</param>
+			/// <returns>A JSON string containing the serialized pages</returns>
+			/// <exception cref="JsonDataException">Thrown when there was a problem serializing the page</exception>
+			public static string JsonFromList(List<Page> pages) {
+				try {
+					var serializedList = JsonConvert.SerializeObject(pages, 
+					                                                 Formatting.None, 
+					                                                 new JsonSerializerSettings {
+																									TypeNameHandling = TypeNameHandling.Auto
+					                                                                            });
+
+					return serializedList;
+				}
+				catch (JsonSerializationException exception) {
+					
+					throw new JsonDataException(exception);
+				}
+			}
+
+			/// <summary>
+			/// Deserialize a JSON string to a List of Pages
+			/// </summary>
+			/// <param name="jsonString">The JSON string containing the list of pages</param>
+			/// <returns>A List of Jui.Page objects</returns>
+			/// <exception cref="JsonDataException">Thrown when there was a problem deserializing the page</exception>
+			public static List<Page> ListFromJson(string jsonString) {
+				try {
+					var pages = JsonConvert.DeserializeObject<List<Page>>(jsonString,
+					                                               new JsonSerializerSettings
+					                                               { TypeNameHandling = TypeNameHandling.Auto }
+					                                              );
+				
+					return pages;
 				}
 				catch (JsonSerializationException exception) {
 					

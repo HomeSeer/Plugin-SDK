@@ -7,7 +7,7 @@ namespace HomeSeer.Jui.Forms {
 	/// A form used for communicating information, like instructions, to the user.
 	/// <para>This form only supports the use of label and image views.</para>
 	/// </summary>
-	public sealed class InfoFormView : AbstractFormView {
+	internal sealed class InfoFormView : AbstractFormView {
 
 		/// <inheritdoc />
 		/// <summary>

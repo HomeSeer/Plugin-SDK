@@ -10,7 +10,7 @@ namespace HomeSeer.Jui.Forms {
 	/// This form supports all view types except for buttons and view groups.
 	/// </para>
 	/// </summary>
-	public sealed class InputFormView : AbstractFormView {
+	internal sealed class InputFormView : AbstractFormView {
 
 		/// <inheritdoc />
 		/// <summary>

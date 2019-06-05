@@ -49,12 +49,6 @@ namespace HomeSeer.PluginSdk {
         void ClearINISection(string sectionName, string fileName);
         string GetINISetting(string sectionName, string key, string defaultVal, string fileName = "");
         void SaveINISetting(string sectionName, string key, string value, string fileName);
-        /// <summary>
-        /// Register a list of HS-JUI settings pages for this plugin instance
-        /// </summary>
-        /// <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
-        /// <param name="id">unique id of the plugin</param>
-        void RegisterJuiSettingsPages(Dictionary<string, string> pages, string id);
         
         //TODO string GetINISection(string section, string FileName);
         //TODO string[] GetINISectionEx(string section, string FileName);

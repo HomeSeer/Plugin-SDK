@@ -1,10 +1,10 @@
 namespace HomeSeer.PluginSdk {
 
-    public class HsController {
+    internal class HsController {
 
         private IHsController _interface;
 
-        public HsController(IHsController hsController) {
+        internal HsController(IHsController hsController) {
             _interface = hsController;
         }
 

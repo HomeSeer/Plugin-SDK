@@ -3,7 +3,7 @@ namespace HomeSeer.Jui.Types {
 	/// <summary>
 	/// The type that a form is set to determines what class a client application should deserialize it as.
 	/// </summary>
-	public enum EFormType {
+	internal enum EFormType {
 
 		/// <summary>
 		/// A form used for communicating information, like instructions, to the user.

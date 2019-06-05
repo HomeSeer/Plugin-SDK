@@ -11,7 +11,7 @@ namespace HomeSeer.Jui.Forms {
 	/// This form only supports the use of label and image views
 	/// </para>
 	/// </summary>
-	public class ProgressFormView : AbstractFormView {
+	internal class ProgressFormView : AbstractFormView {
 
 		/// <summary>
 		/// The number of milliseconds to wait between calls to the API with the positive action id.

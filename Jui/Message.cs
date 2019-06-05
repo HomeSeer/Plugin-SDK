@@ -9,7 +9,7 @@ namespace HomeSeer.Jui {
 	/// the client knows whether to continue waiting or not or for telling the client to load a particular
 	/// URL using the default web browser.
 	/// </summary>
-	public sealed class Message {
+	internal sealed class Message {
 
 		/// <summary>
 		/// The unique code indicating how this response message should be handled and the type of data contained within the content.

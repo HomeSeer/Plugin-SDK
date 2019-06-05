@@ -9,7 +9,7 @@ namespace HomeSeer.Jui.Forms {
 	/// <summary>
 	/// The base implementation for a JUI form
 	/// </summary>
-	public abstract class AbstractFormView : ViewGroup {
+	internal abstract class AbstractFormView : ViewGroup {
 
 		/// <summary>
 		/// The form's type and style.  See <see cref="EFormType"/> for more information about each type

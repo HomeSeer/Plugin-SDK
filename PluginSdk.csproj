@@ -50,16 +50,21 @@
 		<Compile Include="CAPI\CAPIStatus.cs" />
 		<Compile Include="CAPI\ValueRange.cs" />
 		<Compile Include="CAPI\ICAPIStatus.cs" />
-		<Compile Include="PlugExtraData.cs" />
+		<Compile Include="Devices\DeviceTypeInfo.cs" />
+		<Compile Include="Devices\MultiReturn.cs" />
+		<Compile Include="Devices\PlugExtraData.cs" />
+		<Compile Include="Devices\PollResultInfo.cs" />
+		<Compile Include="Devices\VGPair.cs" />
+		<Compile Include="Devices\VSPair.cs" />
+		<Compile Include="Events\EventData.cs" />
+		<Compile Include="Events\EventGroupData.cs" />
+		<Compile Include="Events\EventTriggerGroupData.cs" />
+		<Compile Include="Events\TrigActInfo.cs" />
 		<Compile Include="Constants.cs" />
-		<Compile Include="DeviceTypeInfo.cs" />
 		<Compile Include="Energy\EnergyCalcData.cs" />
 		<Compile Include="Energy\EnergyData.cs" />
 		<Compile Include="Energy\EnergyGraph.cs" />
 		<Compile Include="Energy\EnergyGraphData.cs" />
-		<Compile Include="EventData.cs" />
-		<Compile Include="EventGroupData.cs" />
-		<Compile Include="EventTriggerGroupData.cs" />
 		<Compile Include="HsController.cs" />
 		<Compile Include="IAppCallbackAPI.cs" />
 		<Compile Include="IHsController.cs" />
@@ -91,17 +96,11 @@
 		<Compile Include="Jui\Views\ViewNotFoundException.cs" />
 		<Compile Include="Jui\Views\ViewTypeMismatchException.cs" />
 		<Compile Include="LogEntry.cs" />
-		<Compile Include="MultiReturn.cs" />
-		<Compile Include="PollResultInfo.cs" />
 		<Compile Include="Properties\AssemblyInfo.cs" />
 		<Compile Include="Speech\clsLastVR.cs" />
 		<Compile Include="Speech\IFromSpeaker.cs" />
 		<Compile Include="Speech\ISpeechAPI.cs" />
 		<Compile Include="Speech\RemoteHost.cs" />
-		<Compile Include="TrigActInfo.cs" />
-		<Compile Include="TunnelMessage.cs" />
-		<Compile Include="VGPair.cs" />
-		<Compile Include="VSPair.cs" />
 		<Compile Include="WebPageDesc.cs" />
 	</ItemGroup>
 	<ItemGroup>
