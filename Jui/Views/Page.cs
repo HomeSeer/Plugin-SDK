@@ -264,8 +264,13 @@ namespace HomeSeer.Jui.Views {
 					if (valueInt < 0) {
 						throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
 					}
+
+					var options = new List<string>();
+					for (var i = 0; i <= valueInt; i++) {
+						options.Add(i.ToString());
+					}
 					
-					view = new SelectListView(id, "", new List<string>(valueInt+1), ESelectListType.DropDown, valueInt);
+					view = new SelectListView(id, "", options, ESelectListType.DropDown, valueInt);
 					break;
 				
 				case bool valueBool:

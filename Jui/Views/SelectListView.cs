@@ -159,7 +159,7 @@ namespace HomeSeer.Jui.Views {
 					sb.Append(".title\" class=\"jui-title\">");
 					sb.Append("<small>");
 					sb.Append(Name);
-					sb.Append("/<small>");
+					sb.Append("</small>");
 					sb.Append("</div>");
 					sb.Append(Environment.NewLine);
 					//Add the option items

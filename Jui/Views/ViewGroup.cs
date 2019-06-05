@@ -186,6 +186,16 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Id);
 			sb.Append("\" class=\"jui-view\">");
 			sb.Append(Environment.NewLine);
+			//Add the title
+			sb.Append(GetIndentStringFromNumber(indent+1));
+			sb.Append("<div id=\"");
+			sb.Append(Id);
+			sb.Append(".title\" class=\"jui-title\">");
+			sb.Append("<small>");
+			sb.Append(Name);
+			sb.Append("</small>");
+			sb.Append("</div>");
+			sb.Append(Environment.NewLine);
 			//Add child views
 			foreach (var view in _views) {
 				sb.Append(view.ToHtml(indent + 1));
