@@ -108,15 +108,16 @@ namespace HomeSeer.Jui.Views {
 					sb.Append("\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
-					sb.Append("<option value=\"\" disabled selected>");
+					sb.Append("<option value=\"\" disabled>");
 					sb.Append(Name);
 					sb.Append("</option>");
 					sb.Append(Environment.NewLine);
-					foreach (var option in Options) {
+					for (var i = 0; i < Options.Count; i++) {
+						var option = Options[i];
 						sb.Append(GetIndentStringFromNumber(indent+2));
 						sb.Append("<option value=\"");
 						sb.Append(option);
-						sb.Append("\">");
+						sb.Append(i == Selection ? "\" selected>" : "\">");
 						sb.Append(option);
 						sb.Append("</option>");
 						sb.Append(Environment.NewLine);
