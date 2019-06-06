@@ -68,7 +68,7 @@
 		<Compile Include="HsController.cs" />
 		<Compile Include="IAppCallbackAPI.cs" />
 		<Compile Include="IHsController.cs" />
-		<Compile Include="InterfaceStatus.cs" />
+		<Compile Include="PluginStatus.cs" />
 		<Compile Include="IPlugin.cs" />
 		<Compile Include="Jui\Forms\AbstractFormView.cs" />
 		<Compile Include="Jui\Forms\InfoFormView.cs" />
@@ -84,12 +84,14 @@
 		<Compile Include="Jui\Types\EViewType.cs" />
 		<Compile Include="Jui\Views\AbstractView.cs" />
 		<Compile Include="Jui\Views\ButtonView.cs" />
+		<Compile Include="Jui\Views\CollectionView.cs" />
 		<Compile Include="Jui\Views\InputView.cs" />
 		<Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
 		<Compile Include="Jui\Views\JsonDataException.cs" />
 		<Compile Include="Jui\Views\LabelView.cs" />
 		<Compile Include="Jui\Views\Page.cs" />
 		<Compile Include="Jui\Views\SelectListView.cs" />
+		<Compile Include="Jui\Views\SettingsCollection.cs" />
 		<Compile Include="Jui\Views\ToggleView.cs" />
 		<Compile Include="Jui\Views\ViewCollectionHelper.cs" />
 		<Compile Include="Jui\Views\ViewGroup.cs" />

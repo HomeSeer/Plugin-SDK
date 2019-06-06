@@ -504,16 +504,6 @@ namespace HomeSeer.PluginSdk {
             Other_Error            = 7,
             Status_Not_Supported   = 8
         }
-        
-        public enum enumInterfaceStatus {
-            OK = 0, // Everything is fine.
-            INFO = 1, // Information
-            WARNING = 2, // Something wrong, but should not affect operation.
-            CRITICAL = 3, // Something wrong that will prevent operation from being successful.
-            FATAL = 4 // Something really wrong and the plug-in cannot function.
-        }
-        
-        
 
         public struct SearchReturn {
             public eSearchReturn RType;

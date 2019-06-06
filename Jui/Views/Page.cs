@@ -477,23 +477,6 @@ namespace HomeSeer.Jui.Views {
 			/// This should always be wrapped in a try/catch in case the data received is malformed
 			/// </para>
 			/// </summary>
-			/// <example>
-			/// <code>
-			/// public string SaveJuiPage(string pageContent) {
-			///     try {
-			///         var page = Page.Factory.FromJsonString(pageContent);
-			///         foreach (var view in page.Views) {
-			///             //Process the update
-			///             //Save the update to the page in memory
-			///             PluginSettingsPage.UpdateViewById(view);
-			///         }
-			///     } catch (JsonDataException exception) {
-			///         var errorMessage = Message.Factory.CreateFailMessage("There was a problem with the data received.  Please try again.");
-			///         return errorMessage.toJsonString();
-			///     }
-			/// }
-			/// </code>
-			/// </example>
 			/// <param name="jsonString">The JSON string containing the page</param>
 			/// <returns>A Page</returns>
 			/// <exception cref="JsonDataException">Thrown when there was a problem deserializing the page</exception>
@@ -519,6 +502,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="pages">the List of Pages to serialize</param>
 			/// <returns>A JSON string containing the serialized pages</returns>
 			/// <exception cref="JsonDataException">Thrown when there was a problem serializing the page</exception>
+			[Obsolete]
 			public static string JsonFromList(List<Page> pages) {
 				try {
 					var serializedList = JsonConvert.SerializeObject(pages, 
@@ -560,10 +544,12 @@ namespace HomeSeer.Jui.Views {
 			/// Convert a list of JSON pages into a tabbed HTML page.
 			/// </summary>
 			/// <param name="jsonPages">A list of pages serialized as JSON strings</param>
+			/// <param name="selectedPage">The index of the page that should be selected by default</param>
 			/// <returns>A string containing a tabbed HTML page</returns>
 			/// <exception cref="ArgumentNullException">Thrown if the supplied list of pages is null</exception>
 			/// <exception cref="ArgumentException">Thrown if the list of pages is empty</exception>
-			public static string PageListToHtml(List<string> jsonPages) {
+			[Obsolete("Please use a SettingsCollection instead", true)]
+			public static string PageListToHtml(List<string> jsonPages, int selectedPage = 0) {
 
 				if (jsonPages == null) {
 					throw new ArgumentNullException(nameof(jsonPages));
@@ -605,7 +591,7 @@ namespace HomeSeer.Jui.Views {
 					sb.Append("\" role=\"tab\" aria-controls=\"");
 					sb.Append(page.Id);
 					sb.Append("\" aria-selected=\"");
-					sb.Append(pageIndex == 0 ? "true" : "false");
+					sb.Append(pageIndex == selectedPage ? "true" : "false");
 					sb.Append("\">");
 					sb.Append(page.Name);
 					//Close anchor

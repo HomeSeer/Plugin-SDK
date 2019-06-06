@@ -64,7 +64,7 @@ namespace HomeSeer.PluginSdk {
     void HSEvent(Constants.HSEvent EventType, object[] parms);
     string InitIO(string port);
     string InstanceFriendlyName();
-    InterfaceStatus InterfaceStatus();
+    PluginStatus OnStatusCheck();
     /// <summary>
     /// Interface for plugin specific calls
     /// </summary>
@@ -212,9 +212,9 @@ namespace HomeSeer.PluginSdk {
     /// Called by the HomeSeer software to obtain a list of settings pages
     /// </summary>
     /// <returns>
-    /// A List of Pages serialized to JSON strings
+    /// A SettingsCollection serialized to a JSON string
     /// </returns>
-    List<string> GetJuiSettingsPages();
+    string GetJuiSettingsPages();
 
     /// <summary>
     /// Save updated values for a HS-JUI formatted device config page

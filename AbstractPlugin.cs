@@ -18,9 +18,7 @@ namespace HomeSeer.PluginSdk {
         public bool IsShutdown { get; protected set; }
 
         public abstract bool HasSettings { get; }
-
-        protected List<Page> SettingsPages;
-        protected Dictionary<string, int> SettingsPageIndexes;
+        protected SettingsCollection Settings;
         //TODO feature pages
         
         //Chris says he rarely uses this to manage com ports with plugins
@@ -41,8 +39,8 @@ namespace HomeSeer.PluginSdk {
         public bool TriggerConfigured { get; }
         public string TriggerName { get; }
 
-        public IHsController HomeSeerSystem { get; set; }
-        public IAppCallbackAPI AppCallback { get; set; }
+        public IHsController HomeSeerSystem { get; private set; }
+        public IAppCallbackAPI AppCallback { get; private set; }
 
         protected const string SettingsSectionName = "Settings";
         protected abstract string SettingsFileName { get; }
@@ -58,9 +56,8 @@ namespace HomeSeer.PluginSdk {
         
         #region Constructor
         
-        public AbstractPlugin() {
-            SettingsPages = new List<Page>();
-            SettingsPageIndexes = new Dictionary<string, int>();
+        protected AbstractPlugin() {
+            Settings = new SettingsCollection();
         }
         
         #endregion
@@ -182,12 +179,24 @@ namespace HomeSeer.PluginSdk {
         
         #region Settings
 
-        public abstract List<string> GetJuiSettingsPages();
+        public string GetJuiSettingsPages() {
+            
+            OnSettingsLoad();
+            return Settings.ToJsonString();
+        }
+
+        protected virtual void OnSettingsLoad() {}
 
         public bool SaveJuiSettingsPages(string jsonString) {
 
-            var deserializedPages = Page.Factory.ListFromJson(jsonString);
-            return OnSettingsChange(deserializedPages);
+            try {
+                var deserializedPages = Page.Factory.ListFromJson(jsonString);
+                return OnSettingsChange(deserializedPages);
+            }
+            catch (KeyNotFoundException exception) {
+                Console.WriteLine(exception);
+                throw new KeyNotFoundException("Cannot save settings; no settings pages exist with that ID.", exception);
+            }
         }
 
         protected abstract bool OnSettingsChange(List<Page> pages);
@@ -240,7 +249,7 @@ namespace HomeSeer.PluginSdk {
         public virtual bool SupportsConfigDeviceJui() => true;
         
         //TODO clean up the documentation here to better indicate how it should be used
-        public abstract InterfaceStatus InterfaceStatus();
+        public abstract PluginStatus OnStatusCheck();
         
         #endregion
         
@@ -470,7 +479,7 @@ namespace HomeSeer.PluginSdk {
         protected void LoadSettingsFromIni() {
             Console.WriteLine("Loading settings from INI");
             //TODO optimize this so that if no settings are saved, the process is skipped and default settings are written
-            foreach (var settingsPage in SettingsPages) {
+            foreach (var settingsPage in Settings) {
                 var pageValueMap = settingsPage.ToValueMap();
                 foreach (var settingPair in pageValueMap) {
                     var savedValue =
