@@ -174,18 +174,14 @@ namespace HomeSeer.Jui.Views {
 						sb.Append(GetIndentStringFromNumber(indent+3));
 						sb.Append("<label class=\"jui-toggle-text\" for=\"");
 						sb.Append(Id);
-						sb.Append(".");
-						sb.Append(option);
-						sb.Append("\">");
+						sb.Append(".option\">");
 						sb.Append(option);
 						sb.Append("</label>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
 						sb.Append("<span class=\"form-check jui-toggle-control\"><input type=\"radio\" id=\"");
 						sb.Append(Id);
-						sb.Append(".");
-						sb.Append(option);
-						sb.Append("\" class=\"form-check-input jui-input\" name=\"");
+						sb.Append(".option\" class=\"form-check-input jui-input\" name=\"");
 						sb.Append(Id);
 						sb.Append("\"");
 						if (optionCount == Selection) {
