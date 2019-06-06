@@ -56,9 +56,8 @@ namespace HomeSeer.Jui.Views {
         public SettingsCollection() { }
 
         [JsonConstructor]
-        public SettingsCollection(List<Page> pages, int selectedPageIndex) {
+        public SettingsCollection(List<Page> pages) {
             Pages = pages;
-            SelectedPageIndex = selectedPageIndex;
         }
 
         public void Add(Page page) {
