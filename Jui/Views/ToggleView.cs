@@ -98,12 +98,14 @@ namespace HomeSeer.Jui.Views {
 				case EToggleType.Switch:
 					sb.Append("<span class=\"switch jui-toggle-control\"><label><input type=\"checkbox\" class=\"jui-input\" id=\"");
 					sb.Append(Id);
-					sb.Append("\"><span class=\"lever\"/></label></span>");
+					sb.Append(IsEnabled ? "\" checked>" : "\">");
+					sb.Append("<span class=\"lever\"/></label></span>");
 					break;
 				case EToggleType.Checkbox:
 					sb.Append("class=\"jui-toggle-control\"><span class=\"form-check form-check-inline jui-toggle-checkbox\"><input type=\"checkbox\" class=\"form-check-input jui-input\" id=\"");
 					sb.Append(Id);
-					sb.Append("\"/> <label class=\"form-check-label jui-toggle-checkbox-label\" for=\"");
+					sb.Append(IsEnabled ? "\" checked>" : "\">");
+					sb.Append("<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"");
 					sb.Append(Id);
 					sb.Append("\"></label></span></span>");
 					break;
