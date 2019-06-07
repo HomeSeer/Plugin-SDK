@@ -27,7 +27,7 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Register a new plugin with HomeSeer
         /// <para>
-        /// This will add the specified ID/Name pair to HomeSeer's list of plugins to check when it runs through
+        /// This will add the specified ID/filename pair to HomeSeer's list of plugins to check when it runs through
         ///  the plugin initialization process.
         /// </para>
         /// </summary>
@@ -49,15 +49,23 @@ namespace HomeSeer.PluginSdk {
         void ClearINISection(string sectionName, string fileName);
         string GetINISetting(string sectionName, string key, string defaultVal, string fileName = "");
         void SaveINISetting(string sectionName, string key, string value, string fileName);
-        
+
         //TODO string GetINISection(string section, string FileName);
         //TODO string[] GetINISectionEx(string section, string FileName);
-        
+
         #endregion
-        
+
         #region Features/Pages
-        
-        string RegisterPage(WebPageDesc cbo);
+
+        /// <summary>
+        /// Register a feature page with HomeSeer. The PluginFilename must end with .html and not include the enclosing folder name.
+        /// The page must exist in the HomeSeer html folder as: PluginID/PluginFilename
+        /// </summary>
+        /// <param name="PluginId">The ID of the plugin</param>
+        /// <param name="PluginFilename">The filename of the page, ending with .html</param>
+        /// <param name="LinkText">The text that appears in the plugin menu</param>
+        /// <returns></returns>
+        string RegisterFeaturePage(string PluginId, string PluginFilename, string LinkText);
         void UnRegisterPage(WebPageDesc cbo);
         void RegisterHelpLink(WebPageDesc cbo);
        
