@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Reflection;
+using System.Text;
 using HomeSeer.Jui.Views;
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
@@ -17,39 +18,53 @@ namespace HomeSeer.PluginSdk {
         
         public bool IsShutdown { get; protected set; }
 
+        /// <inheritdoc />
         public abstract bool HasSettings { get; }
         protected SettingsCollection Settings;
-        //TODO feature pages
         
         //Chris says he rarely uses this to manage com ports with plugins
-        public virtual bool            HSCOMPort          { get; } = false;
-        public abstract string ID                 { get; }
-        public abstract string Name               { get; }
-        public virtual bool            ActionAdvancedMode { get; set; } = false;
+        public virtual bool HSCOMPort { get; } = false;
+        /// <inheritdoc />
+        public abstract string ID { get; }
+        /// <inheritdoc />
+        public abstract string Name { get; }
+        /// <inheritdoc />
+        public virtual int AccessLevel { get; } = 1;
+        /// <inheritdoc />
+        public virtual bool SupportsAddDevice { get; } = false;
+        /// <inheritdoc />
+        public virtual bool SupportsConfigDevice { get; } = false;
+        /// <inheritdoc />
+        public virtual bool SupportsConfigDeviceAll { get; } = false;
+        
+        
+        public virtual bool ActionAdvancedMode { get; set; } = false;
         //TODO HasTriggers
-        public virtual bool            HasTriggers        { get; } = false;
+        public virtual bool HasTriggers { get; } = false;
         //TODO TriggerCount
-        public virtual int             TriggerCount       { get; } = 0;
+        public virtual int  TriggerCount { get; } = 0;
 
-        public string ActionName { get; }
-        public bool Condition { get; set; }
-        public bool HasConditions { get; }
-        public int SubTriggerCount { get; }
-        public string SubTriggerName { get; }
-        public bool TriggerConfigured { get; }
-        public string TriggerName { get; }
+        public virtual int ActionCount { get; } = 0;
+        public virtual string ActionName { get; }
+        public virtual bool Condition { get; set; }
+        public virtual bool HasConditions { get; } = false;
+        public virtual int SubTriggerCount { get; } = 0;
+        public virtual string SubTriggerName { get; }
+        public virtual bool TriggerConfigured { get; }
+        public virtual string TriggerName { get; }
 
+        /// <summary>
+        /// An instance of the HomeSeer system
+        /// </summary>
         public IHsController HomeSeerSystem { get; private set; }
-        public IAppCallbackAPI AppCallback { get; private set; }
 
         protected const string SettingsSectionName = "Settings";
         protected abstract string SettingsFileName { get; }
         
         private const int HomeSeerPort = 10400;
         
-        private static IScsServiceClient<IHsController>   Client;
-        private static IScsServiceClient<IAppCallbackAPI> ClientCallback;
-
+        private static IScsServiceClient<IHsController> _client;
+        
         private string _ipAddress = "127.0.0.1";
 
         #endregion
@@ -64,6 +79,10 @@ namespace HomeSeer.PluginSdk {
         
         #region Startup and Shutdown
         
+        /// <summary>
+        /// Attempt to establish a connection to the HomeSeer system
+        /// </summary>
+        /// <param name="args">Command line arguments included in the execution of the program</param>
         public void Connect(string[] args) {
             
             foreach (var arg in args) {
@@ -78,8 +97,7 @@ namespace HomeSeer.PluginSdk {
                 }
             }
             
-            Client         = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), this);
-            ClientCallback = ScsServiceClientBuilder.CreateClient<IAppCallbackAPI>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), this);
+            _client         = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort), this);
             
             Connect(1);
         }
@@ -87,26 +105,16 @@ namespace HomeSeer.PluginSdk {
         private void Connect(int attempts) {
 
             try {
-                Client.Connect();
-                ClientCallback.Connect();
+                _client.Connect();
                 var apiVersion = 0D;
 
                 try {
-                    HomeSeerSystem       = Client.ServiceProxy;
+                    HomeSeerSystem       = _client.ServiceProxy;
                     apiVersion = HomeSeerSystem.APIVersion;
                     Console.WriteLine("Host API Version: " + apiVersion);
                 }
                 catch (Exception exception) {
                     Console.WriteLine(exception);
-                }
-
-                try {
-                    AppCallback = ClientCallback.ServiceProxy;
-                    apiVersion = AppCallback.APIVersion;
-                }
-                catch (Exception exception) {
-                    Console.WriteLine(exception);
-                    return;
                 }
 
 
@@ -116,15 +124,11 @@ namespace HomeSeer.PluginSdk {
                 Console.WriteLine("Cannot connect attempt " + attempts);
                 if (exception.Message.ToLower().Contains("timeout occurred.") && attempts < 6) {
                     Connect(attempts + 1);
-                    if (Client != null) {
-                        Client.Dispose();
-                        Client = null;
+                    if (_client != null) {
+                        _client.Dispose();
+                        _client = null;
                     }
-
-                    if (ClientCallback != null) {
-                        ClientCallback.Dispose();
-                        ClientCallback = null;
-                    }
+                    
                     return;
                 }
             }
@@ -135,10 +139,9 @@ namespace HomeSeer.PluginSdk {
                 HomeSeerSystem.RegisterPlugin(ID, Name);
                 do {
                     Thread.Sleep(10);
-                } while (Client.CommunicationState == CommunicationStates.Connected && !IsShutdown);
+                } while (_client.CommunicationState == CommunicationStates.Connected && !IsShutdown);
 				
-                Client.Disconnect();
-                ClientCallback.Disconnect();
+                _client.Disconnect();
 				
                 Thread.Sleep(2000); //?
             }
@@ -148,45 +151,69 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
+        /// <inheritdoc cref="IPlugin.InitIO"/>
         protected abstract void Initialize();
 
-        public virtual string InitIO(string port) {
-            var result = "";
+        /// <inheritdoc cref="IPlugin.InitIO"/>
+        /// <summary>
+        /// Called by HomeSeer to initialize the plugin.
+        /// <para>DO NOT OVERRIDE this method unless you are certain you need to modify the default behavior.</para>
+        /// <para>Perform all initialization logic in <see cref="Initialize"/></para>
+        /// </summary>
+        public virtual bool InitIO(string port) {
             try {
                 Console.WriteLine("InitIO");
                 LoadSettingsFromIni();
-                //register settings pages
-                Console.WriteLine("Registering JUI Settings Pages");
-                //HomeSeerSystem.RegisterJuiSettingsPages(SettingsPages.ToDictionary(p => p.Id, p => p.Name), ID);
-                Console.WriteLine("Initializing");
+                Console.WriteLine("Calling Initialize");
                 Initialize();
+                return true;
             }
             catch (Exception exception) {
                 Console.WriteLine(exception);
                 IsShutdown = true;
-                result     = "Error on InitIO: " + exception.Message;
+                throw new Exception("Error on InitIO: " + exception.Message, exception);
             }
             
-            return result;
         }
         
-        public virtual void ShutdownIO() {
+        /// <inheritdoc />
+        public void ShutdownIO() {
+
+            try {
+                OnShutdown();
+            }
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+            }
             
             IsShutdown = true;
         }
-        
+
+        /// <summary>
+        /// Called right before the plugin shuts down.
+        /// </summary>
+        protected virtual void OnShutdown() { }
+
         #endregion
         
         #region Settings
 
+        /// <inheritdoc cref="IPlugin.GetJuiSettingsPages"/>
         public string GetJuiSettingsPages() {
             
             OnSettingsLoad();
             return Settings.ToJsonString();
         }
 
+        /// <summary>
+        /// Called right before the data held in Settings is serialized and sent to HomeSeer.
+        /// <para>
+        /// Use this if you need to process anything when the plugin settings are loaded.
+        /// </para>
+        /// </summary>
         protected virtual void OnSettingsLoad() {}
 
+        /// <inheritdoc cref="IPlugin.SaveJuiSettingsPages"/>
         public bool SaveJuiSettingsPages(string jsonString) {
 
             try {
@@ -199,57 +226,65 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
+        /// <summary>
+        /// Called when there are changes to the plugin settings that need to be processed and saved
+        /// </summary>
+        /// <param name="pages">A list of JUI pages containing only the new state of any changed views</param>
+        /// <returns>
+        /// TRUE if the save was successful; FALSE if it was not
+        /// <para>
+        /// You should throw an exception including a detailed message whenever possible over returning FALSE
+        /// </para>
+        /// </returns>
         protected abstract bool OnSettingsChange(List<Page> pages);
+        
+        /// <summary>
+        /// Loads the plugin settings saved to INI and saves default values if none exist.
+        /// <para>
+        /// This is automatically called during InitIO
+        /// </para>
+        /// </summary>
+        protected void LoadSettingsFromIni() {
+            Console.WriteLine("Loading settings from INI");
+            //Get the whole section for settings
+            var savedSettings = HomeSeerSystem.GetIniSection(SettingsSectionName, SettingsFileName);
+            //Loop through each settings page
+            foreach (var settingsPage in Settings) {
+                //Build a map of settings on the page
+                var pageValueMap = settingsPage.ToValueMap();
+                //Loop through each setting
+                foreach (var settingPair in pageValueMap) {
+                    //If there is a saved value for the setting
+                    // Always true after the first time the plugin starts
+                    if (savedSettings.ContainsKey(settingPair.Key)) {
+                        //Pull the saved value into memory
+                        settingsPage.UpdateViewValueById(settingPair.Key, savedSettings[settingPair.Key]);
+                        //Go to the next setting
+                        continue;
+                    }
+                    
+                    //Save the setting if there is no default value already saved
+                    HomeSeerSystem.SaveINISetting(SettingsSectionName, settingPair.Key, settingPair.Value, SettingsFileName);     
+                }
+            }
+        }
         
         #endregion
         
         #region Configuration and Status Info
-
-        public virtual int AccessLevel() => 1;
-
-        //This is always CA_IO
-        public int Capabilities() => (int) Constants.eCapabilities.CA_IO;
         
-        //This is always the same as the name now
-        public string InstanceFriendlyName() => Name;
+        /// <inheritdoc cref="IPlugin.OnStatusCheck"/>
+        public abstract PluginStatus OnStatusCheck();
+
         
+
         //TRUE to indicate that the plugin should receive device change events
         //FALSE to indicate that the plugin should not receive any device change events
-        public virtual bool RaisesGenericCallbacks() {
-            //TODO assess this method
-            return false;
-        }
-
-        //This indicates that the plugin supports the ability to add devices but was never fully implemented
-        public virtual bool SupportsAddDevice() {
-            //TODO device add screen
-            return false;
-        }
-
-        //This indicates that the plugin supports the device config screen for devices mapped to their interface
-        public virtual bool SupportsConfigDevice() {
-            //TODO device config screen
-            return false;
-        }
-
-        //This indicates that the plugin supports the device config screen for all devices on the system
-        public virtual bool SupportsConfigDeviceAll() => false;
-
-        //Used to lazily implement multi-device support
-        public bool SupportsMultipleInstances() => false;
-
-        //DEPRECATED -> Plugins should no longer support multiple instances
-        public bool SupportsMultipleInstancesSingleEXE() => false;
-
-        public virtual int ActionCount() {
-            //TODO ActionCount
-            return 0;
-        }
+        public virtual bool RaisesGenericCallbacks { get; } = false;
         
         public virtual bool SupportsConfigDeviceJui() => true;
         
-        //TODO clean up the documentation here to better indicate how it should be used
-        public abstract PluginStatus OnStatusCheck();
+        
         
         #endregion
         
@@ -285,43 +320,6 @@ namespace HomeSeer.PluginSdk {
         
         public virtual string SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
             throw new System.NotImplementedException();
-        }
-        
-        #endregion
-        
-        #region Features
-
-        public virtual string GetPagePlugin(string page, string user, int userRights, string queryString) {
-            //TODO GetPagePlugin
-            return "";
-        }
-        
-        public virtual string PostBackProc(string page, string data, string user, int userRights) {
-            //TODO PostBackProc
-            return "";
-        }
-        
-        public virtual string ExecuteActionById(string actionId, Dictionary<string, string> @params) {
-            //TODO ExecuteActionById
-            return "";
-        }
-
-        public virtual string GetJuiPagePlugin(string pageId) {
-            //TODO GetJuiPagePlugin
-            return "";
-        }
-        
-        public virtual string SaveJuiPage(string pageContent) {
-            //TODO SaveJuiPage
-            return "";
-        }
-        
-        #endregion
-        
-        #region Events
-
-        public virtual void HSEvent(Constants.HSEvent EventType, object[] parms) {
-            //TODO process events
         }
         
         public virtual bool ActionReferencesDevice(TrigActInfo ActInfo, int dvRef) {
@@ -388,77 +386,114 @@ namespace HomeSeer.PluginSdk {
         }
         
         #endregion
+        
+        #region Features
 
-        #region Deprecated
-
-        public string PagePut(string data) {
-            return null;
+        public virtual string GetPagePlugin(string page, string user, int userRights, string queryString) {
+            //TODO GetPagePlugin
+            return "";
         }
         
-        public string GenPage(string link) {
-            return null;
+        public virtual string PostBackProc(string page, string data, string user, int userRights) {
+            //TODO PostBackProc
+            return "";
+        }
+        
+        public virtual string ExecuteActionById(string actionId, Dictionary<string, string> @params) {
+            //TODO ExecuteActionById
+            return "";
+        }
+
+        public virtual string GetJuiPagePlugin(string pageId) {
+            //TODO GetJuiPagePlugin
+            return "";
+        }
+        
+        public virtual string SaveJuiPage(string pageContent) {
+            //TODO SaveJuiPage
+            return "";
+        }
+        
+        #endregion
+        
+        #region Events
+
+        public virtual void HSEvent(Constants.HSEvent EventType, object[] @params) {
+            //TODO process events
+        }
+
+        public string GetActionNameByNumber(int actionNum) {
+            throw new NotImplementedException();
+        }
+
+        public bool TriggerHasConditions(int triggerNum) {
+            throw new NotImplementedException();
+        }
+
+        public int GetSubTriggerCount(int triggerNum) {
+            throw new NotImplementedException();
+        }
+
+        public string GetSubTriggerNameByNumber(int triggerNum, int subTriggerNum) {
+            throw new NotImplementedException();
+        }
+
+        public bool IsTriggerConfigValid(TrigActInfo trigInfo) {
+            throw new NotImplementedException();
+        }
+
+        public string GetTriggerNameByNumber(int triggerNum) {
+            throw new NotImplementedException();
         }
 
         #endregion
 
         #region Dynamic Method/Property Calls
 
-        public object PluginFunction(string procName, object[] parms) {
-            try
-            {
-                Type ty = this.GetType();
-                MethodInfo mi = ty.GetMethod(procName);
-                if (mi == null)
-                {
-                    //Log("Method " + proc + " does not exist in this plugin.", LogType.LOG_TYPE_ERROR);
-                    return null;
-                }
-                return (mi.Invoke(this, parms));
+        /// <inheritdoc cref="IPlugin.PluginFunction"/>
+        public object PluginFunction(string procName, object[] @params) {
+            try {
+                var ty = GetType();
+                var mi = ty.GetMethod(procName);
+                return mi == null ? null : mi.Invoke(this, @params);
             }
-            catch (Exception ex)
-            {
-                //Log("Error in PluginProc: " + ex.Message, LogType.LOG_TYPE_ERROR);
+            catch (Exception exception) {
+                Console.WriteLine(exception.Message);
             }
 
             return null;
         }
 
-        public object PluginPropertyGet(string procName, object[] parms) {
-            try
-            {
-                Type ty = this.GetType();
-                PropertyInfo mi = ty.GetProperty(procName);
-                if (mi == null)
-                {
-                    //Log("Method " + proc + " does not exist in this plugin.", LogType.LOG_TYPE_ERROR);
-                    return null;
-                }
-                return mi.GetValue(this, null);
+        /// <inheritdoc cref="IPlugin.PluginPropertyGet"/>
+        public object PluginPropertyGet(string propName, object[] @params) {
+            try {
+                var ty = GetType();
+                var mi = ty.GetProperty(propName);
+                return mi == null ? null : mi.GetValue(this, null);
             }
-            catch (Exception ex)
-            {
-                //Log("Error in PluginProc: " + ex.Message, LogType.LOG_TYPE_ERROR);
+            catch (Exception exception) {
+                Console.WriteLine(exception.Message);
             }
+            
             return null;
         }
 
-        public void PluginPropertySet(string procName, object value) {
-            try
-            {
-                Type ty = this.GetType();
-                PropertyInfo mi = ty.GetProperty(procName);
-                if (mi == null)
-                {
-                    //Log("Property " + proc + " does not exist in this plugin.", LogType.LOG_TYPE_ERROR);
+        /// <inheritdoc cref="IPlugin.PluginPropertySet"/>
+        public void PluginPropertySet(string propName, object value) {
+            try {
+                var ty = GetType();
+                var mi = ty.GetProperty(propName);
+                if (mi == null) {
+                    //TODO log
+                    var message = new StringBuilder("Property ").Append(propName).Append(" does not exist in this plugin.");
+                    Console.WriteLine(message);
                 }
-                else
-                {
+                else {
                     mi.SetValue(this, value, null);
                 }                
             }
-            catch (Exception ex)
-            {
-                //Log("Error in PluginPropertySet: " + ex.Message, LogType.LOG_TYPE_ERROR);
+            catch (Exception exception) {
+                Console.WriteLine(exception.Message);
             }
         }
 
@@ -474,31 +509,7 @@ namespace HomeSeer.PluginSdk {
         //Deprecated? Rich might have a new/better approach for this
         public void SpeakIn(int device, string txt, bool w, string host) {
             //TODO SpeakIn
-        }
-
-        protected void LoadSettingsFromIni() {
-            Console.WriteLine("Loading settings from INI");
-            //TODO optimize this so that if no settings are saved, the process is skipped and default settings are written
-            foreach (var settingsPage in Settings) {
-                var pageValueMap = settingsPage.ToValueMap();
-                foreach (var settingPair in pageValueMap) {
-                    var savedValue =
-                        HomeSeerSystem.GetINISetting(SettingsSectionName,
-                                                     settingPair.Key,
-                                                     null,
-                                                     SettingsFileName);
-                    //Check if a value was previously saved
-                    if (savedValue == null) {
-                        //Save the default value when nothing has previously been saved
-                        HomeSeerSystem.SaveINISetting(SettingsSectionName, settingPair.Key, settingPair.Value, SettingsFileName);
-                        continue;
-                    }
-
-                    settingsPage.UpdateViewValueById(settingPair.Key, savedValue);       
-                    
-                }
-            }
-        }
+        }        
 
     }
 

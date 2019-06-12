@@ -66,8 +66,6 @@
 		<Compile Include="Energy\EnergyData.cs" />
 		<Compile Include="Energy\EnergyGraph.cs" />
 		<Compile Include="Energy\EnergyGraphData.cs" />
-		<Compile Include="HsController.cs" />
-		<Compile Include="IAppCallbackAPI.cs" />
 		<Compile Include="IHsController.cs" />
 		<Compile Include="PluginStatus.cs" />
 		<Compile Include="IPlugin.cs" />
@@ -104,7 +102,6 @@
 		<Compile Include="Speech\IFromSpeaker.cs" />
 		<Compile Include="Speech\ISpeechAPI.cs" />
 		<Compile Include="Speech\RemoteHost.cs" />
-		<Compile Include="WebPageDesc.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Include="packages.config" />

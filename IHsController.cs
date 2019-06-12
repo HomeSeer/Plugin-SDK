@@ -17,12 +17,13 @@ namespace HomeSeer.PluginSdk {
     [ScsService]
     public interface IHsController {
 
-        double APIVersion               { get; }
+        double APIVersion { get; }
         //TODO bool   DayLightSavings          { get; }
         //TODO int    DebugMode                { get; set; }
         //TODO string ScheduleFile             { get; set; }
         //TODO bool   ShuttingDown             { get; }
         //TODO int    WEBStatsPageViews        { get; set; }
+        int DeviceCount { get; }
         
         /// <summary>
         /// Register a new plugin with HomeSeer
@@ -50,74 +51,137 @@ namespace HomeSeer.PluginSdk {
         string GetINISetting(string sectionName, string key, string defaultVal, string fileName = "");
         void SaveINISetting(string sectionName, string key, string value, string fileName);
 
-        //TODO string GetINISection(string section, string FileName);
-        //TODO string[] GetINISectionEx(string section, string FileName);
+        Dictionary<string, string> GetIniSection(string section, string fileName);
 
         #endregion
 
         #region Features/Pages
 
         /// <summary>
-        /// Register a feature page with HomeSeer. The PluginFilename must end with .html and not include the enclosing folder name.
-        /// The page must exist in the HomeSeer html folder as: PluginID/PluginFilename
+        /// Register a feature page to create a link to it in the navigation menu in HomeSeer.
+        /// <para>
+        /// The PluginFilename must end with .html and not include the enclosing folder name.
+        ///   The page must exist in the HomeSeer html folder as: PluginID/PluginFilename
+        /// </para>
         /// </summary>
-        /// <param name="PluginId">The ID of the plugin</param>
-        /// <param name="PluginFilename">The filename of the page, ending with .html</param>
-        /// <param name="LinkText">The text that appears in the plugin menu</param>
-        /// <returns></returns>
-        string RegisterFeaturePage(string PluginId, string PluginFilename, string LinkText);
-        void UnRegisterPage(WebPageDesc cbo);
-        void RegisterHelpLink(WebPageDesc cbo);
-       
-        //TODO void SetPageContentType(string pageName, string contentType);
-        //TODO string GetPageFooter(bool NoEndTags = false);
-        //TODO string GetPageHeader(string pageName, string title, string extra_meta, string HSOnload,bool ExcludeNavLinks,bool NoHeader, bool HeadContentOnly = false, bool BodyContentOnly = false,bool BodyOnLoadOnly = false);
-        //TODO string GetPageHeaderRaw(string pageName, string title, string extra_meta, string HSOnload,bool ExcludeNavLinks,bool NoHeader, bool HeadContentOnly = false, bool BodyContentOnly = false,bool BodyOnLoadOnly = false);
-#pragma warning disable 1587
+        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pageFilename">The filename of the page, ending with .html</param>
+        /// <param name="linkText">The text that appears in the navigation menu</param>
+        void RegisterFeaturePage(string pluginId, string pageFilename, string linkText);
+
         /// <summary>
-        /// Register a list of HTML feature page names for this plugin instance
+        /// Unregister a feature page to remove any navigation links to the page.
         /// </summary>
-        /// <param name="pageNames">A list of page names. Their order in this list is the order they will be presented in</param>
-        /// <param name="id">unique id of the plugin</param>
-        //void RegisterHtmlFeaturePages(List<string> pageNames, string id);
+        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pageFilename">
+        /// The filename of the page, ending with .html.
+        ///   This must be exactly the same as the filename used to register the page</param>
+        void UnregisterFeaturePage(string pluginId, string pageFilename);
+
         /// <summary>
-        /// Register a device inclusion wizard for this plugin instance
+        /// Register a page as the device inclusion process guide for this plugin.
+        /// <para>
+        /// There can only be one device inclusion process for each plugin.
+        ///   The page that is tagged as the device inclusion process will be displayed first in
+        ///  the list of features for the plugin and be shown in the list of devices users can add.
+        /// </para>
         /// </summary>
-        /// <param name="pageId">The ID of the page</param>
-        /// <param name="pageName">The title of the page displayed to users</param>
-        /// <param name="id">unique id of the plugin</param>
-#pragma warning restore 1587
-        //void RegisterJuiDeviceIncPage(string pageId, string pageName, string id);
+        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pageFilename">The filename of the page, ending with .html</param>
+        /// <param name="linkText">The text that appears in the navigation menu</param>
+        void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
+
         /// <summary>
-        /// Register a list of HS-JUI feature pages for this plugin instance
+        /// Unregister the device inclusion page for this plugin.
         /// </summary>
-        /// <param name="pages">A Map of page IDs and page Names. Their order in this list is the order they will be presented in</param>
-        /// <param name="id">unique id of the plugin</param>
-        //void RegisterJuiFeaturePages(Dictionary<string, string> pages, string id);
-        
-        void UnRegisterHelpLinks(string plugin_name, string plugin_instance);
-        /// <summary>
-        /// Unregister all pages of a certain type for a plugin instance
-        /// </summary>
-        /// <param name="pageType">The type of page to unregister. See HomeSeer.Jui.Types.EPageType for a list of values</param>
-        /// <param name="id">unique id of the plugin</param>
-        void UnregisterJuiPagesByType(int pageType, string id);
+        /// <param name="pluginId">The ID of the plugin</param>
+        void UnregisterDeviceIncPage(string pluginId);
         
         #endregion
         
         #region Devices
         
+        #region Create
+        
+        int NewDeviceRef(string Name);
+        //TODO int NewDevice(string Name);
+        
+        #endregion
+        
+        #region Read
+        
         object GetDeviceByRef(int @ref);
         object GetDeviceEnumerator();
+        
+        //VSP
+        
+        VSPair DeviceVSP_Get(int dvRef, double Value, Constants.ePairStatusControl VSPType);
+        string DeviceVSP_GetStatus(int dvRef, double Value, Constants.ePairStatusControl VSPType);
+        VSPair[] DeviceVSP_GetAllStatus(int dvRef);
+        int DeviceVSP_CountStatus(int dvRef);
+        int DeviceVSP_CountControl(int dvRef);
+        int DeviceVSP_CountAll(int dvRef);
+        bool DeviceVSP_PairsProtected(int dvRef);
+        
+        //VGP
+        
+        VGPair DeviceVGP_Get(int dvRef, double Value);
+        int DeviceVGP_Count(int dvRef);
+        string DeviceVGP_GetGraphic(int dvRef, double Value);
+        bool DeviceVGP_PairsProtected(int dvRef);
+        
+        bool DeviceExistsRef(int dvRef);
+        int DeviceExistsAddress(string Address, bool CaseSensitive);
+        int DeviceExistsAddressFull(string Address, bool CaseSensitive);
+        int DeviceExistsCode(string Code);
+        
+        int GetDeviceRef(string sAddress);
+        int GetDeviceRefByName(string device_name);
+        int GetDeviceParentRefByRef(int @ref);
+        string GetDeviceCode(string Name);
+        //TODO object GetDeviceEnumeratorUser(string user); -> This returns a DeviceClass
+        string GetNextVirtualCode();
+        
+        int DeviceValue(int dvRef);
+        double DeviceValueEx(int dvRef);
+        int DeviceValueByName(string devname);
+        double DeviceValueByNameEx(string devname);
+        string DeviceString(int dvRef);
+        string DeviceStringByName(string Name);
+        int DeviceTime(int dvRef);
+        int DeviceTimeByName(string dev_name);
+        DateTime DeviceDateTime(int dvRef);
+        DateTime DeviceLastChange(string Address);
+        DateTime DeviceLastChangeRef(int dvRef);
+        string DeviceName(int dvRef);
+        bool IsOff(int dvRef);
+        bool IsON(int dvRef);
+        bool IsOffByName(string dev_name);
+        bool IsOnByName(string dev_name);
+        
+
+        //TODO ICAPIStatus CAPIGetStatus(int dvRef);
+        //TODO CAPIControl[] CAPIGetControl(int dvRef);
+        //TODO CAPIControl[] CAPIGetControlEx(int dvRef,bool SingleRangeEntry);
+        //TODO CAPIControl CAPIGetSingleControl(int dvRef,bool SingleRangeEntry, string Label,bool ExactCase, bool Contains);
+        //TODO CAPIControl CAPIGetSingleControlByUse(int dvRef, Constants.ePairControlUse UseType);
+        
+        #endregion
+        
+        #region Update
+        
         void SetDeviceValueByRef(int dvRef, double Valuenum, bool trigger);
         void SetDeviceString(int dvRef, string st, bool reset);
-        bool DeleteDevice(int dvRef);
-        int NewDeviceRef(string Name);
-        void SaveEventsDevices();
         void DeviceVSP_ClearAll(int dvRef, bool TrueConfirm);
+        bool DeviceVSP_ClearAny(int dvRef, double Value);
+        bool DeviceVSP_ClearBoth(int dvRef, double Value);
+        bool DeviceVSP_ClearControl(int dvRef, double Value);
+        bool DeviceVSP_ClearStatus(int dvRef, double Value);
+        bool DeviceVSP_ChangePair(int dvRef, VSPair Existing, Constants.ePairStatusControl NewType);
         bool DeviceVSP_AddPair(int dvRef, VSPair Pair);
         bool DeviceVGP_AddPair(int dvRef, VGPair Pair);
         void DeviceVGP_ClearAll(int dvRef, bool TrueConfirm);
+        bool DeviceVGP_Clear(int dvRef, double Value);
         void DeviceProperty_Int(int dvRef, Constants.eDeviceProperty Prop, int Value);
         void DeviceProperty_String(int dvRef, Constants.eDeviceProperty Prop, string Value);
         void DeviceProperty_StrArray(int dvRef, Constants.eDeviceProperty Prop, string[] Value);
@@ -127,90 +191,34 @@ namespace HomeSeer.PluginSdk {
         void DeviceProperty_dvMISC(int dvRef, Constants.eDeviceProperty Prop, Constants.dvMISC Value);
         void DeviceProperty_PlugData(int dvRef, Constants.eDeviceProperty Prop, PlugExtraData Value);
         
-        //TODO void DeleteIODevices(string pluginName, string pluginInstance);
-        //TODO bool DeviceExistsRef(int dvRef);
-        //TODO int DeviceExistsAddress(string Address, bool CaseSensitive);
-        //TODO int DeviceExistsAddressFull(string Address, bool CaseSensitive);
-        //TODO int DeviceExistsCode(string Code);
-        //TODO int GetDeviceRef(string sAddress);
-        //TODO int GetDeviceRefByName(string device_name);
-        //TODO int GetDeviceParentRefByRef(int @ref);
-        //TODO string GetDeviceCode(string Name);
+        void SetDeviceValue(string Address, double Value);
+        void SetDeviceValueByName(string devname, double Value);
+        void SetDeviceStringByName(string devname, string strval, bool reset_lastchange);
+        void SetDeviceLastChange(int dvRef, DateTime change_time);
         
-        //TODO object GetDeviceEnumeratorUser(string user);
-        //TODO string GetNextVirtualCode();
-        //TODO int DeviceValue(int dvRef);
-        //TODO double DeviceValueEx(int dvRef);
-        //TODO int DeviceValueByName(string devname);
-        //TODO double DeviceValueByNameEx(string devname);
-        //TODO void SetDeviceValue(string Address, double Value);
+        #endregion
         
-        //TODO void SetDeviceValueByName(string devname, double Value);
-        //TODO string DeviceString(int dvRef);
-        //TODO string DeviceStringByName(string Name);
+        #region Delete
         
-        //TODO void SetDeviceStringByName(string devname, string strval, bool reset_lastchange);
-        //TODO bool DeviceScriptButton_Add(int dvRef, string Label, string ScriptFile, string ScriptFunc, string ScriptParm,ushort Row, ushort Column, ushort ColumnSpan);
-        //TODO bool DeviceScriptButton_Delete(int dvRef, string Label);
-        //TODO void DeviceScriptButton_DeleteAll(int dvRef);
-        //TODO string[] DeviceScriptButton_List(int dvRef);
-        //TODO bool DeviceScriptButton_Location(int dvRef, string Label, ushort Row, ushort Column, ushort ColumnSpan);
-        //TODO bool DeviceScriptButton_AddButton(int dvRef, string Label, double Value, string ScriptFile,string ScriptFunc,string ScriptParm, ushort Row, ushort Column, ushort ColumnSpan);
-        //TODO bool DeviceScriptButton_DeleteButton(int dvRef, double Value);
-        //TODO bool DeviceScriptButton_Locate(int dvRef, double Value, ushort Row, ushort Column, ushort ColumnSpan);
-        //TODO int DeviceTime(int dvRef);
-        //TODO int DeviceTimeByName(string dev_name);
-        //TODO DateTime DeviceDateTime(int dvRef);
-        //TODO void SetDeviceLastChange(int dvRef, DateTime change_time);
-        //TODO DateTime DeviceLastChange(string Address);
-        //TODO DateTime DeviceLastChangeRef(int dvRef);
-        //TODO string DeviceName(int dvRef);
-        //TODO bool DeviceNoLog(int dvRef);
-        //TODO bool DeviceInvalidValue { get; set; }
+        bool DeleteDevice(int dvRef);
+        //TODO void DeleteIODevices(string pluginName, string pluginInstance); -> Plugins operate by ID now; how do we handle this?
         
-        //TODO bool IsOff(int dvRef);
-        //TODO bool IsON(int dvRef);
-        //TODO int NewDevice(string Name);
+        #endregion
+
+        void SaveEventsDevices();
+        bool DeviceNoLog(int dvRef);
+        //TODO bool DeviceInvalidValue { get; set; } -> What is this designed to do?
         
-        //TODO bool IsOffByName(string dev_name);
-        //TODO bool IsOnByName(string dev_name);
-        //TODO int DeviceCount { get; }
-        //TODO int DeviceVSP_CountStatus(int dvRef);
-        //TODO int DeviceVSP_CountControl(int dvRef);
-        //TODO int DeviceVSP_CountAll(int dvRef);
-        
-        //TODO bool DeviceVSP_ClearAny(int dvRef, double Value);
-        //TODO bool DeviceVSP_ClearBoth(int dvRef, double Value);
-        //TODO bool DeviceVSP_ClearControl(int dvRef, double Value);
-        //TODO bool DeviceVSP_ClearStatus(int dvRef, double Value);
-        //TODO bool DeviceVSP_PairsProtected(int dvRef);
-        //TODO string DeviceVGP_GetGraphic(int dvRef, double Value);
-        //TODO bool DeviceVGP_PairsProtected(int dvRef);
-        
+        Constants.CAPIControlResponse CAPIControlHandler(CAPIControl CC);
+        Constants.CAPIControlResponse CAPIControlsHandler(CAPIControl[] CC);
+
         #endregion
         
         #region DateTime
         
-        //TODO DateTime SolarNoon    { get; }
-        //TODO string   Sunrise      { get; }
-        //TODO DateTime SunriseDt    { get; }
-        //TODO string   Sunset       { get; }
-        //TODO DateTime SunsetDt     { get; }
-        //TODO string   TimeZoneName { get; }
-        //TODO int DaysLeftInYear();
-        //TODO int DaysLeftInMonth();
-        //TODO int DaysInMonth(DateTime inDate);
-        //TODO DateTime GetLastWeekday(DateTime ForMonth);
-        //TODO bool IsWeekend(DateTime inDate);
-        //TODO bool IsWeekday(DateTime inDate);
-        //TODO int LocalTimeZone();
-        //TODO void Moon(DateTime dtStart, ref DateTime NMoon, ref DateTime FMoon, ref double CurCycle, ref string Desc);
-        //TODO int WeeksLeftInYear();
-        //TODO int WeeksLeftInYearEx(int WeekMode);
-        //TODO int WeekNumber(DateTime inDate);
-        //TODO int WeekNumberEx(DateTime inDate, int WeekMode);
-        //TODO int WeekEndDays(DateTime dtStart, DateTime dtEnd);
-        //TODO int WeekDays(DateTime dtStart, DateTime dtEnd);
+        DateTime SolarNoon { get; }
+        DateTime Sunrise { get; }
+        DateTime Sunset { get; }
         
         #endregion
         
@@ -222,6 +230,11 @@ namespace HomeSeer.PluginSdk {
         //TODO void ClearLog();
         //TODO bool NoLog { get; set; }
         //TODO string LogGet();
+        //TODO LogEntry[] GetLog_Date(DateTime StartDate, DateTime EndDate);
+        //TODO LogEntry[] GetLog_Date_Text(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx);
+        //TODO LogEntry[] GetLog_Date_Priority(DateTime StartDate, DateTime EndDate, int Priority_Start, int Priority_End,bool Show_No_Priority);
+        //TODO LogEntry[] GetLog_Date_ErrorCode(DateTime StartDate, DateTime EndDate, int ErrorCode);
+        //TODO LogEntry[] GetLog_FullFilter(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx, int Priority_Start, int Priority_End,bool Show_No_Priority,int ErrorCode, bool ShowAllErrorCode);
         
         #endregion
         
@@ -234,6 +247,16 @@ namespace HomeSeer.PluginSdk {
         //TODO SortedList<int, string> Energy_GetGraphDataIDs();
         //TODO SortedList<int, string> Energy_GetEnergyRefs(bool GetParentRefs);
         //TODO System.Drawing.Image Energy_GetGraph(int id, string dvRefs, int width, int height, string format);
+        //TODO bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
+        //TODO bool Energy_AddData(int dvRef, EnergyData Data);
+        //TODO bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
+        //TODO List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
+        //TODO List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
+        //TODO List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
+        //TODO EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
+        //TODO EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
+        //TODO int Energy_SaveGraphData(EnergyGraphData Data);
+        //TODO EnergyGraphData Energy_GetGraphData(int ID);
         
         #endregion
         
@@ -259,13 +282,17 @@ namespace HomeSeer.PluginSdk {
         
         #region System
         
-        //TODO string Version();
-        //TODO Constants.editions GetHSEdition();
-        //TODO string GetUsers();        
+        string Version();
+        Constants.editions GetHSEdition();
+        string GetUsers();        
+        bool IsLicensed();
+        bool IsRegistered();
+        System.Collections.SortedList GetLocationsList();
+        System.Collections.SortedList GetLocations2List();
+        int CheckRegistrationStatus(string piname);
+        
         //TODO int InterfaceVersion();
         //TODO bool IsApplicationRunning(string ApplicationName);
-        //TODO bool IsLicensed();
-        //TODO bool IsRegistered();
         //TODO string RecurseFiles(string SourceDir);
         //TODO string[] RecurseFilesEx(string SourceDir);
         //TODO string GetAppPath();
@@ -285,34 +312,6 @@ namespace HomeSeer.PluginSdk {
         
         #endregion
         
-        #region Util
-        
-        //TODO void WaitSecs(double secs);
-        //TODO TimeSpan TimerValue(string TimerName);
-        //TODO void TimerReset(string TimerName);
-        //TODO void CounterDecrement(string CounterName);
-        //TODO void CounterIncrement(string CounterName);
-        //TODO void CounterReset(string CounterName);
-        //TODO double CounterValue(string CounterName);
-        //TODO string CreateVar(string Name);
-        //TODO void DeleteVar(string Name);
-        //TODO object GetVar(string Name);
-        //TODO string ReplaceVariables(string StrIn);
-        //TODO string SaveVar(string Name, object obj);
-        //TODO string DecryptString(string sToDecrypt, string sPassword, string KeyModifier = "");
-        //TODO string EncryptString(string sToEncrypt, string sPassword);
-        //TODO string EncryptStringEx(string sToEncrypt, string sPassword, string KeyModifier);
-        //TODO string UnZip(string filename);
-        //TODO string UnZipDest(string filename, string destination);
-        //TODO string UnZipDestIgnore(string filename, string destination, bool IgnoreZipDirs);
-        //TODO string UnZipEx(string filename, string destination, bool IgnoreZipDirs, bool OverWrite, string password);
-        //TODO string Zip(string WhatToZip, string zipFileName);
-        //TODO string ZipPass(string WhatToZip, string zipFileName, string pass);
-        //TODO string ZipLevel(string WhatToZip, string zipFileName, int level, string pass);
-        //TODO string ZipEx(string WhatToZip, string zipFileName, int level, string pass, bool RemoveBase, bool Flatten);
-        
-        #endregion
-        
         #region COM
         
         //TODO void CloseComPort(int port);
@@ -328,34 +327,46 @@ namespace HomeSeer.PluginSdk {
         
         #region Networking & Web
         
-        //TODO string FTP(string host, string username, string password, string command, string Path, string local_file, string remote_file);
-        //TODO string FTPLastError();
-        //TODO string GenCookieString(string Name, string Value, string expire = "", string path = "/");
-        //TODO string GetURL(string host_str, string page, bool strip_tags, int port, bool UTF8 = false);
-        //TODO object GetURLEx(string Host, string WebPage, string ElapsedTime, int Port = 80, bool Strip_Tags = false, bool ByteArray = false, string FileName = "");
-        //TODO string GetURLIE(string host, bool strip_tags);
-        //TODO string URLAction(string url, string action, string data, string headers);
         //TODO bool WEBCheckUserRights(int rights);
         //TODO string WEBLoggedInUser();
         //TODO bool WEBValidateUser(string username, string password);
         //TODO string GetIPAddress();
         //TODO string GetLastRemoteIP();
-        //TODO int ping(string host, int timeout = 0);
         //TODO string LANIP();
         //TODO string WANIP();
         //TODO int WebServerPort();
         //TODO int WebServerSSLPort();
         
+        //TODO string GenCookieString(string Name, string Value, string expire = "", string path = "/");
+        
         #endregion
         
         #region Images
         
-        //TODO object GetURLImage(string host_str, string page, bool strip_tags, int port, string filename = "");
-        //TODO string GetURLImageEx(string host_str, string page, string filename, int port = 80);
         //TODO bool WriteHTMLImageFile(byte[] ImageFile, string Dest, bool OverWrite);
         //TODO bool WriteHTMLImage(System.Drawing.Image Image, string Dest, bool OverWrite);
         //TODO bool DeleteImageFile(string DeleteFile);
         
+        #endregion
+        
+        #region AppCallback
+
+        //TODO void RegisterProxySpeakPlug(string   PIName, string PIInstance);
+        //TODO void UnRegisterProxySpeakPlug(string PIName, string PIInstance);
+
+        //TODO void RegisterGenericEventCB(string   GenericType, string   PIName, string PIInstance);
+        //TODO void UnRegisterGenericEventCB(string GenericType, string   PIName, string PIInstance);
+        //TODO void RaiseGenericEventCB(string      GenericType, object[] Parms,  string PIName, string PIInstance);
+        //TODO void RegisterEventCB(Constants.HSEvent evType, string PIName, string PIInstance);
+
+        //TODO TrigActInfo[] TriggerMatches(string     Plug_Name, int         TrigID,    int SubTrig);             // new
+        //TODO void          TriggerFire(string        Plug_Name, TrigActInfo TrigInfo);                           // new
+
+        //TODO TrigActInfo[] GetTriggers(string     PIName);
+        //TODO TrigActInfo[] GetActions(string      PIName);
+
+        //TODO string UpdatePlugAction(string PlugName, int evRef, TrigActInfo ActionInfo);
+
         #endregion
         
         //TODO bool AppStarting(bool wait = false);
@@ -372,50 +383,9 @@ namespace HomeSeer.PluginSdk {
         //TODO void SetRemoteTimeout(int timeout_seconds);
         //TODO void SetSecurityMode(bool mode);
         //TODO void WaitEvents();
-
-        #region Needs Rewrite
-        
         //TODO Constants.eOSType GetOSType();
         //TODO clsLastVR[] GetLastVRCollection();
         //TODO Constants.REGISTRATION_MODES PluginLicenseMode(string IfaceName);
-        //TODO Constants.CD_DAY_EvenOdd EvenOddDay(DateTime inDate);
-        //TODO Constants.CD_DAY_EvenOdd EvenOddMonth(DateTime indate);
-        //TODO DateTime GetSpecialDay(DayOfWeek DOW, Constants.CD_DAY_IS_TYPE inst,DateTime ForMonth, bool GetNext);
-        //TODO bool IsSpecialDay(DateTime inDate, DayOfWeek DOW,Constants.CD_DAY_IS_TYPE inst, DateTime ForMonth);
-        //TODO ICAPIStatus CAPIGetStatus(int dvRef);
-        //TODO CAPIControl[] CAPIGetControl(int dvRef);
-        //TODO CAPIControl[] CAPIGetControlEx(int dvRef,bool SingleRangeEntry);
-        //TODO CAPIControl CAPIGetSingleControl(int dvRef,bool SingleRangeEntry, string Label,bool ExactCase, bool Contains);
-        //TODO CAPIControl CAPIGetSingleControlByUse(int dvRef, Constants.ePairControlUse UseType);
-        //TODO Constants.CAPIControlResponse CAPIControlHandler(CAPIControl CC);
-        //TODO Constants.CAPIControlResponse CAPIControlsHandler(CAPIControl[] CC);
-        //TODO bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
-        //TODO bool Energy_AddData(int dvRef, EnergyData Data);
-        //TODO bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
-        //TODO List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
-        //TODO List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
-        //TODO List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
-        //TODO EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
-        //TODO EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
-        //TODO int Energy_SaveGraphData(EnergyGraphData Data);
-        //TODO EnergyGraphData Energy_GetGraphData(int ID);
-        
-        //TODO bool DeviceVSP_ChangePair(int dvRef, VSPair Existing, Constants.ePairStatusControl NewType);
-        //TODO VSPair DeviceVSP_Get(int dvRef, double Value, Constants.ePairStatusControl VSPType);
-        //TODO string DeviceVSP_GetStatus(int dvRef, double Value, Constants.ePairStatusControl VSPType);
-        //TODO VSPair[] DeviceVSP_GetAllStatus(int dvRef);
-        
-        //TODO int DeviceVGP_Count(int dvRef);
-        
-        //TODO bool DeviceVGP_Clear(int dvRef, double Value);
-        //TODO VGPair DeviceVGP_Get(int dvRef, double Value);
-        
-        //TODO LogEntry[] GetLog_Date(DateTime StartDate, DateTime EndDate);
-        //TODO LogEntry[] GetLog_Date_Text(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx);
-        //TODO LogEntry[] GetLog_Date_Priority(DateTime StartDate, DateTime EndDate, int Priority_Start, int Priority_End,bool Show_No_Priority);
-        //TODO LogEntry[] GetLog_Date_ErrorCode(DateTime StartDate, DateTime EndDate, int ErrorCode);
-        //TODO LogEntry[] GetLog_FullFilter(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx, int Priority_Start, int Priority_End,bool Show_No_Priority,int ErrorCode, bool ShowAllErrorCode);
-        #endregion
 
     }
 
