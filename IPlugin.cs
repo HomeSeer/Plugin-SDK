@@ -1,8 +1,14 @@
-using System.Collections.Generic;
 using HomeSeer.PluginSdk.CAPI;
 
 namespace HomeSeer.PluginSdk {
 
+    /// <summary>
+    /// The core plugin interface used by HomeSeer to interact with third-party plugins.
+    /// <para>
+    /// The <see cref="AbstractPlugin"/> class provides a default implementation of this interface
+    ///  that should be used to develop plugins.
+    /// </para>
+    /// </summary>
     public interface IPlugin {
         
         #region Properties
@@ -10,7 +16,7 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Unique ID for this plugin, needs to be unique for all plugins
         /// </summary>
-        string ID { get; }
+        string Id { get; }
         
         /// <summary>
         /// Whether HomeSeer is to manage the communications (COM) port for this plug-in or not
@@ -52,9 +58,6 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </summary>
         int AccessLevel { get; }
-
-        //TODO SupportsAddDevice -> What is the name presented in the list of add device options? / Instead of RegisterDeviceIncPage()?
-        bool SupportsAddDevice       { get; }
         
         /// <summary>
         /// Whether this plugin supports a device configuration page for devices created/managed by it
@@ -73,7 +76,12 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         bool SupportsConfigDeviceAll { get; }
         
-        //TODO RaisesGenericCallbacks -> What does this do?
+        //TODO RaisesGenericCallbacks -> What does this do? documentation
+        /// <summary>
+        /// Indicates to HomeSeer that this plugin...
+        /// <para>TRUE to indicate that the plugin should receive device change events</para>
+        /// <para>FALSE to indicate that the plugin should not receive any device change events</para>
+        /// </summary>
         bool RaisesGenericCallbacks { get; }
         
         /// <summary>
@@ -91,6 +99,9 @@ namespace HomeSeer.PluginSdk {
         /// <returns>TRUE if advanced mode is set, you may enable this mode if you detect advanced selections have already been made.</returns>
         bool ActionAdvancedMode { get; set; }
         
+        /// <summary>
+        /// The number of unique event actions the plugin supports
+        /// </summary>
         int ActionCount { get; }
         
         /// <summary>
@@ -99,7 +110,7 @@ namespace HomeSeer.PluginSdk {
         bool HasTriggers { get; }
         
         /// <summary>
-        /// Returns the number of triggers the plugin supports
+        /// The number of unique event triggers the plugin supports
         /// </summary>
         int TriggerCount { get; }
         
@@ -139,8 +150,18 @@ namespace HomeSeer.PluginSdk {
         
         #region Devices
         
-        string ConfigDevice(int @ref, string user, int userRights, bool newDevice);                            // changed name and parameter
-        Constants.ConfigDevicePostReturn ConfigDevicePost(int @ref, string data, string user, int userRights); // changed paramters
+        //TODO string ConfigDevice(int @ref, string user, int userRights, bool newDevice) -> replaced with new JUI Config Page
+        //TODO Constants.ConfigDevicePostReturn ConfigDevicePost(int @ref, string data, string user, int userRights) -> replaced with new JUI Config Page
+        /// <summary>
+        /// Called by the HomeSeer system when a device that this plugin owns is controlled.
+        /// <para>
+        /// A plugin owns a device when its Interface property is set to the plugin name.
+        /// </para>
+        /// </summary>
+        /// <param name="colSend">
+        /// A collection of <see cref="CAPIControl"/> objects,
+        ///  one for each device being controlled
+        /// </param>
         void SetIOMulti(System.Collections.Generic.List<CAPIControl> colSend);
         
         /// <summary>
@@ -159,15 +180,14 @@ namespace HomeSeer.PluginSdk {
         string SaveJuiDeviceConfigPage(string pageContent, int deviceRef);
         
         /// <summary>
-        /// Called by the HomeSeer software to determine if this plugin allows for device configuration, in HS-JUI format, via the device utility page
+        /// Called by the HomeSeer system when it needs the current status for a device owned by the plugin.
+        /// <para>
+        /// This should force the device to report its current status to HomeSeer.
+        /// </para>
         /// </summary>
-        /// <returns>
-        /// TRUE if the plugin supports a HS-JUI device configuration page
-        /// FALSE if the plugin does not support a HS-JUI device configuration page
-        /// </returns>
-        bool SupportsConfigDeviceJui();
-        
-        PollResultInfo PollDevice(int dvref);
+        /// <param name="devRef">The reference ID of the device to poll</param>
+        /// <returns>A <see cref="PollResultInfo"/> describing the current state of the device</returns>
+        PollResultInfo PollDevice(int devRef);
         
         #endregion
         
@@ -204,15 +224,14 @@ namespace HomeSeer.PluginSdk {
         /// <para>
         /// The parameters are passed in an array of objects.  Each entry in the array is a parameter.  
         /// The number of entries depends on the type of event and are described below.  
-        /// The event type is always present in the first entry or parms(0).
+        /// The event type is always present in the first entry or params(0).
         /// </para>
         /// </summary>
-        /// <param name="EventType"></param>
-        /// <param name="params"></param>
-        void HSEvent(Constants.HSEvent EventType, object[] @params);
+        /// <param name="eventType">The type of event that has occurred</param>
+        /// <param name="params">The data associated with the event</param>
+        void HsEvent(Constants.HSEvent eventType, object[] @params);
         
-        //TODO Condition -> Move into TrigActInfo as a property (IsCondition)
-        bool Condition { get; set; }
+        //TODO bool Condition -> Move into TrigActInfo as a property (IsCondition)
 
         #region Actions
         
@@ -224,14 +243,45 @@ namespace HomeSeer.PluginSdk {
         /// <returns>The name of the action associated with the action number</returns>
         string GetActionNameByNumber(int actionNum);
     
-        string ActionBuildUI(string sUnique, TrigActInfo ActInfo);
-        bool ActionConfigured(TrigActInfo ActInfo);
-        string ActionFormatUI(TrigActInfo ActInfo);
-        MultiReturn ActionProcessPostUI(System.Collections.Specialized.NameValueCollection PostData, TrigActInfo TrigInfoIN);
-        bool ActionReferencesDevice(TrigActInfo ActInfo, int dvRef);
+        /// <summary>
+        /// Called by the HomeSeer system when an event is in edit mode and in need of HTML controls for the user.
+        /// </summary>
+        /// <param name="unique">A unique string that can be used with your HTML controls to identify the control. All controls need to have a unique ID.</param>
+        /// <param name="actInfo">Object that contains information about the action like current selections.</param>
+        /// <returns>HTML controls that need to be displayed so the user can select the action parameters.</returns>
+        string ActionBuildUI(string unique, TrigActInfo actInfo);
+        
+        /// <summary>
+        /// Called by the HomeSeer system to verify that the configuration is valid and can be saved
+        /// </summary>
+        /// <param name="actInfo">Object describing the action.</param>
+        /// <returns>TRUE if the given action is configured properly; FALSE if the action shouldn't be saved</returns>
+        bool ActionConfigured(TrigActInfo actInfo);
 
-        /// <returns>true = OK, false = error</returns>
-        bool HandleAction(TrigActInfo ActInfo);
+        string ActionFormatUI(TrigActInfo actInfo);
+        
+        /// <summary>
+        /// Called by the HomeSeer system to process selections when a user edits your event actions.
+        /// </summary>
+        /// <param name="postData">A collection of name value pairs that include the user's selections.</param>
+        /// <param name="trigInfoIn">Object that contains information about the action.</param>
+        /// <returns>Object the holds the parsed information for the action. HomeSeer will save this information for you in the database.</returns>
+        MultiReturn ActionProcessPostUI(System.Collections.Specialized.NameValueCollection postData, TrigActInfo trigInfoIn);
+        
+        /// <summary>
+        /// Called by the HomeSeer system to determine if a specified device is referenced by a certain action.
+        /// </summary>
+        /// <param name="actInfo">Object describing the action.</param>
+        /// <param name="devRef">The reference ID of the device to check</param>
+        /// <returns>TRUE if the action references the device; FALSE if it does not</returns>
+        bool ActionReferencesDevice(TrigActInfo actInfo, int devRef);
+
+        /// <summary>
+        /// Called by the HomeSeer system when an event is triggered and the plugin needs to carry out a specific action.
+        /// </summary>
+        /// <param name="actInfo">Object describing the trigger and action.</param>
+        /// <returns>TRUE if the action was executed successfully; FALSE if there was an error</returns>
+        bool HandleAction(TrigActInfo actInfo);
         
         #endregion
         
@@ -273,11 +323,38 @@ namespace HomeSeer.PluginSdk {
         /// <returns>The name of the trigger</returns>
         string GetTriggerNameByNumber(int triggerNum);
     
-        string TriggerBuildUI(string sUnique, TrigActInfo TrigInfo);
-        string TriggerFormatUI(TrigActInfo TrigInfo);
-        MultiReturn TriggerProcessPostUI(System.Collections.Specialized.NameValueCollection PostData, TrigActInfo TrigInfoIN);
-        bool TriggerReferencesDevice(TrigActInfo TrigInfo, int dvRef);
-        bool TriggerTrue(TrigActInfo TrigInfo);
+        /// <summary>
+        /// Called by the HomeSeer system when an event is in edit mode and in need of HTML controls for the user.
+        /// </summary>
+        /// <param name="unique">A unique string that can be used with your HTML controls to identify the control. All controls need to have a unique ID.</param>
+        /// <param name="trigInfo">Object that contains information about the trigger like current selections.</param>
+        /// <returns>HTML controls that need to be displayed so the user can select the action parameters.</returns>
+        string TriggerBuildUI(string unique, TrigActInfo trigInfo);
+        
+        string TriggerFormatUI(TrigActInfo trigInfo);
+        
+        /// <summary>
+        /// Called by the HomeSeer system to process selections when a user edits your event triggers.
+        /// </summary>
+        /// <param name="postData">A collection of name value pairs that include the user's selections.</param>
+        /// <param name="trigInfoIn">Object that contains information about the trigger.</param>
+        /// <returns>Object the holds the parsed information for the trigger. HomeSeer will save this information for you in the database.</returns>
+        MultiReturn TriggerProcessPostUI(System.Collections.Specialized.NameValueCollection postData, TrigActInfo trigInfoIn);
+        
+        /// <summary>
+        /// Called by the HomeSeer system to determine if a specified device is referenced by a certain trigger.
+        /// </summary>
+        /// <param name="trigInfo">Object describing the trigger.</param>
+        /// <param name="devRef">The reference ID of the device to check</param>
+        /// <returns>TRUE if the trigger references the device; FALSE if it does not</returns>
+        bool TriggerReferencesDevice(TrigActInfo trigInfo, int devRef);
+        
+        /// <summary>
+        /// Called by HomeSeer when a trigger needs to be evaluated as a condition
+        /// </summary>
+        /// <param name="trigInfo">Object describing the trigger</param>
+        /// <returns>TRUE if the conditions are met; FALSE if they are not</returns>
+        bool TriggerTrue(TrigActInfo trigInfo);
         
         #endregion
         
@@ -308,7 +385,6 @@ namespace HomeSeer.PluginSdk {
         
         #endregion
         
-        
         //TODO GetPagePlugin -> Can we get rid of this since all new pages are loaded via HTML file?
         string GetPagePlugin(string page, string user, int userRights, string queryString);
         
@@ -322,21 +398,9 @@ namespace HomeSeer.PluginSdk {
         /// <param name="userRights">The user's rights</param>
         /// <returns></returns>
         string PostBackProc(string page, string data, string user, int userRights);
-        
-        //TODO Search -> I'm not sure this was ever used.  Can we get rid of it?
-        Constants.SearchReturn[] Search(string SearchString, bool RegEx);
-        //TODO SpeakIn -> Can we get rid of this? Is it even used?
-        void SpeakIn(int device, string txt, bool w, string host);
 
         //TODO ExecuteActionById -> What do we do with this now?
-        /// <summary>
-        /// Called by the HomeSeer software to run a particular procedure based on the action ID specified.  
-        /// This is called when a user clicks a button on one of the HS-JUI pages.
-        /// </summary>
-        /// <param name="actionId">The ID of the action to execute</param>
-        /// <param name="params">A map of view IDs and values</param>
-        /// <returns>A JSON serialized Jui.Message or Jui.Form</returns>
-        string ExecuteActionById(string actionId, Dictionary<string, string> @params);
+        //string ExecuteActionById(string actionId, Dictionary<string, string> @params);
 
     }
 

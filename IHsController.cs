@@ -18,12 +18,14 @@ namespace HomeSeer.PluginSdk {
     public interface IHsController {
 
         double APIVersion { get; }
-        //TODO bool   DayLightSavings          { get; }
-        //TODO int    DebugMode                { get; set; }
-        //TODO string ScheduleFile             { get; set; }
-        //TODO bool   ShuttingDown             { get; }
-        //TODO int    WEBStatsPageViews        { get; set; }
         int DeviceCount { get; }
+        
+        //TODO Properties
+        //bool   DayLightSavings          { get; }
+        //int    DebugMode                { get; set; }
+        //string ScheduleFile             { get; set; }
+        //bool   ShuttingDown             { get; }
+        //int    WEBStatsPageViews        { get; set; }
         
         /// <summary>
         /// Register a new plugin with HomeSeer
@@ -47,10 +49,18 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="sectionName">The section to clear</param>
         /// <param name="fileName">The name of the INI file to edit</param>
-        void ClearINISection(string sectionName, string fileName);
+        void ClearIniSection(string sectionName, string fileName);
+
         string GetINISetting(string sectionName, string key, string defaultVal, string fileName = "");
+
         void SaveINISetting(string sectionName, string key, string value, string fileName);
 
+        /// <summary>
+        /// Get a key-value map of settings saved in the specified section of the INI file
+        /// </summary>
+        /// <param name="section">The section to get</param>
+        /// <param name="fileName">The name of the INI file</param>
+        /// <returns>A Dictionary of setting keys and values</returns>
         Dictionary<string, string> GetIniSection(string section, string fileName);
 
         #endregion
@@ -78,24 +88,24 @@ namespace HomeSeer.PluginSdk {
         ///   This must be exactly the same as the filename used to register the page</param>
         void UnregisterFeaturePage(string pluginId, string pageFilename);
 
-        /// <summary>
-        /// Register a page as the device inclusion process guide for this plugin.
-        /// <para>
-        /// There can only be one device inclusion process for each plugin.
-        ///   The page that is tagged as the device inclusion process will be displayed first in
-        ///  the list of features for the plugin and be shown in the list of devices users can add.
-        /// </para>
-        /// </summary>
-        /// <param name="pluginId">The ID of the plugin</param>
-        /// <param name="pageFilename">The filename of the page, ending with .html</param>
-        /// <param name="linkText">The text that appears in the navigation menu</param>
-        void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
+        /*<summary>
+        Register a page as the device inclusion process guide for this plugin.
+        <para>
+        There can only be one device inclusion process for each plugin.
+          The page that is tagged as the device inclusion process will be displayed first in
+         the list of features for the plugin and be shown in the list of devices users can add.
+        </para>
+        </summary>
+        <param name="pluginId">The ID of the plugin</param>
+        <param name="pageFilename">The filename of the page, ending with .html</param>
+        <param name="linkText">The text that appears in the navigation menu</param>*/
+        //void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
 
-        /// <summary>
-        /// Unregister the device inclusion page for this plugin.
-        /// </summary>
-        /// <param name="pluginId">The ID of the plugin</param>
-        void UnregisterDeviceIncPage(string pluginId);
+        /*<summary>
+        Unregister the device inclusion page for this plugin.
+        </summary>
+        <param name="pluginId">The ID of the plugin</param>*/
+        //void UnregisterDeviceIncPage(string pluginId);
         
         #endregion
         
@@ -224,59 +234,62 @@ namespace HomeSeer.PluginSdk {
         
         #region Logging
         
-        //TODO void WriteLog(string mtype, string message);
-        //TODO void WriteLogEx(string mtype, string message, string Color);
-        //TODO void WriteLogDetail(string mType, string Message, string Color, int Priority, string mFrom, int ErrorCode);
-        //TODO void ClearLog();
-        //TODO bool NoLog { get; set; }
-        //TODO string LogGet();
-        //TODO LogEntry[] GetLog_Date(DateTime StartDate, DateTime EndDate);
-        //TODO LogEntry[] GetLog_Date_Text(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx);
-        //TODO LogEntry[] GetLog_Date_Priority(DateTime StartDate, DateTime EndDate, int Priority_Start, int Priority_End,bool Show_No_Priority);
-        //TODO LogEntry[] GetLog_Date_ErrorCode(DateTime StartDate, DateTime EndDate, int ErrorCode);
-        //TODO LogEntry[] GetLog_FullFilter(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx, int Priority_Start, int Priority_End,bool Show_No_Priority,int ErrorCode, bool ShowAllErrorCode);
+        //TODO Logging
+        //void WriteLog(string mtype, string message);
+        //void WriteLogEx(string mtype, string message, string Color);
+        //void WriteLogDetail(string mType, string Message, string Color, int Priority, string mFrom, int ErrorCode);
+        //void ClearLog();
+        //bool NoLog { get; set; }
+        //string LogGet();
+        //LogEntry[] GetLog_Date(DateTime StartDate, DateTime EndDate);
+        //LogEntry[] GetLog_Date_Text(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx);
+        //LogEntry[] GetLog_Date_Priority(DateTime StartDate, DateTime EndDate, int Priority_Start, int Priority_End,bool Show_No_Priority);
+        //LogEntry[] GetLog_Date_ErrorCode(DateTime StartDate, DateTime EndDate, int ErrorCode);
+        //LogEntry[] GetLog_FullFilter(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx, int Priority_Start, int Priority_End,bool Show_No_Priority,int ErrorCode, bool ShowAllErrorCode);
         
         #endregion
         
         #region Energy
         
-        //TODO int Energy_RemoveData(int dvRef,DateTime dteStart);
-        //TODO string Energy_AddCalculator(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
-        //TODO string Energy_AddCalculatorEvenDay(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
-        //TODO int Energy_CalcCount(int dvRef);
-        //TODO SortedList<int, string> Energy_GetGraphDataIDs();
-        //TODO SortedList<int, string> Energy_GetEnergyRefs(bool GetParentRefs);
-        //TODO System.Drawing.Image Energy_GetGraph(int id, string dvRefs, int width, int height, string format);
-        //TODO bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
-        //TODO bool Energy_AddData(int dvRef, EnergyData Data);
-        //TODO bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
-        //TODO List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
-        //TODO List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
-        //TODO List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
-        //TODO EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
-        //TODO EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
-        //TODO int Energy_SaveGraphData(EnergyGraphData Data);
-        //TODO EnergyGraphData Energy_GetGraphData(int ID);
+        //TODO Energy methods
+        //int Energy_RemoveData(int dvRef,DateTime dteStart);
+        //string Energy_AddCalculator(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
+        //string Energy_AddCalculatorEvenDay(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
+        //int Energy_CalcCount(int dvRef);
+        //SortedList<int, string> Energy_GetGraphDataIDs();
+        //SortedList<int, string> Energy_GetEnergyRefs(bool GetParentRefs);
+        //System.Drawing.Image Energy_GetGraph(int id, string dvRefs, int width, int height, string format);
+        //bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
+        //bool Energy_AddData(int dvRef, EnergyData Data);
+        //bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
+        //List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
+        //List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
+        //List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
+        //EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
+        //EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
+        //int Energy_SaveGraphData(EnergyGraphData Data);
+        //EnergyGraphData Energy_GetGraphData(int ID);
         
         #endregion
         
         #region Scripts
         
-        //TODO object PluginFunction(string plugname, string pluginstance, string func,object[] parms);
-        //TODO object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
-        //TODO void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
-        //TODO int SendMessage(string message, string host, bool showballoon);
-        //TODO int Launch(string Name, string @params, string direc, int LaunchPri);
-        //TODO bool RegisterStatusChangeCB(string script, string func);
-        //TODO void UnRegisterStatusChangeCB(string script);
-        //TODO string GetScriptPath();
-        //TODO string InstallScript(string scr_name, object param);
-        //TODO bool IsScriptRunning(string scr);
-        //TODO object RunScript(string scr, bool Wait, bool SingleInstance);
-        //TODO object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
-        //TODO string ScriptsRunning();
-        //TODO int ValidateScriptLicense(string LicenseID, string ProductID);
-        //TODO int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
+        //TODO Script methods
+        //object PluginFunction(string plugname, string pluginstance, string func,object[] parms);
+        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
+        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
+        //int SendMessage(string message, string host, bool showballoon);
+        //int Launch(string Name, string @params, string direc, int LaunchPri);
+        //bool RegisterStatusChangeCB(string script, string func);
+        //void UnRegisterStatusChangeCB(string script);
+        //string GetScriptPath();
+        //string InstallScript(string scr_name, object param);
+        //bool IsScriptRunning(string scr);
+        //object RunScript(string scr, bool Wait, bool SingleInstance);
+        //object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
+        //string ScriptsRunning();
+        //int ValidateScriptLicense(string LicenseID, string ProductID);
+        //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
         
         #endregion
         
@@ -291,101 +304,107 @@ namespace HomeSeer.PluginSdk {
         System.Collections.SortedList GetLocations2List();
         int CheckRegistrationStatus(string piname);
         
-        //TODO int InterfaceVersion();
-        //TODO bool IsApplicationRunning(string ApplicationName);
-        //TODO string RecurseFiles(string SourceDir);
-        //TODO string[] RecurseFilesEx(string SourceDir);
-        //TODO string GetAppPath();
-        //TODO string GetOSVersion();
-        //TODO string HSMemoryUsed();
-        //TODO int HSModules();
-        //TODO int HSThreads();
-        //TODO void PowerFailRecover();
-        //TODO void RestartSystem();
-        //TODO void ShutDown();
-        //TODO string SystemUpTime();
-        //TODO TimeSpan SystemUpTimeTS();
-        //TODO void WindowsLockSystem();
-        //TODO void WindowsLogoffSystem();
-        //TODO void WindowsShutdownSystem();
-        //TODO void WindowsRebootSystem();
+        //TODO System methods
+        //int InterfaceVersion();
+        //bool IsApplicationRunning(string ApplicationName);
+        //string RecurseFiles(string SourceDir);
+        //string[] RecurseFilesEx(string SourceDir);
+        //string GetAppPath();
+        //string GetOSVersion();
+        //string HSMemoryUsed();
+        //int HSModules();
+        //int HSThreads();
+        //void PowerFailRecover();
+        //void RestartSystem();
+        //void ShutDown();
+        //string SystemUpTime();
+        //TimeSpan SystemUpTimeTS();
+        //void WindowsLockSystem();
+        //void WindowsLogoffSystem();
+        //void WindowsShutdownSystem();
+        //void WindowsRebootSystem();
         
         #endregion
         
         #region COM
         
-        //TODO void CloseComPort(int port);
-        //TODO int GetComPortCount(int port);
-        //TODO object GetComPortData(int port);
-        //TODO string OpenComPort(int port, string Config, int mode, string cb_script, string cb_func);
-        //TODO string OpenComPortTerm(int port, string Config, int mode, string cb_script, string cb_func, string term);
-        //TODO void SendToComPort(int port, string sData);
-        //TODO void SendToComPortBytes(int port, byte[] Data);
-        //TODO void SetComPortRTSDTR(int port, bool rtsval, bool dtrval);
+        //TODO COM port methods
+        //void CloseComPort(int port);
+        //int GetComPortCount(int port);
+        //object GetComPortData(int port);
+        //string OpenComPort(int port, string Config, int mode, string cb_script, string cb_func);
+        //string OpenComPortTerm(int port, string Config, int mode, string cb_script, string cb_func, string term);
+        //void SendToComPort(int port, string sData);
+        //void SendToComPortBytes(int port, byte[] Data);
+        //void SetComPortRTSDTR(int port, bool rtsval, bool dtrval);
         
         #endregion
         
         #region Networking & Web
         
-        //TODO bool WEBCheckUserRights(int rights);
-        //TODO string WEBLoggedInUser();
-        //TODO bool WEBValidateUser(string username, string password);
-        //TODO string GetIPAddress();
-        //TODO string GetLastRemoteIP();
-        //TODO string LANIP();
-        //TODO string WANIP();
-        //TODO int WebServerPort();
-        //TODO int WebServerSSLPort();
+        //TODO Networking methods
+        //bool WEBCheckUserRights(int rights);
+        //string WEBLoggedInUser();
+        //bool WEBValidateUser(string username, string password);
+        //string GetIPAddress();
+        //string GetLastRemoteIP();
+        //string LANIP();
+        //string WANIP();
+        //int WebServerPort();
+        //int WebServerSSLPort();
         
-        //TODO string GenCookieString(string Name, string Value, string expire = "", string path = "/");
+        //string GenCookieString(string Name, string Value, string expire = "", string path = "/");
         
         #endregion
         
         #region Images
         
-        //TODO bool WriteHTMLImageFile(byte[] ImageFile, string Dest, bool OverWrite);
-        //TODO bool WriteHTMLImage(System.Drawing.Image Image, string Dest, bool OverWrite);
-        //TODO bool DeleteImageFile(string DeleteFile);
+        //TODO image methods
+        //bool WriteHTMLImageFile(byte[] ImageFile, string Dest, bool OverWrite);
+        //bool WriteHTMLImage(System.Drawing.Image Image, string Dest, bool OverWrite);
+        //bool DeleteImageFile(string DeleteFile);
         
         #endregion
         
         #region AppCallback
 
-        //TODO void RegisterProxySpeakPlug(string   PIName, string PIInstance);
-        //TODO void UnRegisterProxySpeakPlug(string PIName, string PIInstance);
+        //TODO AppCallback methods
+        //void RegisterProxySpeakPlug(string   PIName, string PIInstance);
+        //void UnRegisterProxySpeakPlug(string PIName, string PIInstance);
 
-        //TODO void RegisterGenericEventCB(string   GenericType, string   PIName, string PIInstance);
-        //TODO void UnRegisterGenericEventCB(string GenericType, string   PIName, string PIInstance);
-        //TODO void RaiseGenericEventCB(string      GenericType, object[] Parms,  string PIName, string PIInstance);
-        //TODO void RegisterEventCB(Constants.HSEvent evType, string PIName, string PIInstance);
+        //void RegisterGenericEventCB(string   GenericType, string   PIName, string PIInstance);
+        //void UnRegisterGenericEventCB(string GenericType, string   PIName, string PIInstance);
+        //void RaiseGenericEventCB(string      GenericType, object[] Parms,  string PIName, string PIInstance);
+        //void RegisterEventCB(Constants.HSEvent evType, string PIName, string PIInstance);
 
-        //TODO TrigActInfo[] TriggerMatches(string     Plug_Name, int         TrigID,    int SubTrig);             // new
-        //TODO void          TriggerFire(string        Plug_Name, TrigActInfo TrigInfo);                           // new
+        //TrigActInfo[] TriggerMatches(string     Plug_Name, int         TrigID,    int SubTrig);             // new
+        //void          TriggerFire(string        Plug_Name, TrigActInfo TrigInfo);                           // new
 
-        //TODO TrigActInfo[] GetTriggers(string     PIName);
-        //TODO TrigActInfo[] GetActions(string      PIName);
+        //TrigActInfo[] GetTriggers(string     PIName);
+        //TrigActInfo[] GetActions(string      PIName);
 
-        //TODO string UpdatePlugAction(string PlugName, int evRef, TrigActInfo ActionInfo);
+        //string UpdatePlugAction(string PlugName, int evRef, TrigActInfo ActionInfo);
 
         #endregion
         
-        //TODO bool AppStarting(bool wait = false);
-        //TODO string BackupDB();
-        //TODO object GetHSPRef();
-        //TODO string GetInstanceList();
-        //TODO string GetPlugLinks();
-        //TODO string[] GetPluginsList();
-        //TODO int GetRemoteTimeout();
-        //TODO string GetSource();
-        //TODO void Keys(string k, string title, bool waitf);
-        //TODO int LCID();
+        //TODO other methods
+        //bool AppStarting(bool wait = false);
+        //string BackupDB();
+        //object GetHSPRef();
+        //string GetInstanceList();
+        //string GetPlugLinks();
+        //string[] GetPluginsList();
+        //int GetRemoteTimeout();
+        //string GetSource();
+        //void Keys(string k, string title, bool waitf);
+        //int LCID();
         
-        //TODO void SetRemoteTimeout(int timeout_seconds);
-        //TODO void SetSecurityMode(bool mode);
-        //TODO void WaitEvents();
-        //TODO Constants.eOSType GetOSType();
-        //TODO clsLastVR[] GetLastVRCollection();
-        //TODO Constants.REGISTRATION_MODES PluginLicenseMode(string IfaceName);
+        //void SetRemoteTimeout(int timeout_seconds);
+        //void SetSecurityMode(bool mode);
+        //void WaitEvents();
+        //Constants.eOSType GetOSType();
+        //clsLastVR[] GetLastVRCollection();
+        //Constants.REGISTRATION_MODES PluginLicenseMode(string IfaceName);
 
     }
 
