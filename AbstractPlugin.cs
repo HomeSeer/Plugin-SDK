@@ -20,7 +20,7 @@ namespace HomeSeer.PluginSdk {
     /// Once the containing plugin application is started, initiate a connection
     ///  to the HomeSeer system by calling <see cref="Connect(string[])"/>.
     /// </para>
-    /// <para>All plugins (the Hspi class) should extend this class.</para>
+    /// <para>All plugins (the HSPI class) should extend this class.</para>
     /// </summary>
     public abstract class AbstractPlugin : IPlugin {
 
@@ -88,12 +88,16 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         protected SettingsCollection Settings { get; set; } = new SettingsCollection();
+        
+        /// <summary>
+        /// The IP Address that the HomeSeer system is located at
+        /// </summary>
+        protected string IpAddress { get; set; } = "127.0.0.1";
 
         private const int HomeSeerPort = 10400;
 
         private static IScsServiceClient<IHsController> _client;
-
-        private string _ipAddress = "127.0.0.1";
+        
         private bool   _isShutdown;
 
         #endregion
@@ -114,7 +118,7 @@ namespace HomeSeer.PluginSdk {
                 var parts = arg.Split('=');
                 switch (parts[0].ToLower()) {
                     case "server":
-                        _ipAddress = parts[1];
+                        IpAddress = parts[1];
                         break;
                     default:
                         Console.WriteLine("Unknown command-line argument : " + parts[0].ToLower());
@@ -122,7 +126,7 @@ namespace HomeSeer.PluginSdk {
                 }
             }
 
-            _client = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(_ipAddress, HomeSeerPort),
+            _client = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(IpAddress, HomeSeerPort),
                                                                           this);
 
             Connect(1);
