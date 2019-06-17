@@ -86,28 +86,21 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Environment.NewLine);
 			//Add the text
 			sb.Append(GetIndentStringFromNumber(indent+1));
-			sb.Append("<label class=\"jui-toggle-text\" for=\"");
-			sb.Append(Id);
-			sb.Append("\">");
-			sb.Append(Name);
-			sb.Append("</label>");
+			sb.Append($"<label class=\"jui-toggle-text\" for=\"{Id}\">{Name}</label>");
 			sb.Append(Environment.NewLine);
 			//Add the toggle
 			sb.Append(GetIndentStringFromNumber(indent+1));
 			switch (ToggleType) {
 				case EToggleType.Switch:
-					sb.Append("<span class=\"switch jui-toggle-control\"><label><input type=\"checkbox\" class=\"jui-input\" id=\"");
-					sb.Append(Id);
-					sb.Append(IsEnabled ? "\" checked>" : "\">");
+					sb.Append("<span class=\"switch jui-toggle-control\"><label>");
+					sb.Append($"<input type=\"checkbox\" class=\"jui-input\" id=\"{Id}\" {(IsEnabled ? "checked" : "")}>");
 					sb.Append("<span class=\"lever\"/></label></span>");
 					break;
 				case EToggleType.Checkbox:
-					sb.Append("<span class=\"form-check jui-toggle-control\"><span class=\"form-check form-check-inline jui-toggle-checkbox\"><input type=\"checkbox\" class=\"form-check-input jui-input\" id=\"");
-					sb.Append(Id);
-					sb.Append(IsEnabled ? "\" checked>" : "\">");
-					sb.Append("<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"");
-					sb.Append(Id);
-					sb.Append("\"></label></span></span>");
+					sb.Append("<span class=\"form-check jui-toggle-control\">");
+					sb.Append("<span class=\"form-check form-check-inline jui-toggle-checkbox\">");
+					sb.Append($"<input type=\"checkbox\" class=\"form-check-input jui-input\" id=\"{Id}\" {(IsEnabled ? "checked" : "")}>");
+					sb.Append($"<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"{Id}\"></label></span></span>");
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

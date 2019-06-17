@@ -60,27 +60,15 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
-			sb.Append("<div id=\"");
-			sb.Append(Id);
-			sb.Append("\" class=\"jui-view\">");
+			sb.Append($"<div id=\"{Id}\" class=\"jui-view\">");
 			sb.Append(Environment.NewLine);
 			//Add the title
 			sb.Append(GetIndentStringFromNumber(indent+1));
-			sb.Append("<div id=\"");
-			sb.Append(Id);
-			sb.Append(".title\" class=\"jui-title\">");
-			sb.Append("<small>");
-			sb.Append(Name);
-			sb.Append("</small>");
-			sb.Append("</div>");
+			sb.Append($"<div id=\"{Id}.title\" class=\"jui-title\"><small>{Name}</small></div>");
 			sb.Append(Environment.NewLine);
 			//Add the label text
 			sb.Append(GetIndentStringFromNumber(indent+1));
-			sb.Append("<p id=\"");
-			sb.Append(Id);
-			sb.Append(".value\">");
-			sb.Append(Value);
-			sb.Append("</p>");
+			sb.Append($"<p id=\"{Id}.value\">{Value}</p>");
 			sb.Append(Environment.NewLine);
 			//Close the containing div
 			sb.Append(GetIndentStringFromNumber(indent));

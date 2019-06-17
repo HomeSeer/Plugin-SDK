@@ -141,44 +141,34 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Environment.NewLine);
             //Add the input
             sb.Append(GetIndentStringFromNumber(indent+1));
-            sb.Append("<input type=\"");
+            string typeString = null;
             switch (InputType) {
 	            case EInputType.Text:
-		            sb.Append("text\" ");
+		            typeString = "text\" ";
 		            break;
 	            case EInputType.Number:
-		            sb.Append("number\" pattern=\"[0-9]*\"");
+		            typeString = "number\" pattern=\"[0-9]*\" ";
 		            break;
 	            case EInputType.Email:
-		            sb.Append("email\" ");
+		            typeString = "email\" ";
 		            break;
 	            case EInputType.Url:
-		            sb.Append("url\" ");
+		            typeString = "url\" ";
 		            break;
 	            case EInputType.Password:
-		            sb.Append("password\" ");
+		            typeString = "password\" ";
 		            break;
 	            case EInputType.Decimal:
-		            sb.Append("text\" pattern=\"[0-9.]*\" ");
+		            typeString = "text\" pattern=\"[0-9.]*\" ";
 		            break;
 	            default:
 		            throw new ArgumentOutOfRangeException();
             }
-            sb.Append("id=\" ");
-            sb.Append(Id);
-            sb.Append("\" class=\"form-control jui-input\" value=\"");
-            sb.Append(Value);
-            sb.Append("\">");
+            sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value}\">");
             sb.Append(Environment.NewLine);
             //Add the hint label
             sb.Append(GetIndentStringFromNumber(indent+1));
-            sb.Append("<label for=\"");
-            sb.Append(Id);
-            sb.Append("\" id=\"");
-            sb.Append(Id);
-            sb.Append(".hint\">");
-            sb.Append(Name);
-            sb.Append("</label>");
+            sb.Append($"<label for=\"{Id}\" id=\"{Id}.hint\">{Name}</label>");
             sb.Append(Environment.NewLine);
             //Close the form div
             sb.Append(GetIndentStringFromNumber(indent));
