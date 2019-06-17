@@ -187,14 +187,19 @@ namespace HomeSeer.Jui.Views {
 						sb.Append(optionCount);
 						sb.Append("\" class=\"form-check-input jui-input\" name=\"");
 						sb.Append(Id);
+						sb.Append(".");
+						sb.Append(optionCount);
 						sb.Append("\"");
 						if (optionCount == Selection) {
-							sb.Append(" checked=\"true\"");
+							sb.Append(" checked");
 						}
-						sb.Append("><span class=\"lever\"/><label class=\"form-check-label jui-toggle-checkbox-label\" for=\"");
+
+						sb.Append(" value=\"");
+						sb.Append(optionCount);
+						sb.Append("\"><label class=\"form-check-label jui-toggle-checkbox-label\" for=\"");
 						sb.Append(Id);
 						sb.Append(".");
-						sb.Append(option);
+						sb.Append(optionCount);
 						sb.Append("\"/></span>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+2));
