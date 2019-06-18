@@ -516,6 +516,20 @@ namespace HomeSeer.PluginSdk {
             public string Name;
             public string Value;
         }
+        
+        [Serializable]
+        public enum Device_Constants {
+
+            // MAX_VIRTUAL = 11 ' q->z
+            // 65-90 = A-Z
+            FIRST_HC = 65, // 35 ' "#"
+            // MAX_IO_CODES = 36   ' Actually 26 after the 10 digits (0-9) are subtracted.
+            MAX_DEVICE_CODES = 999,
+            // FIRST_IO_CODE = 65 '&H5B ' "["
+            // IO_WRAP = &H61 ' "a"   wrap to #
+            MAX_HOUSE_CODES = 26 // 26 + Device_Constants.MAX_IO_CODES 
+
+        }
 
     }
 

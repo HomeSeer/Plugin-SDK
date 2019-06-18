@@ -192,6 +192,8 @@ namespace HomeSeer.PluginSdk {
         bool DeviceVGP_AddPair(int dvRef, VGPair Pair);
         void DeviceVGP_ClearAll(int dvRef, bool TrueConfirm);
         bool DeviceVGP_Clear(int dvRef, double Value);
+        
+        //void SetDeviceProperty<TProp>(int devRef, Constants.eDeviceProperty property, TProp value); 
         void DeviceProperty_Int(int dvRef, Constants.eDeviceProperty Prop, int Value);
         void DeviceProperty_String(int dvRef, Constants.eDeviceProperty Prop, string Value);
         void DeviceProperty_StrArray(int dvRef, Constants.eDeviceProperty Prop, string[] Value);

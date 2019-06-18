@@ -51,7 +51,10 @@
 		<Compile Include="CAPI\CAPIStatus.cs" />
 		<Compile Include="CAPI\ValueRange.cs" />
 		<Compile Include="CAPI\ICAPIStatus.cs" />
+		<Compile Include="Devices\DeviceButtonScript.cs" />
+		<Compile Include="Devices\DeviceCollection.cs" />
 		<Compile Include="Devices\DeviceTypeInfo.cs" />
+		<Compile Include="Devices\HsDevice.cs" />
 		<Compile Include="Devices\MultiReturn.cs" />
 		<Compile Include="Devices\PlugExtraData.cs" />
 		<Compile Include="Devices\PollResultInfo.cs" />
