@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace HomeSeer.PluginSdk {
 
@@ -230,10 +231,9 @@ namespace HomeSeer.PluginSdk {
         }
         public string[] GetNamedKeys()
         {
-            try
-            {
+            try {
                 if (Ncol == null)
-                    return null;
+                    return new List<string>().ToArray();
                 System.Collections.IList Keys;
                 lock (Ncol.SyncRoot)
                     Keys = Ncol.GetKeyList();
@@ -244,7 +244,7 @@ namespace HomeSeer.PluginSdk {
             }
             catch (Exception ex)
             {
-                return null;
+                return new List<string>().ToArray();
             }
         }
     
@@ -267,19 +267,18 @@ namespace HomeSeer.PluginSdk {
         }
         public object[] GetAllUnNamed()
         {
-            try
-            {
+            try {
                 if (UNcol == null)
-                    return null;
+                    return new List<object>().ToArray();
                 CheckUnNamed();
                 if (UNcol.Count < 1)
-                    return null;
+                    return new List<object>().ToArray();
                 lock (UNcol.SyncRoot)
                     return UNcol.ToArray();
             }
             catch (Exception ex)
             {
-                return null;
+                return new List<object>().ToArray();
             }
         }
         // 
