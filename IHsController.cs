@@ -148,27 +148,8 @@ namespace HomeSeer.PluginSdk {
         int GetDeviceRef(string sAddress);
         int GetDeviceRefByName(string device_name);
         int GetDeviceParentRefByRef(int @ref);
-        string GetDeviceCode(string Name);
         //TODO object GetDeviceEnumeratorUser(string user); -> This returns a DeviceClass
         string GetNextVirtualCode();
-        
-        int DeviceValue(int dvRef);
-        double DeviceValueEx(int dvRef);
-        int DeviceValueByName(string devname);
-        double DeviceValueByNameEx(string devname);
-        string DeviceString(int dvRef);
-        string DeviceStringByName(string Name);
-        int DeviceTime(int dvRef);
-        int DeviceTimeByName(string dev_name);
-        DateTime DeviceDateTime(int dvRef);
-        DateTime DeviceLastChange(string Address);
-        DateTime DeviceLastChangeRef(int dvRef);
-        string DeviceName(int dvRef);
-        bool IsOff(int dvRef);
-        bool IsON(int dvRef);
-        bool IsOffByName(string dev_name);
-        bool IsOnByName(string dev_name);
-        
 
         //TODO ICAPIStatus CAPIGetStatus(int dvRef);
         //TODO CAPIControl[] CAPIGetControl(int dvRef);
