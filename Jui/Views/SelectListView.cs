@@ -101,12 +101,15 @@ namespace HomeSeer.Jui.Views {
 			//Add the select list
 			switch (Style) {
 				case ESelectListType.DropDown:
+					//Add the title
+					sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
+					sb.Append(Environment.NewLine);
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<select class=\"mdb-select md-form jui-input\" id=\"{Id}\">");
+					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
-					sb.Append($"<option value=\"\" disabled>{Name}</option>");
+					sb.Append("<option value=\"\" disabled>Select an option</option>");
 					sb.Append(Environment.NewLine);
 					for (var i = 0; i < Options.Count; i++) {
 						var option = Options[i];
@@ -152,23 +155,23 @@ namespace HomeSeer.Jui.Views {
 					sb.Append($"<div id=\"{Id}.title\" class=\"jui-title\"><small>{Name}</small></div>");
 					sb.Append(Environment.NewLine);
 					//Add the option items
-					var optionCount = 0;
-					foreach (var option in Options) {
+					for (var optionNum = 0; optionNum < Options.Count; optionNum++) {
+						var option = Options[optionNum];
+						var optionId = $"{Id}.{optionNum}";
 						sb.Append(GetIndentStringFromNumber(indent+2));
 						sb.Append("<div class=\"jui-toggle jui-selectlist-radio-option\">");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
-						sb.Append($"<label class=\"jui-toggle-text\" for=\"{Id}.{optionCount}\">{option}</label>");
+						sb.Append($"<label class=\"jui-toggle-text\" for=\"{optionId}\">{option}</label>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
 						sb.Append("<span class=\"form-check jui-toggle-control\">");
-						sb.Append($"<input type=\"radio\" id=\"{Id}.{optionCount}\" class=\"form-check-input jui-input\" name=\"{Id}.{optionCount}\" {(optionCount == Selection ? "checked" : "")} value=\"{optionCount}\">");
-						sb.Append($"<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"{Id}.{optionCount}\"/></span>");
+						sb.Append($"<input type=\"radio\" id=\"{optionId}\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionNum}\">");
+						sb.Append($"<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"{optionId}\"/></span>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+2));
 						sb.Append("</div>");
 						sb.Append(Environment.NewLine);
-						optionCount++;
 					}
 					//Add the last horizontal line
 					sb.Append(GetIndentStringFromNumber(indent+1));
