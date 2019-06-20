@@ -185,8 +185,6 @@ namespace HomeSeer.PluginSdk {
         public virtual bool InitIO(string port) {
             try {
                 Console.WriteLine("InitIO");
-                LoadSettingsFromIni();
-                Console.WriteLine("Calling Initialize");
                 Initialize();
                 return true;
             }
@@ -220,6 +218,7 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc cref="IPlugin.GetJuiSettingsPages"/>
         public string GetJuiSettingsPages() {
+            Console.WriteLine("GetJuiSettingsPages");
             OnSettingsLoad();
             return Settings.ToJsonString();
         }
@@ -236,8 +235,9 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc cref="IPlugin.SaveJuiSettingsPages"/>
         public bool SaveJuiSettingsPages(string jsonString) {
+            Console.WriteLine("SaveJuiSettingsPages");
             try {
-                var deserializedPages = Page.Factory.ListFromJson(jsonString);
+                var deserializedPages = SettingsCollection.FromJsonString(jsonString).Pages;
                 return OnSettingsChange(deserializedPages);
             }
             catch (KeyNotFoundException exception) {
@@ -260,10 +260,7 @@ namespace HomeSeer.PluginSdk {
         protected abstract bool OnSettingsChange(List<Page> pages);
 
         /// <summary>
-        /// Loads the plugin settings saved to INI and saves default values if none exist.
-        /// <para>
-        /// This is automatically called during InitIO
-        /// </para>
+        /// Loads the plugin settings saved to INI to Settings and saves default values if none exist.
         /// </summary>
         protected void LoadSettingsFromIni() {
             Console.WriteLine("Loading settings from INI");

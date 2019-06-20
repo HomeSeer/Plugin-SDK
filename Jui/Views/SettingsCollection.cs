@@ -106,6 +106,14 @@ namespace HomeSeer.Jui.Views {
             return _pageOrder.IndexOf(pageId);
         }
 
+        public bool ContainsPageId(string pageId) {
+	        if (string.IsNullOrWhiteSpace(pageId)) {
+		        throw new ArgumentNullException(nameof(pageId));
+	        }
+
+	        return _pages.ContainsKey(pageId);
+        }
+
         public IEnumerator<Page> GetEnumerator() {
 	        return Pages.GetEnumerator();
         }

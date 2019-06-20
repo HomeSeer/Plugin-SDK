@@ -240,7 +240,11 @@ namespace HomeSeer.Jui.Views {
 							if (intValue < 0) {
 								throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
 							}
-							view = new SelectListView(id, "", new List<string>(intValue+1), ESelectListType.DropDown, intValue);
+							var selectListOptions = new List<string>();
+							for (var i = 0; i <= intValue; i++) {
+								selectListOptions.Add(i.ToString());
+							}
+							view = new SelectListView(id, id, selectListOptions, ESelectListType.DropDown, intValue);
 							break;
 						}
 						catch (Exception exception) {
@@ -252,7 +256,7 @@ namespace HomeSeer.Jui.Views {
 						throw new ArgumentException("The view type does not match the value type");
 					}
 					
-					view = new InputView(id, "", valueString);
+					view = new InputView(id, id, valueString);
 					break;
 				
 				case int valueInt:
@@ -270,7 +274,7 @@ namespace HomeSeer.Jui.Views {
 						options.Add(i.ToString());
 					}
 					
-					view = new SelectListView(id, "", options, ESelectListType.DropDown, valueInt);
+					view = new SelectListView(id, id, options, ESelectListType.DropDown, valueInt);
 					break;
 				
 				case bool valueBool:
@@ -278,7 +282,7 @@ namespace HomeSeer.Jui.Views {
 						throw new ArgumentException("The view type does not match the value type");
 					}
             
-					view = new ToggleView(id, "", valueBool);
+					view = new ToggleView(id, id, valueBool);
 					break;
 			}
 
