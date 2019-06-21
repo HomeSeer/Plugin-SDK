@@ -58,7 +58,7 @@
 		<Compile Include="Devices\MultiReturn.cs" />
 		<Compile Include="Devices\PlugExtraData.cs" />
 		<Compile Include="Devices\PollResultInfo.cs" />
-		<Compile Include="Devices\VGPair.cs" />
+		<Compile Include="Devices\StatusGraphic.cs" />
 		<Compile Include="Devices\VSPair.cs" />
 		<Compile Include="Events\EventData.cs" />
 		<Compile Include="Events\EventGroupData.cs" />

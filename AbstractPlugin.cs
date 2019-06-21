@@ -276,6 +276,7 @@ namespace HomeSeer.PluginSdk {
                     // Always true after the first time the plugin starts
                     if (savedSettings.ContainsKey(settingPair.Key)) {
                         //Pull the saved value into memory
+                        Console.WriteLine("Updating view");
                         settingsPage.UpdateViewValueById(settingPair.Key, savedSettings[settingPair.Key]);
                         //Go to the next setting
                         continue;

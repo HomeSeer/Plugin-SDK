@@ -135,7 +135,7 @@ namespace HomeSeer.PluginSdk {
         
         //VGP
         
-        VGPair DeviceVGP_Get(int dvRef, double Value);
+        StatusGraphic DeviceVGP_Get(int dvRef, double Value);
         int DeviceVGP_Count(int dvRef);
         string DeviceVGP_GetGraphic(int dvRef, double Value);
         bool DeviceVGP_PairsProtected(int dvRef);
@@ -170,7 +170,7 @@ namespace HomeSeer.PluginSdk {
         bool DeviceVSP_ClearStatus(int dvRef, double Value);
         bool DeviceVSP_ChangePair(int dvRef, VSPair Existing, Constants.ePairStatusControl NewType);
         bool DeviceVSP_AddPair(int dvRef, VSPair Pair);
-        bool DeviceVGP_AddPair(int dvRef, VGPair Pair);
+        bool DeviceVGP_AddPair(int dvRef, StatusGraphic Pair);
         void DeviceVGP_ClearAll(int dvRef, bool TrueConfirm);
         bool DeviceVGP_Clear(int dvRef, double Value);
         

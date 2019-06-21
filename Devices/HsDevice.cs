@@ -193,7 +193,7 @@ namespace HomeSeer.PluginSdk.Devices {
         private string         _sortTime          = "";
         private string         _userAccess        = "Any";
         private string         _userNote          = "";
-        private List<VGPair>   _vgPairs           = new List<VGPair>();
+        private List<StatusGraphic>   _vgPairs           = new List<StatusGraphic>();
         private string         _voiceCommand      = "";
         private List<VSPair>   _vsPairs           = new List<VSPair>();
         private object         _stringSelected;
@@ -201,75 +201,6 @@ namespace HomeSeer.PluginSdk.Devices {
         #endregion
 
         #endregion
-
-        /*public string OLD_Values {
-            set {
-                // mvarvalues = Value
-                try {
-                    if (StringIsNullOrEmpty(Value))
-                        break;
-                    string[] allvals;
-                    string   sName;
-                    string   sVal;
-                    VSPair   Pair;
-                    double   dStart;
-                    double   dEnd;
-                    allvals = Strings.Split(Value, Strings.Chr(1));
-                    for (var ci = 0; ci <= Information.UBound(allvals); ci++) {
-                        if (StringIsNullOrEmpty(allvals[ci]))
-                            continue;
-                        try {
-                            sName = MidString(allvals[ci], 1, Strings.Chr(2));
-                            sVal  = MidString(allvals[ci], 2, Strings.Chr(2));
-                            VSPair ps = null
-                            if (sName.Trim().StartsWith("~")) {
-                                ps = VSPairs.GetPairByValue(Conversion.Val(sVal.Trim()),
-                                                            Constants.ePairStatusControl.Status);
-                                Pair  = new VSPair(HomeSeerAPI.ePairStatusControl.Status);
-                                sName = sName.TrimStart(" ");
-                                sName = sName.Substring(1);
-                            }
-                            else if (sName.Trim().StartsWith("*")) {
-                                ps = VSPairs.GetPairByValue(Conversion.Val(sVal.Trim()),
-                                                            Constants.ePairStatusControl.Control);
-                                Pair  = new VSPair(HomeSeerAPI.ePairStatusControl.Control);
-                                sName = sName.TrimStart(" ");
-                                sName = sName.Substring(1);
-                            }
-                            else {
-                                ps = VSPairs.GetPairByValue(Conversion.Val(sVal.Trim()),
-                                                            Constants.ePairStatusControl.Both);
-                                Pair = new VSPair(HomeSeerAPI.ePairStatusControl.Both);
-                            }
-
-                            if (sVal.Contains("...")) {
-                                dStart                   = Val(MidString(sVal, 1, "...").Trim);
-                                dEnd                     = Val(MidString(sVal, 2, "...").Trim);
-                                Pair.PairType            = Constants.VSVGPairType.Range;
-                                Pair.Status              = sName.Trim();
-                                Pair.RangeStart          = dStart;
-                                Pair.RangeEnd            = dEnd;
-                                Pair.RangeStatusDecimals = 0;
-                            }
-                            else {
-                                Pair.PairType = Constants.VSVGPairType.SingleValue;
-                                Pair.Status   = sName.Trim();
-                                Pair.Value    = Conversion.Val(sVal.Trim());
-                            }
-
-                            if (!VSPairs.SetValue(Pair))
-                                fDEBUG_DATABASE("Error converting old value/status pair in " + DeviceName(this) +
-                                                ", original pairs=" + allvals[ci].Replace(Strings.Chr(2), "-/-"));
-                        }
-                        catch (Exception ex) { }
-                    }
-                }
-                catch (Exception ex) {
-                    fDEBUG_DATABASE("Exception in OLD_values for device " + DeviceName(this) + ": " + ex.Message);
-                }
-                //hs.DeviceProperty_String(_ref, Constants.eDeviceProperty.OLD_Values, value);
-            }
-        }*/
 
         public void AssociatedDevice_Add(int dvRef) {
             if (_assDevices == null)

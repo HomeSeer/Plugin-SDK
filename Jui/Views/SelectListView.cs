@@ -114,7 +114,7 @@ namespace HomeSeer.Jui.Views {
 					for (var i = 0; i < Options.Count; i++) {
 						var option = Options[i];
 						sb.Append(GetIndentStringFromNumber(indent+2));
-						sb.Append($"<option value=\"{option}\"{(i == Selection ? " selected" : "")}>{option}</option>");
+						sb.Append($"<option value=\"{i}\"{(i == Selection ? " selected" : "")}>{option}</option>");
 						sb.Append(Environment.NewLine);
 					}
 					sb.Append(GetIndentStringFromNumber(indent+1));
