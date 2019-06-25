@@ -1,4 +1,5 @@
 using System;
+using HomeSeer.PluginSdk.Devices;
 
 namespace HomeSeer.PluginSdk {
 
@@ -12,8 +13,7 @@ namespace HomeSeer.PluginSdk {
         private bool         _isRange = false;
         private string       _graphicPath = "";
         private double       _value;
-        private double       _rangeStart;
-        private double       _rangeEnd;
+        private ValueRange        _range = new ValueRange();
         
         public string Graphic {
             get => _graphicPath;
@@ -25,19 +25,27 @@ namespace HomeSeer.PluginSdk {
             set => _isRange = value;
         }
 
-        public double RangeStart {
-            get => _rangeStart;
-            set => _rangeStart = value;
+        public double RangeMin {
+            get => _range?.Min ?? 0;
+            set => _range.Min = value;
         }
 
-        public double RangeEnd {
-            get => _rangeEnd;
-            set => _rangeEnd = value;
+        public double RangeMax {
+            get => _range?.Max ?? 0;
+            set => _range.Max = value;
         }
 
         public double Value {
             get => _value;
             set => _value = value;
+        }
+
+        public bool IsValueInRange(double value) {
+            if (_isRange) {
+                return _range.IsValueInRange(value);
+            }
+
+            return Math.Abs(_value - value) < 0.01D;
         }
 
     }

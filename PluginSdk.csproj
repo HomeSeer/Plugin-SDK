@@ -46,20 +46,27 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="AbstractPlugin.cs" />
-		<Compile Include="CAPI\CAPIControl.cs" />
-		<Compile Include="CAPI\CAPIControlLocation.cs" />
+		<None Include="CAPI\CAPIControl.cs" />
 		<Compile Include="CAPI\CAPIStatus.cs" />
-		<Compile Include="CAPI\ValueRange.cs" />
 		<Compile Include="CAPI\ICAPIStatus.cs" />
+		<Compile Include="Devices\ControlLocation.cs" />
 		<Compile Include="Devices\DeviceButtonScript.cs" />
 		<Compile Include="Devices\DeviceCollection.cs" />
+		<Compile Include="Devices\EDeviceMiscFlag.cs" />
+		<Compile Include="Devices\EDeviceProperty.cs" />
+		<Compile Include="Devices\ERelationship.cs" />
+		<Compile Include="Devices\StatusGraphicCollection.cs" />
 		<Compile Include="Devices\DeviceTypeInfo.cs" />
+		<Compile Include="Devices\EControlType.cs" />
+		<Compile Include="Devices\EControlUse.cs" />
 		<Compile Include="Devices\HsDevice.cs" />
 		<Compile Include="Devices\MultiReturn.cs" />
 		<Compile Include="Devices\PlugExtraData.cs" />
 		<Compile Include="Devices\PollResultInfo.cs" />
+		<Compile Include="Devices\ValueRange.cs" />
+		<Compile Include="Devices\StatusControlCollection.cs" />
 		<Compile Include="Devices\StatusGraphic.cs" />
-		<Compile Include="Devices\VSPair.cs" />
+		<Compile Include="Devices\StatusControl.cs" />
 		<Compile Include="Events\EventData.cs" />
 		<Compile Include="Events\EventGroupData.cs" />
 		<Compile Include="Events\EventTriggerGroupData.cs" />

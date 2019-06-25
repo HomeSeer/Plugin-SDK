@@ -35,14 +35,6 @@ namespace HomeSeer.PluginSdk {
             CA_V2PLUGIN_API = 0x80
         }
     
-        public enum eRelationship {
-            Not_Set = 0,
-            Indeterminate = 1,   // Could not be determined
-            Parent_Root = 2,
-            Standalone = 3,
-            Child = 4
-        }
-    
         public enum ConfigDevicePostReturn {
             DoneAndSave = 1,
             DoneAndCancel = 2,
@@ -64,83 +56,6 @@ namespace HomeSeer.PluginSdk {
             Both = 3
         }
     
-        public enum dvMISC : uint {
-            // for device class misc flags, bits in long value
-            // PRESET_DIM = 1         ' supports preset dim if set
-            // EXTENDED_DIM = 2            ' extended dim command
-            // SMART_LINC = 4         ' smart linc switch
-            NO_LOG = 8,             // no logging to event log for this device
-            STATUS_ONLY = 0x10,     // device cannot be controlled
-            HIDDEN = 0x20,          // device is hidden from views
-            DEVICE_NO_STATUS = 0x40,           // device does not have any value pairs that support status
-            INCLUDE_POWERFAIL = 0x80,      // if set, device's state is restored if power fail enabled
-            SHOW_VALUES = 0x100,    // set=display value options in win gui and web status
-            AUTO_VOICE_COMMAND = 0x200,        // set=create a voice command for this device
-            VOICE_COMMAND_CONFIRM = 0x400,     // set=confirm voice command
-            MYHS_DEVICE_CHANGE_NOTIFY = 0x800,        // if set, a change of this device will be sent to MYHS through the tunnel
-            SET_DOES_NOT_CHANGE_LAST_CHANGE = 0x1000, // if set, any set to a device value will not reset last change, this is not set by default for backward compatibility
-            IS_LIGHT = 0x2000,       // Device controls a lighting device (used by Alexa)
-            // for compatibility with 1.7, the following 2 bits are 0 by default which disables SetDeviceStatus notify and enables SetDeviceValue notify
-            // rjh added 1967
-            // SETSTATUS_NOTIFY = &H4000  ' if set, SetDeviceStatus calls plugin SetIO (default is 0 or not to notify)
-            // SETVALUE_NOTIFY = &H8000   ' if set, SetDeviceValue calls plugin SetIO (default is 0 or to not notify)
-            // ON_OFF_ONLY = &H10000      ' if set, device actions are ON and OFF only
-            NO_STATUS_TRIGGER = 0x20000,   // If set, device will not appear in the device status change trigger or conditions lists.
-            NO_GRAPHICS_DISPLAY = 0x40000,    // this device will not display any graphics for its status, graphics pairs are ignored
-            NO_STATUS_DISPLAY = 0x80000,     // if set, no status text will be displayed for a device, will still display any graphic from graphic pairs
-            CONTROL_POPUP = 0x100000,   // The controls for this device should appear in a popup window on the device utility page.
-            HIDE_IN_MOBILE = 0x200000,
-            // MUSIC_API = &H200000
-            // MULTIZONE_API = &H400000
-            // SECURITY_API = &H800000
-            MISC_UNUSED_09 = 0x400000,
-            MISC_UNUSED_10 = 0x800000,
-            MISC_UNUSED_11 = 0x1000000,
-            MISC_UNUSED_12 = 0x2000000,
-            MISC_UNUSED_13 = 0x4000000,
-            MISC_UNUSED_14 = 0x8000000,
-            MISC_UNUSED_15 = 0x10000000,
-            MISC_UNUSED_16 = 0x20000000,
-            MISC_UNUSED_17 = 0x40000000
-        }
-    
-        public enum eDeviceProperty {
-            Ref,
-            AdditionalDisplayData,
-            Address,
-            AssociatedDevices_Add,
-            AssociatedDevices_Remove,
-            AssociatedDevices_ClearAll,
-            Attention,
-            Buttons,
-            Can_Dim,
-            Code,
-            Device_Type,
-            Device_Type_String,
-            Image,
-            ImageLarge,
-            Interface,
-            InterfaceInstance,
-            Last_Change,
-            Location,
-            Location2,
-            MISC_Clear,
-            MISC_Set,
-            Name,
-            OLD_Values,
-            PlugExtraData,
-            Relationship,
-            ScriptName,
-            ScriptFunc,
-            ScaleText,
-            Status_Support,
-            StringSelected,
-            UserNote,
-            UserAccess,
-            LinkedDevice,
-            VoiceCommand
-        }
-    
         // For HSEvent callbacks
         public enum HSEvent {
             // X10 = 1
@@ -160,36 +75,6 @@ namespace HomeSeer.PluginSdk {
             SETUP_CHANGE = 0x2000,
             RUN_SCRIPT_SPECIAL = 0x4000,
             GENERIC = 0x8000        // RVCT added 3/10/08, 2.2.0.76ish
-        }
-    
-    
-        public enum HSDAY {
-            Monday = 0x1,
-            Tuesday = 0x2,
-            Wednesday = 0x4,
-            Thursday = 0x8,
-            Friday = 0x10,
-            Saturday = 0x20,
-            Sunday = 0x40,
-            All_Days = 0x7F,
-            Weekends = 0x60,
-            Weekdays = 0x1F
-        }
-    
-        public enum CAPIControlType {
-            Not_Specified = 1,
-            Values = 2,                          // This is the default to use if one of the others is not specified.
-            Single_Text_from_List = 3,
-            List_Text_from_List = 4,
-            Button = 5,
-            ValuesRange = 6,                 // Rendered as a drop-list by default.
-            ValuesRangeSlider = 7,
-            TextList = 8,
-            TextBox_Number = 9,
-            TextBox_String = 10,
-            Radio_Option = 11,
-            Button_Script = 12,      // Rendered as a button, executes a script when activated.
-            Color_Picker = 13
         }
     
         public enum CAPIControlButtonImage {
@@ -320,11 +205,6 @@ namespace HomeSeer.PluginSdk {
             Run_On_String_Change = 3
         }
         
-        public enum VSVGPairType {
-            SingleValue = 1,
-            Range       = 2
-        }
-        
         public enum TunnelCommand {
             Unknown                = 0,
             OpenConnection         = 1,
@@ -431,63 +311,6 @@ namespace HomeSeer.PluginSdk {
             SPEAK_MESSAGE = 2, // Text message
             SPEAK_WAVEFILE = 3 // Play a wave file
         }
-        
-        public enum CD_DAY_EvenOdd {
-            Even = 0,
-            Odd  = 1
-        }
-
-        public enum CD_DAY_IS_TYPE {
-            FIRST  = 1,
-            SECOND = 2,
-            THIRD  = 3,
-            FOURTH = 4,
-            LAST   = 5,
-            FIFTH  = 6
-        }
-
-        public enum ePairStatusControl {
-            Status  = 1,
-            Control = 2,
-            Both    = 3
-        }
-
-        public enum ePairControlUse {
-            Not_Specified = 0,
-            _On           = 1,
-            _Off          = 2,
-            _Dim          = 3,
-            _On_Alternate = 4,
-            _Play         = 5, // media control devices
-            _Pause        = 6,
-            _Stop         = 7,
-            _Forward      = 8,
-            _Rewind       = 9,
-            _Repeat       = 10,
-            _Shuffle      = 11,
-            _HeatSetPoint = 12, // these are added so we can support IFTTT for now until they change their API
-            _CoolSetPoint    = 13,
-            _ThermModeOff    = 14,
-            _ThermModeHeat   = 15,
-            _ThermModeCool   = 16,
-            _ThermModeAuto   = 17,
-            _DoorLock        = 18,
-            _DoorUnLock      = 19,
-            _ThermFanAuto    = 20,
-            _ThermFanOn      = 21,
-            _ColorControl    = 22,
-            _DimFan          = 23,
-            _MotionActive    = 24,
-            _MotionInActive  = 25,
-            _ContactActive   = 26,
-            _ContactInActive = 27
-        }
-
-        public enum eSearchReturn {
-            r_String_Other = 0,
-            r_URL          = 1,
-            r_Object       = 2
-        }
 
         public enum eOSType {
             windows = 0,
@@ -503,18 +326,6 @@ namespace HomeSeer.PluginSdk {
             Timeout_OK             = 6,
             Other_Error            = 7,
             Status_Not_Supported   = 8
-        }
-
-        public struct SearchReturn {
-            public eSearchReturn RType;
-            public string        RDescription;
-            public string        RValue;
-            public object        RObject;
-        }
-
-        public struct Pair {
-            public string Name;
-            public string Value;
         }
         
         [Serializable]

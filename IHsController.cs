@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.CAPI;
+using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Energy;
 using HomeSeer.PluginSdk.Speech;
 using HSCF.Communication.ScsServices.Service;
@@ -123,23 +124,6 @@ namespace HomeSeer.PluginSdk {
         object GetDeviceByRef(int @ref);
         object GetDeviceEnumerator();
         
-        //VSP
-        
-        VSPair DeviceVSP_Get(int dvRef, double Value, Constants.ePairStatusControl VSPType);
-        string DeviceVSP_GetStatus(int dvRef, double Value, Constants.ePairStatusControl VSPType);
-        VSPair[] DeviceVSP_GetAllStatus(int dvRef);
-        int DeviceVSP_CountStatus(int dvRef);
-        int DeviceVSP_CountControl(int dvRef);
-        int DeviceVSP_CountAll(int dvRef);
-        bool DeviceVSP_PairsProtected(int dvRef);
-        
-        //VGP
-        
-        StatusGraphic DeviceVGP_Get(int dvRef, double Value);
-        int DeviceVGP_Count(int dvRef);
-        string DeviceVGP_GetGraphic(int dvRef, double Value);
-        bool DeviceVGP_PairsProtected(int dvRef);
-        
         bool DeviceExistsRef(int dvRef);
         int DeviceExistsAddress(string Address, bool CaseSensitive);
         int DeviceExistsAddressFull(string Address, bool CaseSensitive);
@@ -163,26 +147,16 @@ namespace HomeSeer.PluginSdk {
         
         void SetDeviceValueByRef(int dvRef, double Valuenum, bool trigger);
         void SetDeviceString(int dvRef, string st, bool reset);
-        void DeviceVSP_ClearAll(int dvRef, bool TrueConfirm);
-        bool DeviceVSP_ClearAny(int dvRef, double Value);
-        bool DeviceVSP_ClearBoth(int dvRef, double Value);
-        bool DeviceVSP_ClearControl(int dvRef, double Value);
-        bool DeviceVSP_ClearStatus(int dvRef, double Value);
-        bool DeviceVSP_ChangePair(int dvRef, VSPair Existing, Constants.ePairStatusControl NewType);
-        bool DeviceVSP_AddPair(int dvRef, VSPair Pair);
-        bool DeviceVGP_AddPair(int dvRef, StatusGraphic Pair);
-        void DeviceVGP_ClearAll(int dvRef, bool TrueConfirm);
-        bool DeviceVGP_Clear(int dvRef, double Value);
         
         //void SetDeviceProperty<TProp>(int devRef, Constants.eDeviceProperty property, TProp value); 
-        void DeviceProperty_Int(int dvRef, Constants.eDeviceProperty Prop, int Value);
-        void DeviceProperty_String(int dvRef, Constants.eDeviceProperty Prop, string Value);
-        void DeviceProperty_StrArray(int dvRef, Constants.eDeviceProperty Prop, string[] Value);
-        void DeviceProperty_Boolean(int dvRef, Constants.eDeviceProperty Prop, bool Value);
-        void DeviceProperty_DevType(int dvRef, Constants.eDeviceProperty Prop, DeviceTypeInfo Value);
-        void DeviceProperty_Date(int dvRef, Constants.eDeviceProperty Prop, DateTime Value);
-        void DeviceProperty_dvMISC(int dvRef, Constants.eDeviceProperty Prop, Constants.dvMISC Value);
-        void DeviceProperty_PlugData(int dvRef, Constants.eDeviceProperty Prop, PlugExtraData Value);
+        void DeviceProperty_Int(int dvRef, EDeviceProperty Prop, int Value);
+        void DeviceProperty_String(int dvRef, EDeviceProperty Prop, string Value);
+        void DeviceProperty_StrArray(int dvRef, EDeviceProperty Prop, string[] Value);
+        void DeviceProperty_Boolean(int dvRef, EDeviceProperty Prop, bool Value);
+        void DeviceProperty_DevType(int dvRef, EDeviceProperty Prop, DeviceTypeInfo Value);
+        void DeviceProperty_Date(int dvRef, EDeviceProperty Prop, DateTime Value);
+        void DeviceProperty_dvMISC(int dvRef, EDeviceProperty Prop, EDeviceMiscFlag Value);
+        void DeviceProperty_PlugData(int dvRef, EDeviceProperty Prop, PlugExtraData Value);
         
         void SetDeviceValue(string Address, double Value);
         void SetDeviceValueByName(string devname, double Value);

@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using HomeSeer.PluginSdk.CAPI;
+using HomeSeer.PluginSdk.Devices;
 
 namespace HomeSeer.PluginSdk {
 
@@ -8,7 +9,7 @@ namespace HomeSeer.PluginSdk {
     [Serializable]
     public class DeviceButtonScript {
 
-        private CAPIControlLocation mvarButtonLocation;
+        private ControlLocation mvarButtonLocation;
         private string              mvarLabel       = "";
         private string              mvarScriptFile  = "";
         private string              mvarScriptFunc  = "";
@@ -18,7 +19,7 @@ namespace HomeSeer.PluginSdk {
         public DeviceButtonScript() {
             mvarButtonLocation.Column     = 1;
             mvarButtonLocation.Row        = 1;
-            mvarButtonLocation.ColumnSpan = 1;
+            mvarButtonLocation.Width = 1;
         }
 
         public double Value {
@@ -79,7 +80,7 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
-        public CAPIControlLocation ButtonLocation => mvarButtonLocation;
+        public ControlLocation ButtonLocation => mvarButtonLocation;
 
         public int ButtonRow {
             get => mvarButtonLocation.Row;
@@ -92,8 +93,8 @@ namespace HomeSeer.PluginSdk {
         }
 
         public int ButtonColumnSpan {
-            get => mvarButtonLocation.ColumnSpan;
-            set => mvarButtonLocation.ColumnSpan = value;
+            get => mvarButtonLocation.Width;
+            set => mvarButtonLocation.Width = value;
         }
 
     }
