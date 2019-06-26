@@ -176,8 +176,8 @@ namespace HomeSeer.PluginSdk {
         bool DeviceNoLog(int dvRef);
         //TODO bool DeviceInvalidValue { get; set; } -> What is this designed to do?
         
-        Constants.CAPIControlResponse CAPIControlHandler(CAPIControl CC);
-        Constants.CAPIControlResponse CAPIControlsHandler(CAPIControl[] CC);
+        Constants.CAPIControlResponse CAPIControlHandler(object CC);
+        Constants.CAPIControlResponse CAPIControlsHandler(object[] CC);
 
         #endregion
         

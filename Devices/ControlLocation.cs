@@ -25,6 +25,32 @@ namespace HomeSeer.PluginSdk.Devices {
             set => _width = value < 1 ? 1 : value;
         }
 
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+
+            if (!(obj is ControlLocation otherLocation)) {
+                return false;
+            }
+
+            if (_row != otherLocation._row) {
+                return false;
+            }
+            if (_column != otherLocation._column) {
+                return false;
+            }
+            if (_width != otherLocation._width) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return _row.GetHashCode() * _column.GetHashCode() * _width.GetHashCode();
+        }
+
     }
 
 }

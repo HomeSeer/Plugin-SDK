@@ -13,8 +13,20 @@ namespace HomeSeer.PluginSdk {
         private bool         _isRange = false;
         private string       _graphicPath = "";
         private double       _value;
-        private ValueRange        _range = new ValueRange();
+        private ValueRange   _range = new ValueRange();
         
+        public StatusGraphic(string imagePath, double targetValue) {
+            _graphicPath = imagePath;
+            _value = targetValue;
+        }
+        
+        public StatusGraphic(string imagePath, double minValue, double maxValue) {
+            _graphicPath = imagePath;
+            _isRange = true;
+            _range.Min = minValue;
+            _range.Max = maxValue;
+        }
+
         public string Graphic {
             get => _graphicPath;
             set => _graphicPath = value;
@@ -46,6 +58,35 @@ namespace HomeSeer.PluginSdk {
             }
 
             return Math.Abs(_value - value) < 0.01D;
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+
+            if (!(obj is StatusGraphic otherSg)) {
+                return false;
+            }
+
+            if (_isRange != otherSg._isRange) {
+                return false;
+            }
+            if (_graphicPath != otherSg._graphicPath) {
+                return false;
+            }
+            if (_value != otherSg._value) {
+                return false;
+            }
+            if (_range != otherSg._range) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return _isRange ? _range.Min.GetHashCode() : _value.GetHashCode();
         }
 
     }

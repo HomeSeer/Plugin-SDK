@@ -162,7 +162,7 @@ namespace HomeSeer.PluginSdk {
         /// A collection of <see cref="CAPIControl"/> objects,
         ///  one for each device being controlled
         /// </param>
-        void SetIOMulti(System.Collections.Generic.List<CAPIControl> colSend);
+        void SetIOMulti(System.Collections.Generic.List<object> colSend);
         
         /// <summary>
         /// Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device

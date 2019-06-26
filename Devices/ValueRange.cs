@@ -5,12 +5,25 @@ namespace HomeSeer.PluginSdk.Devices {
     public class ValueRange {
         
         public double ValueOffset  { get; set; } = 0;
+        public int    Steps        { get; set; } = 10;
         
         private int    _decimalPlaces;
         private double _min;
         private double _max;
         private string _prefix = "";
         private string _suffix = "";
+
+        public ValueRange(double min, double max) {
+            _min = min;
+            _max = max;
+
+            if (min % 1 != 0 || max % 1 != 0) {
+                _decimalPlaces = 2;
+            }
+            else {
+                _decimalPlaces = 0;
+            }
+        }
 
         public double Min {
             get => _min;
@@ -58,6 +71,44 @@ namespace HomeSeer.PluginSdk.Devices {
 
         public bool IsValueInRange(double value) {
             return value >= _min | value <= _max;
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+
+            if (!(obj is ValueRange otherValueRange)) {
+                return false;
+            }
+
+            if (_min != otherValueRange._min) {
+                return false;
+            }
+            if (_max != otherValueRange._max) {
+                return false;
+            }
+            if (_prefix != otherValueRange._prefix) {
+                return false;
+            }
+            if (_suffix != otherValueRange._suffix) {
+                return false;
+            }
+            if (_decimalPlaces != otherValueRange._decimalPlaces) {
+                return false;
+            }
+            if (ValueOffset != otherValueRange.ValueOffset) {
+                return false;
+            }
+            if (Steps != otherValueRange.Steps) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return _min.GetHashCode() * _max.GetHashCode();
         }
 
     }

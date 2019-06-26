@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using HomeSeer.PluginSdk;
 
 namespace Classes {
 
-    [Serializable()]
+    [Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public class StatusGraphicCollection {
         
         private System.Collections.Specialized.OrderedDictionary _statusGraphics = new System.Collections.Specialized.OrderedDictionary();
@@ -64,6 +66,27 @@ namespace Classes {
             }
         }
         
+        public bool ContainsValue(double value) {
+            try {
+
+                StatusGraphic foundStatusGraphic = null;
+                foreach (double statusControlKey in _statusGraphics.Keys) {
+                    if (foundStatusGraphic == null) {
+                        foundStatusGraphic = (StatusGraphic) _statusGraphics[statusControlKey];
+                    }
+                    if (value <= statusControlKey) {
+                        break;
+                    }
+                    foundStatusGraphic = (StatusGraphic) _statusGraphics[statusControlKey];
+                }
+
+                return foundStatusGraphic != null && foundStatusGraphic.IsValueInRange(value);
+            }
+            catch (Exception) {
+                return false;
+            }
+        }
+        
         public List<StatusGraphic> Values => _statusGraphics.Values.Cast<StatusGraphic>().ToList();
         
         public int Count => _statusGraphics?.Count ?? 0;
@@ -73,10 +96,19 @@ namespace Classes {
         
         //Delete
 
-        public void Remove(double value) {
+        public void RemoveKey(double value) {
             var itemToDelete = this[value];
             var itemKey      = itemToDelete.IsRange ? itemToDelete.RangeMin : itemToDelete.Value;
-            _statusGraphics.Remove(itemKey);
+            _statusGraphics.Remove(value);
+        }
+        
+        public void Remove(StatusGraphic statusGraphic) {
+            var itemKey = statusGraphic.IsRange ? statusGraphic.RangeMin : statusGraphic.Value;
+            var itemToDelete = this[itemKey];
+            
+            if (itemToDelete.GetHashCode() == statusGraphic.GetHashCode()) {
+                _statusGraphics.Remove(itemKey);
+            }
         }
 
         public void RemoveAll() {

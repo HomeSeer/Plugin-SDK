@@ -11,75 +11,44 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #region Public
         
+        public Dictionary<EDeviceProperty, object> Changes { get; private set; } = new Dictionary<EDeviceProperty, object>();
+        
         public DateTime LastChange { get; private set; } = DateTime.MinValue;
         public int      Ref        { get; private set; } = -1;
 
-        public Dictionary<EDeviceProperty, object> Changes { get; private set; } = new Dictionary<EDeviceProperty, object>();
-        
-        public string Address {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.Address)) {
-                    return (string) Changes[EDeviceProperty.Address];
-                }
-                
-                return _address ?? "";
-            }
-            set {
-
-                if (value == _address) {
-                    Changes.Remove(EDeviceProperty.Address);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EDeviceProperty.Address)) {
-                    Changes[EDeviceProperty.Address] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.Address, value);
-                }
-
-                if (_cacheChanges) {
-                    return;
-                }
-                _address = value ?? "";
-            }
-        }
-
-        public int[] AssociatedDevices {
+        public HashSet<int> AssociatedDevices {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    return (Changes[EDeviceProperty.AssociatedDevices] as HashSet<int>)?.ToArray() ?? new int[0];
+                    return Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
                 }
                 
-                return _assDevices.ToArray();
+                return _assDevices;
             }
-            set {
+            /*set {
 
-                var uniqueDevices = value != null ? new HashSet<int>(value.Distinct()) : new HashSet<int>();
-                if (uniqueDevices == _assDevices) {
+                if (value == _assDevices) {
                     Changes.Remove(EDeviceProperty.AssociatedDevices);
                     return;
                 }
                 
                 if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    Changes[EDeviceProperty.AssociatedDevices] = uniqueDevices;
+                    Changes[EDeviceProperty.AssociatedDevices] = value ?? new HashSet<int>();
                 }
                 else {
-                    Changes.Add(EDeviceProperty.AssociatedDevices, uniqueDevices);
+                    Changes.Add(EDeviceProperty.AssociatedDevices, value ?? new HashSet<int>());
                 }
                 
                 if (_cacheChanges) {
                     return;
                 }
-                _assDevices = uniqueDevices;
-            }
+                _assDevices = value ?? new HashSet<int>();
+            }*/
         }
 
         public string AssociatedDevicesList {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    var cachedAssDevices = (Changes[EDeviceProperty.AssociatedDevices] as HashSet<int>)?.ToArray();
-                    if (cachedAssDevices == null || cachedAssDevices.Length == 0) {
+                    if (!(Changes[EDeviceProperty.AssociatedDevices] is HashSet<int> cachedAssDevices) || cachedAssDevices.Count == 0) {
                         return "";
                     }
 
@@ -91,34 +60,6 @@ namespace HomeSeer.PluginSdk.Devices {
                 }
 
                 return string.Join(",", _assDevices.Select(i => i.ToString()));
-            }
-        }
-        
-        public string Attention {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.Attention)) {
-                    return (string) Changes[EDeviceProperty.Attention];
-                }
-                
-                return _attention ?? "";
-            }
-            set {
-                if (value == _attention) {
-                    Changes.Remove(EDeviceProperty.Attention);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EDeviceProperty.Attention)) {
-                    Changes[EDeviceProperty.Attention] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.Attention, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _attention = value ?? "";
             }
         }
         
@@ -150,34 +91,6 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        public string Code {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.Code)) {
-                    return (string) Changes[EDeviceProperty.Code];
-                }
-
-                return _code ?? "";
-            }
-            set {
-                if (value == _code) {
-                    Changes.Remove(EDeviceProperty.Code);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EDeviceProperty.Code)) {
-                    Changes[EDeviceProperty.Code] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.Code, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _code = value ?? "";
-            }
-        }
-
         public DeviceTypeInfo DeviceType {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.DeviceType)) {
@@ -206,36 +119,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        public string DeviceTypeString {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.DeviceTypeString)) {
-                    return (string) Changes[EDeviceProperty.DeviceTypeString];
-                }
-
-                return _devTypeString;
-            }
-            set {
-                if (value == _devTypeString) {
-                    Changes.Remove(EDeviceProperty.DeviceTypeString);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EDeviceProperty.DeviceTypeString)) {
-                    Changes[EDeviceProperty.DeviceTypeString] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.DeviceTypeString, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _devTypeString = value ?? "";
-            }
-        }
-
-        public string FullAddress => 
-            $"{_address?.Trim()}{((string.IsNullOrWhiteSpace(_address) || string.IsNullOrWhiteSpace(_code)) ? "" : "-")}{_code?.Trim()}";
+        //public string FullAddress => $"{_address?.Trim()}{((string.IsNullOrWhiteSpace(_address) || string.IsNullOrWhiteSpace(_code)) ? "" : "-")}{_code?.Trim()}";
         
         public string Image {
             get {
@@ -424,6 +308,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _plugExtraData;
             }
             set {
+                
                 if (value == _plugExtraData) {
                     Changes.Remove(EDeviceProperty.PlugExtraData);
                     return;
@@ -450,6 +335,16 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _relationship;
             }
             set {
+
+                var currentAssociatedDeviceList = _assDevices ?? new HashSet<int>();
+                if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
+                    currentAssociatedDeviceList = (HashSet<int>) Changes[EDeviceProperty.AssociatedDevices];
+                }
+
+                if (currentAssociatedDeviceList.Count > 0) {
+                    throw new DeviceRelationshipException("Please clear this devices association with other devices before changing its relationship type.");
+                }
+                
                 if (value == _relationship) {
                     Changes.Remove(EDeviceProperty.Relationship);
                     return;
@@ -469,34 +364,29 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public string Status {
-            get => _status;
-            set => _status = value ?? "";
-        }
-
-        public string ScaleText {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.ScaleText)) {
-                    return (string) Changes[EDeviceProperty.ScaleText];
+                if (Changes.ContainsKey(EDeviceProperty.Status)) {
+                    return (string) Changes[EDeviceProperty.Status];
                 }
-
-                return _scaleText;
+                
+                return _status;
             }
             set {
-                if (value == _scaleText) {
-                    Changes.Remove(EDeviceProperty.ScaleText);
+                if (value == _status) {
+                    Changes.Remove(EDeviceProperty.Status);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.ScaleText)) {
-                    Changes[EDeviceProperty.ScaleText] = value;
+                if (Changes.ContainsKey(EDeviceProperty.Status)) {
+                    Changes[EDeviceProperty.Status] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.ScaleText, value);
+                    Changes.Add(EDeviceProperty.Status, value);
                 }
                 
                 if (_cacheChanges) {
                     return;
                 }
-                _scaleText = value ?? "";
+                _status = value ?? "";
             }
         }
 
@@ -555,13 +445,49 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public StatusControlCollection StatusControls {
-            get => _statusControls;
-            set => _statusControls = value ?? new StatusControlCollection();
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                    return Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+                }
+                
+                return _statusControls;
+            }
+            /*set {
+                var currentRelationship = _relationship;
+                
+                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
+                    currentRelationship = (ERelationship) Changes[EDeviceProperty.Relationship];
+                }
+
+                if (currentRelationship != ERelationship.Child || currentRelationship != ERelationship.Standalone) {
+                    throw new DeviceRelationshipException("Only child and standalone devices can have status controls");
+                }
+                
+                _statusControls = value ?? new StatusControlCollection();
+            }*/
         }
 
         public StatusGraphicCollection StatusGraphics {
-            get => _statusGraphics;
-            set => _statusGraphics = value ?? new StatusGraphicCollection();
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                    return Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+                }
+                
+                return _statusGraphics;
+            }
+            /*set {
+                var currentRelationship = _relationship;
+                
+                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
+                    currentRelationship = (ERelationship) Changes[EDeviceProperty.Relationship];
+                }
+
+                if (currentRelationship != ERelationship.Child || currentRelationship != ERelationship.Standalone) {
+                    throw new DeviceRelationshipException("Only child and standalone devices can have status graphics");
+                }
+                
+                _statusGraphics = value ?? new StatusGraphicCollection();
+            }*/
         }
 
         //String or String[]
@@ -689,15 +615,15 @@ namespace HomeSeer.PluginSdk.Devices {
         // '''
         // internal bool InvalidValue = false;
         
-        private string         _address           = "";
+        //private string         _address           = "";
         private HashSet<int>   _assDevices        = new HashSet<int>();
-        private string         _attention         = "";
+        //private string         _attention         = "";
         //private string         _buttons           = "";
         //private Hashtable      _buttonScripts     = new Hashtable();
         private bool           _cacheChanges      = false;
         private bool           _canDim            = false;
-        private string         _code              = "";
-        private string         _devTypeString     = "";
+        //private string         _code              = "";
+        //private string         _devTypeString     = "";
         private DeviceTypeInfo _deviceType;
         private string         _image             = "";
         private string         _imageLarge        = "";
@@ -711,7 +637,7 @@ namespace HomeSeer.PluginSdk.Devices {
         private PlugExtraData  _plugExtraData     = new PlugExtraData();
         private ERelationship  _relationship      = ERelationship.Not_Set;
         private string         _status            = "";
-        private string         _scaleText         = "";
+        //private string         _scaleText         = "";
         private string         _scriptFunc        = "";
         private string         _scriptName        = "";
         private string         _userAccess        = "Any";
@@ -741,53 +667,356 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public HsDevice Duplicate(int deviceRef, HsDevice source) {
-            var dev = new HsDevice(deviceRef, source.LastChange);
-            dev._address = source.Address;
-            dev._assDevices = new HashSet<int>(source.AssociatedDevices.Distinct());
-            dev._attention = source.Attention;
-            dev._canDim = source.CanDim;
-            dev._code = source.Code;
-            dev._deviceType = source.DeviceType;
-            dev._devTypeString = source.DeviceTypeString;
-            dev._image = source.Image;
-            dev._imageLarge = source.ImageLarge;
-            dev._interface = source.Interface;
-            dev._location = source.Location;
-            dev._location2 = source.Location2;
-            dev._misc = source.Misc;
-            dev._name = source.Name;
-            dev._plugExtraData = source.PlugExtraData;
-            dev._relationship = source.Relationship;
-            dev._status = source.Status;
-            dev._scaleText = source.ScaleText;
-            dev._scriptFunc = source.ScriptFunc;
-            dev._scriptName = source.ScriptName;
-            dev._statusControls = source.StatusControls;
-            dev._statusGraphics = source.StatusGraphics;
-            dev._stringSelected = source.StringSelected;
-            dev._userAccess = source.UserAccess;
-            dev._userNote = source.UserNote;
-            dev._value = source.Value;
-            dev._voiceCommand = source.VoiceCommand;
+            var dev = new HsDevice(deviceRef, source.LastChange)
+                      {
+                          _assDevices     = source.AssociatedDevices,
+                          _canDim         = source.CanDim,
+                          _deviceType     = source.DeviceType,
+                          _image          = source.Image,
+                          _imageLarge     = source.ImageLarge,
+                          _interface      = source.Interface,
+                          _location       = source.Location,
+                          _location2      = source.Location2,
+                          _misc           = source.Misc,
+                          _name           = source.Name,
+                          _plugExtraData  = source.PlugExtraData,
+                          _relationship   = source.Relationship,
+                          _status         = source.Status,
+                          _scriptFunc     = source.ScriptFunc,
+                          _scriptName     = source.ScriptName,
+                          _statusControls = source.StatusControls,
+                          _statusGraphics = source.StatusGraphics,
+                          _stringSelected = source.StringSelected,
+                          _userAccess     = source.UserAccess,
+                          _userNote       = source.UserNote,
+                          _value          = source.Value,
+                          _voiceCommand   = source.VoiceCommand
+                      };
             return dev;
+        }
+
+        public void RevertChanges() {
+            Changes = new Dictionary<EDeviceProperty, object>();
+        }
+
+        public void SetParentDevice(int deviceRef) {
+
+            var associatedDevices = _assDevices ?? new HashSet<int>();
+
+            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
+                associatedDevices = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
+            }
+
+            if (associatedDevices.Count > 0) {
+                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
+                    var cachedRelationshipChange = (ERelationship) Changes[EDeviceProperty.Relationship];
+                    if (cachedRelationshipChange == ERelationship.Parent_Root) {
+                        throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
+                    }
+                }
+                else if (_relationship == ERelationship.Parent_Root) {
+                    throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
+                }
+            }
+            
+            var updatedDeviceList = new HashSet<int> {deviceRef};
+
+            if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
+                Changes[EDeviceProperty.Relationship] = ERelationship.Child;
+            }
+            else {
+                Changes.Add(EDeviceProperty.Relationship, ERelationship.Child);
+            }
+
+            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
+                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
+            }
+            else {
+                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _assDevices = updatedDeviceList;
+            _relationship = ERelationship.Child;
+        }
+
+        /*private bool AddAssociatedDevice(int deviceRef) {
+            if (_relationship != ERelationship.Parent_Root || _relationship != ERelationship.Child) {
+                throw new DeviceRelationshipException("Cannot add an association to a device that is not a parent or child.");
+            }
+
+            var wasDeviceAdded = false;
+            var updatedDeviceList = _assDevices ?? new HashSet<int>();
+            
+            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
+
+                updatedDeviceList = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
+                wasDeviceAdded = updatedDeviceList.Add(deviceRef);
+                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
+            }
+            else {
+                wasDeviceAdded = updatedDeviceList.Add(deviceRef);
+                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
+            }
+
+            if (!_cacheChanges) {
+                _assDevices = updatedDeviceList;
+            }
+
+            return wasDeviceAdded;
+        }
+
+        private bool RemoveAssociatedDevice(int deviceRef) {
+            
+            var wasDeviceRemoved = false;
+            var updatedDeviceList = _assDevices ?? new HashSet<int>();
+            
+            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
+
+                updatedDeviceList = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
+                wasDeviceRemoved = updatedDeviceList.Remove(deviceRef);
+                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
+            }
+            else {
+                wasDeviceRemoved = updatedDeviceList.Remove(deviceRef);
+                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
+            }
+
+            if (!_cacheChanges) {
+                _assDevices = updatedDeviceList;
+            }
+
+            return wasDeviceRemoved;
+        }*/
+
+        public void AddStatusControl(StatusControl statusControl) {
+
+            var currentStatusControls = _statusControls ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            }
+            
+            currentStatusControls.Add(statusControl);
+            
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            }
+            else {
+                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _statusControls = currentStatusControls;
+        }
+
+        public bool HasControlForValue(double value) {
+            
+            var currentStatusControls = _statusControls ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            }
+
+            return currentStatusControls.ContainsValue(value);
+        }
+        
+        public bool HasControlForRange(ValueRange range) {
+            
+            var currentStatusControls = _statusControls ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            }
+
+            return currentStatusControls.ContainsValue(range.Min) || currentStatusControls.ContainsValue(range.Max);
+        }
+
+        public void RemoveStatusControl(StatusControl statusControl) {
+            
+            var currentStatusControls = _statusControls ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            }
+            
+            currentStatusControls.Remove(statusControl);
+            
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            }
+            else {
+                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _statusControls = currentStatusControls;
+        }
+
+        public void ClearStatusControls() {
+            
+            var currentStatusControls = new StatusControlCollection();
+            
+            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
+                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            }
+            else {
+                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _statusControls = currentStatusControls;
+        }
+
+        public void AddStatusGraphic(StatusGraphic statusGraphic) {
+            
+            var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            }
+            
+            currentStatusGraphics.Add(statusGraphic);
+            
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            }
+            else {
+                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _statusGraphics = currentStatusGraphics;
+        }
+        
+        public bool HasGraphicForValue(double value) {
+            
+            var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            }
+
+            return currentStatusGraphics.ContainsValue(value);
+        }
+
+        public void RemoveStatusGraphic(StatusGraphic statusGraphic) {
+            
+            var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            }
+            
+            currentStatusGraphics.Remove(statusGraphic);
+            
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            }
+            else {
+                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _statusGraphics = currentStatusGraphics;
+        }
+
+        public void ClearStatusGraphics() {
+            
+            var currentStatusGraphics = new StatusGraphicCollection();
+            
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            }
+            else {
+                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _statusGraphics = currentStatusGraphics;
         }
         
         public void AddMiscFlag(EDeviceMiscFlag misc) {
-            var miscTemp = _misc | (uint) misc;
-            if (miscTemp != _misc) {
-                _misc = _misc | (uint) misc;
+            
+            var currentMisc = _misc;
+            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                currentMisc = (uint) Changes[EDeviceProperty.Misc];
             }
+            
+            var tempMisc = currentMisc | (uint) misc;
+            
+            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                Changes[EDeviceProperty.Misc] = tempMisc;
+            }
+            else {
+                Changes.Add(EDeviceProperty.Misc, tempMisc);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+            
+            _misc = tempMisc;
         }
 
         public bool ContainsMiscFlag(EDeviceMiscFlag misc) {
-            return (_misc & (uint) misc) != 0;
+            var currentMisc = _misc;
+            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                currentMisc = (uint) Changes[EDeviceProperty.Misc];
+            }
+            
+            return (currentMisc & (uint) misc) != 0;
         }
 
-        public void ClearMiscFlag(EDeviceMiscFlag misc) {
-            var miscTemp = _misc ^ (uint) misc;
-            if (miscTemp != _misc) {
-                _misc = _misc ^ (uint) misc;
+        public void RemoveMiscFlag(EDeviceMiscFlag misc) {
+            var currentMisc = _misc;
+            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                currentMisc = (uint) Changes[EDeviceProperty.Misc];
             }
+            
+            var tempMisc = currentMisc ^ (uint) misc;
+            
+            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                Changes[EDeviceProperty.Misc] = tempMisc;
+            }
+            else {
+                Changes.Add(EDeviceProperty.Misc, tempMisc);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+            
+            _misc = tempMisc;
+        }
+
+        public void ClearMiscFlag() {
+            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                Changes[EDeviceProperty.Misc] = (uint) 0;
+            }
+            else {
+                Changes.Add(EDeviceProperty.Misc, (uint) 0);
+            }
+
+            if (_cacheChanges) {
+                return;
+            }
+
+            _misc = 0;
         }
 
     }

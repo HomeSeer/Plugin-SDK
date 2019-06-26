@@ -313,7 +313,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual void SetIOMulti(List<CAPI.CAPIControl> colSend) {
+        public virtual void SetIOMulti(List<object> colSend) {
             //TODO SetIOMulti -> process the device update
             /*foreach (var control in colSend) {
                 

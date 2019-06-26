@@ -52,6 +52,8 @@
 		<Compile Include="Devices\ControlLocation.cs" />
 		<Compile Include="Devices\DeviceButtonScript.cs" />
 		<Compile Include="Devices\DeviceCollection.cs" />
+		<Compile Include="Devices\DeviceFactory.cs" />
+		<Compile Include="Devices\DeviceRelationshipException.cs" />
 		<Compile Include="Devices\EDeviceMiscFlag.cs" />
 		<Compile Include="Devices\EDeviceProperty.cs" />
 		<Compile Include="Devices\ERelationship.cs" />

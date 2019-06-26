@@ -12,18 +12,18 @@ namespace HomeSeer.PluginSdk.Devices {
         
         //public string Label { get; set; }
         private string _label = "";
-        private bool _isControl;
+        private bool _isControl = true;
         private bool _isStatus = true;
         //public int ControlUse { get; set; }
         private EControlUse _controlUse = EControlUse.NotSpecified;
         //public EControlType ControlType { get; set; }
-        private EControlType _controlType = EControlType.NotSpecified;
+        private EControlType _controlType;
         //public object ControlStringList { get; set; }
         private List<string> _controlStates = new List<string>();
         //public double ControlValue { get; set; }
         private double _targetValue;
         //public bool SingleRangeEntry { get; set; }
-        private bool _isRange;
+        private bool _isRange = false;
         private ValueRange _targetRange = new ValueRange();
         /*
          public ControlLocation ControlLocation { get; set; }
@@ -32,6 +32,39 @@ namespace HomeSeer.PluginSdk.Devices {
          public int ControlLocColumnSpan { get; set; }
          */
         private ControlLocation _location = new ControlLocation();
+
+        public StatusControl(EControlType type) {
+            _controlType = type;
+            switch (type) {
+                case EControlType.NotSpecified:
+                    throw new ArgumentException("You must specify a valid control type", nameof(type));
+                    break;
+                case EControlType.Values:
+                    break;
+                case EControlType.TextSelectList:
+                    break;
+                case EControlType.Button:
+                    break;
+                case EControlType.ValueRangeDropDown:
+                    _isRange = true;
+                    break;
+                case EControlType.ValueRangeSlider:
+                    _isRange = true;
+                    break;
+                case EControlType.TextBoxNumber:
+                    break;
+                case EControlType.TextBoxString:
+                    break;
+                case EControlType.RadioOption:
+                    break;
+                case EControlType.ButtonScript:
+                    break;
+                case EControlType.ColorPicker:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, "You must specify a valid control type");
+            }
+        }
 
         public string Label {
             get => _label;
@@ -101,6 +134,53 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             return _targetRange.GetStringForValue(value);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+
+            if (!(obj is StatusControl otherStatusControl)) {
+                return false;
+            }
+			
+            if (_isControl != otherStatusControl._isControl) {
+                return false;
+            }
+            if (_isStatus != otherStatusControl._isStatus) {
+                return false;
+            }
+            if (_isRange != otherStatusControl._isRange) {
+                return false;
+            }
+            if (_label != otherStatusControl._label) {
+                return false;
+            }
+            if (_controlUse != otherStatusControl._controlUse) {
+                return false;
+            }
+            if (_controlType != otherStatusControl._controlType) {
+                return false;
+            }
+            if (_targetValue != otherStatusControl._targetValue) {
+                return false;
+            }
+            if (_location != otherStatusControl._location) {
+                return false;
+            }
+            if (_controlStates != otherStatusControl._controlStates) {
+                return false;
+            }
+            if (_targetRange != otherStatusControl._targetRange) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return _isRange ? _targetRange.Min.GetHashCode() : _targetValue.GetHashCode();
         }
 
     }

@@ -1,318 +1,144 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using HomeSeer.Jui.Views;
+using Newtonsoft.Json;
 
 namespace HomeSeer.PluginSdk {
 
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class PlugExtraData {
+        
+        #region Named
+        
+        public List<string> NamedKeys => _namedData?.Keys.ToList() ?? new List<string>();
+        public int NamedCount => _namedData?.Count ?? 0;
+        
+        private Dictionary<string, string> _namedData = new Dictionary<string, string>();
+        
+        //Create
+        public bool AddNamed(string key, string data) {
+            if (string.IsNullOrWhiteSpace(key)) {
+                throw new ArgumentNullException(nameof(key));
+            }
 
-        private System.Collections.SortedList Ncol = null;
-        private System.Collections.ArrayList UNcol = null;
-        // 
-        // ======================================================================
-        // 
-        private void CheckNamed()
-        {
-            if (Ncol == null)
-                Ncol = new System.Collections.SortedList();
-        }
-        private void CheckUnNamed()
-        {
-            if (UNcol == null)
-                UNcol = new System.Collections.ArrayList();
-        }
-        // 
-        // ======================================================================
-        // 
-        public int NamedCount()
-        {
-            if (Ncol == null)
-                return 0;
-            return Ncol.Count;
-        }
-    
-        public int UnNamedCount()
-        {
-            if (UNcol == null)
-                return 0;
-            return UNcol.Count;
-        }
-        // 
-        // ======================================================================
-        // 
-        public bool AddNamed(string Key, object Obj)
-        {
-            try
-            {
-                if (Key == null)
-                    return false;
-                if (string.IsNullOrEmpty(Key.Trim()))
-                    return false;
-                if (Obj == null)
-                    return false;
-                CheckNamed();
-                lock (Ncol.SyncRoot)
-                {
-                    try
-                    {
-                        if (Ncol.ContainsKey(Key.Trim().ToLower()))
-                            return false;
-                        lock (Ncol.SyncRoot)
-                            Ncol.Add(Key.Trim().ToLower(), Obj);
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        return false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
+            if (_namedData.ContainsKey(key)) {
                 return false;
             }
+                
+            _namedData.Add(key, data);
+            return true;
         }
-    
-        public int AddUnNamed(object Obj)
-        {
-            try
-            {
-                if (Obj == null)
-                    return -1;
-                CheckUnNamed();
-                lock (UNcol.SyncRoot)
-                    return UNcol.Add(Obj);
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-        }
-        // 
-        // ======================================================================
-        // 
-        public bool RemoveNamed(string Key)
-        {
-            try
-            {
-                if (Key == null)
-                    return false;
-                if (string.IsNullOrEmpty(Key.Trim()))
-                    return false;
-                CheckNamed();
-                try
-                {
-                    lock (Ncol.SyncRoot)
-                    {
-                        if (!Ncol.ContainsKey(Key.Trim().ToLower()))
-                            return false;
-                        Ncol.Remove(Key.Trim().ToLower());
-                    }
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-    
-        public bool RemoveUnNamed(int Index)
-        {
-            try
-            {
-                if (Index < 0)
-                    return false;
-                CheckUnNamed();
-                if (Index > UNcol.Count - 1)
-                    return false;
-                try
-                {
-                    lock (UNcol.SyncRoot)
-                        UNcol.RemoveAt(Index);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-        public bool RemoveUnNamed(object Obj)
-        {
-            try
-            {
-                if (Obj == null)
-                    return false;
-                CheckUnNamed();
-                try
-                {
-                    lock (UNcol.SyncRoot)
-                        UNcol.Remove(Obj);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-        // 
-        // ======================================================================
-        // 
-        public object GetNamed(string Key)
-        {
-            try
-            {
-                if (Key == null)
-                    return null;
-                if (string.IsNullOrEmpty(Key.Trim()))
-                    return null;
-                CheckNamed();
-                lock (Ncol.SyncRoot)
-                {
-                    if (!Ncol.ContainsKey(Key.Trim().ToLower()))
-                        return null;
-                    return Ncol[Key.Trim().ToLower()];
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-        public object GetNamed(int Index)
-        {
-            try
-            {
-                if (Index < 0)
-                    return null;
-                CheckNamed();
-                if (Index > (Ncol.Count - 1))
-                    return null;
-                return Ncol.GetByIndex(Index);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-        public string GetNamedKey(int Index)
-        {
-            try
-            {
-                if (Index < 0)
-                    return "";
-                CheckNamed();
-                lock (Ncol)
-                {
-                    if (Index > (Ncol.Count - 1))
-                        return "";
-                    return Ncol.GetKey(Index).ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-        }
-        public string[] GetNamedKeys()
-        {
+        
+        //Read
+        public object GetNamed<TData>(string key) {
+
+            var jsonString = this[key];
+            
             try {
-                if (Ncol == null)
-                    return new List<string>().ToArray();
-                System.Collections.IList Keys;
-                lock (Ncol.SyncRoot)
-                    Keys = Ncol.GetKeyList();
-                System.Collections.Generic.List<string> col = new System.Collections.Generic.List<string>();
-                for (int i = 0; i <= Keys.Count - 1; i++)
-                    col.Add(Keys[i].ToString());
-                return col.ToArray();
+                var data = JsonConvert.DeserializeObject<TData>(jsonString);
+				
+                return data;
             }
-            catch (Exception ex)
-            {
-                return new List<string>().ToArray();
+            catch (JsonSerializationException exception) {
+					
+                throw new JsonDataException("Couldn't deserialize the data", exception);
             }
         }
-    
-        public object GetUnNamed(int Index)
-        {
-            try
-            {
-                if (Index < 0)
-                    return null;
-                CheckUnNamed();
-                if (Index > (UNcol.Count - 1))
-                    return null;
-                lock (UNcol.SyncRoot)
-                    return UNcol[Index];
+        
+        public string this[string key] {
+            get {
+                if (string.IsNullOrWhiteSpace(key)) {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
+                return _namedData[key];
             }
-            catch (Exception ex)
-            {
-                return null;
+            set {
+                if (string.IsNullOrWhiteSpace(key)) {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
+                _namedData[key] = value;
             }
         }
-        public object[] GetAllUnNamed()
-        {
+        
+        //Delete
+        public bool RemoveNamed(string key) {
+            
+            if (string.IsNullOrWhiteSpace(key)) {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return _namedData.Remove(key);
+        }
+        
+        public void RemoveAllNamed() {
+            _namedData = new Dictionary<string, string>();
+        }
+        
+        #endregion
+        
+        #region UnNamed
+        
+        public List<string> UnNamed      => _unNamedData ?? new List<string>();
+        public int          UnNamedCount => _unNamedData?.Count ?? 0;
+        
+        private List<string> _unNamedData = new List<string>();
+        
+        //Create
+        public int AddUnNamed(string data) {
+
+            if (string.IsNullOrWhiteSpace(data)) {
+                throw new ArgumentNullException(nameof(data), "You cannot store empty strings or null data");
+            }
+            
+            _unNamedData.Add(data);
+            return _unNamedData.Count - 1;
+        }
+        
+        //Read
+        public object GetUnNamed<TData>(int index) {
+
+            var jsonString = this[index];
+            
             try {
-                if (UNcol == null)
-                    return new List<object>().ToArray();
-                CheckUnNamed();
-                if (UNcol.Count < 1)
-                    return new List<object>().ToArray();
-                lock (UNcol.SyncRoot)
-                    return UNcol.ToArray();
+                var data = JsonConvert.DeserializeObject<TData>(jsonString);
+				
+                return data;
             }
-            catch (Exception ex)
-            {
-                return new List<object>().ToArray();
+            catch (JsonSerializationException exception) {
+					
+                throw new JsonDataException("Couldn't deserialize the data", exception);
             }
         }
-        // 
-        // ======================================================================
-        // 
-        public void ClearAllNamed(bool Confirm)
-        {
-            if (!Confirm)
-                return;
-            try
-            {
-                CheckNamed();
-                lock (Ncol.SyncRoot)
-                    Ncol.Clear();
+
+        public string this[int index] {
+            get => _unNamedData[index];
+            set => _unNamedData[index] = value;
+        }
+        
+        //Delete
+        public void RemoveUnNamedAt(int index) {
+            
+            _unNamedData.RemoveAt(index);
+        }
+        
+        public bool RemoveUnNamed(string data) {
+            
+            if (string.IsNullOrWhiteSpace(data)) {
+                throw new ArgumentNullException(nameof(data), "Empty strings or null data cannot be stored");
             }
-            catch (Exception ex)
-            {
-            }
+
+            return _unNamedData.Remove(data);
         }
     
-        public void ClearAllUnNamed(bool Confirm)
-        {
-            if (!Confirm)
-                return;
-            try
-            {
-                CheckUnNamed();
-                lock (UNcol.SyncRoot)
-                    UNcol.Clear();
-            }
-            catch (Exception ex)
-            {
-            }
+        public void RemoveAllUnNamed() {
+            _unNamedData = new List<string>();
         }
+        
+        #endregion
 
     }
 
