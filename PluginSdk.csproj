@@ -54,9 +54,14 @@
 		<Compile Include="Devices\DeviceCollection.cs" />
 		<Compile Include="Devices\DeviceFactory.cs" />
 		<Compile Include="Devices\DeviceRelationshipException.cs" />
+		<Compile Include="Devices\EApiType.cs" />
 		<Compile Include="Devices\EDeviceMiscFlag.cs" />
 		<Compile Include="Devices\EDeviceProperty.cs" />
+		<Compile Include="Devices\EGenericDeviceType.cs" />
+		<Compile Include="Devices\EGenericFeatureType.cs" />
 		<Compile Include="Devices\ERelationship.cs" />
+		<Compile Include="Devices\FeatureFactory.cs" />
+		<Compile Include="Devices\NewDeviceData.cs" />
 		<Compile Include="Devices\StatusGraphicCollection.cs" />
 		<Compile Include="Devices\DeviceTypeInfo.cs" />
 		<Compile Include="Devices\EControlType.cs" />

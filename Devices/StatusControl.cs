@@ -24,7 +24,7 @@ namespace HomeSeer.PluginSdk.Devices {
         private double _targetValue;
         //public bool SingleRangeEntry { get; set; }
         private bool _isRange = false;
-        private ValueRange _targetRange = new ValueRange();
+        private ValueRange _targetRange = new ValueRange(0,0);
         /*
          public ControlLocation ControlLocation { get; set; }
          public int ControlLocRow { get; set; }
@@ -38,8 +38,6 @@ namespace HomeSeer.PluginSdk.Devices {
             switch (type) {
                 case EControlType.NotSpecified:
                     throw new ArgumentException("You must specify a valid control type", nameof(type));
-                    break;
-                case EControlType.Values:
                     break;
                 case EControlType.TextSelectList:
                     break;

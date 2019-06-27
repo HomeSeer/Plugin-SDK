@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using HomeSeer.PluginSdk;
 
-namespace Classes {
+namespace HomeSeer.PluginSdk.Devices {
 
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]

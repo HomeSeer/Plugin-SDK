@@ -10,6 +10,12 @@ namespace HomeSeer.PluginSdk.Devices {
         private int _column;
         private int _width;
 
+        public ControlLocation() {
+            _row = 0;
+            _column = 0;
+            _width = 1;
+        }
+
         public int Row {
             get => _row;
             set => _row = value < 0 ? 0 : value;

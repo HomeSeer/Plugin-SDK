@@ -11,7 +11,7 @@ namespace HomeSeer.PluginSdk.Devices {
         TextBoxString      = 10,
         RadioOption        = 11,
         ButtonScript       = 12, // Rendered as a button, executes a script when activated.
-        ColorPicker        = 13
+        ColorPicker        = 13  
 
     }
 

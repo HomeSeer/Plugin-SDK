@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Classes;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public class HsDevice {
         
         #region Properties
-
-        #region Public
         
         public Dictionary<EDeviceProperty, object> Changes { get; private set; } = new Dictionary<EDeviceProperty, object>();
         
         public DateTime LastChange { get; private set; } = DateTime.MinValue;
         public int      Ref        { get; private set; } = -1;
 
+        #region Public
+        
         public HashSet<int> AssociatedDevices {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
@@ -60,34 +61,6 @@ namespace HomeSeer.PluginSdk.Devices {
                 }
 
                 return string.Join(",", _assDevices.Select(i => i.ToString()));
-            }
-        }
-        
-        public bool CanDim {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.CanDim)) {
-                    return (bool) Changes[EDeviceProperty.CanDim];
-                }
-                
-                return _canDim;
-            }
-            set {
-                if (value == _canDim) {
-                    Changes.Remove(EDeviceProperty.CanDim);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EDeviceProperty.CanDim)) {
-                    Changes[EDeviceProperty.CanDim] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.CanDim, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _canDim = value;
             }
         }
 
@@ -146,33 +119,6 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _image = value ?? "";
-            }
-        }
-
-        public string ImageLarge {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.ImageLarge)) {
-                    return (string) Changes[EDeviceProperty.ImageLarge];
-                }
-
-                return _imageLarge;
-            }
-            set {
-                if (value == _imageLarge) {
-                    Changes.Remove(EDeviceProperty.ImageLarge);
-                    return;
-                }
-                if (Changes.ContainsKey(EDeviceProperty.ImageLarge)) {
-                    Changes[EDeviceProperty.ImageLarge] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.ImageLarge, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _imageLarge = value ?? "";
             }
         }
 
@@ -326,6 +272,33 @@ namespace HomeSeer.PluginSdk.Devices {
                 _plugExtraData = value;
             }
         }
+        
+        public string ProductImage {
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.ProductImage)) {
+                    return (string) Changes[EDeviceProperty.ProductImage];
+                }
+
+                return _productImage;
+            }
+            set {
+                if (value == _productImage) {
+                    Changes.Remove(EDeviceProperty.ProductImage);
+                    return;
+                }
+                if (Changes.ContainsKey(EDeviceProperty.ProductImage)) {
+                    Changes[EDeviceProperty.ProductImage] = value;
+                }
+                else {
+                    Changes.Add(EDeviceProperty.ProductImage, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _productImage = value ?? "";
+            }
+        }
 
         public ERelationship Relationship {
             get {
@@ -390,60 +363,6 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        public string ScriptFunc {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.ScriptFunc)) {
-                    return (string) Changes[EDeviceProperty.ScriptFunc];
-                }
-
-                return _scriptFunc;
-            }
-            set {
-                if (value == _scriptFunc) {
-                    Changes.Remove(EDeviceProperty.ScriptFunc);
-                    return;
-                }
-                if (Changes.ContainsKey(EDeviceProperty.ScriptFunc)) {
-                    Changes[EDeviceProperty.ScriptFunc] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.ScriptFunc, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _scriptFunc = value ?? "";
-            }
-        }
-
-        public string ScriptName {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.ScriptName)) {
-                    return (string) Changes[EDeviceProperty.ScriptName];
-                }
-
-                return _scriptName;
-            }
-            set {
-                if (value == _scriptName) {
-                    Changes.Remove(EDeviceProperty.ScriptName);
-                    return;
-                }
-                if (Changes.ContainsKey(EDeviceProperty.ScriptName)) {
-                    Changes[EDeviceProperty.ScriptName] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.ScriptName, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _scriptName = value ?? "";
-            }
-        }
-
         public StatusControlCollection StatusControls {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
@@ -488,34 +407,6 @@ namespace HomeSeer.PluginSdk.Devices {
                 
                 _statusGraphics = value ?? new StatusGraphicCollection();
             }*/
-        }
-
-        //String or String[]
-        public object StringSelected {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.StringSelected)) {
-                    return (string) Changes[EDeviceProperty.StringSelected];
-                }
-
-                return _stringSelected;
-            }
-            set {
-                if (value == _stringSelected) {
-                    Changes.Remove(EDeviceProperty.StringSelected);
-                    return;
-                }
-                if (Changes.ContainsKey(EDeviceProperty.StringSelected)) {
-                    Changes[EDeviceProperty.StringSelected] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.StringSelected, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _stringSelected = value;
-            }
         }
 
         public string UserAccess {
@@ -607,13 +498,6 @@ namespace HomeSeer.PluginSdk.Devices {
         #endregion
 
         #region Private
-
-        // InvalidValue
-        // '''  Indicates when a device has an invalid value.  In Z-Wave, -1 or 17
-        // '''    (the ways we used to indicate invalid states) could correspond to
-        // '''    a real value, so this Bool will be used instead.
-        // '''
-        // internal bool InvalidValue = false;
         
         //private string         _address           = "";
         private HashSet<int>   _assDevices        = new HashSet<int>();
@@ -621,30 +505,29 @@ namespace HomeSeer.PluginSdk.Devices {
         //private string         _buttons           = "";
         //private Hashtable      _buttonScripts     = new Hashtable();
         private bool           _cacheChanges      = false;
-        private bool           _canDim            = false;
+        //private bool           _canDim            = false;
         //private string         _code              = "";
         //private string         _devTypeString     = "";
-        private DeviceTypeInfo _deviceType;
+        private DeviceTypeInfo _deviceType; //TODO device type
         private string         _image             = "";
-        private string         _imageLarge        = "";
         private string         _interface         = "";
         //private string         _interfaceInstance = "";
-        //private bool           _invalidValue      = false;
-        private string         _location          = "";
-        private string         _location2         = "";
+        private string         _location          = "Home";
+        private string         _location2         = "Home";
         private uint           _misc;             //= (uint) Constants.dvMISC.SET_DOES_NOT_CHANGE_LAST_CHANGE;
         private string         _name              = "";
         private PlugExtraData  _plugExtraData     = new PlugExtraData();
-        private ERelationship  _relationship      = ERelationship.Not_Set;
+        private string         _productImage      = "";
+        private ERelationship  _relationship      = ERelationship.NotSet;
         private string         _status            = "";
         //private string         _scaleText         = "";
-        private string         _scriptFunc        = "";
-        private string         _scriptName        = "";
+        //private string         _scriptFunc        = "";
+        //private string         _scriptName        = "";
         private string         _userAccess        = "Any";
         private string         _userNote          = "";
         private double         _value             = 0D;
         private string         _voiceCommand      = "";
-        private object         _stringSelected;
+        //private object         _stringSelected;
         
         private StatusGraphicCollection _statusGraphics = new StatusGraphicCollection();
         private StatusControlCollection _statusControls = new StatusControlCollection();
@@ -653,9 +536,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
-        public HsDevice() {
-            
-        }
+        public HsDevice() {}
 
         public HsDevice(int deviceRef) {
             Ref = deviceRef;
@@ -670,10 +551,9 @@ namespace HomeSeer.PluginSdk.Devices {
             var dev = new HsDevice(deviceRef, source.LastChange)
                       {
                           _assDevices     = source.AssociatedDevices,
-                          _canDim         = source.CanDim,
                           _deviceType     = source.DeviceType,
                           _image          = source.Image,
-                          _imageLarge     = source.ImageLarge,
+                          _productImage     = source.ProductImage,
                           _interface      = source.Interface,
                           _location       = source.Location,
                           _location2      = source.Location2,
@@ -682,11 +562,8 @@ namespace HomeSeer.PluginSdk.Devices {
                           _plugExtraData  = source.PlugExtraData,
                           _relationship   = source.Relationship,
                           _status         = source.Status,
-                          _scriptFunc     = source.ScriptFunc,
-                          _scriptName     = source.ScriptName,
                           _statusControls = source.StatusControls,
                           _statusGraphics = source.StatusGraphics,
-                          _stringSelected = source.StringSelected,
                           _userAccess     = source.UserAccess,
                           _userNote       = source.UserNote,
                           _value          = source.Value,
@@ -710,11 +587,11 @@ namespace HomeSeer.PluginSdk.Devices {
             if (associatedDevices.Count > 0) {
                 if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
                     var cachedRelationshipChange = (ERelationship) Changes[EDeviceProperty.Relationship];
-                    if (cachedRelationshipChange == ERelationship.Parent_Root) {
+                    if (cachedRelationshipChange == ERelationship.Device) {
                         throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
                     }
                 }
-                else if (_relationship == ERelationship.Parent_Root) {
+                else if (_relationship == ERelationship.Device) {
                     throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
                 }
             }
@@ -722,10 +599,10 @@ namespace HomeSeer.PluginSdk.Devices {
             var updatedDeviceList = new HashSet<int> {deviceRef};
 
             if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                Changes[EDeviceProperty.Relationship] = ERelationship.Child;
+                Changes[EDeviceProperty.Relationship] = ERelationship.Feature;
             }
             else {
-                Changes.Add(EDeviceProperty.Relationship, ERelationship.Child);
+                Changes.Add(EDeviceProperty.Relationship, ERelationship.Feature);
             }
 
             if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
@@ -740,7 +617,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _assDevices = updatedDeviceList;
-            _relationship = ERelationship.Child;
+            _relationship = ERelationship.Feature;
         }
 
         /*private bool AddAssociatedDevice(int deviceRef) {
@@ -907,6 +784,16 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             return currentStatusGraphics.ContainsValue(value);
+        }
+        
+        public bool HasGraphicForRange(ValueRange range) {
+            
+            var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            }
+
+            return currentStatusGraphics.ContainsValue(range.Min) || currentStatusGraphics.ContainsValue(range.Max);
         }
 
         public void RemoveStatusGraphic(StatusGraphic statusGraphic) {

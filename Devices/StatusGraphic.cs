@@ -13,7 +13,7 @@ namespace HomeSeer.PluginSdk {
         private bool         _isRange = false;
         private string       _graphicPath = "";
         private double       _value;
-        private ValueRange   _range = new ValueRange();
+        private ValueRange   _range = new ValueRange(0,0);
         
         public StatusGraphic(string imagePath, double targetValue) {
             _graphicPath = imagePath;

@@ -5,7 +5,7 @@ namespace HomeSeer.PluginSdk.Devices {
         CanDim                    = 8,
         DeviceType                = 10,
         Image                     = 12,
-        ImageLarge                = 13,
+        ProductImage                = 13,
         Interface                 = 14,
         LastChange                = 16,
         Location                  = 17,

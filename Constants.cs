@@ -25,16 +25,6 @@ namespace HomeSeer.PluginSdk {
             REG_READY_TO_REGISTER = 4       // for HSPRO, plugin does not have a license and needs to be enabled to get one
         }
     
-        public enum eCapabilities {
-            // CA_IR = 2
-            CA_IO = 4,
-            CA_Security = 8,
-            CA_Thermostat = 0x10,
-            CA_Music = 0x20,
-            CA_SourceSwitch = 0x40,
-            CA_V2PLUGIN_API = 0x80
-        }
-    
         public enum ConfigDevicePostReturn {
             DoneAndSave = 1,
             DoneAndCancel = 2,
@@ -82,21 +72,6 @@ namespace HomeSeer.PluginSdk {
             Use_Status_Value = 1,
             Use_Custom = 2
         }
-        
-        public enum eDeviceAPI {
-            No_API = 0,
-            Plug_In = eCapabilities.CA_IO,                    // 4
-            Thermostat = eCapabilities.CA_Thermostat,         // 16
-            Media = eCapabilities.CA_Music,                   // 32
-            Security = eCapabilities.CA_Security,             // 8
-            SourceSwitch = eCapabilities.CA_SourceSwitch,     // 64
-            Script = 128,
-            Energy = 256
-        }
-        
-        public enum eDeviceType_Plugin {
-            Root = 999
-        }
 
         public enum eDeviceType_Energy {
             Watts = 1,
@@ -126,31 +101,7 @@ namespace HomeSeer.PluginSdk {
             Siren = 70,                          // Siren output - status usually - control follows alarm state.
             Root = 99,                           // Indicates a root device of a root/child grouping.
         }
-        public enum eDeviceType_Media {
-            Player_Status = 1,
-            Player_Status_Additional = 2,
-            Player_Control = 3,
-            Player_Volume = 4,
-            Player_Shuffle = 5,
-            Player_Repeat = 6,
-            Media_Genre = 7,
-            Media_Album = 8,
-            Media_Artist = 9,
-            Media_Track = 10,
-            Media_Playlist = 11,
-            Media_Type = 12,
-            Media_Selector_Control = 20, // Used to track which instance of MusicAPI and selection mode (e.g. album, artists, playlists)
-            Root = 99                           // Indicates a root device of a root/child grouping.
-        }
-        public enum eDeviceType_SourceSwitch {
-            Invalid = 0,
-            System = 1,                  // Indicates system status and/or contains system control capabilities.
-            Source = 10,                 // Indicates source status information and/or contains source control capabilities.
-            Source_Extended = 15,   // An extension to Source, can be used for less common status or control features.
-            Zone = 20,                   // Indicates zone status information and/or contains zone control capabilities.
-            Zone_Extended = 25,     // An extension to Zone, can be used for less common status or control features.
-            Root = 99                   // The root device of a root/child grouping.
-        }
+        
         public enum eDeviceSubType_SecurityArea {
             Invalid = 0,
             PRIMARY = 1,
@@ -163,6 +114,7 @@ namespace HomeSeer.PluginSdk {
             Area_Partition_8 = 8,
             Area_Partition_9 = 9
         }
+        
         public enum eDeviceType_Thermostat {
             Operating_State = 1,
             Temperature = 2,
@@ -197,12 +149,6 @@ namespace HomeSeer.PluginSdk {
             _Unused_3 = 3,
             _Unused_4 = 4,
             Humidity = 5
-        }
-        public enum eDeviceType_Script {
-            Disabled = 0,
-            Run_On_Any_Change = 1,
-            Run_On_Value_Change = 2,
-            Run_On_String_Change = 3
         }
         
         public enum TunnelCommand {
