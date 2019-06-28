@@ -155,7 +155,7 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Called by the HomeSeer system when a device that this plugin owns is controlled.
         /// <para>
-        /// A plugin owns a device when its Interface property is set to the plugin name.
+        /// A plugin owns a device when its Interface property is set to the plugin ID.
         /// </para>
         /// </summary>
         /// <param name="colSend">

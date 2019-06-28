@@ -114,70 +114,37 @@ namespace HomeSeer.PluginSdk {
         
         #region Create
         
-        int NewDeviceRef(string Name);
-        //TODO int NewDevice(string Name);
+        List<HsDevice> CreateDevice(NewDeviceData deviceData);
         
         #endregion
         
         #region Read
         
-        object GetDeviceByRef(int @ref);
-        object GetDeviceEnumerator();
-        
-        bool DeviceExistsRef(int dvRef);
-        int DeviceExistsAddress(string Address, bool CaseSensitive);
-        int DeviceExistsAddressFull(string Address, bool CaseSensitive);
-        int DeviceExistsCode(string Code);
-        
-        int GetDeviceRef(string sAddress);
-        int GetDeviceRefByName(string device_name);
-        int GetDeviceParentRefByRef(int @ref);
-        //TODO object GetDeviceEnumeratorUser(string user); -> This returns a DeviceClass
-        string GetNextVirtualCode();
-
-        //TODO ICAPIStatus CAPIGetStatus(int dvRef);
-        //TODO CAPIControl[] CAPIGetControl(int dvRef);
-        //TODO CAPIControl[] CAPIGetControlEx(int dvRef,bool SingleRangeEntry);
-        //TODO CAPIControl CAPIGetSingleControl(int dvRef,bool SingleRangeEntry, string Label,bool ExactCase, bool Contains);
-        //TODO CAPIControl CAPIGetSingleControlByUse(int dvRef, Constants.ePairControlUse UseType);
-        
+        HsDevice GetDeviceByRef(int devRef);
+        HsDevice GetDeviceByAddress(string devAddress);
+        List<HsDevice> GetDevicesByInterface(string interfaceName);
+                
         #endregion
         
         #region Update
-        
-        void SetDeviceValueByRef(int dvRef, double Valuenum, bool trigger);
-        void SetDeviceString(int dvRef, string st, bool reset);
-        
-        //void SetDeviceProperty<TProp>(int devRef, Constants.eDeviceProperty property, TProp value); 
-        void DeviceProperty_Int(int dvRef, EDeviceProperty Prop, int Value);
-        void DeviceProperty_String(int dvRef, EDeviceProperty Prop, string Value);
-        void DeviceProperty_StrArray(int dvRef, EDeviceProperty Prop, string[] Value);
-        void DeviceProperty_Boolean(int dvRef, EDeviceProperty Prop, bool Value);
-        void DeviceProperty_DevType(int dvRef, EDeviceProperty Prop, DeviceTypeInfo Value);
-        void DeviceProperty_Date(int dvRef, EDeviceProperty Prop, DateTime Value);
-        void DeviceProperty_dvMISC(int dvRef, EDeviceProperty Prop, EDeviceMiscFlag Value);
-        void DeviceProperty_PlugData(int dvRef, EDeviceProperty Prop, PlugExtraData Value);
-        
-        void SetDeviceValue(string Address, double Value);
-        void SetDeviceValueByName(string devname, double Value);
-        void SetDeviceStringByName(string devname, string strval, bool reset_lastchange);
-        void SetDeviceLastChange(int dvRef, DateTime change_time);
-        
+        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EDeviceProperty, object> changes);
+
         #endregion
         
         #region Delete
         
-        bool DeleteDevice(int dvRef);
-        //TODO void DeleteIODevices(string pluginName, string pluginInstance); -> Plugins operate by ID now; how do we handle this?
+        bool DeleteDevice(int devRef);
         
         #endregion
-
-        void SaveEventsDevices();
-        bool DeviceNoLog(int dvRef);
-        //TODO bool DeviceInvalidValue { get; set; } -> What is this designed to do?
         
-        Constants.CAPIControlResponse CAPIControlHandler(object CC);
-        Constants.CAPIControlResponse CAPIControlsHandler(object[] CC);
+        #region Control
+        
+        void SetDeviceValueByRef(int devRef, double value);
+        void SendDeviceControlStringByRef(int devRef, string controlString);
+
+        //TODO Bulk update control methods
+        
+        #endregion
 
         #endregion
         
@@ -188,6 +155,41 @@ namespace HomeSeer.PluginSdk {
         DateTime Sunset { get; }
         
         #endregion
+        
+        #region System
+        
+        string Version();
+        Constants.editions GetHSEdition();
+        string GetUsers();        
+        bool IsLicensed();
+        bool IsRegistered();
+        System.Collections.SortedList GetLocationsList();
+        System.Collections.SortedList GetLocations2List();
+        int CheckRegistrationStatus(string piname);
+        
+        //TODO System methods
+        //int InterfaceVersion();
+        //bool IsApplicationRunning(string ApplicationName);
+        //string RecurseFiles(string SourceDir);
+        //string[] RecurseFilesEx(string SourceDir);
+        //string GetAppPath();
+        //string GetOSVersion();
+        //string HSMemoryUsed();
+        //int HSModules();
+        //int HSThreads();
+        //void PowerFailRecover();
+        //void RestartSystem();
+        //void ShutDown();
+        //string SystemUpTime();
+        //TimeSpan SystemUpTimeTS();
+        //void WindowsLockSystem();
+        //void WindowsLogoffSystem();
+        //void WindowsShutdownSystem();
+        //void WindowsRebootSystem();
+        
+        #endregion
+        
+        #region Not Implemented
         
         #region Logging
         
@@ -247,39 +249,6 @@ namespace HomeSeer.PluginSdk {
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
-        
-        #endregion
-        
-        #region System
-        
-        string Version();
-        Constants.editions GetHSEdition();
-        string GetUsers();        
-        bool IsLicensed();
-        bool IsRegistered();
-        System.Collections.SortedList GetLocationsList();
-        System.Collections.SortedList GetLocations2List();
-        int CheckRegistrationStatus(string piname);
-        
-        //TODO System methods
-        //int InterfaceVersion();
-        //bool IsApplicationRunning(string ApplicationName);
-        //string RecurseFiles(string SourceDir);
-        //string[] RecurseFilesEx(string SourceDir);
-        //string GetAppPath();
-        //string GetOSVersion();
-        //string HSMemoryUsed();
-        //int HSModules();
-        //int HSThreads();
-        //void PowerFailRecover();
-        //void RestartSystem();
-        //void ShutDown();
-        //string SystemUpTime();
-        //TimeSpan SystemUpTimeTS();
-        //void WindowsLockSystem();
-        //void WindowsLogoffSystem();
-        //void WindowsShutdownSystem();
-        //void WindowsRebootSystem();
         
         #endregion
         
@@ -362,6 +331,8 @@ namespace HomeSeer.PluginSdk {
         //Constants.eOSType GetOSType();
         //clsLastVR[] GetLastVRCollection();
         //Constants.REGISTRATION_MODES PluginLicenseMode(string IfaceName);
+        
+        #endregion
 
     }
 

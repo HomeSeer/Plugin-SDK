@@ -11,11 +11,40 @@ namespace HomeSeer.PluginSdk.Devices {
         #region Properties
         
         public Dictionary<EDeviceProperty, object> Changes { get; private set; } = new Dictionary<EDeviceProperty, object>();
-        
+        public List<HsDevice> Features { get; internal set; } = new List<HsDevice>();
         public DateTime LastChange { get; private set; } = DateTime.MinValue;
         public int      Ref        { get; private set; } = -1;
 
         #region Public
+        
+        public string Address {
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.Address)) {
+                    return (string) Changes[EDeviceProperty.Address];
+                }
+                
+                return _address ?? "";
+            }
+            set {
+
+                if (value == _address) {
+                    Changes.Remove(EDeviceProperty.Address);
+                    return;
+                }
+                
+                if (Changes.ContainsKey(EDeviceProperty.Address)) {
+                    Changes[EDeviceProperty.Address] = value;
+                }
+                else {
+                    Changes.Add(EDeviceProperty.Address, value);
+                }
+
+                if (_cacheChanges) {
+                    return;
+                }
+                _address = value ?? "";
+            }
+        }
         
         public HashSet<int> AssociatedDevices {
             get {
@@ -499,7 +528,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #region Private
         
-        //private string         _address           = "";
+        private string         _address           = "";
         private HashSet<int>   _assDevices        = new HashSet<int>();
         //private string         _attention         = "";
         //private string         _buttons           = "";
@@ -550,10 +579,11 @@ namespace HomeSeer.PluginSdk.Devices {
         public HsDevice Duplicate(int deviceRef, HsDevice source) {
             var dev = new HsDevice(deviceRef, source.LastChange)
                       {
+                          _address        = source.Address,
                           _assDevices     = source.AssociatedDevices,
                           _deviceType     = source.DeviceType,
                           _image          = source.Image,
-                          _productImage     = source.ProductImage,
+                          _productImage   = source.ProductImage,
                           _interface      = source.Interface,
                           _location       = source.Location,
                           _location2      = source.Location2,
@@ -904,6 +934,30 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _misc = 0;
+        }
+
+        public HsDevice GetFeatureByType(DeviceTypeInfo featureType) {
+
+            if (Features.Count == 0) {
+                throw new KeyNotFoundException("There are no features on this device");
+            }
+
+            foreach (var feature in Features) {
+                var cFeatureType = feature.DeviceType;
+                if (cFeatureType.ApiType != featureType.ApiType) {
+                    continue;
+                }
+                if (cFeatureType.Type != featureType.Type) {
+                    continue;
+                }
+                if (cFeatureType.SubType != featureType.SubType) {
+                    continue;
+                }
+
+                return feature;
+            }
+            
+            throw new KeyNotFoundException("There are no features of that type on this device");
         }
 
     }

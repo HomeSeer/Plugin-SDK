@@ -31,6 +31,9 @@ namespace HomeSeer.PluginSdk {
         /// The default implementation should be sufficient for all purposes;
         ///  returning TRUE if the <see cref="Settings"/> property contains pages
         ///  or FALSE if it doesn't.
+        /// <para>
+        /// Override this and always return TRUE if you plan on adding settings pages to the collection later
+        /// </para>
         /// </remarks>
         public virtual bool HasSettings => (Settings?.Count ?? 0) > 0;
 
@@ -314,10 +317,10 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual void SetIOMulti(List<object> colSend) {
-            //TODO SetIOMulti -> process the device update
-            /*foreach (var control in colSend) {
-                
-            }*/
+            //TODO Send to HsInterfaceConnection
+            //Calculate the new device state according to controls
+            //Translate to OnDeviceControl()
+            
         }
 
         /// <inheritdoc />

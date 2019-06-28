@@ -61,12 +61,12 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #endregion
         
-        public FeatureFactory AsType(int featureType, int featureSubType) {
+        public FeatureFactory AsType(EFeatureType featureType, int featureSubType) {
 
             _feature.DeviceType = new DeviceTypeInfo()
                                  {
-                                     ApiType = EApiType.GenericFeature,
-                                     Type    = featureType,
+                                     ApiType = EApiType.Feature,
+                                     Type    = (int) featureType,
                                      SubType = featureSubType
                                  };
 

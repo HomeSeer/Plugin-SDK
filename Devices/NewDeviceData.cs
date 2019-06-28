@@ -8,15 +8,13 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class NewDeviceData {
 
-        private Dictionary<EDeviceProperty, object> _deviceData = new Dictionary<EDeviceProperty, object>();
-        private List<Dictionary<EDeviceProperty, object>> _featureData = new List<Dictionary<EDeviceProperty, object>>();
+        public Dictionary<EDeviceProperty, object> Device = new Dictionary<EDeviceProperty, object>();
+        public List<Dictionary<EDeviceProperty, object>> FeatureData = new List<Dictionary<EDeviceProperty, object>>();
         
         internal NewDeviceData(HsDevice device, List<HsDevice> features) {
-            _deviceData = device.Changes;
-            _featureData = features.Select(f => f.Changes).ToList();
+            Device = device.Changes;
+            FeatureData = features.Select(f => f.Changes).ToList();
         }
-        
-        
 
     }
 

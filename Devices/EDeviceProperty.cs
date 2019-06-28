@@ -2,10 +2,11 @@ namespace HomeSeer.PluginSdk.Devices {
 
     public enum EDeviceProperty {
         Ref                       = 0,
+        Address                   = 2,
         CanDim                    = 8,
         DeviceType                = 10,
         Image                     = 12,
-        ProductImage                = 13,
+        ProductImage              = 13,
         Interface                 = 14,
         LastChange                = 16,
         Location                  = 17,

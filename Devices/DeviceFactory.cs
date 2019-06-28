@@ -92,16 +92,20 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #endregion
 
-        public DeviceFactory AsType(int deviceType, int deviceSubType) {
+        public DeviceFactory AsType(EDeviceType deviceType, int deviceSubType) {
 
             _device.DeviceType = new DeviceTypeInfo()
                                  {
-                                     ApiType = EApiType.GenericDevice,
-                                     Type    = deviceType,
+                                     ApiType = EApiType.Device,
+                                     Type    = (int) deviceType,
                                      SubType = deviceSubType
                                  };
 
             return this;
+        }
+
+        internal NewDeviceData PrepareForHs() {
+            return new NewDeviceData(_device, _features);
         }
     }
 
