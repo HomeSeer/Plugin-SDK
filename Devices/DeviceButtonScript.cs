@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using HomeSeer.PluginSdk.CAPI;
 using HomeSeer.PluginSdk.Devices;
 
 namespace HomeSeer.PluginSdk {

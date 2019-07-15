@@ -1,4 +1,5 @@
-using HomeSeer.PluginSdk.CAPI;
+using System.Collections.Generic;
+using HomeSeer.PluginSdk.Devices;
 
 namespace HomeSeer.PluginSdk {
 
@@ -159,10 +160,10 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </summary>
         /// <param name="colSend">
-        /// A collection of <see cref="CAPIControl"/> objects,
+        /// A collection of <see cref="DeviceControlEvent"/> objects,
         ///  one for each device being controlled
         /// </param>
-        void SetIOMulti(System.Collections.Generic.List<object> colSend);
+        void SetIOMulti(List<DeviceControlEvent> controlEvents);
         
         /// <summary>
         /// Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device
@@ -353,8 +354,9 @@ namespace HomeSeer.PluginSdk {
         /// Called by HomeSeer when a trigger needs to be evaluated as a condition
         /// </summary>
         /// <param name="trigInfo">Object describing the trigger</param>
+        /// <param name="isCondition">TRUE if the trigger represents a condition, FALSE if it is a trigger</param>
         /// <returns>TRUE if the conditions are met; FALSE if they are not</returns>
-        bool TriggerTrue(TrigActInfo trigInfo);
+        bool TriggerTrue(TrigActInfo trigInfo, bool isCondition = false);
         
         #endregion
         

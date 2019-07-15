@@ -104,7 +104,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
 
-        internal NewDeviceData PrepareForHs() {
+        public NewDeviceData PrepareForHs() {
             return new NewDeviceData(_device, _features);
         }
     }

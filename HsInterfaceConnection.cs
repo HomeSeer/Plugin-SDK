@@ -129,23 +129,21 @@ namespace HomeSeer.PluginSdk {
                 throw new ArgumentException("This device is a feature.  Please use GetDeviceFeature() instead.");
             }
 
-            HsDevice device = null;
-
-            if (_devices.Count == 0 || !_devices.ContainsKey(devRef)) {
-                device = _hsController.GetDeviceByRef(devRef);
-                if (device == null) {
-                    throw new KeyNotFoundException("No device with the reference exists in HomeSeer");
-                }
-
-                if (device.Relationship == ERelationship.Feature) {
-                    _features.Add(device.Ref, device);
-                    throw new DeviceRelationshipException("This device is a feature.  Please use GetDeviceFeature() instead.");
-                }
-                
-                _devices.Add(device.Ref, device);
+            var device = _hsController.GetDeviceByRef(devRef);
+            
+            if (device == null) {
+                throw new KeyNotFoundException("No device with the reference exists in HomeSeer");
             }
-            else {
-                device = _devices[devRef];
+            
+            //Not excluding features from this method for now -JLW
+            /*if (device.Relationship == ERelationship.Feature) {
+                _features.Add(device.Ref, device);
+                throw new DeviceRelationshipException("This device is a feature.  Please use GetDeviceFeature() instead.");
+            }*/
+
+            if (_devices.ContainsKey(devRef)) {
+
+                
             }
 
             if (device.AssociatedDevices.Count == 0) {
@@ -153,6 +151,7 @@ namespace HomeSeer.PluginSdk {
             }
 
             foreach (var assDeviceRef in device.AssociatedDevices) {
+                //TODO get latest
                 if (_features.ContainsKey(assDeviceRef)) {
                     device.Features.Add(_features[assDeviceRef]);
                     continue;
@@ -195,9 +194,9 @@ namespace HomeSeer.PluginSdk {
         
         //Get Device Feature by type
 
-        public HsDevice GetDeviceFeatureByType() {
+        /*public HsDevice GetDeviceFeatureByType() {
             
-        }
+        }*/
         
         //Get Device feature by address?
         

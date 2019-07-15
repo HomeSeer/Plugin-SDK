@@ -258,9 +258,9 @@ namespace HomeSeer.PluginSdk {
             SPEAK_WAVEFILE = 3 // Play a wave file
         }
 
-        public enum eOSType {
-            windows = 0,
-            linux   = 1
+        public enum EOsType {
+            Windows = 0,
+            Linux   = 1
         }
         
         public enum enumPollResult {

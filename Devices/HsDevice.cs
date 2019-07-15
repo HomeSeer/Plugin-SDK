@@ -54,7 +54,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 
                 return _assDevices;
             }
-            /*set {
+            set {
 
                 if (value == _assDevices) {
                     Changes.Remove(EDeviceProperty.AssociatedDevices);
@@ -72,7 +72,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _assDevices = value ?? new HashSet<int>();
-            }*/
+            }
         }
 
         public string AssociatedDevicesList {
@@ -177,6 +177,33 @@ namespace HomeSeer.PluginSdk.Devices {
                 _interface = value ?? "";
             }
         }
+        
+        public bool IsValueInvalid {
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.InvalidValue)) {
+                    return (bool) Changes[EDeviceProperty.InvalidValue];
+                }
+
+                return _invalidValue || !IsValueValid();
+            }
+            set {
+                if (value == _invalidValue) {
+                    Changes.Remove(EDeviceProperty.InvalidValue);
+                    return;
+                }
+                if (Changes.ContainsKey(EDeviceProperty.InvalidValue)) {
+                    Changes[EDeviceProperty.InvalidValue] = value;
+                }
+                else {
+                    Changes.Add(EDeviceProperty.InvalidValue, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _invalidValue = value;
+            }
+        }
 
         /*public string InterfaceInstance {
             get => _interfaceInstance;
@@ -244,6 +271,23 @@ namespace HomeSeer.PluginSdk.Devices {
                 }
 
                 return _misc;
+            }
+            set {
+                if (value == _misc) {
+                    Changes.Remove(EDeviceProperty.Misc);
+                    return;
+                }
+                if (Changes.ContainsKey(EDeviceProperty.Misc)) {
+                    Changes[EDeviceProperty.Misc] = value;
+                }
+                else {
+                    Changes.Add(EDeviceProperty.Misc, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _misc = value;
             }
         }
 
@@ -493,8 +537,31 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public double Value {
-            get => _value;
-            set => _value = value;
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.Value)) {
+                    return (double) Changes[EDeviceProperty.Value];
+                }
+                
+                return _value;
+            }
+            set {
+                if (value == _value) {
+                    Changes.Remove(EDeviceProperty.Value);
+                    return;
+                }
+                if (Changes.ContainsKey(EDeviceProperty.Value)) {
+                    Changes[EDeviceProperty.Value] = value;
+                }
+                else {
+                    Changes.Add(EDeviceProperty.Value, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                
+                _value = value;
+            }
         }
 
         public string VoiceCommand {
@@ -540,6 +607,7 @@ namespace HomeSeer.PluginSdk.Devices {
         private DeviceTypeInfo _deviceType; //TODO device type
         private string         _image             = "";
         private string         _interface         = "";
+        private bool           _invalidValue      = false;
         //private string         _interfaceInstance = "";
         private string         _location          = "Home";
         private string         _location2         = "Home";
@@ -604,6 +672,16 @@ namespace HomeSeer.PluginSdk.Devices {
 
         public void RevertChanges() {
             Changes = new Dictionary<EDeviceProperty, object>();
+        }
+
+        private bool IsValueValid() {
+            try {
+                return HasControlForValue(_value) || HasGraphicForValue(_value);
+            }
+            catch (Exception exception) {
+                Console.WriteLine(exception);
+                return false;
+            }            
         }
 
         public void SetParentDevice(int deviceRef) {

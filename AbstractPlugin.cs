@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Text;
 using HomeSeer.Jui.Views;
+using HomeSeer.PluginSdk.Devices;
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
 using HSCF.Communication.ScsServices.Client;
@@ -102,6 +103,10 @@ namespace HomeSeer.PluginSdk {
         private static IScsServiceClient<IHsController> _client;
         
         private bool   _isShutdown;
+        
+        //Actions
+        
+        //Triggers
 
         #endregion
 
@@ -316,7 +321,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual void SetIOMulti(List<object> colSend) {
+        public virtual void SetIOMulti(List<DeviceControlEvent> colSend) {
             //TODO Send to HsInterfaceConnection
             //Calculate the new device state according to controls
             //Translate to OnDeviceControl()
@@ -330,71 +335,6 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual string SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual string ActionBuildUI(string sUnique, TrigActInfo actInfo) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual bool ActionConfigured(TrigActInfo actInfo) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual string ActionFormatUI(TrigActInfo actInfo) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual MultiReturn ActionProcessPostUI(NameValueCollection postData, TrigActInfo trigInfoIn) {
-            throw new NotImplementedException();
-            /*var result = new MultiReturn
-                         {
-                             sResult = "", DataOut = trigInfoIn.DataIn, TrigActInfo = trigInfoIn
-                         };
-            return result;*/
-        }
-
-        /// <inheritdoc />
-        public virtual bool HandleAction(TrigActInfo actInfo) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual string TriggerBuildUI(string sUnique, TrigActInfo trigInfo) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual string TriggerFormatUI(TrigActInfo trigInfo) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual MultiReturn TriggerProcessPostUI(NameValueCollection postData, TrigActInfo trigInfoIn) {
-            throw new NotImplementedException();
-            /*var result = new MultiReturn
-                         {
-                             sResult = "", DataOut = trigInfoIn.DataIn, TrigActInfo = trigInfoIn
-                         };
-            return result;*/
-        }
-
-        /// <inheritdoc />
-        public virtual bool TriggerReferencesDevice(TrigActInfo trigInfo, int devRef) {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public virtual bool TriggerTrue(TrigActInfo trigInfo) {
             throw new NotImplementedException();
         }
 
@@ -421,35 +361,108 @@ namespace HomeSeer.PluginSdk {
             //TODO process events
         }
 
+        #region Actions
+
+        /// <inheritdoc />
+        public virtual bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
+            return false;
+        }
+
+        /// <inheritdoc />
+        public virtual string ActionBuildUI(string sUnique, TrigActInfo actInfo) {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public virtual bool ActionConfigured(TrigActInfo actInfo) {
+            return false;
+        }
+
+        /// <inheritdoc />
+        public virtual string ActionFormatUI(TrigActInfo actInfo) {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public virtual MultiReturn ActionProcessPostUI(NameValueCollection postData, TrigActInfo trigInfoIn) {
+            throw new NotImplementedException();
+            /*var result = new MultiReturn
+                         {
+                             sResult = "", DataOut = trigInfoIn.DataIn, TrigActInfo = trigInfoIn
+                         };
+            return result;*/
+        }
+
+        /// <inheritdoc />
+        public virtual bool HandleAction(TrigActInfo actInfo) {
+            return false;
+        }
+        
         /// <inheritdoc />
         public virtual string GetActionNameByNumber(int actionNum) {
+            return "Unknown";
+        }
+
+        #endregion
+
+        #region Triggers
+
+        /// <inheritdoc />
+        public virtual string TriggerBuildUI(string sUnique, TrigActInfo trigInfo) {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public virtual string TriggerFormatUI(TrigActInfo trigInfo) {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public virtual MultiReturn TriggerProcessPostUI(NameValueCollection postData, TrigActInfo trigInfoIn) {
+            throw new NotImplementedException();
+            /*var result = new MultiReturn
+                         {
+                             sResult = "", DataOut = trigInfoIn.DataIn, TrigActInfo = trigInfoIn
+                         };
+            return result;*/
+        }
+
+        /// <inheritdoc />
+        public virtual bool TriggerReferencesDevice(TrigActInfo trigInfo, int devRef) {
+            return false;
         }
 
         /// <inheritdoc />
         public virtual bool TriggerHasConditions(int triggerNum) {
-            throw new NotImplementedException();
+            return false;
         }
 
         /// <inheritdoc />
         public virtual int GetSubTriggerCount(int triggerNum) {
-            throw new NotImplementedException();
+            return 0;
         }
 
         /// <inheritdoc />
         public virtual string GetSubTriggerNameByNumber(int triggerNum, int subTriggerNum) {
-            throw new NotImplementedException();
+            return "Unknown";
         }
 
         /// <inheritdoc />
         public virtual bool IsTriggerConfigValid(TrigActInfo trigInfo) {
-            throw new NotImplementedException();
+            return false;
         }
 
         /// <inheritdoc />
         public virtual string GetTriggerNameByNumber(int triggerNum) {
-            throw new NotImplementedException();
+            return "Unknown";
         }
+
+        /// <inheritdoc />
+        public virtual bool TriggerTrue(TrigActInfo trigInfo, bool isCondition = false) {
+            return false;
+        }
+
+        #endregion
 
         #endregion
 

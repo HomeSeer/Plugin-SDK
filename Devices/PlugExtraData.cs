@@ -63,6 +63,14 @@ namespace HomeSeer.PluginSdk {
                 _namedData[key] = value;
             }
         }
+
+        public bool ContainsNamed(string key) {
+            if (string.IsNullOrWhiteSpace(key)) {
+                throw new ArgumentNullException(nameof(key));
+            }
+            
+            return _namedData.ContainsKey(key);
+        }
         
         //Delete
         public bool RemoveNamed(string key) {

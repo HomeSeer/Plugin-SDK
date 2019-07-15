@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Reflection;
-using HomeSeer.PluginSdk.CAPI;
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -32,6 +30,7 @@ namespace HomeSeer.PluginSdk.Devices {
          public int ControlLocColumnSpan { get; set; }
          */
         private ControlLocation _location = new ControlLocation();
+        //private int _deviceRef;
 
         public StatusControl(EControlType type) {
             _controlType = type;
@@ -94,6 +93,11 @@ namespace HomeSeer.PluginSdk.Devices {
             set => _controlStates = value;
         }
 
+        /*public int DeviceRef {
+            get => _deviceRef;
+            set => _deviceRef = value;
+        }*/
+
         public double TargetValue {
             get => _targetValue;
             set => _targetValue = value;
@@ -132,6 +136,30 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             return _targetRange.GetStringForValue(value);
+        }
+        
+        public DeviceControlEvent CreateControlEvent(int devRef) {
+            var dce = new DeviceControlEvent(devRef)
+                      {
+                          Label        = GetLabelForValue(_targetValue),
+                          ControlUse   = _controlUse,
+                          ControlType  = _controlType,
+                          ControlValue = _targetValue
+                      };
+            
+            return dce;
+        }
+
+        public DeviceControlEvent CreateControlEvent(int devRef, double value) {
+            var dce = new DeviceControlEvent(devRef)
+                      {
+                          Label        = GetLabelForValue(value),
+                          ControlUse   = _controlUse,
+                          ControlType  = _controlType,
+                          ControlValue = value
+                      };
+            
+            return dce;
         }
 
         public override bool Equals(object obj) {

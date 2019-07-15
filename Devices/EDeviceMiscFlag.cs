@@ -16,6 +16,7 @@ namespace HomeSeer.PluginSdk.Devices {
             MYHS_DEVICE_CHANGE_NOTIFY = 0x800,        // if set, a change of this device will be sent to MYHS through the tunnel
             SET_DOES_NOT_CHANGE_LAST_CHANGE = 0x1000, // if set, any set to a device value will not reset last change, this is not set by default for backward compatibility
             IS_LIGHT = 0x2000,       // Device controls a lighting device (used by Alexa)
+            CanDim = 0x4000,
             // for compatibility with 1.7, the following 2 bits are 0 by default which disables SetDeviceStatus notify and enables SetDeviceValue notify
             // rjh added 1967
             // SETSTATUS_NOTIFY = &H4000  ' if set, SetDeviceStatus calls plugin SetIO (default is 0 or not to notify)

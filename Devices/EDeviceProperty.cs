@@ -24,7 +24,9 @@ namespace HomeSeer.PluginSdk.Devices {
         Misc                      = 35,
         Status                    = 36,
         StatusControls            = 37,
-        StatusGraphics            = 38
+        StatusGraphics            = 38,
+        Value                     = 39,
+        InvalidValue              = 40
 
     }
 

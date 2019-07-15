@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using HomeSeer.PluginSdk.CAPI;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Energy;
-using HomeSeer.PluginSdk.Speech;
 using HSCF.Communication.ScsServices.Service;
 
 namespace HomeSeer.PluginSdk {
@@ -89,24 +87,24 @@ namespace HomeSeer.PluginSdk {
         ///   This must be exactly the same as the filename used to register the page</param>
         void UnregisterFeaturePage(string pluginId, string pageFilename);
 
-        /*<summary>
-        Register a page as the device inclusion process guide for this plugin.
-        <para>
-        There can only be one device inclusion process for each plugin.
-          The page that is tagged as the device inclusion process will be displayed first in
-         the list of features for the plugin and be shown in the list of devices users can add.
-        </para>
-        </summary>
-        <param name="pluginId">The ID of the plugin</param>
-        <param name="pageFilename">The filename of the page, ending with .html</param>
-        <param name="linkText">The text that appears in the navigation menu</param>*/
-        //void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
+        /// <summary>
+        /// Register a page as the device inclusion process guide for this plugin.
+        /// <para>
+        /// There can only be one device inclusion process for each plugin.
+        ///   The page that is tagged as the device inclusion process will be displayed first in
+        ///  the list of features for the plugin and be shown in the list of devices users can add.
+        /// </para>
+        /// </summary>
+        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pageFilename">The filename of the page, ending with .html</param>
+        /// <param name="linkText">The text that appears in the navigation menu</param>
+        void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
 
-        /*<summary>
-        Unregister the device inclusion page for this plugin.
-        </summary>
-        <param name="pluginId">The ID of the plugin</param>*/
-        //void UnregisterDeviceIncPage(string pluginId);
+        /// <summary>
+        /// Unregister the device inclusion page for this plugin.
+        /// </summary>
+        /// <param name="pluginId">The ID of the plugin</param>
+        void UnregisterDeviceIncPage(string pluginId);
         
         #endregion
         
@@ -114,7 +112,9 @@ namespace HomeSeer.PluginSdk {
         
         #region Create
         
-        List<HsDevice> CreateDevice(NewDeviceData deviceData);
+        int CreateDevice(NewDeviceData deviceData);
+
+        int CreateFeatureForDevice(NewFeatureData featureData);
         
         #endregion
         
@@ -122,12 +122,41 @@ namespace HomeSeer.PluginSdk {
         
         HsDevice GetDeviceByRef(int devRef);
         HsDevice GetDeviceByAddress(string devAddress);
+        HsDevice GetDeviceWithFeaturesByRef(int devRef);
         List<HsDevice> GetDevicesByInterface(string interfaceName);
+
+        string GetDeviceNameByRef(int devRef);
+        bool DoesDeviceRefExist(int devRef);
+        bool IsDeviceValueValid(int devRef);
+
+        object GetDevicePropertyByRef(int devRef, EDeviceProperty property);
+        bool IsFlagOnDeviceRef(int devRef, EDeviceMiscFlag miscFlag);
+        
+        StatusControl GetStatusControlForValue(int devRef, double value);
+        StatusControl GetStatusControlForLabel(int devRef, string label);
+        List<StatusControl> GetStatusControlsForRange(int devRef, double min, double max);
+        int GetStatusControlCountByRef(int devRef);
+        List<StatusControl> GetStatusControlsByRef(int devRef);
+        
+        StatusGraphic GetStatusGraphicForValue(int devRef, double value);
+        List<StatusGraphic> GetStatusGraphicsForRange(int devRef, double min, double max);
+        int GetStatusGraphicCountByRef(int devRef);
+        List<StatusControl> GetStatusGraphicsByRef(int devRef);
                 
         #endregion
         
         #region Update
         HsDevice UpdateDeviceByRef(int devRef, Dictionary<EDeviceProperty, object> changes);
+
+        void UpdateDevicePropertyByRef(int devRef, EDeviceProperty property, object value);
+        
+        void AddStatusControlToDevice(int devRef, StatusControl statusControl);
+        bool DeleteStatusControlByValue(int devRef, double value);
+        void ClearStatusControlsByRef(int devRef);
+        
+        void AddStatusGraphicToDevice(int devRef, StatusGraphic statusGraphic);
+        bool DeleteStatusGraphicByValue(int devRef, double value);
+        void ClearStatusGraphicsByRef(int devRef);
 
         #endregion
         
@@ -138,6 +167,9 @@ namespace HomeSeer.PluginSdk {
         #endregion
         
         #region Control
+
+        string ControlDeviceByValue(int devRef, double value);
+        string ControlDeviceByString(int devRef, string value);
         
         void SetDeviceValueByRef(int devRef, double value);
         void SendDeviceControlStringByRef(int devRef, string controlString);
@@ -148,11 +180,65 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
         
-        #region DateTime
+        #region Events
         
-        DateTime SolarNoon { get; }
-        DateTime Sunrise { get; }
-        DateTime Sunset { get; }
+        void RegisterGenericEventCB(string GenericType, string pluginId);
+        void UnRegisterGenericEventCB(string GenericType, string pluginId);
+        void RaiseGenericEventCB(string GenericType, object[] Parms, string pluginId);
+        void RegisterEventCB(Constants.HSEvent evType, string pluginId);
+        void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
+
+        string GetEventNameByRef(int eventRef);
+        bool IsEventLoggingEnabledByRef(int eventRef);
+
+        int CreateEventWithNameInGroup(string name, string group);
+
+        void TriggerEventByRef(int eventRef);
+        string AddDeviceActionToEvent(int evRef, StatusControl CC);
+
+        bool EventSetTimeTrigger(int evRef, DateTime DT);
+
+        bool EventSetRecurringTrigger(int evRef, TimeSpan Frequency, bool Once_Per_Hour, bool Reference_To_Hour);
+
+        void AddActionRunScript(int @ref, string script, string method, string parms);
+
+        void DisableEventByRef(int evref);
+
+        void DeleteAfterTrigger_Set(int evRef);
+
+        void EnableEventByRef(int evref);
+
+        bool EventEnabled(int evRef);
+
+        void DeleteAfterTrigger_Clear(int evRef);
+
+        void DeleteEventByRef(int evRef);
+
+        int EventCount { get; }
+
+        bool EventExistsByRef(int evRef);
+
+        int GetEventRefByName(string event_name);
+
+        int GetEventRefByNameAndGroup(string event_name, string event_group);
+
+        EventGroupData GetEventGroupById(int GroupRef);
+
+        List<EventGroupData> GetAllEventGroups();
+
+        EventData GetEventByRef(int eventRef);
+
+        List<EventData> GetAllEvents();
+
+        List<EventData> GetEventsByGroup(int GroupId);
+
+        List<TrigActInfo> GetActionsByInterface(string pluginId);
+        
+        //TrigActInfo[] TriggerMatches(string Plug_Name, int TrigID, int SubTrig);
+        void TriggerFire(string Plug_Name, TrigActInfo TrigInfo);
+
+        TrigActInfo[] GetTriggers(string PIName);
+        TrigActInfo[] GetActions(string PIName);
         
         #endregion
         
@@ -166,7 +252,17 @@ namespace HomeSeer.PluginSdk {
         System.Collections.SortedList GetLocationsList();
         System.Collections.SortedList GetLocations2List();
         int CheckRegistrationStatus(string piname);
+
+        int GetOsType();
         
+        #region DateTime
+        
+        DateTime SolarNoon { get; }
+        DateTime Sunrise   { get; }
+        DateTime Sunset    { get; }
+        
+        #endregion
+
         //TODO System methods
         //int InterfaceVersion();
         //bool IsApplicationRunning(string ApplicationName);
@@ -186,53 +282,48 @@ namespace HomeSeer.PluginSdk {
         //void WindowsLogoffSystem();
         //void WindowsShutdownSystem();
         //void WindowsRebootSystem();
-        
+
         #endregion
         
-        #region Not Implemented
-        
         #region Logging
-        
-        //TODO Logging
-        //void WriteLog(string mtype, string message);
-        //void WriteLogEx(string mtype, string message, string Color);
-        //void WriteLogDetail(string mType, string Message, string Color, int Priority, string mFrom, int ErrorCode);
-        //void ClearLog();
-        //bool NoLog { get; set; }
-        //string LogGet();
-        //LogEntry[] GetLog_Date(DateTime StartDate, DateTime EndDate);
-        //LogEntry[] GetLog_Date_Text(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx);
-        //LogEntry[] GetLog_Date_Priority(DateTime StartDate, DateTime EndDate, int Priority_Start, int Priority_End,bool Show_No_Priority);
-        //LogEntry[] GetLog_Date_ErrorCode(DateTime StartDate, DateTime EndDate, int ErrorCode);
-        //LogEntry[] GetLog_FullFilter(DateTime StartDate, DateTime EndDate, string mType, string mEntry,bool mEntry_RegEx, int Priority_Start, int Priority_End,bool Show_No_Priority,int ErrorCode, bool ShowAllErrorCode);
+
+        void WriteLog(ELogType logType, string message, string pluginName, int color = 0);
         
         #endregion
         
         #region Energy
+
+        //Create
+        string Energy_AddCalculator(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
+        string Energy_AddCalculatorEvenDay(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
+        bool Energy_AddData(int dvRef, EnergyData Data);
+        bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
+        bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
         
-        //TODO Energy methods
-        //int Energy_RemoveData(int dvRef,DateTime dteStart);
-        //string Energy_AddCalculator(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
-        //string Energy_AddCalculatorEvenDay(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
-        //int Energy_CalcCount(int dvRef);
-        //SortedList<int, string> Energy_GetGraphDataIDs();
-        //SortedList<int, string> Energy_GetEnergyRefs(bool GetParentRefs);
-        //System.Drawing.Image Energy_GetGraph(int id, string dvRefs, int width, int height, string format);
-        //bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
-        //bool Energy_AddData(int dvRef, EnergyData Data);
-        //bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
-        //List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
-        //List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
-        //List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
-        //EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
-        //EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
-        //int Energy_SaveGraphData(EnergyGraphData Data);
-        //EnergyGraphData Energy_GetGraphData(int ID);
+        //Read
+        int Energy_CalcCount(int dvRef);
+        SortedList<int, string> Energy_GetGraphDataIDs();
+        SortedList<int, string> Energy_GetEnergyRefs(bool GetParentRefs);
+        System.Drawing.Image Energy_GetGraph(int id, string dvRefs, int width, int height, string format);        
+        List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
+        List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
+        List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
+        EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
+        EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
+        EnergyGraphData Energy_GetGraphData(int ID);
+        
+        //Update
+        int Energy_SaveGraphData(EnergyGraphData Data);
+        
+        //Delete
+        int Energy_RemoveData(int dvRef, DateTime dteStart);
         
         #endregion
-        
+
+        #region Not Implemented
+
         #region Scripts
-        
+
         //TODO Script methods
         //object PluginFunction(string plugname, string pluginstance, string func,object[] parms);
         //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
@@ -249,11 +340,11 @@ namespace HomeSeer.PluginSdk {
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
-        
+
         #endregion
-        
+
         #region COM
-        
+
         //TODO COM port methods
         //void CloseComPort(int port);
         //int GetComPortCount(int port);
@@ -263,11 +354,11 @@ namespace HomeSeer.PluginSdk {
         //void SendToComPort(int port, string sData);
         //void SendToComPortBytes(int port, byte[] Data);
         //void SetComPortRTSDTR(int port, bool rtsval, bool dtrval);
-        
+
         #endregion
-        
+
         #region Networking & Web
-        
+
         //TODO Networking methods
         //bool WEBCheckUserRights(int rights);
         //string WEBLoggedInUser();
@@ -278,41 +369,30 @@ namespace HomeSeer.PluginSdk {
         //string WANIP();
         //int WebServerPort();
         //int WebServerSSLPort();
-        
+
         //string GenCookieString(string Name, string Value, string expire = "", string path = "/");
-        
+
         #endregion
-        
+
         #region Images
-        
+
         //TODO image methods
         //bool WriteHTMLImageFile(byte[] ImageFile, string Dest, bool OverWrite);
         //bool WriteHTMLImage(System.Drawing.Image Image, string Dest, bool OverWrite);
         //bool DeleteImageFile(string DeleteFile);
-        
+
         #endregion
-        
+
         #region AppCallback
 
         //TODO AppCallback methods
         //void RegisterProxySpeakPlug(string   PIName, string PIInstance);
         //void UnRegisterProxySpeakPlug(string PIName, string PIInstance);
 
-        //void RegisterGenericEventCB(string   GenericType, string   PIName, string PIInstance);
-        //void UnRegisterGenericEventCB(string GenericType, string   PIName, string PIInstance);
-        //void RaiseGenericEventCB(string      GenericType, object[] Parms,  string PIName, string PIInstance);
-        //void RegisterEventCB(Constants.HSEvent evType, string PIName, string PIInstance);
-
-        //TrigActInfo[] TriggerMatches(string     Plug_Name, int         TrigID,    int SubTrig);             // new
-        //void          TriggerFire(string        Plug_Name, TrigActInfo TrigInfo);                           // new
-
-        //TrigActInfo[] GetTriggers(string     PIName);
-        //TrigActInfo[] GetActions(string      PIName);
-
         //string UpdatePlugAction(string PlugName, int evRef, TrigActInfo ActionInfo);
 
         #endregion
-        
+
         //TODO other methods
         //bool AppStarting(bool wait = false);
         //string BackupDB();
@@ -324,14 +404,14 @@ namespace HomeSeer.PluginSdk {
         //string GetSource();
         //void Keys(string k, string title, bool waitf);
         //int LCID();
-        
+
         //void SetRemoteTimeout(int timeout_seconds);
         //void SetSecurityMode(bool mode);
         //void WaitEvents();
         //Constants.eOSType GetOSType();
         //clsLastVR[] GetLastVRCollection();
         //Constants.REGISTRATION_MODES PluginLicenseMode(string IfaceName);
-        
+
         #endregion
 
     }

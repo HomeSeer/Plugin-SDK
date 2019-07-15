@@ -2,11 +2,11 @@ namespace HomeSeer.PluginSdk.Devices {
 
     public enum EApiType {
 
-        NotSpecified        = 0,
-        //Plugin              = 4,
-        //Thermostat          = 16,
-        Device              = 512,
-        Feature             = 513
+        NotSpecified     = 0,
+        LegacyPlugin     = 4,
+        LegacyThermostat = 16,
+        Device           = 512,
+        Feature          = 513
         
         
         /*Media        = eCapabilities.CA_Music,        // 32

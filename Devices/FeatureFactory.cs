@@ -308,6 +308,10 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #endregion
         
+        public NewFeatureData PrepareForHs() {
+            return new NewFeatureData(_feature);
+        }
+        
     }
 
 }
