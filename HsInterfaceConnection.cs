@@ -87,7 +87,7 @@ namespace HomeSeer.PluginSdk {
             //Get all devices that are owned by this plugin (WHERE Interface = _pluginId || Interface = _pluginName)
             foreach (var interfaceKey in _interfaceKeys) {
                 //Get all the device marked with the interface key
-                var devicesForInterface = _hsController.GetDevicesByInterface(interfaceKey);
+                var devicesForInterface = new List<HsDevice>();//_hsController.GetDevicesByInterface(interfaceKey);
                 if (devicesForInterface == null) {
                     continue;
                 }

@@ -120,18 +120,24 @@ namespace HomeSeer.PluginSdk {
         
         #region Read
         
-        HsDevice GetDeviceByRef(int devRef);
-        HsDevice GetDeviceByAddress(string devAddress);
-        HsDevice GetDeviceWithFeaturesByRef(int devRef);
-        List<HsDevice> GetDevicesByInterface(string interfaceName);
-
-        string GetDeviceNameByRef(int devRef);
-        bool DoesDeviceRefExist(int devRef);
-        bool IsDeviceValueValid(int devRef);
-
+        //Both
+        List<int> GetRefsByInterface(string interfaceName);
+        string GetNameByRef(int devRef);
+        bool DoesRefExist(int devRef);
         object GetDevicePropertyByRef(int devRef, EDeviceProperty property);
         bool IsFlagOnDeviceRef(int devRef, EDeviceMiscFlag miscFlag);
+        bool IsRefDevice(int devRef);
         
+        //Devices
+        HsDevice GetDeviceByRef(int devRef);
+        HsDevice GetDeviceWithFeaturesByRef(int devRef);
+        HsDevice GetDeviceByAddress(string devAddress);
+        
+        //Features
+        HsFeature GetFeatureByRef(int featRef);
+        HsFeature GetFeatureByAddress(string featAddress);
+        bool IsFeatureValueValid(int devRef);
+
         StatusControl GetStatusControlForValue(int devRef, double value);
         StatusControl GetStatusControlForLabel(int devRef, string label);
         List<StatusControl> GetStatusControlsForRange(int devRef, double min, double max);
@@ -150,11 +156,11 @@ namespace HomeSeer.PluginSdk {
 
         void UpdateDevicePropertyByRef(int devRef, EDeviceProperty property, object value);
         
-        void AddStatusControlToDevice(int devRef, StatusControl statusControl);
+        void AddStatusControlToFeature(int devRef, StatusControl statusControl);
         bool DeleteStatusControlByValue(int devRef, double value);
         void ClearStatusControlsByRef(int devRef);
         
-        void AddStatusGraphicToDevice(int devRef, StatusGraphic statusGraphic);
+        void AddStatusGraphicToFeature(int devRef, StatusGraphic statusGraphic);
         bool DeleteStatusGraphicByValue(int devRef, double value);
         void ClearStatusGraphicsByRef(int devRef);
 
@@ -163,16 +169,14 @@ namespace HomeSeer.PluginSdk {
         #region Delete
         
         bool DeleteDevice(int devRef);
+        bool DeleteFeature(int featRef);
         
         #endregion
         
         #region Control
 
-        string ControlDeviceByValue(int devRef, double value);
-        string ControlDeviceByString(int devRef, string value);
-        
-        void SetDeviceValueByRef(int devRef, double value);
-        void SendDeviceControlStringByRef(int devRef, string controlString);
+        string ControlFeatureByValue(int devRef, double value);
+        string ControlFeatureByString(int devRef, string value);
 
         //TODO Bulk update control methods
         

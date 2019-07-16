@@ -64,6 +64,8 @@
 		<Compile Include="Devices\EGenericFeatureSubType.cs" />
 		<Compile Include="Devices\ERelationship.cs" />
 		<Compile Include="Devices\FeatureFactory.cs" />
+		<Compile Include="Devices\AbstractHsDevice.cs" />
+		<Compile Include="Devices\HsFeature.cs" />
 		<Compile Include="Devices\NewDeviceData.cs" />
 		<Compile Include="Devices\NewFeatureData.cs" />
 		<Compile Include="Devices\StatusGraphicCollection.cs" />

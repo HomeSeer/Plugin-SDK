@@ -7,7 +7,7 @@ namespace HomeSeer.PluginSdk.Devices {
     public class DeviceFactory {
 
         private HsDevice _device;
-        private List<HsDevice> _features;
+        private List<HsFeature> _features;
         
         #region Create
         
@@ -34,7 +34,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             if (_features == null) {
-                _features = new List<HsDevice>();
+                _features = new List<HsFeature>();
             }
             
             _features.Add(feature.Feature);

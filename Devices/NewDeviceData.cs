@@ -11,7 +11,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public Dictionary<EDeviceProperty, object> Device = new Dictionary<EDeviceProperty, object>();
         public List<Dictionary<EDeviceProperty, object>> FeatureData = new List<Dictionary<EDeviceProperty, object>>();
         
-        internal NewDeviceData(HsDevice device, List<HsDevice> features) {
+        internal NewDeviceData(HsDevice device, List<HsFeature> features) {
             Device = device.Changes;
             FeatureData = features.Select(f => f.Changes).ToList();
         }

@@ -24,7 +24,7 @@ namespace HomeSeer.PluginSdk.Devices {
             Feature[EDeviceProperty.AssociatedDevices] = new HashSet<int>() {deviceRef};
         }
         
-        internal NewFeatureData(HsDevice feature) {
+        internal NewFeatureData(HsFeature feature) {
             if (feature == null) {
                 throw new ArgumentNullException(nameof(feature));
             }

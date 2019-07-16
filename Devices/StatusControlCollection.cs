@@ -23,6 +23,17 @@ namespace HomeSeer.PluginSdk.Devices {
             
             _statusControls.Add(statusControl.IsRange ? statusControl.TargetRange.Min : statusControl.TargetValue, statusControl);
         }
+
+        public void AddRange(List<StatusControl> statusControls) {
+
+            foreach (var statusControl in statusControls) {
+                if (Contains(statusControl)) {
+                    throw new ArgumentException("A status control covering all or a portion of that value range already exists");
+                }
+            
+                _statusControls.Add(statusControl.IsRange ? statusControl.TargetRange.Min : statusControl.TargetValue, statusControl);
+            }
+        }
         
         //Read
         

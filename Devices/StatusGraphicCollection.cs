@@ -22,6 +22,16 @@ namespace HomeSeer.PluginSdk.Devices {
             
             _statusGraphics.Add(statusGraphic.IsRange ? statusGraphic.RangeMin : statusGraphic.Value, statusGraphic);
         }
+
+        public void AddRange(List<StatusGraphic> statusGraphics) {
+            foreach (var statusGraphic in statusGraphics) {
+                if (Contains(statusGraphic)) {
+                    throw new ArgumentException("A status graphic with that value set already exists");
+                }
+            
+                _statusGraphics.Add(statusGraphic.IsRange ? statusGraphic.RangeMin : statusGraphic.Value, statusGraphic);
+            }
+        }
         
         //Read
         

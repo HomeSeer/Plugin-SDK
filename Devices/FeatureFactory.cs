@@ -6,13 +6,13 @@ namespace HomeSeer.PluginSdk.Devices {
 
     public class FeatureFactory {
         
-        internal HsDevice Feature => _feature;
+        internal HsFeature Feature => _feature;
 
-        private HsDevice _feature;
+        private HsFeature _feature;
 
         public static FeatureFactory CreateFeature(string pluginId) {
             var ff = new FeatureFactory();
-            var feature = new HsDevice
+            var feature = new HsFeature
                           {
                               Relationship = ERelationship.Feature,
                               Interface    = pluginId
