@@ -99,6 +99,19 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        public List<StatusControl> GetControlsForRange(double min, double max) {
+            
+            var foundStatusControls = new List<StatusControl>();
+            foreach (double statusControlKey in _statusControls.Keys) {
+                
+                if (statusControlKey >= min && statusControlKey <= max) {
+                    foundStatusControls.Add(this[statusControlKey]);
+                }
+            }
+
+            return foundStatusControls;
+        }
+        
         public List<StatusControl> Values => _statusControls.Values.Cast<StatusControl>().ToList();
         
         public int Count => _statusControls?.Count ?? 0;

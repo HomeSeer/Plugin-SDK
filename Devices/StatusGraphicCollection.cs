@@ -96,6 +96,19 @@ namespace HomeSeer.PluginSdk.Devices {
                 return false;
             }
         }
+
+        public List<StatusGraphic> GetGraphicsForRange(double min, double max) {
+            
+            var foundStatusGraphics = new List<StatusGraphic>();
+            foreach (double statusGraphicsKey in _statusGraphics.Keys) {
+                
+                if (statusGraphicsKey >= min && statusGraphicsKey <= max) {
+                    foundStatusGraphics.Add(this[statusGraphicsKey]);
+                }
+            }
+
+            return foundStatusGraphics;
+        }
         
         public List<StatusGraphic> Values => _statusGraphics.Values.Cast<StatusGraphic>().ToList();
         
