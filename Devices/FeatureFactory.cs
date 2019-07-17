@@ -23,6 +23,17 @@ namespace HomeSeer.PluginSdk.Devices {
         }
         
         #region Device Properties
+
+        public FeatureFactory OnDevice(int devRef) {
+
+            if (devRef <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(devRef));
+            }
+            
+            _feature.AssociatedDevices = new HashSet<int> {devRef};
+
+            return this;
+        }
         
         public FeatureFactory WithName(string name) {
 
@@ -307,6 +318,10 @@ namespace HomeSeer.PluginSdk.Devices {
         //Remove status graphics?
         
         #endregion
+        
+        public NewFeatureData PrepareForHsDevice(int devRef) {
+            return new NewFeatureData(devRef, _feature);
+        }
         
         public NewFeatureData PrepareForHs() {
             return new NewFeatureData(_feature);

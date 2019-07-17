@@ -10,7 +10,7 @@ namespace HomeSeer.PluginSdk.Devices {
         
         public Dictionary<EDeviceProperty, object> Feature = new Dictionary<EDeviceProperty, object>();
         
-        internal NewFeatureData(int deviceRef, HsDevice feature) {
+        internal NewFeatureData(int deviceRef, HsFeature feature) {
             if (feature == null) {
                 throw new ArgumentNullException(nameof(feature));
             }
