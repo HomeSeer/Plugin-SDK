@@ -186,64 +186,64 @@ namespace HomeSeer.PluginSdk {
         
         #region Events
         
+        #region Create
+        
+        int CreateEventWithNameInGroup(string name, string group);
+        
+        #endregion
+        
+        #region Read
+        
+        string GetEventNameByRef(int eventRef);
+        DateTime GetEventTriggerTime(int evRef);
+        string GetEventVoiceCommand(int evRef);
+        int GetEventRefByName(string event_name);
+        int GetEventRefByNameAndGroup(string event_name, string event_group);
+        EventGroupData GetEventGroupById(int GroupRef);
+        List<EventGroupData> GetAllEventGroups();
+        EventData GetEventByRef(int eventRef);
+        List<EventData> GetAllEvents();
+        List<EventData> GetEventsByGroup(int GroupId);
+        List<TrigActInfo> GetActionsByInterface(string pluginId);
+        bool IsEventLoggingEnabledByRef(int eventRef);
+        bool EventEnabled(int evRef);
+        int EventCount { get; }
+        bool EventExistsByRef(int evRef);
+        
+        TrigActInfo[] GetTriggers(string PIName);
+        TrigActInfo[] GetActions(string PIName);
+        
+        #endregion
+        
+        #region Update
+        
+        bool TriggerEventByRef(int eventRef);
+        string AddDeviceActionToEvent(int evRef, StatusControl CC);
+        bool EventSetTimeTrigger(int evRef, DateTime DT);
+        bool EventSetRecurringTrigger(int evRef, TimeSpan Frequency, bool Once_Per_Hour, bool Reference_To_Hour);
+        void AddActionRunScript(int @ref, string script, string method, string parms);
+        void DisableEventByRef(int evref);
+        void DeleteAfterTrigger_Set(int evRef);
+        void EnableEventByRef(int evref);
+        void DeleteAfterTrigger_Clear(int evRef);
+        
+        #endregion
+        
+        #region Delete
+        
+        void DeleteEventByRef(int evRef);
+        
+        #endregion
+        
         void RegisterGenericEventCB(string GenericType, string pluginId);
         void UnRegisterGenericEventCB(string GenericType, string pluginId);
         void RaiseGenericEventCB(string GenericType, object[] Parms, string pluginId);
         void RegisterEventCB(Constants.HSEvent evType, string pluginId);
         void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
-        string GetEventNameByRef(int eventRef);
-        bool IsEventLoggingEnabledByRef(int eventRef);
-
-        int CreateEventWithNameInGroup(string name, string group);
-
-        void TriggerEventByRef(int eventRef);
-        string AddDeviceActionToEvent(int evRef, StatusControl CC);
-
-        bool EventSetTimeTrigger(int evRef, DateTime DT);
-
-        bool EventSetRecurringTrigger(int evRef, TimeSpan Frequency, bool Once_Per_Hour, bool Reference_To_Hour);
-
-        void AddActionRunScript(int @ref, string script, string method, string parms);
-
-        void DisableEventByRef(int evref);
-
-        void DeleteAfterTrigger_Set(int evRef);
-
-        void EnableEventByRef(int evref);
-
-        bool EventEnabled(int evRef);
-
-        void DeleteAfterTrigger_Clear(int evRef);
-
-        void DeleteEventByRef(int evRef);
-
-        int EventCount { get; }
-
-        bool EventExistsByRef(int evRef);
-
-        int GetEventRefByName(string event_name);
-
-        int GetEventRefByNameAndGroup(string event_name, string event_group);
-
-        EventGroupData GetEventGroupById(int GroupRef);
-
-        List<EventGroupData> GetAllEventGroups();
-
-        EventData GetEventByRef(int eventRef);
-
-        List<EventData> GetAllEvents();
-
-        List<EventData> GetEventsByGroup(int GroupId);
-
-        List<TrigActInfo> GetActionsByInterface(string pluginId);
-        
         //TrigActInfo[] TriggerMatches(string Plug_Name, int TrigID, int SubTrig);
         void TriggerFire(string Plug_Name, TrigActInfo TrigInfo);
 
-        TrigActInfo[] GetTriggers(string PIName);
-        TrigActInfo[] GetActions(string PIName);
-        
         #endregion
         
         #region System
