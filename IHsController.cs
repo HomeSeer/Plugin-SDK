@@ -98,13 +98,13 @@ namespace HomeSeer.PluginSdk {
         /// <param name="pluginId">The ID of the plugin</param>
         /// <param name="pageFilename">The filename of the page, ending with .html</param>
         /// <param name="linkText">The text that appears in the navigation menu</param>
-        void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
+        //void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
 
         /// <summary>
         /// Unregister the device inclusion page for this plugin.
         /// </summary>
         /// <param name="pluginId">The ID of the plugin</param>
-        void UnregisterDeviceIncPage(string pluginId);
+        //void UnregisterDeviceIncPage(string pluginId);
         
         #endregion
         
@@ -210,15 +210,14 @@ namespace HomeSeer.PluginSdk {
         int EventCount { get; }
         bool EventExistsByRef(int evRef);
         
-        TrigActInfo[] GetTriggers(string PIName);
-        TrigActInfo[] GetActions(string PIName);
+        TrigActInfo[] GetTriggersByInterface(string pluginId);
         
         #endregion
         
         #region Update
         
         bool TriggerEventByRef(int eventRef);
-        string AddDeviceActionToEvent(int evRef, StatusControl CC);
+        string AddDeviceActionToEvent(int evRef, DeviceControlEvent CC);
         bool EventSetTimeTrigger(int evRef, DateTime DT);
         bool EventSetRecurringTrigger(int evRef, TimeSpan Frequency, bool Once_Per_Hour, bool Reference_To_Hour);
         void AddActionRunScript(int @ref, string script, string method, string parms);
@@ -239,7 +238,9 @@ namespace HomeSeer.PluginSdk {
         void UnRegisterGenericEventCB(string GenericType, string pluginId);
         void RaiseGenericEventCB(string GenericType, object[] Parms, string pluginId);
         void RegisterEventCB(Constants.HSEvent evType, string pluginId);
-        void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
+        
+        //This doesn't exist in the legacy API?
+        //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
         //TrigActInfo[] TriggerMatches(string Plug_Name, int TrigID, int SubTrig);
         void TriggerFire(string Plug_Name, TrigActInfo TrigInfo);
@@ -291,7 +292,7 @@ namespace HomeSeer.PluginSdk {
         
         #region Logging
 
-        void WriteLog(ELogType logType, string message, string pluginName, int color = 0);
+        void WriteLog(ELogType logType, string message, string pluginName, string color = "");
         
         #endregion
         

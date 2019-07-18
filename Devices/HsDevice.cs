@@ -12,7 +12,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #region Public
         
-        public List<HsDevice> Features { get; internal set; } = new List<HsDevice>();
+        public List<HsFeature> Features { get; internal set; } = new List<HsFeature>();
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return dev;
         }
 
-        public HsDevice GetFeatureByType(DeviceTypeInfo featureType) {
+        public HsFeature GetFeatureByType(DeviceTypeInfo featureType) {
 
             if (Features.Count == 0) {
                 throw new KeyNotFoundException("There are no features on this device");

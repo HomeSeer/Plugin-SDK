@@ -387,9 +387,6 @@ namespace HomeSeer.PluginSdk {
         
         #endregion
         
-        //TODO GetPagePlugin -> Can we get rid of this since all new pages are loaded via HTML file?
-        string GetPagePlugin(string page, string user, int userRights, string queryString);
-        
         //TODO PostBackProc -> More documentation on the return value and its uses
         /// <summary>
         /// Called by the HomeSeer system when a page owned by this plugin receives an HTTP POST request
