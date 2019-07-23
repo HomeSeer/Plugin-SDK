@@ -89,7 +89,7 @@
 		<Compile Include="Energy\EnergyData.cs" />
 		<Compile Include="Energy\EnergyGraph.cs" />
 		<Compile Include="Energy\EnergyGraphData.cs" />
-		<Compile Include="HsInterfaceConnection.cs" />
+		<None Include="HsInterfaceConnection.cs" />
 		<Compile Include="IHsController.cs" />
 		<Compile Include="Logging\ELogType.cs" />
 		<Compile Include="Logging\LogEntry.cs" />
