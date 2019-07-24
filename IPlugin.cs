@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Events;
 
 namespace HomeSeer.PluginSdk {
 

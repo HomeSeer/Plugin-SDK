@@ -1,7 +1,6 @@
 using System;
-using HomeSeer.PluginSdk.Devices;
 
-namespace HomeSeer.PluginSdk {
+namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>
     /// Status graphics are used to specify what image is displayed for a device when its value matches certain criteria

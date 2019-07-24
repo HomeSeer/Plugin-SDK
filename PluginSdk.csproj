@@ -1,153 +1,151 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProjectGuid>{8D2165FA-0DBE-4F59-815C-72157B2401CF}</ProjectGuid>
-		<OutputType>Library</OutputType>
-		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<RootNamespace>HomeSeer.PluginSdk</RootNamespace>
-		<AssemblyName>PluginSdk</AssemblyName>
-		<TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-		<FileAlignment>512</FileAlignment>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
-		<Optimize>false</Optimize>
-		<OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-		<DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<DebugType>pdbonly</DebugType>
-		<Optimize>true</Optimize>
-		<OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
-		<DefineConstants>TRACE</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-		<DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PluginDev|AnyCPU' ">
-	  <OutputPath>bin\PluginDev\</OutputPath>
-	  <DocumentationFile>bin\PluginDev\PluginSdk.xml</DocumentationFile>
-	</PropertyGroup>
-	<ItemGroup>
-		<Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-		  <HintPath>..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
-		  <Private>False</Private>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Core" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Xml" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="AbstractPlugin.cs" />
-		<Compile Include="Devices\ControlLocation.cs" />
-		<Compile Include="Devices\DeviceButtonScript.cs" />
-		<Compile Include="Devices\DeviceFactory.cs" />
-		<Compile Include="Devices\DeviceRelationshipException.cs" />
-		<Compile Include="Devices\EApiType.cs" />
-		<Compile Include="Devices\EDeviceMiscFlag.cs" />
-		<Compile Include="Devices\EDeviceProperty.cs" />
-		<Compile Include="Devices\EDeviceType.cs" />
-		<Compile Include="Devices\EEnergyFeatureSubType.cs" />
-		<Compile Include="Devices\EFeatureType.cs" />
-		<Compile Include="Devices\EGenericDeviceSubType.cs" />
-		<Compile Include="Devices\EGenericFeatureSubType.cs" />
-		<Compile Include="Devices\ERelationship.cs" />
-		<Compile Include="Devices\FeatureFactory.cs" />
-		<Compile Include="Devices\AbstractHsDevice.cs" />
-		<Compile Include="Devices\HsFeature.cs" />
-		<Compile Include="Devices\NewDeviceData.cs" />
-		<Compile Include="Devices\NewFeatureData.cs" />
-		<Compile Include="Devices\StatusGraphicCollection.cs" />
-		<Compile Include="Devices\DeviceTypeInfo.cs" />
-		<Compile Include="Devices\EControlType.cs" />
-		<Compile Include="Devices\EControlUse.cs" />
-		<Compile Include="Devices\HsDevice.cs" />
-		<Compile Include="Devices\MultiReturn.cs" />
-		<Compile Include="Devices\PlugExtraData.cs" />
-		<Compile Include="Devices\PollResultInfo.cs" />
-		<Compile Include="Devices\ValueRange.cs" />
-		<Compile Include="Devices\StatusControlCollection.cs" />
-		<Compile Include="Devices\StatusGraphic.cs" />
-		<Compile Include="Devices\StatusControl.cs" />
-		<Compile Include="Events\EventData.cs" />
-		<Compile Include="Events\EventGroupData.cs" />
-		<Compile Include="Events\EventTriggerGroupData.cs" />
-		<Compile Include="Events\TrigActInfo.cs" />
-		<Compile Include="Constants.cs" />
-		<Compile Include="Energy\EnergyCalcData.cs" />
-		<Compile Include="Energy\EnergyData.cs" />
-		<Compile Include="Energy\EnergyGraph.cs" />
-		<Compile Include="Energy\EnergyGraphData.cs" />
-		<None Include="HsInterfaceConnection.cs" />
-		<Compile Include="IHsController.cs" />
-		<Compile Include="Logging\ELogType.cs" />
-		<Compile Include="Logging\LogEntry.cs" />
-		<Compile Include="PluginStatus.cs" />
-		<Compile Include="IPlugin.cs" />
-		<Compile Include="Jui\Forms\AbstractFormView.cs" />
-		<Compile Include="Jui\Forms\InfoFormView.cs" />
-		<Compile Include="Jui\Forms\InputFormView.cs" />
-		<Compile Include="Jui\Forms\ProgressFormView.cs" />
-		<Compile Include="Jui\Message.cs" />
-		<Compile Include="Jui\Plugin.cs" />
-		<Compile Include="Jui\Types\EFormType.cs" />
-		<Compile Include="Jui\Types\EInputType.cs" />
-		<Compile Include="Jui\Types\EPageType.cs" />
-		<Compile Include="Jui\Types\ESelectListType.cs" />
-		<Compile Include="Jui\Types\EToggleType.cs" />
-		<Compile Include="Jui\Types\EViewType.cs" />
-		<Compile Include="Jui\Views\AbstractView.cs" />
-		<Compile Include="Jui\Views\ButtonView.cs" />
-		<Compile Include="Jui\Views\CollectionView.cs" />
-		<Compile Include="Jui\Views\InputView.cs" />
-		<Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
-		<Compile Include="Jui\Views\JsonDataException.cs" />
-		<Compile Include="Jui\Views\LabelView.cs" />
-		<Compile Include="Jui\Views\Page.cs" />
-		<Compile Include="Jui\Views\SelectListView.cs" />
-		<Compile Include="Jui\Views\SettingsCollection.cs" />
-		<Compile Include="Jui\Views\ToggleView.cs" />
-		<Compile Include="Jui\Views\ViewCollectionHelper.cs" />
-		<Compile Include="Jui\Views\ViewGroup.cs" />
-		<Compile Include="Jui\Views\ViewNotFoundException.cs" />
-		<Compile Include="Jui\Views\ViewTypeMismatchException.cs" />
-		<Compile Include="Properties\AssemblyInfo.cs" />
-		<Compile Include="Speech\clsLastVR.cs" />
-		<Compile Include="Speech\IFromSpeaker.cs" />
-		<Compile Include="Speech\ISpeechAPI.cs" />
-		<Compile Include="Speech\RemoteHost.cs" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Include="Devices\DeviceControlEvent.cs" />
-	  <None Include="packages.config" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="PluginSdk.dll.config" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\HomeSeer\HSCF\HSCF\HSCF.csproj">
-	    <Project>{0dc81b09-3abf-4bb3-8c08-4e8ee4432bdc}</Project>
-	    <Name>HSCF</Name>
-	  </ProjectReference>
-	</ItemGroup>
-	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8D2165FA-0DBE-4F59-815C-72157B2401CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HomeSeer.PluginSdk</RootNamespace>
+    <AssemblyName>PluginSdk</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PluginDev|AnyCPU' ">
+    <OutputPath>bin\PluginDev\</OutputPath>
+    <DocumentationFile>bin\PluginDev\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractPlugin.cs" />
+    <Compile Include="Devices\ControlLocation.cs" />
+    <Compile Include="Devices\DeviceFactory.cs" />
+    <Compile Include="Devices\DeviceRelationshipException.cs" />
+    <Compile Include="Devices\EApiType.cs" />
+    <Compile Include="Devices\EDeviceMiscFlag.cs" />
+    <Compile Include="Devices\EDeviceProperty.cs" />
+    <Compile Include="Devices\EDeviceType.cs" />
+    <Compile Include="Devices\EEnergyFeatureSubType.cs" />
+    <Compile Include="Devices\EFeatureType.cs" />
+    <Compile Include="Devices\EGenericDeviceSubType.cs" />
+    <Compile Include="Devices\EGenericFeatureSubType.cs" />
+    <Compile Include="Devices\ERelationship.cs" />
+    <Compile Include="Devices\FeatureFactory.cs" />
+    <Compile Include="Devices\AbstractHsDevice.cs" />
+    <Compile Include="Devices\HsFeature.cs" />
+    <Compile Include="Devices\NewDeviceData.cs" />
+    <Compile Include="Devices\NewFeatureData.cs" />
+    <Compile Include="Devices\StatusGraphicCollection.cs" />
+    <Compile Include="Devices\DeviceTypeInfo.cs" />
+    <Compile Include="Devices\EControlType.cs" />
+    <Compile Include="Devices\EControlUse.cs" />
+    <Compile Include="Devices\HsDevice.cs" />
+    <Compile Include="Devices\MultiReturn.cs" />
+    <Compile Include="Devices\PlugExtraData.cs" />
+    <Compile Include="Devices\PollResultInfo.cs" />
+    <Compile Include="Devices\ValueRange.cs" />
+    <Compile Include="Devices\StatusControlCollection.cs" />
+    <Compile Include="Devices\StatusGraphic.cs" />
+    <Compile Include="Devices\StatusControl.cs" />
+    <Compile Include="Events\EventData.cs" />
+    <Compile Include="Events\EventGroupData.cs" />
+    <Compile Include="Events\EventTriggerGroupData.cs" />
+    <Compile Include="Events\TrigActInfo.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Energy\EnergyCalcData.cs" />
+    <Compile Include="Energy\EnergyData.cs" />
+    <Compile Include="Energy\EnergyGraph.cs" />
+    <Compile Include="Energy\EnergyGraphData.cs" />
+    <None Include="HsInterfaceConnection.cs" />
+    <Compile Include="IHsController.cs" />
+    <Compile Include="Logging\ELogType.cs" />
+    <Compile Include="Logging\LogEntry.cs" />
+    <Compile Include="PluginStatus.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="Jui\Forms\AbstractFormView.cs" />
+    <Compile Include="Jui\Forms\InfoFormView.cs" />
+    <Compile Include="Jui\Forms\InputFormView.cs" />
+    <Compile Include="Jui\Forms\ProgressFormView.cs" />
+    <Compile Include="Jui\Message.cs" />
+    <Compile Include="Jui\Plugin.cs" />
+    <Compile Include="Jui\Types\EFormType.cs" />
+    <Compile Include="Jui\Types\EInputType.cs" />
+    <Compile Include="Jui\Types\EPageType.cs" />
+    <Compile Include="Jui\Types\ESelectListType.cs" />
+    <Compile Include="Jui\Types\EToggleType.cs" />
+    <Compile Include="Jui\Types\EViewType.cs" />
+    <Compile Include="Jui\Views\AbstractView.cs" />
+    <Compile Include="Jui\Views\ButtonView.cs" />
+    <Compile Include="Jui\Views\CollectionView.cs" />
+    <Compile Include="Jui\Views\InputView.cs" />
+    <Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
+    <Compile Include="Jui\Views\JsonDataException.cs" />
+    <Compile Include="Jui\Views\LabelView.cs" />
+    <Compile Include="Jui\Views\Page.cs" />
+    <Compile Include="Jui\Views\SelectListView.cs" />
+    <Compile Include="Jui\Views\SettingsCollection.cs" />
+    <Compile Include="Jui\Views\ToggleView.cs" />
+    <Compile Include="Jui\Views\ViewCollectionHelper.cs" />
+    <Compile Include="Jui\Views\ViewGroup.cs" />
+    <Compile Include="Jui\Views\ViewNotFoundException.cs" />
+    <Compile Include="Jui\Views\ViewTypeMismatchException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Speech\clsLastVR.cs" />
+    <Compile Include="Speech\IFromSpeaker.cs" />
+    <Compile Include="Speech\ISpeechAPI.cs" />
+    <Compile Include="Speech\RemoteHost.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Devices\DeviceControlEvent.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PluginSdk.dll.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HomeSeer\HSCF\HSCF\HSCF.csproj">
+      <Project>{0dc81b09-3abf-4bb3-8c08-4e8ee4432bdc}</Project>
+      <Name>HSCF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 		 Other similar extension points exist, see Microsoft.Common.targets.
 	<Target Name="BeforeBuild">
 	</Target>
 	<Target Name="AfterBuild">
 	</Target>
 	-->
-
 </Project>

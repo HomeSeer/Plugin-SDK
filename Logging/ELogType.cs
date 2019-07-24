@@ -1,4 +1,4 @@
-namespace HomeSeer.PluginSdk {
+namespace HomeSeer.PluginSdk.Logging {
 
     public enum ELogType {
 

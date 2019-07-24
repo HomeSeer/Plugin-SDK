@@ -1,6 +1,6 @@
 using System;
 
-namespace HomeSeer.PluginSdk {
+namespace HomeSeer.PluginSdk.Logging {
 
     public struct LogEntry {
 

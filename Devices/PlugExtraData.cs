@@ -4,7 +4,7 @@ using System.Linq;
 using HomeSeer.Jui.Views;
 using Newtonsoft.Json;
 
-namespace HomeSeer.PluginSdk {
+namespace HomeSeer.PluginSdk.Devices {
 
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]

@@ -1,4 +1,4 @@
-namespace HomeSeer.PluginSdk {
+namespace HomeSeer.PluginSdk.Devices {
 
     public struct PollResultInfo {
 

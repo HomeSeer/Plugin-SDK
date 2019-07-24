@@ -1,4 +1,6 @@
-namespace HomeSeer.PluginSdk {
+using HomeSeer.PluginSdk.Events;
+
+namespace HomeSeer.PluginSdk.Devices {
 
     public struct MultiReturn {
 

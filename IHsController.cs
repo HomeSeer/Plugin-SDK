@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Energy;
+using HomeSeer.PluginSdk.Events;
+using HomeSeer.PluginSdk.Logging;
 using HSCF.Communication.ScsServices.Service;
 
 namespace HomeSeer.PluginSdk {
@@ -225,6 +227,8 @@ namespace HomeSeer.PluginSdk {
         void DeleteAfterTrigger_Set(int evRef);
         void EnableEventByRef(int evref);
         void DeleteAfterTrigger_Clear(int evRef);
+
+        string UpdatePlugAction(string plugName, int evRef, TrigActInfo actInfo);
         
         #endregion
         
