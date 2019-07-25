@@ -28,7 +28,8 @@ namespace HomeSeer.PluginSdk.Devices {
 
             foreach (var statusControl in statusControls) {
                 if (Contains(statusControl)) {
-                    throw new ArgumentException("A status control covering all or a portion of that value range already exists");
+                    var valRangeText = statusControl.IsRange ? $"{statusControl.TargetRange.Min}-{statusControl.TargetRange.Max}" : $"{statusControl.TargetValue}";
+                    throw new ArgumentException($"A status control covering all or a portion of the value range {valRangeText} already exists");
                 }
             
                 _statusControls.Add(statusControl.IsRange ? statusControl.TargetRange.Min : statusControl.TargetValue, statusControl);
@@ -56,7 +57,7 @@ namespace HomeSeer.PluginSdk.Devices {
                         throw new KeyNotFoundException();
                     }
 
-                    if (foundStatusControl.TargetRange.IsValueInRange(value)) {
+                    if (foundStatusControl.IsValueInRange(value)) {
                         return foundStatusControl;
                     }
 
@@ -92,7 +93,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     foundStatusControl = (StatusControl) _statusControls[statusControlKey];
                 }
 
-                return foundStatusControl != null && foundStatusControl.TargetRange.IsValueInRange(value);
+                return foundStatusControl != null && foundStatusControl.IsValueInRange(value);
             }
             catch (Exception) {
                 return false;

@@ -35,8 +35,10 @@ namespace HomeSeer.PluginSdk.Devices {
         public StatusControl(EControlType type) {
             _controlType = type;
             switch (type) {
-                case EControlType.NotSpecified:
-                    throw new ArgumentException("You must specify a valid control type", nameof(type));
+                case EControlType.StatusOnly:
+                    _isControl = false;
+                    _isStatus = true;
+                    //throw new ArgumentException("You must specify a valid control type", nameof(type));
                     break;
                 case EControlType.TextSelectList:
                     break;
@@ -160,6 +162,14 @@ namespace HomeSeer.PluginSdk.Devices {
                       };
             
             return dce;
+        }
+
+        public bool IsValueInRange(double value) {
+            if (_isRange) {
+                return _targetRange.IsValueInRange(value);
+            }
+
+            return Math.Abs(_targetValue - value) < 0.01D;
         }
 
         public override bool Equals(object obj) {
