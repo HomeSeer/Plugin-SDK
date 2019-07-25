@@ -145,6 +145,8 @@ namespace HomeSeer.PluginSdk {
         List<StatusControl> GetStatusControlsForRange(int devRef, double min, double max);
         int GetStatusControlCountByRef(int devRef);
         List<StatusControl> GetStatusControlsByRef(int devRef);
+
+        StatusControlCollection GetStatusControlCollectionByRef(int devRef);
         
         StatusGraphic GetStatusGraphicForValue(int devRef, double value);
         List<StatusGraphic> GetStatusGraphicsForRange(int devRef, double min, double max);
