@@ -1,7 +1,10 @@
 using System;
+using System.Reflection;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    [Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public class ValueRange {
         
         public double ValueOffset  { get; set; } = 0;
@@ -28,7 +31,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public double Min {
             get => _min;
             set {
-                if (value > _max) throw new ArgumentOutOfRangeException();
+                if (_max != 0 && value > _max) throw new ArgumentOutOfRangeException();
 
                 _min = value;
             }
@@ -37,7 +40,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public double Max {
             get => _max;
             set {
-                if (value < _min) throw new ArgumentOutOfRangeException();
+                if (_min != 0 && value < _min) throw new ArgumentOutOfRangeException();
 
                 _max = value;
             }
@@ -70,7 +73,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public bool IsValueInRange(double value) {
-            return value >= _min | value <= _max;
+            return value >= _min && value <= _max;
         }
 
         public override bool Equals(object obj) {

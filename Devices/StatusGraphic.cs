@@ -22,8 +22,8 @@ namespace HomeSeer.PluginSdk.Devices {
         public StatusGraphic(string imagePath, double minValue, double maxValue) {
             _graphicPath = imagePath;
             _isRange = true;
-            _range.Min = minValue;
             _range.Max = maxValue;
+            _range.Min = minValue;
         }
 
         public string Graphic {
