@@ -12,7 +12,9 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class StatusControlCollection {
 
-        private System.Collections.Specialized.OrderedDictionary _statusControls = new System.Collections.Specialized.OrderedDictionary();
+        private SortedDictionary<double, StatusControl> _statusControls = new SortedDictionary<double, StatusControl>();
+
+        public StatusControlCollection() { }
 
         //Create
         
@@ -83,7 +85,7 @@ namespace HomeSeer.PluginSdk.Devices {
             try {
 
                 StatusControl foundStatusControl = null;
-                foreach (double statusControlKey in _statusControls.Keys) {
+                foreach (var statusControlKey in _statusControls.Keys) {
                     if (foundStatusControl == null) {
                         foundStatusControl = (StatusControl) _statusControls[statusControlKey];
                     }
@@ -123,7 +125,7 @@ namespace HomeSeer.PluginSdk.Devices {
         //Delete
 
         public void RemoveKey(double value) {
-            if (!_statusControls.Contains(value)) {
+            if (!_statusControls.ContainsKey(value)) {
                 return;
             }
 
@@ -140,7 +142,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public void RemoveAll() {
-            _statusControls = new OrderedDictionary();
+            _statusControls = new SortedDictionary<double, StatusControl>();
         }
   
     }

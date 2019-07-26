@@ -11,7 +11,7 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class StatusGraphicCollection {
         
-        private System.Collections.Specialized.OrderedDictionary _statusGraphics = new System.Collections.Specialized.OrderedDictionary();
+        private SortedDictionary<double, StatusGraphic> _statusGraphics = new SortedDictionary<double, StatusGraphic>();
 
         //Create
         
@@ -135,7 +135,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public void RemoveAll() {
-            _statusGraphics = new OrderedDictionary();
+            _statusGraphics = new SortedDictionary<double, StatusGraphic>();
         }
         
     }
