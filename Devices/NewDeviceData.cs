@@ -13,7 +13,7 @@ namespace HomeSeer.PluginSdk.Devices {
         
         internal NewDeviceData(HsDevice device, List<HsFeature> features) {
             Device = device.Changes;
-            FeatureData = features.Select(f => f.Changes).ToList();
+            FeatureData = features?.Select(f => f.Changes).ToList();
         }
 
     }
