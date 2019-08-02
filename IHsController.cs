@@ -123,7 +123,8 @@ namespace HomeSeer.PluginSdk {
         #region Read
         
         //Both
-        List<int> GetRefsByInterface(string interfaceName);
+        List<int> GetRefsByInterface(string interfaceName, bool deviceOnly = false);
+        Dictionary<int, object> GetPropertyByInterface(string interfaceName, EDeviceProperty property);
         string GetNameByRef(int devRef);
         bool DoesRefExist(int devRef);
         object GetDevicePropertyByRef(int devRef, EDeviceProperty property);
