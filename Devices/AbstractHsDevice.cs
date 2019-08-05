@@ -564,7 +564,7 @@ namespace HomeSeer.PluginSdk.Devices {
         //private string         _interfaceInstance = "";
         protected string         _location          = "Home";
         protected string         _location2         = "Home";
-        protected uint           _misc;             //= (uint) Constants.dvMISC.SET_DOES_NOT_CHANGE_LAST_CHANGE;
+        protected uint           _misc              = (uint) EDeviceMiscFlag.SHOW_VALUES;
         protected string         _name              = "";
         protected PlugExtraData  _plugExtraData     = new PlugExtraData();
         protected string         _productImage      = "";
