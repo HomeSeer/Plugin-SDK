@@ -17,6 +17,15 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		[JsonProperty("options")]
 		public List<string> Options { get; private set; }
+		
+		/// <summary>
+		/// A list of keys that corresponds to the <see cref="Options"/> list.
+		/// <para>
+		/// For internal use by a plugin.  This is not displayed or used in any fashion otherwise.
+		/// </para>
+		/// </summary>
+		[JsonIgnore]
+		public List<string> OptionKeys { get; private set; }
 
 		/// <summary>
 		/// The display style for the list of options
@@ -53,9 +62,44 @@ namespace HomeSeer.Jui.Views {
 			
 			Type = EViewType.SelectList;
 			Options = options;
+			OptionKeys = null;
 			Style = style;
 			Selection = selection;
 		}
+        
+        /// <inheritdoc />
+        /// <summary>
+        /// Create a new instance of a select list with the default, drop down style, an ID, Name, and the specified list of options and keys
+        /// </summary>
+        /// <param name="id">The unique ID for this View</param>
+        /// <param name="name">The name of the view</param>
+        /// <param name="options">The list of options</param>
+        /// <param name="style">The display style of the select list. DEFAULT: drop down</param>
+        /// <param name="selection">The index of the currently selected option in the list. DEFAULT: 0</param>
+        /// <param name="optionKeys">The list of keys corresponding to the list of options</param>
+        /// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
+        public SelectListView(string id, string name, List<string> options, List<string> optionKeys, ESelectListType style = ESelectListType.DropDown, int selection = 0) : base(id, name) {
+
+	        if (options == null || options.Count == 0) {
+		        throw new ArgumentNullException(nameof(options));
+	        }
+	        if (optionKeys == null || optionKeys.Count == 0) {
+		        throw new ArgumentNullException(nameof(optionKeys));
+	        }
+	        if (options.Count != optionKeys.Count) {
+		        throw new ArgumentException("Options and Option Keys must match in size.");
+	        }
+	        if (selection < 0 || selection >= options.Count ){
+		        throw new ArgumentOutOfRangeException(nameof(selection));
+	        }
+			
+	        Type       = EViewType.SelectList;
+	        Options    = options;
+	        OptionKeys = optionKeys;
+	        Style      = style;
+	        Selection  = selection;
+        }
 		
 		/// <inheritdoc />
 		/// <summary>
