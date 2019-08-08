@@ -415,7 +415,19 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="id">The ID for the page</param>
 			/// <param name="name">The name of the page</param>
 			/// <returns>A new Page with its type set to EPageType.Settings</returns>
+			[Obsolete("Please use CreateSettingsPage() now.", false)]
 			public static Page CreateSettingPage(string id, string name) {
+				
+				return new Page(id, name, EPageType.Settings);
+			}
+			
+			/// <summary>
+			/// Create a new settings page
+			/// </summary>
+			/// <param name="id">The ID for the page</param>
+			/// <param name="name">The name of the page</param>
+			/// <returns>A new Page with its type set to EPageType.Settings</returns>
+			public static Page CreateSettingsPage(string id, string name) {
 				
 				return new Page(id, name, EPageType.Settings);
 			}
@@ -428,7 +440,7 @@ namespace HomeSeer.Jui.Views {
 			/// <returns>A new Page with its type set to EPageType.Feature</returns>
 			internal static Page CreateFeaturePage(string id, string name) {
 				
-				return new Page(id, name, EPageType.Feature);
+				return new Page(id, name, EPageType.Generic);
 			}
 			
 			/// <summary>
@@ -439,7 +451,7 @@ namespace HomeSeer.Jui.Views {
 			/// <returns>A new Page with its type set to EPageType.DeviceInclude</returns>
 			internal static Page CreateDeviceIncPage(string id, string name) {
 				
-				return new Page(id, name, EPageType.DeviceInclude);
+				return new Page(id, name, EPageType.Generic);
 			}
 			
 			/// <summary>
@@ -461,7 +473,7 @@ namespace HomeSeer.Jui.Views {
 			/// <returns>A new Page with its type set to EPageType.Guide</returns>
 			internal static Page CreateGuidedProcessPage(string id, string name) {
 				
-				return new Page(id, name, EPageType.Guide);
+				return new Page(id, name, EPageType.Generic);
 			}
 			
 			/// <summary>
@@ -472,7 +484,18 @@ namespace HomeSeer.Jui.Views {
 			/// <returns>A new Page with its type set to EPageType.FeatureHtml</returns>
 			internal static Page CreateHtmlFeaturePage(string id, string name) {
 				
-				return new Page(id, name, EPageType.FeatureHtml);
+				return new Page(id, name, EPageType.Generic);
+			}
+			
+			/// <summary>
+			/// Create a new, generic page
+			/// </summary>
+			/// <param name="id">The ID for the page</param>
+			/// <param name="name">The name of the page</param>
+			/// <returns>A new Page with its type set to EPageType.Generic</returns>
+			internal static Page CreateGenericPage(string id, string name) {
+				
+				return new Page(id, name, EPageType.Generic);
 			}
 			
 			/// <summary>

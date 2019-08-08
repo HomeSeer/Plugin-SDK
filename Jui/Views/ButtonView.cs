@@ -11,7 +11,7 @@ namespace HomeSeer.Jui.Views {
 	/// A plugin will then instruct the client on how to proceed by either responding
 	/// with a message or a form to display to the user.  
 	/// </summary>
-	public sealed class ButtonView : AbstractView {
+	internal sealed class ButtonView : AbstractView {
 
 		/// <summary>
 		/// The ID that will be sent to the API when this button is clicked
