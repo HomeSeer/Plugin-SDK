@@ -178,8 +178,13 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pageContent">A JSON serialized Jui.Page describing what has changed about the page</param>
         /// <param name="deviceRef">The reference of the device the config page is for</param>
-        /// <returns></returns>
-        string SaveJuiDeviceConfigPage(string pageContent, int deviceRef);
+        /// <returns>
+        /// TRUE if the save was successful; FALSE if it was unsuccessful. 
+        /// <para>
+        /// An exception should be thrown with details about the error if it was unsuccessful
+        /// </para>
+        /// </returns>
+        bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef);
         
         /// <summary>
         /// Called by the HomeSeer system when it needs the current status for a device owned by the plugin.

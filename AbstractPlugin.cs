@@ -335,9 +335,31 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual string SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
-            throw new NotImplementedException();
+        public virtual bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
+            Console.WriteLine("SaveJuiDeviceConfigPage");
+            try {
+                var deserializedPage = Page.Factory.FromJsonString(pageContent);
+                return OnDeviceConfigChange(deserializedPage, deviceRef);
+            }
+            catch (KeyNotFoundException exception) {
+                Console.WriteLine(exception);
+                throw new KeyNotFoundException("Cannot save device config; no pages exist with that ID.",
+                                               exception);
+            }
         }
+        
+        /// <summary>
+        /// Called when there are changes to the device config page that need to be processed and saved
+        /// </summary>
+        /// <param name="deviceConfigPage">A JUI page containing only the new state of any changed views</param>
+        /// <param name="deviceRef">The reference of the device the config page is for</param>
+        /// <returns>
+        /// TRUE if the save was successful; FALSE if it was not
+        /// <para>
+        /// You should throw an exception including a detailed message whenever possible over returning FALSE
+        /// </para>
+        /// </returns>
+        protected abstract bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef);
 
         #endregion
 
