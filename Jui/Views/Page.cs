@@ -493,7 +493,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="id">The ID for the page</param>
 			/// <param name="name">The name of the page</param>
 			/// <returns>A new Page with its type set to EPageType.Generic</returns>
-			internal static Page CreateGenericPage(string id, string name) {
+			public static Page CreateGenericPage(string id, string name) {
 				
 				return new Page(id, name, EPageType.Generic);
 			}
