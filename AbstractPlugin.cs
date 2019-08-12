@@ -99,6 +99,8 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         protected string IpAddress { get; set; } = "127.0.0.1";
 
+        protected bool LogDebug { get; set; } = false;
+
         private const int HomeSeerPort = 10400;
 
         private static IScsServiceClient<IHsController> _client;
@@ -193,7 +195,9 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         public virtual bool InitIO(string port) {
             try {
-                Console.WriteLine("InitIO");
+                if (LogDebug) {
+                    Console.WriteLine("InitIO");
+                }
                 Initialize();
                 return true;
             }
@@ -227,7 +231,9 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc cref="IPlugin.GetJuiSettingsPages"/>
         public string GetJuiSettingsPages() {
-            Console.WriteLine("GetJuiSettingsPages");
+            if (LogDebug) {
+                Console.WriteLine("GetJuiSettingsPages");
+            }
             OnSettingsLoad();
             return Settings.ToJsonString();
         }
@@ -244,7 +250,9 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc cref="IPlugin.SaveJuiSettingsPages"/>
         public bool SaveJuiSettingsPages(string jsonString) {
-            Console.WriteLine("SaveJuiSettingsPages");
+            if (LogDebug) {
+                Console.WriteLine("SaveJuiSettingsPages");
+            }
             try {
                 var deserializedPages = SettingsCollection.FromJsonString(jsonString).Pages;
                 return OnSettingsChange(deserializedPages);
@@ -272,7 +280,9 @@ namespace HomeSeer.PluginSdk {
         /// Loads the plugin settings saved to INI to Settings and saves default values if none exist.
         /// </summary>
         protected void LoadSettingsFromIni() {
-            Console.WriteLine("Loading settings from INI");
+            if (LogDebug) {
+                Console.WriteLine("Loading settings from INI");
+            }
             //Get the whole section for settings
             var savedSettings = HomeSeerSystem.GetIniSection(SettingsSectionName, SettingsFileName);
             //Loop through each settings page
@@ -285,7 +295,9 @@ namespace HomeSeer.PluginSdk {
                     // Always true after the first time the plugin starts
                     if (savedSettings.ContainsKey(settingPair.Key)) {
                         //Pull the saved value into memory
-                        Console.WriteLine("Updating view");
+                        if (LogDebug) {
+                            Console.WriteLine("Updating view");
+                        }
                         settingsPage.UpdateViewValueById(settingPair.Key, savedSettings[settingPair.Key]);
                         //Go to the next setting
                         continue;
@@ -336,7 +348,9 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
-            Console.WriteLine("SaveJuiDeviceConfigPage");
+            if (LogDebug) {
+                Console.WriteLine("SaveJuiDeviceConfigPage");
+            }
             try {
                 var deserializedPage = Page.Factory.FromJsonString(pageContent);
                 return OnDeviceConfigChange(deserializedPage, deviceRef);
