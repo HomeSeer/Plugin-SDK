@@ -140,6 +140,7 @@ namespace HomeSeer.PluginSdk {
             _client = ScsServiceClientBuilder.CreateClient<IHsController>(new ScsTcpEndPoint(IpAddress, HomeSeerPort),
                                                                           this);
 
+            Console.WriteLine("Connecting to HomeSeer...");
             Connect(1);
         }
 
@@ -150,15 +151,22 @@ namespace HomeSeer.PluginSdk {
                 try {
                     HomeSeerSystem = _client.ServiceProxy;
                     var apiVersion = HomeSeerSystem.APIVersion;
-                    Console.WriteLine("Host API Version: " + apiVersion);
+                    Console.WriteLine("Connected to HomeSeer");
+                    if (LogDebug) {
+                        Console.WriteLine($"Host API Version: {apiVersion}");
+                    }
                 }
                 catch (Exception exception) {
-                    Console.WriteLine(exception);
+                    if (LogDebug) {
+                        Console.WriteLine(exception);
+                    }
                 }
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
-                Console.WriteLine("Cannot connect attempt " + attempts);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
+                Console.WriteLine($"Cannot connect attempt {attempts.ToString()}");
                 if (exception.Message.ToLower().Contains("timeout occurred.") && attempts < 6) {
                     Connect(attempts + 1);
                     if (_client != null) {
@@ -171,15 +179,19 @@ namespace HomeSeer.PluginSdk {
             }
 
             try {
+                Console.WriteLine("Waiting for initialization...");
                 HomeSeerSystem.RegisterPlugin(Id, Name);
                 do {
                     Thread.Sleep(10);
                 } while (_client.CommunicationState == CommunicationStates.Connected && !_isShutdown);
 
                 _client.Disconnect();
+                Console.WriteLine("Disconnected from HomeSeer");
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 throw;
             }
         }
@@ -196,13 +208,15 @@ namespace HomeSeer.PluginSdk {
         public virtual bool InitIO(string port) {
             try {
                 if (LogDebug) {
-                    Console.WriteLine("InitIO");
+                    Console.WriteLine("InitIO called by HomeSeer");
                 }
                 Initialize();
                 return true;
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 _isShutdown = true;
                 throw new Exception("Error on InitIO: " + exception.Message, exception);
             }
@@ -211,10 +225,13 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc />
         public void ShutdownIO() {
             try {
+                Console.WriteLine("Disconnecting from HomeSeer...");
                 OnShutdown();
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
             }
 
             _isShutdown = true;
@@ -258,7 +275,9 @@ namespace HomeSeer.PluginSdk {
                 return OnSettingsChange(deserializedPages);
             }
             catch (KeyNotFoundException exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 throw new KeyNotFoundException("Cannot save settings; no settings pages exist with that ID.",
                                                exception);
             }
@@ -356,7 +375,9 @@ namespace HomeSeer.PluginSdk {
                 return OnDeviceConfigChange(deserializedPage, deviceRef);
             }
             catch (KeyNotFoundException exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 throw new KeyNotFoundException("Cannot save device config; no pages exist with that ID.",
                                                exception);
             }
@@ -513,7 +534,9 @@ namespace HomeSeer.PluginSdk {
                 return mi == null ? null : mi.Invoke(this, @params);
             }
             catch (Exception exception) {
-                Console.WriteLine(exception.Message);
+                if (LogDebug) {
+                    Console.WriteLine(exception.Message);
+                }
             }
 
             return null;
@@ -527,7 +550,9 @@ namespace HomeSeer.PluginSdk {
                 return mi == null ? null : mi.GetValue(this, null);
             }
             catch (Exception exception) {
-                Console.WriteLine(exception.Message);
+                if (LogDebug) {
+                    Console.WriteLine(exception.Message);
+                }
             }
 
             return null;
@@ -541,14 +566,18 @@ namespace HomeSeer.PluginSdk {
                 if (mi == null) {
                     var message = new StringBuilder("Property ")
                                   .Append(propName).Append(" does not exist in this plugin.");
-                    Console.WriteLine(message);
+                    if (LogDebug) {
+                        Console.WriteLine(message);
+                    }
                 }
                 else {
                     mi.SetValue(this, value, null);
                 }
             }
             catch (Exception exception) {
-                Console.WriteLine(exception.Message);
+                if (LogDebug) {
+                    Console.WriteLine(exception.Message);
+                }
             }
         }
 
