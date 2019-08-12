@@ -125,11 +125,15 @@ namespace HomeSeer.PluginSdk {
         //Both
         List<int> GetRefsByInterface(string interfaceName, bool deviceOnly = false);
         Dictionary<int, object> GetPropertyByInterface(string interfaceName, EDeviceProperty property, bool deviceOnly = false);
-        string GetNameByRef(int devRef);
-        bool DoesRefExist(int devRef);
+        string GetNameByRef(int devOrFeatRef);
+        bool DoesRefExist(int devOrFeatRef);
+        [Obsolete("Please use the renamed GetPropertyByRef() method.", false)]
         object GetDevicePropertyByRef(int devRef, EDeviceProperty property);
+        object GetPropertyByRef(int devOrFeatRef, EDeviceProperty property);
+        [Obsolete("Please use the renamed IsFlagOnRef() method.", false)]
         bool IsFlagOnDeviceRef(int devRef, EDeviceMiscFlag miscFlag);
-        bool IsRefDevice(int devRef);
+        bool IsFlagOnRef(int devOrFeatRef, EDeviceMiscFlag miscFlag);
+        bool IsRefDevice(int devOrFeatRef);
         
         //Devices
         HsDevice GetDeviceByRef(int devRef);
@@ -139,35 +143,39 @@ namespace HomeSeer.PluginSdk {
         //Features
         HsFeature GetFeatureByRef(int featRef);
         HsFeature GetFeatureByAddress(string featAddress);
-        bool IsFeatureValueValid(int devRef);
+        bool IsFeatureValueValid(int featRef);
 
-        StatusControl GetStatusControlForValue(int devRef, double value);
-        StatusControl GetStatusControlForLabel(int devRef, string label);
-        List<StatusControl> GetStatusControlsForRange(int devRef, double min, double max);
-        int GetStatusControlCountByRef(int devRef);
-        List<StatusControl> GetStatusControlsByRef(int devRef);
+        StatusControl GetStatusControlForValue(int featRef, double value);
+        StatusControl GetStatusControlForLabel(int featRef, string label);
+        List<StatusControl> GetStatusControlsForRange(int featRef, double min, double max);
+        int GetStatusControlCountByRef(int featRef);
+        List<StatusControl> GetStatusControlsByRef(int featRef);
 
-        StatusControlCollection GetStatusControlCollectionByRef(int devRef);
+        StatusControlCollection GetStatusControlCollectionByRef(int featRef);
         
-        StatusGraphic GetStatusGraphicForValue(int devRef, double value);
-        List<StatusGraphic> GetStatusGraphicsForRange(int devRef, double min, double max);
-        int GetStatusGraphicCountByRef(int devRef);
-        List<StatusGraphic> GetStatusGraphicsByRef(int devRef);
+        StatusGraphic GetStatusGraphicForValue(int featRef, double value);
+        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
+        int GetStatusGraphicCountByRef(int featRef);
+        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
                 
         #endregion
         
         #region Update
         HsDevice UpdateDeviceByRef(int devRef, Dictionary<EDeviceProperty, object> changes);
+        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EDeviceProperty, object> changes);
 
+        [Obsolete("Please use the renamed UpdatePropertyByRef() method.", false)]
         void UpdateDevicePropertyByRef(int devRef, EDeviceProperty property, object value);
         
-        void AddStatusControlToFeature(int devRef, StatusControl statusControl);
-        bool DeleteStatusControlByValue(int devRef, double value);
-        void ClearStatusControlsByRef(int devRef);
+        void UpdatePropertyByRef(int devOrFeatRef, EDeviceProperty property, object value);
         
-        void AddStatusGraphicToFeature(int devRef, StatusGraphic statusGraphic);
-        bool DeleteStatusGraphicByValue(int devRef, double value);
-        void ClearStatusGraphicsByRef(int devRef);
+        void AddStatusControlToFeature(int featRef, StatusControl statusControl);
+        bool DeleteStatusControlByValue(int featRef, double value);
+        void ClearStatusControlsByRef(int featRef);
+        
+        void AddStatusGraphicToFeature(int featRef, StatusGraphic statusGraphic);
+        bool DeleteStatusGraphicByValue(int featRef, double value);
+        void ClearStatusGraphicsByRef(int featRef);
 
         #endregion
         
@@ -180,8 +188,8 @@ namespace HomeSeer.PluginSdk {
         
         #region Control
 
-        string ControlFeatureByValue(int devRef, double value);
-        string ControlFeatureByString(int devRef, string value);
+        string ControlFeatureByValue(int featRef, double value);
+        string ControlFeatureByString(int featRef, string value);
 
         //TODO Bulk update control methods
         

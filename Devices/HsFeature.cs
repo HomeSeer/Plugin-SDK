@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Scheduler")]
 
 namespace HomeSeer.PluginSdk.Devices {
-
+    
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class HsFeature : AbstractHsDevice {
@@ -110,7 +113,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }            
         }
 
-        public void SetParentDevice(int deviceRef) {
+        internal void SetParentDevice(int deviceRef) {
 
             var associatedDevices = _assDevices ?? new HashSet<int>();
 
@@ -203,7 +206,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return wasDeviceRemoved;
         }*/
 
-        public void AddStatusControl(StatusControl statusControl) {
+        internal void AddStatusControl(StatusControl statusControl) {
 
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
             if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
@@ -226,7 +229,7 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusControls = currentStatusControls;
         }
 
-        public void AddStatusControls(List<StatusControl> statusControls) {
+        internal void AddStatusControls(List<StatusControl> statusControls) {
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
             if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
                 currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
@@ -268,7 +271,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return currentStatusControls.ContainsValue(range.Min) || currentStatusControls.ContainsValue(range.Max);
         }
 
-        public void RemoveStatusControl(StatusControl statusControl) {
+        internal void RemoveStatusControl(StatusControl statusControl) {
             
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
             if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
@@ -291,7 +294,7 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusControls = currentStatusControls;
         }
 
-        public void ClearStatusControls() {
+        internal void ClearStatusControls() {
             
             var currentStatusControls = new StatusControlCollection();
             
@@ -309,7 +312,7 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusControls = currentStatusControls;
         }
 
-        public void AddStatusGraphic(StatusGraphic statusGraphic) {
+        internal void AddStatusGraphic(StatusGraphic statusGraphic) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
             if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
@@ -332,7 +335,7 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusGraphics = currentStatusGraphics;
         }
         
-        public void AddStatusGraphics(List<StatusGraphic> statusGraphics) {
+        internal void AddStatusGraphics(List<StatusGraphic> statusGraphics) {
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
             if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
                 currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
@@ -374,7 +377,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return currentStatusGraphics.ContainsValue(range.Min) || currentStatusGraphics.ContainsValue(range.Max);
         }
 
-        public void RemoveStatusGraphic(StatusGraphic statusGraphic) {
+        internal void RemoveStatusGraphic(StatusGraphic statusGraphic) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
             if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
@@ -397,7 +400,7 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusGraphics = currentStatusGraphics;
         }
 
-        public void ClearStatusGraphics() {
+        internal void ClearStatusGraphics() {
             
             var currentStatusGraphics = new StatusGraphicCollection();
             
