@@ -117,9 +117,14 @@ namespace HomeSeer.Jui.Views {
 		/// Get a string representation of this view converted into HTML
 		/// </summary>
 		/// <returns>An HTML representation of the view as a string</returns>
-		internal abstract string ToHtml(int indent = 0);
+		public abstract string ToHtml(int indent = 0);
 
-		internal static string GetIndentStringFromNumber(int indent) {	
+		/// <summary>
+		/// Used to generate the exact tab spacing (using spaces) for any given indent amount
+		/// </summary>
+		/// <param name="indent">The number of indents for the line</param>
+		/// <returns>A string containing the number of spaces to achieve the desired indent</returns>
+		public static string GetIndentStringFromNumber(int indent) {	
 			
 			var indentString = new StringBuilder("");
 			
