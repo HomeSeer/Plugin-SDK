@@ -29,7 +29,7 @@ namespace HomeSeer.Jui.Forms {
 		}
 		
 		/// <inheritdoc/>
-		internal override string ToHtml(int indent = 0) {
+		public override string ToHtml(int indent = 0) {
 			throw new System.NotImplementedException();
 		}
 		
