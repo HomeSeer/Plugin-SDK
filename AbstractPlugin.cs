@@ -24,7 +24,7 @@ namespace HomeSeer.PluginSdk {
     /// </para>
     /// <para>All plugins (the HSPI class) should extend this class.</para>
     /// </summary>
-    public abstract class AbstractPlugin : IPlugin {
+    public abstract class AbstractPlugin : IPlugin, ActionTypeCollection.IActionTypeListener {
 
         #region Properties
 
@@ -94,11 +94,14 @@ namespace HomeSeer.PluginSdk {
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         protected SettingsCollection Settings { get; set; } = new SettingsCollection();
         
+        protected ActionTypeCollection Actions { get; set; }
+        
         /// <summary>
         /// The IP Address that the HomeSeer system is located at
         /// </summary>
         protected string IpAddress { get; set; } = "127.0.0.1";
 
+        //TODO tie this to the action and trigger collections
         protected bool LogDebug { get; set; } = false;
 
         private const int HomeSeerPort = 10400;
@@ -112,6 +115,10 @@ namespace HomeSeer.PluginSdk {
         //Triggers
 
         #endregion
+
+        protected AbstractPlugin() {
+            Actions = new ActionTypeCollection(this);
+        }
 
         #region Startup and Shutdown
 
@@ -371,7 +378,7 @@ namespace HomeSeer.PluginSdk {
                 Console.WriteLine("SaveJuiDeviceConfigPage");
             }
             try {
-                var deserializedPage = Page.Factory.FromJsonString(pageContent);
+                var deserializedPage = Page.FromJsonString(pageContent);
                 return OnDeviceConfigChange(deserializedPage, deviceRef);
             }
             catch (KeyNotFoundException exception) {
@@ -401,11 +408,6 @@ namespace HomeSeer.PluginSdk {
         #region Features
 
         /// <inheritdoc />
-        public string GetPagePlugin(string page, string user, int userRights, string queryString) {
-            return "";
-        }
-
-        /// <inheritdoc />
         public virtual string PostBackProc(string page, string data, string user, int userRights) {
             return "";
         }
@@ -421,44 +423,54 @@ namespace HomeSeer.PluginSdk {
 
         #region Actions
 
-        /// <inheritdoc />
-        public virtual bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
-            return false;
+        public virtual AbstractActionType OnBuildActionUi(AbstractActionType action) {
+            return action;
+        }
+
+        public virtual AbstractActionType OnActionConfigChange(AbstractActionType action) {
+            return action;
+        }
+
+        public virtual AbstractActionType BeforeRunAction(AbstractActionType action) {
+            return action;
         }
 
         /// <inheritdoc />
-        public virtual string ActionBuildUI(string sUnique, TrigActInfo actInfo) {
-            throw new NotImplementedException();
+        public bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
+            return Actions?.ActionReferencesDeviceOrFeature(dvRef, actInfo) ?? false;
         }
 
         /// <inheritdoc />
-        public virtual bool ActionConfigured(TrigActInfo actInfo) {
-            return false;
+        public string ActionBuildUI(TrigActInfo actInfo) {
+            return Actions?.OnGetActionUi(actInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
-        public virtual string ActionFormatUI(TrigActInfo actInfo) {
-            throw new NotImplementedException();
+        public bool ActionConfigured(TrigActInfo actInfo) {
+            return Actions?.IsActionConfigured(actInfo) ?? true;
         }
 
         /// <inheritdoc />
-        public virtual MultiReturn ActionProcessPostUI(NameValueCollection postData, TrigActInfo trigInfoIn) {
-            throw new NotImplementedException();
-            /*var result = new MultiReturn
-                         {
-                             sResult = "", DataOut = trigInfoIn.DataIn, TrigActInfo = trigInfoIn
-                         };
-            return result;*/
+        public string ActionFormatUI(TrigActInfo actInfo) {
+            return Actions?.OnGetActionPrettyString(actInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
-        public virtual bool HandleAction(TrigActInfo actInfo) {
-            return false;
+        public MultiReturn ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo actInfo) {
+            return Actions?.OnUpdateActionConfig(postData, actInfo) ?? 
+                   new MultiReturn {
+                       DataOut = actInfo.DataIn, sResult = "Plugin returned malformed data", TrigActInfo = actInfo
+                   };
+        }
+
+        /// <inheritdoc />
+        public bool HandleAction(TrigActInfo actInfo) {
+            return Actions?.HandleAction(actInfo) ?? false;
         }
         
         /// <inheritdoc />
-        public virtual string GetActionNameByNumber(int actionNum) {
-            return "Unknown";
+        public string GetActionNameByNumber(int actionNum) {
+            return Actions?.GetName(actionNum) ?? "Error retrieving action name";
         }
 
         #endregion
@@ -466,7 +478,7 @@ namespace HomeSeer.PluginSdk {
         #region Triggers
 
         /// <inheritdoc />
-        public virtual string TriggerBuildUI(string sUnique, TrigActInfo trigInfo) {
+        public virtual string TriggerBuildUI(TrigActInfo trigInfo) {
             throw new NotImplementedException();
         }
 
@@ -476,7 +488,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual MultiReturn TriggerProcessPostUI(NameValueCollection postData, TrigActInfo trigInfoIn) {
+        public virtual MultiReturn TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
             throw new NotImplementedException();
             /*var result = new MultiReturn
                          {

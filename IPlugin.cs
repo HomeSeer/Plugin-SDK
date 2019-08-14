@@ -253,10 +253,9 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Called by the HomeSeer system when an event is in edit mode and in need of HTML controls for the user.
         /// </summary>
-        /// <param name="unique">A unique string that can be used with your HTML controls to identify the control. All controls need to have a unique ID.</param>
         /// <param name="actInfo">Object that contains information about the action like current selections.</param>
         /// <returns>HTML controls that need to be displayed so the user can select the action parameters.</returns>
-        string ActionBuildUI(string unique, TrigActInfo actInfo);
+        string ActionBuildUI(TrigActInfo actInfo);
         
         /// <summary>
         /// Called by the HomeSeer system to verify that the configuration is valid and can be saved
@@ -273,7 +272,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="postData">A collection of name value pairs that include the user's selections.</param>
         /// <param name="trigInfoIn">Object that contains information about the action.</param>
         /// <returns>Object the holds the parsed information for the action. HomeSeer will save this information for you in the database.</returns>
-        MultiReturn ActionProcessPostUI(System.Collections.Specialized.NameValueCollection postData, TrigActInfo trigInfoIn);
+        MultiReturn ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn);
         
         /// <summary>
         /// Called by the HomeSeer system to determine if a specified device is referenced by a certain action.
@@ -333,10 +332,9 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Called by the HomeSeer system when an event is in edit mode and in need of HTML controls for the user.
         /// </summary>
-        /// <param name="unique">A unique string that can be used with your HTML controls to identify the control. All controls need to have a unique ID.</param>
         /// <param name="trigInfo">Object that contains information about the trigger like current selections.</param>
         /// <returns>HTML controls that need to be displayed so the user can select the action parameters.</returns>
-        string TriggerBuildUI(string unique, TrigActInfo trigInfo);
+        string TriggerBuildUI(TrigActInfo trigInfo);
         
         string TriggerFormatUI(TrigActInfo trigInfo);
         
@@ -346,7 +344,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="postData">A collection of name value pairs that include the user's selections.</param>
         /// <param name="trigInfoIn">Object that contains information about the trigger.</param>
         /// <returns>Object the holds the parsed information for the trigger. HomeSeer will save this information for you in the database.</returns>
-        MultiReturn TriggerProcessPostUI(System.Collections.Specialized.NameValueCollection postData, TrigActInfo trigInfoIn);
+        MultiReturn TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn);
         
         /// <summary>
         /// Called by the HomeSeer system to determine if a specified device is referenced by a certain trigger.

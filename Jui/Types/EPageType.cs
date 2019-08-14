@@ -38,7 +38,15 @@ namespace HomeSeer.Jui.Types {
 		/// These pages can be used for whatever you would like if you want to use JUI to
 		/// generate MDBootstrap compatible HTML elements
 		/// </summary>
-		Generic = 6
+		Generic = 6,
+		/// <summary>
+		/// These pages are used to display the configuration options for event actions
+		/// </summary>
+		EventAction = 7,
+		/// <summary>
+		/// These pages are used to display the configuration options for event triggers and conditions
+		/// </summary>
+		EventTrigger = 8,
 	}
 
 }
