@@ -83,7 +83,7 @@ namespace HomeSeer.Jui.Views {
 		/// <param name="type">The type of the page</param>
 		/// <exception cref="ArgumentNullException">Thrown if a Page is created with an invalid ID or Name</exception>
 		[JsonConstructor]
-		protected Page(string id, string name, EPageType type) {
+		internal Page(string id, string name, EPageType type) {
 			if (string.IsNullOrWhiteSpace(id)) {
 				throw new ArgumentNullException(nameof(id), "You must specify an ID");
 			}
@@ -110,6 +110,52 @@ namespace HomeSeer.Jui.Views {
 			return JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings {
 				TypeNameHandling = TypeNameHandling.Auto
 			});
+		}
+		
+		/// <summary>
+		/// Deserialize a JSON string to a page
+		/// <para>
+		/// This should always be wrapped in a try/catch in case the data received is malformed
+		/// </para>
+		/// </summary>
+		/// <param name="jsonString">The JSON string containing the page</param>
+		/// <returns>A Page</returns>
+		/// <exception cref="JsonDataException">Thrown when there was a problem deserializing the page</exception>
+		public static Page FromJsonString(string jsonString) {
+			try {
+				var page = JsonConvert.DeserializeObject<Page>(jsonString,
+				                                               new JsonSerializerSettings
+				                                               { TypeNameHandling = TypeNameHandling.Auto }
+				                                              );
+				
+				page.MapViewIds();
+				return page;
+			}
+			catch (JsonSerializationException exception) {
+					
+				throw new JsonDataException(exception);
+			}
+		}
+		
+		/// <summary>
+		/// Deserialize a JSON string to a List of Pages
+		/// </summary>
+		/// <param name="jsonString">The JSON string containing the list of pages</param>
+		/// <returns>A List of Jui.Page objects</returns>
+		/// <exception cref="JsonDataException">Thrown when there was a problem deserializing the page</exception>
+		public static List<Page> ListFromJson(string jsonString) {
+			try {
+				var pages = JsonConvert.DeserializeObject<List<Page>>(jsonString,
+				                                                      new JsonSerializerSettings
+				                                                      { TypeNameHandling = TypeNameHandling.Auto }
+				                                                     );
+				
+				return pages;
+			}
+			catch (JsonSerializationException exception) {
+					
+				throw new JsonDataException(exception);
+			}
 		}
 		
 		#endregion
@@ -253,7 +299,16 @@ namespace HomeSeer.Jui.Views {
 					}
 					
 					if (type != (int) EViewType.Input) {
-						throw new ArgumentException("The view type does not match the value type");
+						if (!bool.TryParse(valueString, out var boolValue)) {
+							throw new ArgumentException("The view type does not match the value type");
+						}
+
+						if (type != (int) EViewType.Toggle) {
+							throw new ArgumentException("The view type does not match the value type");
+						}
+						
+						view = new ToggleView(id, id, boolValue);
+						break;
 					}
 					
 					view = new InputView(id, id, valueString);
@@ -403,10 +458,13 @@ namespace HomeSeer.Jui.Views {
 		public override int GetHashCode() {
 			return Id.GetHashCode() * Name.GetHashCode() * ViewCount.GetHashCode();
 		}
+		
+		
 
 		/// <summary>
 		/// A factory class for creating pages
 		/// </summary>
+		[Obsolete("Please use HomeSeer.Jui.Views.PageFactory now.", false)]
 		public static class Factory {
 
 			/// <summary>
@@ -499,6 +557,28 @@ namespace HomeSeer.Jui.Views {
 			}
 			
 			/// <summary>
+			/// Create a new, event action page
+			/// </summary>
+			/// <param name="id">The ID for the page</param>
+			/// <param name="name">The name of the page</param>
+			/// <returns>A new Page with its type set to EPageType.EventAction</returns>
+			public static Page CreateEventActionPage(string id, string name) {
+				
+				return new Page(id, name, EPageType.EventAction);
+			}
+			
+			/// <summary>
+			/// Create a new, event trigger page
+			/// </summary>
+			/// <param name="id">The ID for the page</param>
+			/// <param name="name">The name of the page</param>
+			/// <returns>A new Page with its type set to EPageType.EventTrigger</returns>
+			public static Page CreateEventTriggerPage(string id, string name) {
+				
+				return new Page(id, name, EPageType.EventTrigger);
+			}
+			
+			/// <summary>
 			/// Deserialize a JSON string to a page
 			/// <para>
 			/// This should always be wrapped in a try/catch in case the data received is malformed
@@ -507,6 +587,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="jsonString">The JSON string containing the page</param>
 			/// <returns>A Page</returns>
 			/// <exception cref="JsonDataException">Thrown when there was a problem deserializing the page</exception>
+			[Obsolete("Please use Page.FromJsonString() instead", true)]
 			public static Page FromJsonString(string jsonString) {
 				try {
 					var page = JsonConvert.DeserializeObject<Page>(jsonString,
@@ -552,6 +633,7 @@ namespace HomeSeer.Jui.Views {
 			/// <param name="jsonString">The JSON string containing the list of pages</param>
 			/// <returns>A List of Jui.Page objects</returns>
 			/// <exception cref="JsonDataException">Thrown when there was a problem deserializing the page</exception>
+			[Obsolete("Please use Page.ListFromJson() instead", true)]
 			public static List<Page> ListFromJson(string jsonString) {
 				try {
 					var pages = JsonConvert.DeserializeObject<List<Page>>(jsonString,
