@@ -373,7 +373,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
+        public bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
             if (LogDebug) {
                 Console.WriteLine("SaveJuiDeviceConfigPage");
             }
@@ -389,7 +389,7 @@ namespace HomeSeer.PluginSdk {
                                                exception);
             }
         }
-        
+
         /// <summary>
         /// Called when there are changes to the device config page that need to be processed and saved
         /// </summary>
@@ -401,7 +401,9 @@ namespace HomeSeer.PluginSdk {
         /// You should throw an exception including a detailed message whenever possible over returning FALSE
         /// </para>
         /// </returns>
-        protected abstract bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef);
+        protected virtual bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef) {
+            return true;
+        }
 
         #endregion
 
