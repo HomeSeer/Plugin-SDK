@@ -1,6 +1,6 @@
 namespace HomeSeer.Jui.Views {
 
-    public class CollectionView : AbstractView {
+    internal class CollectionView : AbstractView {
         
         
 
@@ -11,7 +11,7 @@ namespace HomeSeer.Jui.Views {
             throw new System.NotImplementedException();
         }
 
-        internal override string ToHtml(int indent = 0) {
+        public override string ToHtml(int indent = 0) {
             throw new System.NotImplementedException();
         }
 

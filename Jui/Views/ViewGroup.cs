@@ -177,7 +177,7 @@ namespace HomeSeer.Jui.Views {
 		
 		#endregion
 
-		internal override string ToHtml(int indent = 0) {
+		public override string ToHtml(int indent = 0) {
 
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
