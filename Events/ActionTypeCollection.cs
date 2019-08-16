@@ -6,6 +6,8 @@ using HomeSeer.PluginSdk.Devices;
 namespace HomeSeer.PluginSdk.Events {
 
     public class ActionTypeCollection {
+        
+        public bool LogDebug { get; set; } = false;
 
         private IActionTypeListener _listener;
 
@@ -40,7 +42,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return targetAct.Name;
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 return "Error retrieving action name";
             }
         }
@@ -53,7 +57,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return curAct.ToHtml();
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 return exception.Message;
             }
             
@@ -75,7 +81,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return mr;
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 mr.sResult = exception.Message;
                 return mr;
             }
@@ -88,7 +96,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return curAct.IsFullyConfigured();
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 return true;
             }
         }
@@ -100,7 +110,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return curAct.GetPrettyString();
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 return exception.Message;
             }
         }
@@ -112,7 +124,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return curAct.OnRunAction();
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 return false;
             }
         }
@@ -123,7 +137,9 @@ namespace HomeSeer.PluginSdk.Events {
                 return curAct.ReferencesDeviceOrFeature(devOrFeatRef);
             }
             catch (Exception exception) {
-                Console.WriteLine(exception);
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
                 return false;
             }
         }
@@ -157,6 +173,7 @@ namespace HomeSeer.PluginSdk.Events {
                 throw new TypeLoadException("This constructor did not produce a class derived from AbstractActionType");
             }
 
+            curAct.LogDebug = LogDebug;
             return curAct;
         }
 

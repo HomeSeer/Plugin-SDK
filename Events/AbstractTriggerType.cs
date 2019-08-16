@@ -5,7 +5,7 @@ using HomeSeer.Jui.Views;
 
 namespace HomeSeer.PluginSdk.Events {
 
-    public abstract class AbstractActionType {
+    public abstract class AbstractTriggerType {
 
         public bool LogDebug { get; set; } = false;
         
@@ -13,15 +13,22 @@ namespace HomeSeer.PluginSdk.Events {
         public int EventRef => _eventRef;
         public byte[] Data => GetData();
         public string Name => GetName();
+        public virtual bool CanBeCondition => false;
+        public int SubTriggerCount => SubTriggerTypeNames?.Count ?? 0;
 
-        protected AbstractActionType(int id, int eventRef, byte[] dataIn) {
+        public int SelectedSubTriggerIndex {
+            get => _selectedSubTriggerIndex;
+            internal set => _selectedSubTriggerIndex = (value >= SubTriggerCount) ? -1 : value;
+        }
+
+        protected AbstractTriggerType(int id, int eventRef, byte[] dataIn) {
             _id           = id;
             _eventRef     = eventRef;
             _data         = dataIn;
             ProcessData();
         }
 
-        protected AbstractActionType() {}
+        protected AbstractTriggerType() {}
 
         /// <summary>
         /// Use this as a unique prefix for all of your JUI views
@@ -30,23 +37,35 @@ namespace HomeSeer.PluginSdk.Events {
 
         protected Page _page;
         
+        protected List<string> SubTriggerTypeNames = new List<string>();
+        
         private int _id;
         private int _eventRef;
         private byte[] _data;
+        private int _selectedSubTriggerIndex = -1;
+
+        public abstract bool IsTriggerTrue(bool isCondition);
         
         public abstract bool IsFullyConfigured();
 
         public abstract string GetPrettyString();
-
-        public abstract bool OnRunAction();
-
+        
         public abstract bool ReferencesDeviceOrFeature(int devOrFeatRef);
         
-        protected abstract bool OnEditAction(Page viewChanges);
+        protected abstract bool OnEditTrigger(Page viewChanges);
         
         protected abstract string GetName();
 
-        protected abstract void OnNewAction();
+        protected abstract void OnNewTrigger();
+
+        public string GetSubTriggerName(int subTriggerNum) {
+            if (subTriggerNum >= SubTriggerTypeNames.Count) {
+                throw new ArgumentOutOfRangeException(nameof(subTriggerNum), 
+                                                      $"{subTriggerNum} is not within the range of 0-{SubTriggerTypeNames.Count}");
+            }
+            
+            return SubTriggerTypeNames[subTriggerNum];
+        }
 
         public string ToHtml() {
             return _page?.ToHtml() ?? "";
@@ -81,14 +100,14 @@ namespace HomeSeer.PluginSdk.Events {
                 }
             }
             
-            return OnEditAction(pageChanges);
+            return OnEditTrigger(pageChanges);
         }
 
         private void ProcessData() {
             //Is data null/empty?
             if (_data == null || _data.Length == 0) {
-                _page = PageFactory.CreateEventActionPage(PageId, Name).Page;
-                OnNewAction();
+                _page = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
+                OnNewTrigger();
             }
             else {
                 try {
@@ -101,8 +120,8 @@ namespace HomeSeer.PluginSdk.Events {
                     if (LogDebug) {
                         Console.WriteLine(exception);
                     }
-                    _page = PageFactory.CreateEventActionPage(PageId, Name).Page;
-                    OnNewAction();
+                    _page = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
+                    OnNewTrigger();
                 }
             }
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading;
 using System.Text;
 using HomeSeer.Jui.Views;
@@ -9,10 +8,13 @@ using HomeSeer.PluginSdk.Events;
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
 using HSCF.Communication.ScsServices.Client;
+// ReSharper disable VirtualMemberNeverOverridden.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace HomeSeer.PluginSdk {
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IPlugin"/>
     /// <summary>
     /// The base implementation of the <see cref="IPlugin"/> interface.
     /// <para>
@@ -24,7 +26,7 @@ namespace HomeSeer.PluginSdk {
     /// </para>
     /// <para>All plugins (the HSPI class) should extend this class.</para>
     /// </summary>
-    public abstract class AbstractPlugin : IPlugin, ActionTypeCollection.IActionTypeListener {
+    public abstract class AbstractPlugin : IPlugin, ActionTypeCollection.IActionTypeListener, TriggerTypeCollection.ITriggerTypeListener {
 
         #region Properties
 
@@ -39,7 +41,7 @@ namespace HomeSeer.PluginSdk {
         /// </remarks>
         public virtual bool HasSettings => (Settings?.Count ?? 0) > 0;
 
-        //Chris says he rarely uses this to manage com ports with plugins
+        /// <inheritdoc />
         public virtual bool HSCOMPort { get; } = false;
 
         /// <inheritdoc />
@@ -94,21 +96,42 @@ namespace HomeSeer.PluginSdk {
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         protected SettingsCollection Settings { get; set; } = new SettingsCollection();
         
-        protected ActionTypeCollection Actions { get; set; }
+        /// <summary>
+        /// The collection of action types that this plugin hosts for HomeSeer
+        /// </summary>
+        protected ActionTypeCollection ActionTypes { get; set; }
+        
+        /// <summary>
+        /// The collection of trigger types that this plugin hosts for HomeSeer
+        /// </summary>
+        protected TriggerTypeCollection TriggerTypes { get; set; }
         
         /// <summary>
         /// The IP Address that the HomeSeer system is located at
         /// </summary>
         protected string IpAddress { get; set; } = "127.0.0.1";
 
-        //TODO tie this to the action and trigger collections
-        protected bool LogDebug { get; set; } = false;
+        /// <summary>
+        /// Used to enable/disable internal logging to the console
+        /// <para>
+        /// When it is TRUE, log messages from the PluginSdk code will be written to the Console
+        /// </para>
+        /// </summary>
+        protected bool LogDebug {
+            get => _logDebug;
+            set {
+                _logDebug = value;
+                ActionTypes.LogDebug = value;
+                TriggerTypes.LogDebug = value;
+            }
+        }
 
         private const int HomeSeerPort = 10400;
 
         private static IScsServiceClient<IHsController> _client;
         
         private bool   _isShutdown;
+        private bool _logDebug;
         
         //Actions
         
@@ -116,8 +139,13 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        /// <summary>
+        /// Default constructor that initializes the Action and Trigger type collections
+        /// </summary>
         protected AbstractPlugin() {
-            Actions = new ActionTypeCollection(this);
+            ActionTypes = new ActionTypeCollection(this);
+            TriggerTypes = new TriggerTypeCollection(this);
+            LogDebug = _logDebug;
         }
 
         #region Startup and Shutdown
@@ -361,15 +389,12 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual void SetIOMulti(List<DeviceControlEvent> colSend) {
-            //TODO Send to HsInterfaceConnection
-            //Calculate the new device state according to controls
-            //Translate to OnDeviceControl()
-            
+            //Default behavior is to do nothing
         }
 
         /// <inheritdoc />
         public virtual string GetJuiDeviceConfigPage(string deviceRef) {
-            throw new NotImplementedException();
+            return $"No device config page registered by plugin {Id}";
         }
 
         /// <inheritdoc />
@@ -389,7 +414,9 @@ namespace HomeSeer.PluginSdk {
                                                exception);
             }
         }
-
+        
+        // ReSharper disable UnusedParameter.Global
+        
         /// <summary>
         /// Called when there are changes to the device config page that need to be processed and saved
         /// </summary>
@@ -402,8 +429,11 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </returns>
         protected virtual bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef) {
+            
             return true;
         }
+        
+        // ReSharper restore UnusedParameter.Global
 
         #endregion
 
@@ -420,46 +450,49 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual void HsEvent(Constants.HSEvent eventType, object[] @params) {
-            //TODO process events
+            //process events?
         }
 
         #region Actions
 
+        /// <inheritdoc />
         public virtual AbstractActionType OnBuildActionUi(AbstractActionType action) {
             return action;
         }
 
+        /// <inheritdoc />
         public virtual AbstractActionType OnActionConfigChange(AbstractActionType action) {
             return action;
         }
 
+        /// <inheritdoc />
         public virtual AbstractActionType BeforeRunAction(AbstractActionType action) {
             return action;
         }
 
         /// <inheritdoc />
         public bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
-            return Actions?.ActionReferencesDeviceOrFeature(dvRef, actInfo) ?? false;
+            return ActionTypes?.ActionReferencesDeviceOrFeature(dvRef, actInfo) ?? false;
         }
 
         /// <inheritdoc />
         public string ActionBuildUI(TrigActInfo actInfo) {
-            return Actions?.OnGetActionUi(actInfo) ?? "Plugin returned malformed data";
+            return ActionTypes?.OnGetActionUi(actInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
         public bool ActionConfigured(TrigActInfo actInfo) {
-            return Actions?.IsActionConfigured(actInfo) ?? true;
+            return ActionTypes?.IsActionConfigured(actInfo) ?? true;
         }
 
         /// <inheritdoc />
         public string ActionFormatUI(TrigActInfo actInfo) {
-            return Actions?.OnGetActionPrettyString(actInfo) ?? "Plugin returned malformed data";
+            return ActionTypes?.OnGetActionPrettyString(actInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
         public MultiReturn ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo actInfo) {
-            return Actions?.OnUpdateActionConfig(postData, actInfo) ?? 
+            return ActionTypes?.OnUpdateActionConfig(postData, actInfo) ?? 
                    new MultiReturn {
                        DataOut = actInfo.DataIn, sResult = "Plugin returned malformed data", TrigActInfo = actInfo
                    };
@@ -467,12 +500,12 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public bool HandleAction(TrigActInfo actInfo) {
-            return Actions?.HandleAction(actInfo) ?? false;
+            return ActionTypes?.HandleAction(actInfo) ?? false;
         }
         
         /// <inheritdoc />
         public string GetActionNameByNumber(int actionNum) {
-            return Actions?.GetName(actionNum) ?? "Error retrieving action name";
+            return ActionTypes?.GetName(actionNum) ?? "Error retrieving action name";
         }
 
         #endregion
@@ -480,58 +513,72 @@ namespace HomeSeer.PluginSdk {
         #region Triggers
 
         /// <inheritdoc />
+        public AbstractTriggerType OnBuildTriggerUi(AbstractTriggerType trigger) {
+            return trigger;
+        }
+
+        /// <inheritdoc />
+        public AbstractTriggerType OnTriggerConfigChange(AbstractTriggerType trigger) {
+            return trigger;
+        }
+
+        /// <inheritdoc />
+        public AbstractTriggerType BeforeCheckTrigger(AbstractTriggerType trigger) {
+            return trigger;
+        }
+
+        /// <inheritdoc />
         public virtual string TriggerBuildUI(TrigActInfo trigInfo) {
-            throw new NotImplementedException();
+            return TriggerTypes?.OnGetTriggerUi(trigInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
         public virtual string TriggerFormatUI(TrigActInfo trigInfo) {
-            throw new NotImplementedException();
+            return TriggerTypes?.OnGetTriggerPrettyString(trigInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
         public virtual MultiReturn TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
-            throw new NotImplementedException();
-            /*var result = new MultiReturn
-                         {
-                             sResult = "", DataOut = trigInfoIn.DataIn, TrigActInfo = trigInfoIn
-                         };
-            return result;*/
+            return TriggerTypes?.OnUpdateTriggerConfig(postData, trigInfoIn) ?? 
+                   new MultiReturn {
+                                       DataOut = trigInfoIn.DataIn, sResult = "Plugin returned malformed data", 
+                                       TrigActInfo = trigInfoIn
+                                   };
         }
 
         /// <inheritdoc />
-        public virtual bool TriggerReferencesDevice(TrigActInfo trigInfo, int devRef) {
-            return false;
+        public virtual bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef) {
+            return TriggerTypes?.TriggerReferencesDeviceOrFeature(devOrFeatRef, trigInfo) ?? false;
         }
 
         /// <inheritdoc />
-        public virtual bool TriggerHasConditions(int triggerNum) {
-            return false;
+        public virtual bool TriggerCanBeCondition(int triggerNum) {
+            return TriggerTypes?.TriggerCanBeCondition(triggerNum) ?? false;
         }
 
         /// <inheritdoc />
         public virtual int GetSubTriggerCount(int triggerNum) {
-            return 0;
+            return TriggerTypes?.GetSubTriggerCount(triggerNum) ?? 0;
         }
 
         /// <inheritdoc />
         public virtual string GetSubTriggerNameByNumber(int triggerNum, int subTriggerNum) {
-            return "Unknown";
+            return TriggerTypes?.GetSubTriggerName(triggerNum, subTriggerNum) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
         public virtual bool IsTriggerConfigValid(TrigActInfo trigInfo) {
-            return false;
+            return TriggerTypes?.IsTriggerConfigured(trigInfo) ?? true;
         }
 
         /// <inheritdoc />
         public virtual string GetTriggerNameByNumber(int triggerNum) {
-            return "Unknown";
+            return TriggerTypes?.GetName(triggerNum) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
         public virtual bool TriggerTrue(TrigActInfo trigInfo, bool isCondition = false) {
-            return false;
+            return TriggerTypes?.IsTriggerTrue(trigInfo, isCondition) ?? false;
         }
 
         #endregion

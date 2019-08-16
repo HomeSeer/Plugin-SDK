@@ -30,7 +30,8 @@ namespace HomeSeer.PluginSdk {
         /// A COM port selection box will be displayed on the interfaces page so the user can enter a COM port number. 
         /// When InitIO is called in the plug-in the selected COM port will passed as a parameter.
         /// </remarks>
-        bool HSCOMPort { get; }
+        bool HSCOMPort { get; } //Chris says he rarely uses this to manage com ports with plugins
+        
         /// <summary>
         /// The name of the plugin
         /// <para>
@@ -152,8 +153,6 @@ namespace HomeSeer.PluginSdk {
         
         #region Devices
         
-        //TODO string ConfigDevice(int @ref, string user, int userRights, bool newDevice) -> replaced with new JUI Config Page
-        //TODO Constants.ConfigDevicePostReturn ConfigDevicePost(int @ref, string data, string user, int userRights) -> replaced with new JUI Config Page
         /// <summary>
         /// Called by the HomeSeer system when a device that this plugin owns is controlled.
         /// <para>
@@ -238,8 +237,6 @@ namespace HomeSeer.PluginSdk {
         /// <param name="params">The data associated with the event</param>
         void HsEvent(Constants.HSEvent eventType, object[] @params);
         
-        //TODO bool Condition -> Move into TrigActInfo as a property (IsCondition)
-
         #region Actions
         
         /// <summary>
@@ -298,7 +295,7 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="triggerNum">The number of the trigger to check</param>
         /// <returns>TRUE if the given trigger can also be used as a condition, for the given trigger number.</returns>
-        bool TriggerHasConditions(int triggerNum);
+        bool TriggerCanBeCondition(int triggerNum);
 
         /// <summary>
         /// Returns the number of sub triggers the plugin supports for the specified trigger number
@@ -352,7 +349,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="trigInfo">Object describing the trigger.</param>
         /// <param name="devRef">The reference ID of the device to check</param>
         /// <returns>TRUE if the trigger references the device; FALSE if it does not</returns>
-        bool TriggerReferencesDevice(TrigActInfo trigInfo, int devRef);
+        bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef);
         
         /// <summary>
         /// Called by HomeSeer when a trigger needs to be evaluated as a condition
@@ -401,9 +398,6 @@ namespace HomeSeer.PluginSdk {
         /// <param name="userRights">The user's rights</param>
         /// <returns></returns>
         string PostBackProc(string page, string data, string user, int userRights);
-
-        //TODO ExecuteActionById -> What do we do with this now?
-        //string ExecuteActionById(string actionId, Dictionary<string, string> @params);
 
     }
 
