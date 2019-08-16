@@ -117,6 +117,7 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
 
+        //TODO update this
         public virtual bool HandleAction(TrigActInfo actInfo) {
             try {
                 var curAct = GetObjectFromActInfo(actInfo);
@@ -205,8 +206,32 @@ namespace HomeSeer.PluginSdk.Events {
         
         public interface IActionTypeListener {
 
+            /// <summary>
+            /// Called during HomeSeer's request for the HTML to display for a given event action.
+            /// <para>
+            /// Use this opportunity to load in any additional data needed for the action configuration
+            /// </para>
+            /// </summary>
+            /// <param name="action">The action being configured</param>
+            /// <returns>The modified action being configured</returns>
             AbstractActionType OnBuildActionUi(AbstractActionType action);
+            /// <summary>
+            /// Called when configuration changes to an action needs to be processed.
+            /// <para>
+            /// Use this opportunity to load in any additional data needed for the action configuration
+            /// </para>
+            /// </summary>
+            /// <param name="action">The action being configured</param>
+            /// <returns>The modified action being configured</returns>
             AbstractActionType OnActionConfigChange(AbstractActionType action);
+            /// <summary>
+            /// Called before an action is executed
+            /// <para>
+            /// Use this opportunity to load in any additional data needed for the operation of the action
+            /// </para>
+            /// </summary>
+            /// <param name="action">The action being executed</param>
+            /// <returns>The modified action to execute</returns>
             AbstractActionType BeforeRunAction(AbstractActionType action);
 
         }

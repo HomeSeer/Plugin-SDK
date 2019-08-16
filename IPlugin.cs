@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Events;
+// ReSharper disable UnusedParameter.Global
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace HomeSeer.PluginSdk {
 
@@ -19,19 +21,7 @@ namespace HomeSeer.PluginSdk {
         /// Unique ID for this plugin, needs to be unique for all plugins
         /// </summary>
         string Id { get; }
-        
-        /// <summary>
-        /// Whether HomeSeer is to manage the communications (COM) port for this plug-in or not
-        /// <para>
-        /// TRUE if HomeSeer should manage the COM port for this plugin, FALSE if not
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// A COM port selection box will be displayed on the interfaces page so the user can enter a COM port number. 
-        /// When InitIO is called in the plug-in the selected COM port will passed as a parameter.
-        /// </remarks>
-        bool HSCOMPort { get; } //Chris says he rarely uses this to manage com ports with plugins
-        
+
         /// <summary>
         /// The name of the plugin
         /// <para>
@@ -78,30 +68,7 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </summary>
         bool SupportsConfigDeviceAll { get; }
-        
-        //TODO RaisesGenericCallbacks -> What does this do? documentation
-        /// <summary>
-        /// Indicates to HomeSeer that this plugin...
-        /// <para>TRUE to indicate that the plugin should receive device change events</para>
-        /// <para>FALSE to indicate that the plugin should not receive any device change events</para>
-        /// </summary>
-        bool RaisesGenericCallbacks { get; }
-        
-        /// <summary>
-        /// Whether this plugin supports advanced edit mode or not
-        /// <para>
-        /// Set to TRUE to enable advanced mode, you should display advanced controls.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// The HomeSeer events page has an option to set the editing mode to "Advanced Mode."  
-        /// This is typically used to enable options that may only be of interest to advanced users or programmers. 
-        /// The Set in this function is called when advanced mode is enabled. 
-        /// Your plug-in can also enable this mode if an advanced selection was saved and needs to be displayed.
-        /// </remarks>
-        /// <returns>TRUE if advanced mode is set, you may enable this mode if you detect advanced selections have already been made.</returns>
-        bool ActionAdvancedMode { get; set; }
-        
+
         /// <summary>
         /// The number of unique event actions the plugin supports
         /// </summary>
@@ -121,14 +88,12 @@ namespace HomeSeer.PluginSdk {
         
         #region Startup, Status, and Shutdown
         
-        //TODO InitIO -> What are going to do with the port parameter now?
         /// <summary>
         /// Called by the HomeSeer system to initialize the plugin.
         /// <para>
         /// This is the primary entry point for all plugins.  Start the plugin and get it ready for use.
         /// </para>
         /// </summary>
-        /// <param name="port"></param>
         /// <returns>
         /// TRUE if the plugin started successfully; FALSE if it did not
         /// <para>
@@ -136,7 +101,7 @@ namespace HomeSeer.PluginSdk {
         ///  returning FALSE whenever possible.
         /// </para>
         /// </returns>
-        bool InitIO(string port);
+        bool InitIO();
         
         /// <summary>
         /// Called by the HomeSeer system to determine the status of the plugin.
@@ -159,7 +124,7 @@ namespace HomeSeer.PluginSdk {
         /// A plugin owns a device when its Interface property is set to the plugin ID.
         /// </para>
         /// </summary>
-        /// <param name="colSend">
+        /// <param name="controlEvents">
         /// A collection of <see cref="DeviceControlEvent"/> objects,
         ///  one for each device being controlled
         /// </param>
@@ -261,6 +226,12 @@ namespace HomeSeer.PluginSdk {
         /// <returns>TRUE if the given action is configured properly; FALSE if the action shouldn't be saved</returns>
         bool ActionConfigured(TrigActInfo actInfo);
 
+        /// <summary>
+        /// Called by the HomeSeer system when an event action is finished being configured and needs to be displayed
+        ///  in an easy to read format.
+        /// </summary>
+        /// <param name="actInfo">Object that contains information about the current configuration of the trigger.</param>
+        /// <returns>HTML representing easy to read text describing the action</returns>
         string ActionFormatUI(TrigActInfo actInfo);
         
         /// <summary>
@@ -329,10 +300,16 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Called by the HomeSeer system when an event is in edit mode and in need of HTML controls for the user.
         /// </summary>
-        /// <param name="trigInfo">Object that contains information about the trigger like current selections.</param>
-        /// <returns>HTML controls that need to be displayed so the user can select the action parameters.</returns>
+        /// <param name="trigInfo">Object that contains information about the current configuration of the trigger.</param>
+        /// <returns>HTML controls that need to be displayed so the user can select the trigger parameters.</returns>
         string TriggerBuildUI(TrigActInfo trigInfo);
         
+        /// <summary>
+        /// Called by the HomeSeer system when an event trigger is finished being configured and needs to be displayed
+        ///  in an easy to read format.
+        /// </summary>
+        /// <param name="trigInfo">Object that contains information about the current configuration of the trigger.</param>
+        /// <returns>HTML representing easy to read text describing the trigger</returns>
         string TriggerFormatUI(TrigActInfo trigInfo);
         
         /// <summary>
@@ -347,7 +324,7 @@ namespace HomeSeer.PluginSdk {
         /// Called by the HomeSeer system to determine if a specified device is referenced by a certain trigger.
         /// </summary>
         /// <param name="trigInfo">Object describing the trigger.</param>
-        /// <param name="devRef">The reference ID of the device to check</param>
+        /// <param name="devOrFeatRef">The reference ID of the device or feature to check</param>
         /// <returns>TRUE if the trigger references the device; FALSE if it does not</returns>
         bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef);
         
@@ -396,7 +373,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="data">The data included in the request</param>
         /// <param name="user">The user responsible for initiating the request</param>
         /// <param name="userRights">The user's rights</param>
-        /// <returns></returns>
+        /// <returns>A string of data that is returned to the requester</returns>
         string PostBackProc(string page, string data, string user, int userRights);
 
     }

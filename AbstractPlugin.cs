@@ -24,7 +24,7 @@ namespace HomeSeer.PluginSdk {
     /// Once the containing plugin application is started, initiate a connection
     ///  to the HomeSeer system by calling <see cref="Connect(string[])"/>.
     /// </para>
-    /// <para>All plugins (the HSPI class) should extend this class.</para>
+    /// <para>All plugins (the HSPI class) should derive from this class.</para>
     /// </summary>
     public abstract class AbstractPlugin : IPlugin, ActionTypeCollection.IActionTypeListener, TriggerTypeCollection.ITriggerTypeListener {
 
@@ -40,10 +40,7 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </remarks>
         public virtual bool HasSettings => (Settings?.Count ?? 0) > 0;
-
-        /// <inheritdoc />
-        public virtual bool HSCOMPort { get; } = false;
-
+        
         /// <inheritdoc />
         public abstract string Id { get; }
 
@@ -58,9 +55,6 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual bool SupportsConfigDeviceAll { get; } = false;
-
-        /// <inheritdoc />
-        public virtual bool ActionAdvancedMode { get; set; } = false;
 
         /// <inheritdoc />
         public virtual bool HasTriggers { get; } = false;
@@ -237,10 +231,9 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.InitIO"/>
         /// <summary>
         /// Called by HomeSeer to initialize the plugin.
-        /// <para>DO NOT OVERRIDE this method unless you are certain you need to modify the default behavior.</para>
         /// <para>Perform all initialization logic in <see cref="Initialize"/></para>
         /// </summary>
-        public virtual bool InitIO(string port) {
+        public bool InitIO() {
             try {
                 if (LogDebug) {
                     Console.WriteLine("InitIO called by HomeSeer");
@@ -372,9 +365,6 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public abstract PluginStatus OnStatusCheck();
-
-        /// <inheritdoc />
-        public virtual bool RaisesGenericCallbacks { get; } = false;
 
         #endregion
 

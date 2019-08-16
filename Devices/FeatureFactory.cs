@@ -22,6 +22,23 @@ namespace HomeSeer.PluginSdk.Devices {
             return ff;
         }
         
+        public static FeatureFactory CreateFeature(string pluginId, int devRef) {
+            if (devRef <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(devRef));
+            }
+            
+            var ff = new FeatureFactory();
+            var feature = new HsFeature
+                          {
+                              Relationship = ERelationship.Feature,
+                              Interface    = pluginId
+                          };
+            ff._feature = feature;
+            ff._feature.AssociatedDevices = new HashSet<int> {devRef};
+
+            return ff;
+        }
+        
         #region Device Properties
 
         public FeatureFactory OnDevice(int devRef) {

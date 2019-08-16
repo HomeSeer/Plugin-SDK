@@ -5,6 +5,8 @@ using HomeSeer.PluginSdk.Energy;
 using HomeSeer.PluginSdk.Events;
 using HomeSeer.PluginSdk.Logging;
 using HSCF.Communication.ScsServices.Service;
+// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedMember.Global
 
 namespace HomeSeer.PluginSdk {
 
@@ -18,15 +20,14 @@ namespace HomeSeer.PluginSdk {
     [ScsService]
     public interface IHsController {
 
+        /// <summary>
+        /// The current version of the HomeSeer Plugin API
+        /// </summary>
         double APIVersion { get; }
+        /// <summary>
+        /// The number of devices connected to the HomeSeer system
+        /// </summary>
         int DeviceCount { get; }
-        
-        //TODO Properties
-        //bool   DayLightSavings          { get; }
-        //int    DebugMode                { get; set; }
-        //string ScheduleFile             { get; set; }
-        //bool   ShuttingDown             { get; }
-        //int    WEBStatsPageViews        { get; set; }
         
         /// <summary>
         /// Register a new plugin with HomeSeer
@@ -52,8 +53,23 @@ namespace HomeSeer.PluginSdk {
         /// <param name="fileName">The name of the INI file to edit</param>
         void ClearIniSection(string sectionName, string fileName);
 
+        /// <summary>
+        /// Get the value of the setting saved to INI file
+        /// </summary>
+        /// <param name="sectionName">The name of the section the setting is saved to</param>
+        /// <param name="key">The key of the setting</param>
+        /// <param name="defaultVal">A default value to use if the setting was not previously saved</param>
+        /// <param name="fileName">The name of the INI file to search</param>
+        /// <returns></returns>
         string GetINISetting(string sectionName, string key, string defaultVal, string fileName = "");
 
+        /// <summary>
+        /// Save the new value of a setting
+        /// </summary>
+        /// <param name="sectionName">The name of the section the setting is saved to</param>
+        /// <param name="key">The key of the setting</param>
+        /// <param name="value">The value to save</param>
+        /// <param name="fileName">The name of the INI file to save the setting to</param>
         void SaveINISetting(string sectionName, string key, string value, string fileName);
 
         /// <summary>
@@ -100,13 +116,13 @@ namespace HomeSeer.PluginSdk {
         /// <param name="pluginId">The ID of the plugin</param>
         /// <param name="pageFilename">The filename of the page, ending with .html</param>
         /// <param name="linkText">The text that appears in the navigation menu</param>
-        //void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
+        void RegisterDeviceIncPage(string pluginId, string pageFilename, string linkText);
 
         /// <summary>
         /// Unregister the device inclusion page for this plugin.
         /// </summary>
         /// <param name="pluginId">The ID of the plugin</param>
-        //void UnregisterDeviceIncPage(string pluginId);
+        void UnregisterDeviceIncPage(string pluginId);
         
         #endregion
         
@@ -114,8 +130,22 @@ namespace HomeSeer.PluginSdk {
         
         #region Create
         
+        /// <summary>
+        /// Create a new device in HomeSeer
+        /// </summary>
+        /// <param name="deviceData">
+        /// <see cref="NewDeviceData"/> describing the device produced by <see cref="DeviceFactory"/>
+        /// </param>
+        /// <returns>The unique reference ID assigned to the device</returns>
         int CreateDevice(NewDeviceData deviceData);
 
+        /// <summary>
+        /// Create a new feature on a device in HomeSeer
+        /// </summary>
+        /// <param name="featureData">
+        /// <see cref="NewFeatureData"/> describing the feature produced by <see cref="FeatureFactory"/>
+        /// </param>
+        /// <returns>The unique reference ID assigned to the feature</returns>
         int CreateFeatureForDevice(NewFeatureData featureData);
         
         #endregion
@@ -127,11 +157,7 @@ namespace HomeSeer.PluginSdk {
         Dictionary<int, object> GetPropertyByInterface(string interfaceName, EDeviceProperty property, bool deviceOnly = false);
         string GetNameByRef(int devOrFeatRef);
         bool DoesRefExist(int devOrFeatRef);
-        [Obsolete("Please use the renamed GetPropertyByRef() method.", false)]
-        object GetDevicePropertyByRef(int devRef, EDeviceProperty property);
         object GetPropertyByRef(int devOrFeatRef, EDeviceProperty property);
-        [Obsolete("Please use the renamed IsFlagOnRef() method.", false)]
-        bool IsFlagOnDeviceRef(int devRef, EDeviceMiscFlag miscFlag);
         bool IsFlagOnRef(int devOrFeatRef, EDeviceMiscFlag miscFlag);
         bool IsRefDevice(int devOrFeatRef);
         
@@ -164,9 +190,6 @@ namespace HomeSeer.PluginSdk {
         HsDevice UpdateDeviceByRef(int devRef, Dictionary<EDeviceProperty, object> changes);
         HsFeature UpdateFeatureByRef(int featRef, Dictionary<EDeviceProperty, object> changes);
 
-        [Obsolete("Please use the renamed UpdatePropertyByRef() method.", false)]
-        void UpdateDevicePropertyByRef(int devRef, EDeviceProperty property, object value);
-        
         void UpdatePropertyByRef(int devOrFeatRef, EDeviceProperty property, object value);
         
         void AddStatusControlToFeature(int featRef, StatusControl statusControl);
@@ -190,8 +213,6 @@ namespace HomeSeer.PluginSdk {
 
         string ControlFeatureByValue(int featRef, double value);
         string ControlFeatureByString(int featRef, string value);
-
-        //TODO Bulk update control methods
         
         #endregion
 
