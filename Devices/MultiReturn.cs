@@ -1,7 +1,10 @@
+using System;
 using HomeSeer.PluginSdk.Events;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public struct MultiReturn {
 
         /// <summary>

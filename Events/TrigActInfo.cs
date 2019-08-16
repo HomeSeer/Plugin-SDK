@@ -1,5 +1,9 @@
+using System;
+
 namespace HomeSeer.PluginSdk.Events {
 
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public struct TrigActInfo {
 
     /// <summary>
