@@ -8,6 +8,9 @@ namespace HomeSeer.Jui {
 	/// <summary>
 	/// A plugin that is installed on the HomeSeer system
 	/// </summary>
+	/// <remarks>
+	/// This is used strictly as a JSON model for the communication of plugin information via the HomeSeer JSON API
+	/// </remarks>
     public class Plugin {
 
 	    /// <summary>

@@ -19,10 +19,10 @@ namespace HomeSeer.Jui.Types {
 		/// A <see cref="HomeSeer.Jui.Views.ViewGroup"/>
 		/// </summary>
 		Group = 0,
-		/// <summary>
-		/// An <see cref="HomeSeer.Jui.Forms.AbstractFormView"/>
-		/// </summary>
-		Form = 1,
+		// <summary>
+		// An <see cref="HomeSeer.Jui.Forms.AbstractFormView"/>
+		// </summary>
+		//Form = 1,
 		/// <summary>
 		/// A <see cref="HomeSeer.Jui.Views.LabelView"/>
 		/// </summary>
@@ -39,30 +39,15 @@ namespace HomeSeer.Jui.Types {
 		/// A <see cref="HomeSeer.Jui.Views.ToggleView"/>
 		/// </summary>
 		Toggle = 5,
-		/// <summary>
-		/// A <see cref="HomeSeer.Jui.Views.ButtonView"/>
-		/// </summary>
-		Button = 6,
-		/// <summary>
-		/// Not implemented yet
-		/// </summary>
-		Image = 7,
-		/// <summary>
-		/// Not implemented yet
-		/// </summary>
-		DateTime = 8,
-		/// <summary>
-		/// Not implemented yet
-		/// </summary>
-		MessageArchive = 9,
-		/// <summary>
-		/// Not implemented yet
-		/// </summary>
-		Table = 10,
-		/// <summary>
-		/// Not implemented yet
-		/// </summary>
-		Chart = 11
+		// <summary>
+		// A <see cref="HomeSeer.Jui.Views.ButtonView"/>
+		// </summary>
+		//Button = 6,
+		//Image = 7,
+		//TODO DateTime = 8,
+		//MessageArchive = 9,
+		//Table = 10,
+		//Chart = 11
 
 	}
 
