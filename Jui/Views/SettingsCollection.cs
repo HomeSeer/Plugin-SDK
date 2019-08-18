@@ -2,15 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using HomeSeer.Jui.Types;
 using Newtonsoft.Json;
+// ReSharper disable UnusedMember.Global
 
 namespace HomeSeer.Jui.Views {
 
+	/// <summary>
+	/// A collection of JUI settings pages.
+	/// </summary>
+	/// <remarks>
+	/// This is the primary container for settings pages used by plugins. It is integrated into
+	///  the AbstractPlugin class and automatically initialized to an empty collection.
+	/// </remarks>
+	/// <seealso cref="Page"/>
     public class SettingsCollection : IEnumerable<Page> {
 
+	    /// <summary>
+	    /// The number of pages in this collection
+	    /// </summary>
 	    [JsonIgnore]
 	    public int Count => _pages?.Count ?? 0;
 
+	    /// <summary>
+	    /// The list of pages in this collection
+	    /// </summary>
+	    /// <seealso cref="Views.Page"/>
         [JsonProperty("pages")]
         public List<Page> Pages {
             get {
@@ -44,6 +61,9 @@ namespace HomeSeer.Jui.Views {
             }
         }
 
+        /// <summary>
+        /// The index of the page that is selected and will be shown first to users
+        /// </summary>
         [JsonProperty("selected_page")]
         public int SelectedPageIndex { get; set; } = 0;
 
@@ -53,13 +73,28 @@ namespace HomeSeer.Jui.Views {
         [JsonIgnore]
         private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
 
+        /// <summary>
+        /// Default, empty constructor
+        /// </summary>
         public SettingsCollection() { }
 
+        /// <summary>
+        /// Create a new SettingsCollection with the given list of pages
+        /// </summary>
+        /// <param name="pages">The list of pages for the collection</param>
+        /// <seealso cref="Page"/>
         [JsonConstructor]
         public SettingsCollection(List<Page> pages) {
             Pages = pages;
         }
 
+        /// <summary>
+        /// Add a page to the collection
+        /// </summary>
+        /// <param name="page">The page to add. Should be a page of type <see cref="EPageType.Settings"/></param>
+        /// <exception cref="ArgumentNullException">The supplied page or its ID is null</exception>
+        /// <exception cref="ArgumentException">Thrown if a page with the same ID already exists in the collection</exception>
+        /// <seealso cref="Page"/>
         public void Add(Page page) {
 
             if (page?.Id == null) {
@@ -74,6 +109,11 @@ namespace HomeSeer.Jui.Views {
             _pageOrder.Add(page.Id);
         }
         
+        /// <summary>
+        /// Get the page with the specified ID
+        /// </summary>
+        /// <param name="pageId">The ID of the desired page</param>
+        /// <seealso cref="Page"/>
         public Page this[string pageId] {
 
             get {
@@ -93,6 +133,13 @@ namespace HomeSeer.Jui.Views {
             }
         }
 
+        /// <summary>
+        /// Get the index of the page with the specified ID
+        /// </summary>
+        /// <param name="pageId">The ID of the page to look for</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when pageId is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when the pageId was not found in the collection</exception>
         public int IndexOf(string pageId) {
 
             if (string.IsNullOrWhiteSpace(pageId)) {
@@ -106,6 +153,15 @@ namespace HomeSeer.Jui.Views {
             return _pageOrder.IndexOf(pageId);
         }
 
+        /// <summary>
+        /// Determine if the collection contains a page with the specified ID
+        /// </summary>
+        /// <param name="pageId">The ID of the page to look for</param>
+        /// <returns>
+        /// TRUE if the collection contains the page,
+        ///  FALSE if the page was not found
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when pageId is null or whitespace</exception>
         public bool ContainsPageId(string pageId) {
 	        if (string.IsNullOrWhiteSpace(pageId)) {
 		        throw new ArgumentNullException(nameof(pageId));
@@ -114,6 +170,7 @@ namespace HomeSeer.Jui.Views {
 	        return _pages.ContainsKey(pageId);
         }
 
+        /// <inheritdoc />
         public IEnumerator<Page> GetEnumerator() {
 	        return Pages.GetEnumerator();
         }
@@ -122,6 +179,16 @@ namespace HomeSeer.Jui.Views {
 	        return GetEnumerator();
         }
 
+        /// <summary>
+        /// Swap the pages at the specified indexes
+        /// </summary>
+        /// <remarks>
+        /// When this method finishes, the page at index1 will be located at index2,
+        ///  and the page at index2 will be located at index1.
+        /// </remarks>
+        /// <param name="index1">The index of the first page</param>
+        /// <param name="index2">The index of the second page</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if either index is out of range of the collection</exception>
         public void Swap(int index1, int index2) {
 
             if (index1 < 0 || index1 > _pages.Count) {
@@ -138,6 +205,12 @@ namespace HomeSeer.Jui.Views {
             _pageOrder[index2] = page1Id;
         }
         
+        /// <summary>
+        /// Remove the page with the specified ID from the collection
+        /// </summary>
+        /// <param name="pageId">The ID of the page to remove</param>
+        /// <exception cref="ArgumentNullException">Thrown when pageId is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when the pageId was not found in the collection</exception>
         public void RemoveById(string pageId) {
             
             if (string.IsNullOrWhiteSpace(pageId)) {
@@ -152,6 +225,9 @@ namespace HomeSeer.Jui.Views {
             _pageOrder.Remove(pageId);
         }
 
+        /// <summary>
+        /// Remove all pages from the collection
+        /// </summary>
         public void RemoveAll() {
             
             _pages = new Dictionary<string, Page>();

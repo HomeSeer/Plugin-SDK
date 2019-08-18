@@ -2,8 +2,16 @@ using HomeSeer.Jui.Types;
 
 namespace HomeSeer.Jui.Views {
 
+    //TODO documentation and examples
+    
+    /// <summary>
+    /// A factory class for creating pages in a more streamlined way
+    /// </summary>
     public class PageFactory {
         
+        /// <summary>
+        /// The page being created
+        /// </summary>
         public Page Page { get; private set; }
 
         /// <summary>

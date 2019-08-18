@@ -11,6 +11,8 @@ namespace HomeSeer.Jui.Views {
 	/// </summary>
 	public sealed class InputView : AbstractView {
 
+		//TODO error text
+		
 		/// <summary>
 		/// The style of input accepted by this field.
 		/// This determines the keyboard the user is shown when on a mobile device.
