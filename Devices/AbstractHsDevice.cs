@@ -1,21 +1,51 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// The base implementation of a HomeSeer device.
+    /// <para>
+    /// Used to represent devices and features as either a <see cref="HsDevice"/> or <see cref="HsFeature"/>
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Due to the fact that both <see cref="HsDevice"/>s and <see cref="HsFeature"/>s derive from this class
+    ///  some documentation may refer to either as a device. Be careful to ensure you know which one you are working
+    ///  with at all times to avoid unexpected InvalidOperationExceptions.
+    /// </remarks>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public abstract class AbstractHsDevice {
         
         #region Properties
         
-        public Dictionary<EDeviceProperty, object> Changes { get; protected set; } = new Dictionary<EDeviceProperty, object>();
-        public DateTime LastChange { get; protected set; } = DateTime.MinValue;
-        public int      Ref        { get; protected set; } = -1;
+        /// <summary>
+        /// A collection of changes to the device/feature since its initialization
+        /// </summary>
+        /// <remarks>
+        /// This acts as a local cache and makes it easier to change multiple things about a device/feature and then
+        ///  send all of the changes to HomeSeer as a bundle via <see cref="IHsController.UpdateDeviceByRef"/>
+        ///  or <see cref="IHsController.UpdateFeatureByRef"/>
+        /// </remarks>
+        public Dictionary<EDeviceProperty, object> Changes { get; private set; } = new Dictionary<EDeviceProperty, object>();
+        
+        /// <summary>
+        /// The unique identifier for this device/feature. This is the primary key for devices and features in HomeSeer.
+        /// </summary>
+        public int Ref { get; } = -1;
 
         #region Public
         
+        /// <summary>
+        /// A physical address for the device/feature.
+        /// <para>
+        /// Use this to store a unique identifier for the physical device this device/feature is associated with.
+        /// </para>
+        /// </summary>
         public string Address {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Address)) {
@@ -45,6 +75,9 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        /// <summary>
+        /// A set of unique IDs that represent the devices/features that are associated with this device/feature
+        /// </summary>
         public HashSet<int> AssociatedDevices {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
@@ -74,24 +107,15 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        public string AssociatedDevicesList {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    if (!(Changes[EDeviceProperty.AssociatedDevices] is HashSet<int> cachedAssDevices) || cachedAssDevices.Count == 0) {
-                        return "";
-                    }
-
-                    return string.Join(",", cachedAssDevices.Select(i => i.ToString()));
-                }
-                
-                if (_assDevices == null || _assDevices.Count == 0) {
-                    return "";
-                }
-
-                return string.Join(",", _assDevices.Select(i => i.ToString()));
-            }
-        }
-
+        /// <summary>
+        /// Type info for this device/feature
+        /// </summary>
+        /// <remarks>
+        /// This is used to describe this device/feature in a manner that is easily understood by UI generation engines
+        ///  and other smart home platforms. When these systems can understand what this device/feature is, they are
+        ///  better able to tailor the experience of the user to their expectations.
+        /// </remarks>
+        /// <seealso cref="DeviceTypeInfo"/>
         public DeviceTypeInfo DeviceType {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.DeviceType)) {
@@ -119,9 +143,10 @@ namespace HomeSeer.PluginSdk.Devices {
                 _deviceType = value ?? new DeviceTypeInfo();
             }
         }
-
-        //public string FullAddress => $"{_address?.Trim()}{((string.IsNullOrWhiteSpace(_address) || string.IsNullOrWhiteSpace(_code)) ? "" : "-")}{_code?.Trim()}";
         
+        /// <summary>
+        /// The address of an image that represents the current status of the device/feature
+        /// </summary>
         public string Image {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Image)) {
@@ -150,6 +175,9 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The ID of the interface that is responsible for processing interactions with this device/feature
+        /// </summary>
         public string Interface {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Interface)) {
@@ -177,6 +205,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        /// <summary>
+        /// Whether the device/feature is in an invalid state and should display as such to users.
+        /// </summary>
+        /// <remarks>
+        /// Use this as a manual way to flag the device/feature as invalid when the automatic check through
+        ///  <see cref="IsValueValid"/> will not produce the desired result. Setting this to TRUE will force the
+        ///  device/feature's state to invalid.
+        /// </remarks>
         public bool IsValueInvalid {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.InvalidValue)) {
@@ -203,12 +239,48 @@ namespace HomeSeer.PluginSdk.Devices {
                 _invalidValue = value;
             }
         }
-
-        /*public string InterfaceInstance {
-            get => _interfaceInstance;
-            set => _interfaceInstance = value ?? "";
-        }*/
         
+        /// <summary>
+        /// The date and time that this device/feature was last updated or changed
+        /// </summary>
+        public DateTime LastChange {
+            get {
+                if (Changes.ContainsKey(EDeviceProperty.LastChange)) {
+                    return (DateTime) Changes[EDeviceProperty.LastChange];
+                }
+
+                return _lastChange;
+            }
+            set {
+                if (value == _lastChange) {
+                    Changes.Remove(EDeviceProperty.LastChange);
+                    return;
+                }
+                if (Changes.ContainsKey(EDeviceProperty.LastChange)) {
+                    Changes[EDeviceProperty.LastChange] = value;
+                }
+                else {
+                    Changes.Add(EDeviceProperty.LastChange, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _lastChange = value;
+            }
+        }
+
+        /// <summary>
+        /// The primary location of the device/feature according to the locations configured on the user's system
+        /// </summary>
+        /// <remarks>
+        /// Do not set this directly on features. It will be ignored/overwritten in favor of the location set
+        ///  on the owning device.
+        /// <para>
+        /// To optimize the user experience, it is recommended to ask the user which location they wish to assign
+        ///  to a device before finishing the inclusion process.
+        /// </para>
+        /// </remarks>
         public string Location {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Location)) {
@@ -236,6 +308,17 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The secondary location of the device/feature according to the locations configured on the user's system
+        /// </summary>
+        /// <remarks>
+        /// Do not set this directly on features. It will be ignored/overwritten in favor of the location2 set
+        ///  on the owning device.
+        /// <para>
+        /// To optimize the user experience, it is recommended to ask the user which location they wish to assign
+        ///  to a device before finishing the inclusion process.
+        /// </para>
+        /// </remarks>
         public string Location2 {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Location2)) {
@@ -263,6 +346,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// A collection of bit flags used to represent various configuration options for a device/feature.
+        /// <para>
+        /// It is not recommended to set this directly. Instead, use <see cref="AddMiscFlag"/>,
+        ///  <see cref="RemoveMiscFlag"/>, and <see cref="ContainsMiscFlag"/> to interface with this property
+        /// </para>
+        /// </summary>
+        /// <seealso cref="EDeviceMiscFlag"/>
         public uint Misc {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Misc)) {
@@ -290,6 +381,16 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        //TODO Name guidelines
+        /// <summary>
+        /// The name of the device/feature
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// To optimize the user experience, it is recommended to ask the user what name they wish to assign
+        ///  to the device before finishing the inclusion process.
+        /// </para>
+        /// </remarks>
         public string Name {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Name)) {
@@ -317,6 +418,13 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        /// <summary>
+        /// A memory space available for plugins to store keyed and non-keyed data associated with the device/feature
+        /// </summary>
+        /// <remarks>
+        /// Use this to store device/feature specific configuration options accessed via the DeviceConfig page
+        /// </remarks>
+        /// <seealso cref="PlugExtraData"/>
         public PlugExtraData PlugExtraData {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.PlugExtraData)) {
@@ -345,6 +453,9 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        /// <summary>
+        /// The address of an image of the physical device this HomeSeer device/feature is associated with
+        /// </summary>
         public string ProductImage {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.ProductImage)) {
@@ -372,6 +483,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The type of relationship this device/feature has with other devices/features.
+        ///  See <see cref="ERelationship"/> for valid types and more details.
+        /// </summary>
+        /// <exception cref="DeviceRelationshipException">
+        /// Thrown when setting the relationship while there are
+        ///  listed devices/features still associated with this device/feature
+        /// </exception>
         public ERelationship Relationship {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
@@ -408,6 +527,12 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The current status of the device/feature.
+        /// <para>
+        /// This is the primary piece of information that users will look at.
+        /// </para>
+        /// </summary>
         public string Status {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Status)) {
@@ -435,6 +560,10 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        //TODO User Access rights
+        /// <summary>
+        /// A string representation of the HomeSeer user access rights for this device/feature
+        /// </summary>
         public string UserAccess {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.UserAccess)) {
@@ -462,6 +591,9 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// Notes attached to this device/feature by users
+        /// </summary>
         public string UserNote {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.UserNote)) {
@@ -489,6 +621,18 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// A numeric value representing the current state of the device/feature.
+        /// </summary>
+        /// <remarks>
+        /// Although this is available on devices it should not be set directly. This should only be set on features;
+        ///  as the information of the identified primary feature will be automatically pushed to the device to better
+        ///  adhere to user experience expectations.
+        /// <para>
+        /// This value relates to the TargetValue and TargetRange properties on the <see cref="StatusControl"/>
+        ///  and <see cref="StatusGraphic"/> classes.
+        /// </para>
+        /// </remarks>
         public double Value {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.Value)) {
@@ -498,7 +642,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _value;
             }
             set {
-                if (value == _value) {
+                if (Math.Abs(value - _value) < 0.001) {
                     Changes.Remove(EDeviceProperty.Value);
                     return;
                 }
@@ -517,6 +661,10 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        //TODO voice friendly strings documentation
+        /// <summary>
+        /// A voice friendly command string used to identify this device/feature
+        /// </summary>
         public string VoiceCommand {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.VoiceCommand)) {
@@ -548,36 +696,45 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #region Private
         
+        /// <inheritdoc cref="Address"/>
         protected string         _address           = "";
+        /// <inheritdoc cref="AssociatedDevices"/>
         protected HashSet<int>   _assDevices        = new HashSet<int>();
-        //private string         _attention         = "";
-        //private string         _buttons           = "";
-        //private Hashtable      _buttonScripts     = new Hashtable();
         protected bool           _cacheChanges      = false;
-        //private bool           _canDim            = false;
-        //private string         _code              = "";
-        //private string         _devTypeString     = "";
-        protected DeviceTypeInfo _deviceType; //TODO device type
+        /// <inheritdoc cref="DeviceType"/>
+        protected DeviceTypeInfo _deviceType        = new DeviceTypeInfo();
+        /// <inheritdoc cref="Image"/>
         protected string         _image             = "";
+        /// <inheritdoc cref="Interface"/>
         protected string         _interface         = "";
-        protected bool           _invalidValue      = false;
-        //private string         _interfaceInstance = "";
-        protected string         _location          = "Home";
-        protected string         _location2         = "Home";
+        /// <inheritdoc cref="IsValueInvalid"/>
+        protected bool           _invalidValue;     //= false;
+        /// <inheritdoc cref="LastChange"/>
+        protected DateTime       _lastChange        = DateTime.Now;
+        /// <inheritdoc cref="Location"/>
+        protected string         _location          = "Unknown";
+        /// <inheritdoc cref="Location2"/>
+        protected string         _location2         = "Unknown";
+        /// <inheritdoc cref="Misc"/>
         protected uint           _misc              = (uint) EDeviceMiscFlag.SHOW_VALUES;
+        /// <inheritdoc cref="Name"/>
         protected string         _name              = "";
+        /// <inheritdoc cref="PlugExtraData"/>
         protected PlugExtraData  _plugExtraData     = new PlugExtraData();
+        /// <inheritdoc cref="ProductImage"/>
         protected string         _productImage      = "";
+        /// <inheritdoc cref="Relationship"/>
         protected ERelationship  _relationship      = ERelationship.NotSet;
+        /// <inheritdoc cref="Status"/>
         protected string         _status            = "";
-        //private string         _scaleText         = "";
-        //private string         _scriptFunc        = "";
-        //private string         _scriptName        = "";
+        /// <inheritdoc cref="UserAccess"/>
         protected string         _userAccess        = "Any";
+        /// <inheritdoc cref="UserNote"/>
         protected string         _userNote          = "";
-        protected double         _value             = 0D;
+        /// <inheritdoc cref="Value"/>
+        protected double         _value;            //= 0D;
+        /// <inheritdoc cref="VoiceCommand"/>
         protected string         _voiceCommand      = "";
-        //private object         _stringSelected;
         
         #endregion
 
@@ -585,67 +742,29 @@ namespace HomeSeer.PluginSdk.Devices {
 
         internal AbstractHsDevice() {}
 
-        internal AbstractHsDevice(int deviceRef) {
-            Ref = deviceRef;
+        internal AbstractHsDevice(int featureRef) {
+            Ref = featureRef;
         }
 
-        internal AbstractHsDevice(int deviceRef, DateTime lastChange) {
-            Ref = deviceRef;
-            LastChange = lastChange;
-        }
-
+        /// <summary>
+        /// Clear all changes since initialization and reset the <see cref="Changes"/> property
+        /// </summary>
         public void RevertChanges() {
             Changes = new Dictionary<EDeviceProperty, object>();
         }
 
+        /// <summary>
+        /// Determine whether the current value is valid.
+        /// </summary>
+        /// <returns>Always TRUE when not overriden</returns>
         protected virtual bool IsValueValid() {
             return true;
         }
 
-        public void SetParentDevice(int deviceRef) {
-
-            var associatedDevices = _assDevices ?? new HashSet<int>();
-
-            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                associatedDevices = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
-            }
-
-            if (associatedDevices.Count > 0) {
-                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                    var cachedRelationshipChange = (ERelationship) Changes[EDeviceProperty.Relationship];
-                    if (cachedRelationshipChange == ERelationship.Device) {
-                        throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
-                    }
-                }
-                else if (_relationship == ERelationship.Device) {
-                    throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
-                }
-            }
-            
-            var updatedDeviceList = new HashSet<int> {deviceRef};
-
-            if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                Changes[EDeviceProperty.Relationship] = ERelationship.Feature;
-            }
-            else {
-                Changes.Add(EDeviceProperty.Relationship, ERelationship.Feature);
-            }
-
-            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
-            }
-            else {
-                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
-            }
-
-            if (_cacheChanges) {
-                return;
-            }
-
-            _assDevices = updatedDeviceList;
-            _relationship = ERelationship.Feature;
-        }
-        
+        /// <summary>
+        /// Add the specified <see cref="EDeviceMiscFlag"/> to the device/feature
+        /// </summary>
+        /// <param name="misc">The <see cref="EDeviceMiscFlag"/> to add</param>
         public void AddMiscFlag(EDeviceMiscFlag misc) {
             
             var currentMisc = _misc;
@@ -669,6 +788,14 @@ namespace HomeSeer.PluginSdk.Devices {
             _misc = tempMisc;
         }
 
+        /// <summary>
+        /// Determine if the device/feature contains the specified <see cref="EDeviceMiscFlag"/>
+        /// </summary>
+        /// <param name="misc">The <see cref="EDeviceMiscFlag"/> to look for</param>
+        /// <returns>
+        /// TRUE if the device/feature contains the <see cref="EDeviceMiscFlag"/>,
+        ///  FALSE if it does not.
+        /// </returns>
         public bool ContainsMiscFlag(EDeviceMiscFlag misc) {
             var currentMisc = _misc;
             if (Changes.ContainsKey(EDeviceProperty.Misc)) {
@@ -678,6 +805,10 @@ namespace HomeSeer.PluginSdk.Devices {
             return (currentMisc & (uint) misc) != 0;
         }
 
+        /// <summary>
+        /// Remove the specified <see cref="EDeviceMiscFlag"/> from the device/feature
+        /// </summary>
+        /// <param name="misc">The <see cref="EDeviceMiscFlag"/> to remove</param>
         public void RemoveMiscFlag(EDeviceMiscFlag misc) {
             var currentMisc = _misc;
             if (Changes.ContainsKey(EDeviceProperty.Misc)) {
@@ -700,7 +831,10 @@ namespace HomeSeer.PluginSdk.Devices {
             _misc = tempMisc;
         }
 
-        public void ClearMiscFlag() {
+        /// <summary>
+        /// Clear all <see cref="EDeviceMiscFlag"/>s on the device/feature.
+        /// </summary>
+        public void ClearMiscFlags() {
             if (Changes.ContainsKey(EDeviceProperty.Misc)) {
                 Changes[EDeviceProperty.Misc] = (uint) 0;
             }

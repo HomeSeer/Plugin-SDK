@@ -18,14 +18,22 @@ namespace HomeSeer.PluginSdk {
         #region Properties
 
         /// <summary>
-        /// Unique ID for this plugin, needs to be unique for all plugins
+        /// Unique ID for this plugin, needs to be unique for all plugins.
+        /// <para>
+        /// Do NOT use special characters in your plugin name with the exception of "-" and "."
+        /// </para>
         /// </summary>
+        /// <remarks>
+        /// The ID is used throughout the HomeSeer platform to target this plugin specifically via URL or internal code.
+        ///  HomeSeer recommends using the name your plugin (replacing any spaces with hyphens "-") as the ID to make it
+        ///  easy to match them with one-another.
+        /// </remarks>
         string Id { get; }
 
         /// <summary>
         /// The name of the plugin
         /// <para>
-        /// Do NOT use special characters in your plug-in name with the exception of "-", ".", and " " (space).
+        /// Do NOT use special characters in your plugin name with the exception of "-", ".", and " " (space).
         /// </para>
         /// <para>
         /// This is used to identify your plug-in to HomeSeer and your users. 
@@ -107,6 +115,7 @@ namespace HomeSeer.PluginSdk {
         /// Called by the HomeSeer system to determine the status of the plugin.
         /// </summary>
         /// <returns>A PluginStatus object describing the state of the plugin</returns>
+        /// <seealso cref="PluginStatus"/>
         PluginStatus OnStatusCheck();
         
         /// <summary>

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
+// ReSharper disable MemberCanBePrivate.Global
 
 [assembly: InternalsVisibleTo("Scheduler")]
 
@@ -15,6 +15,11 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region Public
 
+        //TODO don't edit directly remarks
+        /// <summary>
+        /// A <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
+        ///  this feature.
+        /// </summary>
         public StatusControlCollection StatusControls {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
@@ -23,21 +28,13 @@ namespace HomeSeer.PluginSdk.Devices {
                 
                 return _statusControls;
             }
-            /*set {
-                var currentRelationship = _relationship;
-                
-                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                    currentRelationship = (ERelationship) Changes[EDeviceProperty.Relationship];
-                }
-
-                if (currentRelationship != ERelationship.Child || currentRelationship != ERelationship.Standalone) {
-                    throw new DeviceRelationshipException("Only child and standalone devices can have status controls");
-                }
-                
-                _statusControls = value ?? new StatusControlCollection();
-            }*/
         }
 
+        //TODO don't edit directly remarks
+        /// <summary>
+        /// A <see cref="StatusGraphicCollection"/> describing all of the <see cref="StatusGraphic"/>s associated with
+        ///  this feature.
+        /// </summary>
         public StatusGraphicCollection StatusGraphics {
             get {
                 if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
@@ -46,19 +43,6 @@ namespace HomeSeer.PluginSdk.Devices {
                 
                 return _statusGraphics;
             }
-            /*set {
-                var currentRelationship = _relationship;
-                
-                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                    currentRelationship = (ERelationship) Changes[EDeviceProperty.Relationship];
-                }
-
-                if (currentRelationship != ERelationship.Child || currentRelationship != ERelationship.Standalone) {
-                    throw new DeviceRelationshipException("Only child and standalone devices can have status graphics");
-                }
-                
-                _statusGraphics = value ?? new StatusGraphicCollection();
-            }*/
         }
 
         #endregion
@@ -72,32 +56,43 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
-        public HsFeature() { }
-        public HsFeature(int deviceRef) : base(deviceRef) { }
-        public HsFeature(int deviceRef, DateTime lastChange) : base(deviceRef, lastChange) { }
+        internal HsFeature() { }
+        
+        /// <summary>
+        /// Create a HomeSeer feature with the specified unique ID
+        /// </summary>
+        /// <param name="featureRef">The unique ID associated with this feature</param>
+        public HsFeature(int featureRef) : base(featureRef) { }
 
-        public HsFeature Duplicate(int deviceRef, HsFeature source) {
-            var dev = new HsFeature(deviceRef, source.LastChange)
+        /// <summary>
+        /// Make a copy of the feature with a different unique ID.
+        /// <para>
+        /// This will not duplicate StatusControls or StatusGraphics associated with the device.
+        /// </para>
+        /// </summary>
+        /// <param name="featureRef">The new unique ID for the copy</param>
+        /// <returns>A copy of the feature with a new reference ID</returns>
+        public HsFeature Duplicate(int featureRef) {
+            var dev = new HsFeature(featureRef)
                       {
-                          _address        = source.Address,
-                          _assDevices     = source.AssociatedDevices,
-                          _deviceType     = source.DeviceType,
-                          _image          = source.Image,
-                          _productImage   = source.ProductImage,
-                          _interface      = source.Interface,
-                          _location       = source.Location,
-                          _location2      = source.Location2,
-                          _misc           = source.Misc,
-                          _name           = source.Name,
-                          _plugExtraData  = source.PlugExtraData,
-                          _relationship   = source.Relationship,
-                          _status         = source.Status,
-                          _statusControls = source.StatusControls,
-                          _statusGraphics = source.StatusGraphics,
-                          _userAccess     = source.UserAccess,
-                          _userNote       = source.UserNote,
-                          _value          = source.Value,
-                          _voiceCommand   = source.VoiceCommand
+                          _address        = Address,
+                          _assDevices     = AssociatedDevices,
+                          _deviceType     = DeviceType,
+                          _image          = Image,
+                          _productImage   = ProductImage,
+                          _interface      = Interface,
+                          _lastChange     = LastChange,
+                          _location       = Location,
+                          _location2      = Location2,
+                          _misc           = Misc,
+                          _name           = Name,
+                          _plugExtraData  = PlugExtraData,
+                          _relationship   = Relationship,
+                          _status         = Status,
+                          _userAccess     = UserAccess,
+                          _userNote       = UserNote,
+                          _value          = Value,
+                          _voiceCommand   = VoiceCommand
                       };
             return dev;
         }
@@ -157,55 +152,6 @@ namespace HomeSeer.PluginSdk.Devices {
             _relationship = ERelationship.Feature;
         }
 
-        /*private bool AddAssociatedDevice(int deviceRef) {
-            if (_relationship != ERelationship.Parent_Root || _relationship != ERelationship.Child) {
-                throw new DeviceRelationshipException("Cannot add an association to a device that is not a parent or child.");
-            }
-
-            var wasDeviceAdded = false;
-            var updatedDeviceList = _assDevices ?? new HashSet<int>();
-            
-            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-
-                updatedDeviceList = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
-                wasDeviceAdded = updatedDeviceList.Add(deviceRef);
-                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
-            }
-            else {
-                wasDeviceAdded = updatedDeviceList.Add(deviceRef);
-                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
-            }
-
-            if (!_cacheChanges) {
-                _assDevices = updatedDeviceList;
-            }
-
-            return wasDeviceAdded;
-        }
-
-        private bool RemoveAssociatedDevice(int deviceRef) {
-            
-            var wasDeviceRemoved = false;
-            var updatedDeviceList = _assDevices ?? new HashSet<int>();
-            
-            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-
-                updatedDeviceList = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
-                wasDeviceRemoved = updatedDeviceList.Remove(deviceRef);
-                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
-            }
-            else {
-                wasDeviceRemoved = updatedDeviceList.Remove(deviceRef);
-                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
-            }
-
-            if (!_cacheChanges) {
-                _assDevices = updatedDeviceList;
-            }
-
-            return wasDeviceRemoved;
-        }*/
-
         internal void AddStatusControl(StatusControl statusControl) {
 
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
@@ -251,6 +197,14 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusControls = currentStatusControls;
         }
 
+        /// <summary>
+        /// Determine if the feature has a <see cref="StatusControl"/> associated with the specified value
+        /// </summary>
+        /// <param name="value">The value to look for</param>
+        /// <returns>
+        /// TRUE if the feature has a <see cref="StatusControl"/> that targets the specified value,
+        ///  FALSE if it does not.
+        /// </returns>
         public bool HasControlForValue(double value) {
             
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
@@ -261,6 +215,14 @@ namespace HomeSeer.PluginSdk.Devices {
             return currentStatusControls.ContainsValue(value);
         }
         
+        /// <summary>
+        /// Determine if the feature has a <see cref="StatusControl"/> associated with the specified range of values
+        /// </summary>
+        /// <param name="range">The range of values to look for</param>
+        /// <returns>
+        /// TRUE if the feature has at least one <see cref="StatusControl"/> that targets any of the values in the range,
+        ///  FALSE if it does not.
+        /// </returns>
         public bool HasControlForRange(ValueRange range) {
             
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
@@ -357,6 +319,14 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusGraphics = currentStatusGraphics;
         }
         
+        /// <summary>
+        /// Determine if the feature has a <see cref="StatusGraphic"/> associated with the specified value
+        /// </summary>
+        /// <param name="value">The value to look for</param>
+        /// <returns>
+        /// TRUE if the feature has a <see cref="StatusGraphic"/> that targets the specified value,
+        ///  FALSE if it does not.
+        /// </returns>
         public bool HasGraphicForValue(double value) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
@@ -367,6 +337,14 @@ namespace HomeSeer.PluginSdk.Devices {
             return currentStatusGraphics.ContainsValue(value);
         }
         
+        /// <summary>
+        /// Determine if the feature has a <see cref="StatusGraphic"/> associated with the specified range of values
+        /// </summary>
+        /// <param name="range">The range of values to look for</param>
+        /// <returns>
+        /// TRUE if the feature has at least one <see cref="StatusGraphic"/> that targets any of the values in the range,
+        ///  FALSE if it does not.
+        /// </returns>
         public bool HasGraphicForRange(ValueRange range) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();

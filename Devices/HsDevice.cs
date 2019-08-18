@@ -1,9 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+// ReSharper disable CollectionNeverUpdated.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    //TODO HsDevice Remarks and Examples
+    /// <summary>
+    /// A device connected to a HomeSeer system. This is the top level item displayed to users when
+    ///  they are looking at the devices connected to their system.
+    /// </summary>
+    /// <remarks>
+    /// 
+    /// </remarks>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class HsDevice : AbstractHsDevice {
@@ -12,7 +21,10 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #region Public
         
-        public List<HsFeature> Features { get; internal set; } = new List<HsFeature>();
+        /// <summary>
+        /// A list of <see cref="HsFeature"/>s that make up the device.
+        /// </summary>
+        public List<HsFeature> Features { get; } = new List<HsFeature>();
 
         #endregion
 
@@ -22,34 +34,56 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
-        public HsDevice() { }
+        internal HsDevice() { }
+        
+        /// <summary>
+        /// Create a HomeSeer device with the specified unique ID
+        /// </summary>
+        /// <param name="deviceRef">The unique ID associated with this device</param>
         public HsDevice(int deviceRef) : base(deviceRef) { }
-        public HsDevice(int deviceRef, DateTime lastChange) : base(deviceRef, lastChange) { }
 
-        public HsDevice Duplicate(int deviceRef, HsDevice source) {
-            var dev = new HsDevice(deviceRef, source.LastChange)
+        /// <summary>
+        /// Make a copy of the device with a different unique ID.
+        /// <para>
+        /// This will not duplicate features associated with the device.
+        /// </para>
+        /// </summary>
+        /// <param name="deviceRef">The new unique ID for the copy</param>
+        /// <returns>A copy of the device with a new reference ID</returns>
+        public HsDevice Duplicate(int deviceRef) {
+            var dev = new HsDevice(deviceRef)
                       {
-                          _address        = source.Address,
-                          _assDevices     = source.AssociatedDevices,
-                          _deviceType     = source.DeviceType,
-                          _image          = source.Image,
-                          _productImage   = source.ProductImage,
-                          _interface      = source.Interface,
-                          _location       = source.Location,
-                          _location2      = source.Location2,
-                          _misc           = source.Misc,
-                          _name           = source.Name,
-                          _plugExtraData  = source.PlugExtraData,
-                          _relationship   = source.Relationship,
-                          _status         = source.Status,
-                          _userAccess     = source.UserAccess,
-                          _userNote       = source.UserNote,
-                          _value          = source.Value,
-                          _voiceCommand   = source.VoiceCommand
+                          _address        = Address,
+                          _assDevices     = AssociatedDevices,
+                          _deviceType     = DeviceType,
+                          _image          = Image,
+                          _productImage   = ProductImage,
+                          _interface      = Interface,
+                          _lastChange     = LastChange,
+                          _location       = Location,
+                          _location2      = Location2,
+                          _misc           = Misc,
+                          _name           = Name,
+                          _plugExtraData  = PlugExtraData,
+                          _relationship   = Relationship,
+                          _status         = Status,
+                          _userAccess     = UserAccess,
+                          _userNote       = UserNote,
+                          _value          = Value,
+                          _voiceCommand   = VoiceCommand
                       };
             return dev;
         }
 
+        /// <summary>
+        /// Get the first feature of the specified type associated with this device.
+        /// </summary>
+        /// <param name="featureType">The <see cref="DeviceTypeInfo"/> describing the desired feature</param>
+        /// <returns>The feature associated with the device that matches that specified featureType</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// Thrown if there are no features or if a feature with
+        ///  the specified featureType was not found.
+        /// </exception>
         public HsFeature GetFeatureByType(DeviceTypeInfo featureType) {
 
             if (Features.Count == 0) {
