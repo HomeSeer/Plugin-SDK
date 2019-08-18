@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -97,24 +97,17 @@
     <Compile Include="IHsController.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
     <Compile Include="Logging\ELogType.cs" />
-    <Compile Include="Logging\LogEntry.cs" />
+    <None Include="Logging\LogEntry.cs" />
     <Compile Include="PluginStatus.cs" />
     <Compile Include="IPlugin.cs" />
-    <Compile Include="Jui\Forms\AbstractFormView.cs" />
-    <Compile Include="Jui\Forms\InfoFormView.cs" />
-    <Compile Include="Jui\Forms\InputFormView.cs" />
-    <Compile Include="Jui\Forms\ProgressFormView.cs" />
-    <Compile Include="Jui\Message.cs" />
     <Compile Include="Jui\Plugin.cs" />
-    <Compile Include="Jui\Types\EFormType.cs" />
     <Compile Include="Jui\Types\EInputType.cs" />
     <Compile Include="Jui\Types\EPageType.cs" />
     <Compile Include="Jui\Types\ESelectListType.cs" />
     <Compile Include="Jui\Types\EToggleType.cs" />
     <Compile Include="Jui\Types\EViewType.cs" />
     <Compile Include="Jui\Views\AbstractView.cs" />
-    <Compile Include="Jui\Views\ButtonView.cs" />
-    <Compile Include="Jui\Views\CollectionView.cs" />
+    <None Include="Jui\Views\ButtonView.cs" />
     <Compile Include="Jui\Views\InputView.cs" />
     <Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
     <Compile Include="Jui\Views\JsonDataException.cs" />
