@@ -74,6 +74,20 @@ namespace HomeSeer.PluginSdk {
         /// An instance of the HomeSeer system
         /// </summary>
         protected IHsController HomeSeerSystem { get; private set; }
+        
+        /// <summary>
+        /// The current status of the plugin.
+        /// <para>
+        /// Default state is OK
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This property is often queried by HomeSeer before interfacing with the plugin during normal
+        ///  operation of the system to determine if it should continue making calls or report to the user that
+        ///  the plugin may be inoperable. This is also queried when users navigate to the plugin management page.
+        /// </remarks>
+        /// <seealso cref="PluginStatus"/>
+        protected PluginStatus Status { get; set; } = PluginStatus.Ok();
 
         /// <summary>
         /// The name of the settings INI file for the plugin.
@@ -364,12 +378,25 @@ namespace HomeSeer.PluginSdk {
         #region Configuration and Status Info
 
         /// <inheritdoc />
-        public abstract PluginStatus OnStatusCheck();
+        public PluginStatus OnStatusCheck() {
+            BeforeReturnStatus();
+            return Status ?? PluginStatus.Warning("Current plugin status is unknown (null)");
+        }
+
+        /// <summary>
+        /// Called immediately before the plugin returns its <see cref="Status"/> to HomeSeer.
+        /// <para>
+        /// Use this to analyze the current state of the plugin and update the <see cref="Status"/> accordingly.
+        /// </para>
+        /// </summary>
+        /// <seealso cref="PluginStatus"/>
+        protected abstract void BeforeReturnStatus();
 
         #endregion
 
         #region Devices
 
+        //TODO PollDevice
         //Chris says he rarely uses this.  What is it used for?
         /// <inheritdoc />
         public virtual PollResultInfo PollDevice(int devRef) {
