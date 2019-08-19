@@ -89,7 +89,29 @@ namespace HomeSeer.PluginSdk.Devices {
 
             return this;
         }
-        
+
+        public DeviceFactory WithLocation(string location) {
+
+            if (string.IsNullOrWhiteSpace(location)) {
+                throw new ArgumentNullException(nameof(location));
+            }
+
+            _device.Location = location;
+
+            return this;
+        }
+
+        public DeviceFactory WithLocation2(string location2) {
+
+            if (string.IsNullOrWhiteSpace(location2)) {
+                throw new ArgumentNullException(nameof(location2));
+            }
+
+            _device.Location2 = location2;
+
+            return this;
+        }
+
         #endregion
 
         public DeviceFactory AsType(EDeviceType deviceType, int deviceSubType) {
