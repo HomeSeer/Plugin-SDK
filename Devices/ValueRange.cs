@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// A range of values that can be targeted by <see cref="StatusControl"/>s and <see cref="StatusGraphic"/>s
+    /// </summary>
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class ValueRange {
@@ -16,6 +19,11 @@ namespace HomeSeer.PluginSdk.Devices {
         private string _prefix = "";
         private string _suffix = "";
 
+        /// <summary>
+        /// Initialize a new range of values
+        /// </summary>
+        /// <param name="min">The smallest value permitted</param>
+        /// <param name="max">The largest value permitted</param>
         public ValueRange(double min, double max) {
             _min = min;
             _max = max;
@@ -28,6 +36,12 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The minimum value permitted by the range
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the new minimum value is larger than the current maximum
+        /// </exception>
         public double Min {
             get => _min;
             set {
@@ -37,6 +51,12 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The maximum value permitted by the range
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the new maximum value is smaller than the current minimum
+        /// </exception>
         public double Max {
             get => _max;
             set {
@@ -46,6 +66,12 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The number of decimal places of accuracy displayed by the range
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if you try to set the decimal places to a value less than 0
+        /// </exception>
         public int DecimalPlaces {
             get => _decimalPlaces;
             set {
@@ -55,16 +81,27 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// A text prefix to include with the value when displayed
+        /// </summary>
         public string Prefix {
             get => _prefix;
             set => _prefix = string.IsNullOrWhiteSpace(value) ? "" : value;
         }
 
+        /// <summary>
+        /// A text suffix to include with the value when displayed
+        /// </summary>
         public string Suffix {
             get => _suffix;
             set => _suffix = string.IsNullOrWhiteSpace(value) ? "" : value;
         }
 
+        /// <summary>
+        /// Obtain the string representation of the specified value according to the range's configuration
+        /// </summary>
+        /// <param name="value">The value to use in the string</param>
+        /// <returns>The value correctly formatted according to the range</returns>
         public string GetStringForValue(double value) {
             var offsetValue = value - ValueOffset;
             var stringValue = $"{_prefix}{offsetValue.ToString($"F{_decimalPlaces}")}{_suffix}";
@@ -72,10 +109,19 @@ namespace HomeSeer.PluginSdk.Devices {
             return stringValue;
         }
 
+        /// <summary>
+        /// Determine if the specified value is valid for this range
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>
+        /// TRUE is it is valid for the range,
+        ///  FALSE if it is not
+        /// </returns>
         public bool IsValueInRange(double value) {
             return value >= _min && value <= _max;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -110,6 +156,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() {
             return _min.GetHashCode() * _max.GetHashCode();
         }

@@ -159,6 +159,7 @@ namespace HomeSeer.PluginSdk {
         /// </returns>
         bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef);
         
+        //TODO remove?
         /// <summary>
         /// Called by the HomeSeer system when it needs the current status for a device owned by the plugin.
         /// <para>

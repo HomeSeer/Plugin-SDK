@@ -1,14 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// A collection of information describing a new feature that needs to be created in HomeSeer.
+    /// <para>
+    /// Created through <see cref="FeatureFactory.PrepareforHs()"/>
+    /// </para>
+    /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class NewFeatureData {
-        
-        public Dictionary<EDeviceProperty, object> Feature = new Dictionary<EDeviceProperty, object>();
+
+        /// <summary>
+        /// A collection of properties describing the feature to be created.
+        /// </summary>
+        public Dictionary<EDeviceProperty, object> Feature;
         
         internal NewFeatureData(int deviceRef, HsFeature feature) {
             if (feature == null) {

@@ -4,34 +4,29 @@ using System.Reflection;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// A control associated with a feature on a HomeSeer system. Formerly referred to as a VSPair.
+    /// </summary>
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class StatusControl {
         
-        //public string Label { get; set; }
         private string _label = "";
         private bool _isControl = true;
         private bool _isStatus = true;
-        //public int ControlUse { get; set; }
         private EControlUse _controlUse = EControlUse.NotSpecified;
-        //public EControlType ControlType { get; set; }
         private EControlType _controlType;
-        //public object ControlStringList { get; set; }
         private List<string> _controlStates = new List<string>();
-        //public double ControlValue { get; set; }
         private double _targetValue;
-        //public bool SingleRangeEntry { get; set; }
         private bool _isRange = false;
         private ValueRange _targetRange = new ValueRange(0,0);
-        /*
-         public ControlLocation ControlLocation { get; set; }
-         public int ControlLocRow { get; set; }
-         public int ControlLocColumn { get; set; }
-         public int ControlLocColumnSpan { get; set; }
-         */
         private ControlLocation _location = new ControlLocation();
-        //private int _deviceRef;
 
+        /// <summary>
+        /// Initialize a new control of the specified type
+        /// </summary>
+        /// <param name="type">The <see cref="EControlType"/> of the control</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if an invalid type is specified</exception>
         public StatusControl(EControlType type) {
             _controlType = type;
             switch (type) {
@@ -64,7 +59,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new ArgumentOutOfRangeException(nameof(type), type, "You must specify a valid control type");
             }
         }
-
+        
         public string Label {
             get => _label;
             set => _label = value;
@@ -94,11 +89,6 @@ namespace HomeSeer.PluginSdk.Devices {
             get => _controlStates;
             set => _controlStates = value;
         }
-
-        /*public int DeviceRef {
-            get => _deviceRef;
-            set => _deviceRef = value;
-        }*/
 
         public double TargetValue {
             get => _targetValue;
@@ -172,6 +162,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return Math.Abs(_targetValue - value) < 0.01D;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -215,6 +206,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _targetValue.GetHashCode();
         }

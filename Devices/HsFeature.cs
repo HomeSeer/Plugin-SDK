@@ -7,6 +7,16 @@ using System.Runtime.CompilerServices;
 
 namespace HomeSeer.PluginSdk.Devices {
     
+    //TODO HsFeature example and remarks
+    /// <summary>
+    /// A feature of a device connected to a HomeSeer system. It encapsulates a specific component of functionality
+    ///  available to the device it is associated with.
+    /// <para>
+    /// For example: A battery powered device should have a feature associated with it that handles only battery
+    ///  related information and controls. This feature should not contain anything having to do with any other
+    ///  component of that device.
+    /// </para>
+    /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class HsFeature : AbstractHsDevice {
