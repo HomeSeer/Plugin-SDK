@@ -50,35 +50,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractPlugin.cs" />
-    <Compile Include="Devices\ControlLocation.cs" />
+    <Compile Include="Devices\Controls\ControlLocation.cs" />
+    <Compile Include="Devices\Controls\ControlEvent.cs" />
+    <Compile Include="Devices\Controls\EControlType.cs" />
+    <Compile Include="Devices\Controls\EControlUse.cs" />
+    <Compile Include="Devices\Controls\StatusControl.cs" />
+    <Compile Include="Devices\Controls\StatusControlCollection.cs" />
     <Compile Include="Devices\DeviceFactory.cs" />
-    <Compile Include="Devices\DeviceRelationshipException.cs" />
-    <Compile Include="Devices\EApiType.cs" />
-    <Compile Include="Devices\EDeviceMiscFlag.cs" />
-    <Compile Include="Devices\EDeviceProperty.cs" />
-    <Compile Include="Devices\EDeviceType.cs" />
-    <Compile Include="Devices\EEnergyFeatureSubType.cs" />
-    <Compile Include="Devices\EFeatureType.cs" />
-    <Compile Include="Devices\EGenericDeviceSubType.cs" />
-    <Compile Include="Devices\EGenericFeatureSubType.cs" />
-    <Compile Include="Devices\ERelationship.cs" />
+    <Compile Include="Devices\EMiscFlag.cs" />
+    <Compile Include="Devices\EProperty.cs" />
+    <Compile Include="Devices\EPollResponse.cs" />
     <Compile Include="Devices\FeatureFactory.cs" />
     <Compile Include="Devices\AbstractHsDevice.cs" />
     <Compile Include="Devices\HsFeature.cs" />
+    <Compile Include="Devices\Identification\DeviceRelationshipException.cs" />
+    <Compile Include="Devices\Identification\TypeInfo.cs" />
+    <Compile Include="Devices\Identification\EApiType.cs" />
+    <Compile Include="Devices\Identification\EDeviceType.cs" />
+    <Compile Include="Devices\Identification\EEnergyFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\EFeatureType.cs" />
+    <Compile Include="Devices\Identification\EGenericDeviceSubType.cs" />
+    <Compile Include="Devices\Identification\EGenericFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\ERelationship.cs" />
     <Compile Include="Devices\NewDeviceData.cs" />
     <Compile Include="Devices\NewFeatureData.cs" />
     <Compile Include="Devices\StatusGraphicCollection.cs" />
-    <Compile Include="Devices\DeviceTypeInfo.cs" />
-    <Compile Include="Devices\EControlType.cs" />
-    <Compile Include="Devices\EControlUse.cs" />
     <Compile Include="Devices\HsDevice.cs" />
     <Compile Include="Devices\MultiReturn.cs" />
     <Compile Include="Devices\PlugExtraData.cs" />
-    <Compile Include="Devices\PollResultInfo.cs" />
     <Compile Include="Devices\ValueRange.cs" />
-    <Compile Include="Devices\StatusControlCollection.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
-    <Compile Include="Devices\StatusControl.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
@@ -99,7 +100,6 @@
     <None Include="Logging\LogEntry.cs" />
     <Compile Include="PluginStatus.cs" />
     <Compile Include="IPlugin.cs" />
-    <Compile Include="Jui\Plugin.cs" />
     <Compile Include="Jui\Types\EInputType.cs" />
     <Compile Include="Jui\Types\EPageType.cs" />
     <Compile Include="Jui\Types\ESelectListType.cs" />
@@ -126,7 +126,6 @@
     <Compile Include="Speech\RemoteHost.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Devices\DeviceControlEvent.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

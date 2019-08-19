@@ -2,18 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace HomeSeer.PluginSdk.Devices {
+namespace HomeSeer.PluginSdk.Devices.Controls {
 
     /// <summary>
     /// A control associated with a feature on a HomeSeer system. Formerly referred to as a VSPair.
+    /// <para>
+    /// This defines a control that will be available for a user to interact with.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Legacy VSPairs used to be able to be defined as either status-only, control-only, or both,
+    ///  but this is no longer allowed. All StatusControls are considered both, and a <see cref="StatusGraphic"/>
+    ///  will override the <see cref="AbstractHsDevice.Status"/> on the feature if it is configured for the feature's
+    ///  current <see cref="AbstractHsDevice.Value"/>.
+    /// <para>
+    ///  If you are looking to add a status-only control to a feature, create a <see cref="StatusGraphic"/> instead.
+    /// </para>
+    /// </remarks>
+    /// <seealso cref="StatusGraphic"/>
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class StatusControl {
         
         private string _label = "";
-        private bool _isControl = true;
-        private bool _isStatus = true;
         private EControlUse _controlUse = EControlUse.NotSpecified;
         private EControlType _controlType;
         private List<string> _controlStates = new List<string>();
@@ -23,18 +34,13 @@ namespace HomeSeer.PluginSdk.Devices {
         private ControlLocation _location = new ControlLocation();
 
         /// <summary>
-        /// Initialize a new control of the specified type
+        /// Initialize a new StatusControl of the specified type
         /// </summary>
         /// <param name="type">The <see cref="EControlType"/> of the control</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if an invalid type is specified</exception>
         public StatusControl(EControlType type) {
             _controlType = type;
             switch (type) {
-                case EControlType.StatusOnly:
-                    _isControl = false;
-                    _isStatus = true;
-                    //throw new ArgumentException("You must specify a valid control type", nameof(type));
-                    break;
                 case EControlType.TextSelectList:
                     break;
                 case EControlType.Button:
@@ -60,78 +66,129 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        /// <summary>
+        /// The text displayed on the control.
+        /// <para>
+        /// Unless overridden by a <see cref="StatusGraphic.Label"/> associated with the same feature,
+        ///  this text is used as the status for the corresponding value.
+        /// </para>
+        /// </summary>
         public string Label {
             get => _label;
             set => _label = value;
         }
 
-        public bool IsControl {
-            get => _isControl;
-            set => _isControl = value;
-        }
-
-        public bool IsStatus {
-            get => _isStatus;
-            set => _isStatus = value;
-        }
-
+        /// <summary>
+        /// What the <see cref="StatusControl"/> is used for.
+        ///  See <see cref="EControlUse"/> for more information.
+        /// </summary>
+        /// <seealso cref="EControlUse"/>
         public EControlUse ControlUse {
             get => _controlUse;
             set => _controlUse = value;
         }
 
+        /// <summary>
+        /// The style the control is displayed as to users
+        /// </summary>
+        /// <seealso cref="EControlType"/>
         public EControlType ControlType {
             get => _controlType;
             set => _controlType = value;
         }
 
+        /// <summary>
+        /// The possible states available for users to set this control to.
+        /// <para>
+        /// This is only used when the <see cref="ControlType"/> is set to <see cref="EControlType.TextSelectList"/>
+        /// </para>
+        /// </summary>
         public List<string> ControlStates {
             get => _controlStates;
             set => _controlStates = value;
         }
 
+        /// <summary>
+        /// The value this StatusControl targets.
+        /// <para>
+        /// If <see cref="IsRange"/> is TRUE then this is ignored in favor of <see cref="TargetRange"/>
+        /// </para>
+        /// </summary>
         public double TargetValue {
             get => _targetValue;
             set => _targetValue = value;
         }
 
+        /// <summary>
+        /// Whether the <see cref="StatusControl"/> targets a range of values or a single value.
+        /// <para>
+        /// Settings this to TRUE will cause the <see cref="TargetValue"/> field to be ignored in favor of
+        ///  the <see cref="TargetRange"/>
+        /// </para>
+        /// </summary>
         public bool IsRange {
             get => _isRange;
             set => _isRange = value;
         }
 
+        /// <summary>
+        /// The range of values that the <see cref="StatusControl"/> targets.
+        /// <para>
+        /// If <see cref="IsRange"/> is FALSE then this is ignored in favor of <see cref="TargetValue"/>
+        /// </para>
+        /// </summary>
+        /// <seealso cref="ValueRange"/>
         public ValueRange TargetRange {
             get => _targetRange;
             set => _targetRange = value;
         }
 
+        /// <summary>
+        /// The location of the <see cref="StatusControl"/> when displayed to users
+        /// </summary>
+        /// <seealso cref="ControlLocation"/>
         public ControlLocation Location {
             get => _location;
             set => _location = value;
         }
 
+        /// <summary>
+        /// The column that the <see cref="StatusControl"/> is located at
+        /// </summary>
         public int Column => _location?.Column ?? 0;
 
+        /// <summary>
+        /// The row that the <see cref="StatusControl"/> is located at
+        /// </summary>
         public int Row => _location?.Row ?? 0;
 
+        /// <summary>
+        /// The number of columns the <see cref="StatusControl"/> occupies
+        /// </summary>
         public int Width => _location?.Width ?? 0;
 
         public double ValueOffset => _targetRange?.ValueOffset ?? 0;
         
+        /// <summary>
+        /// Get the label for the specified value correctly formatted according to the <see cref="StatusControl"/>'s
+        ///  configuration
+        /// </summary>
+        /// <param name="value">The value to get the label for</param>
+        /// <returns>The value as a string formatted according to the <see cref="TargetRange"/> configuration.</returns>
         public string GetLabelForValue(double value) {
             if (!_isRange) {
                 return _label;
             }
             if (!_targetRange.IsValueInRange(value)) {
-                //TODO throw exception?
-                return "";
+                throw new ArgumentOutOfRangeException(nameof(value), $"{value} is not valid for this control");
             }
 
             return _targetRange.GetStringForValue(value);
         }
         
-        public DeviceControlEvent CreateControlEvent(int devRef) {
-            var dce = new DeviceControlEvent(devRef)
+        
+        public ControlEvent CreateControlEvent(int devRef) {
+            var dce = new ControlEvent(devRef)
                       {
                           Label        = GetLabelForValue(_targetValue),
                           ControlUse   = _controlUse,
@@ -142,8 +199,8 @@ namespace HomeSeer.PluginSdk.Devices {
             return dce;
         }
 
-        public DeviceControlEvent CreateControlEvent(int devRef, double value) {
-            var dce = new DeviceControlEvent(devRef)
+        public ControlEvent CreateControlEvent(int devRef, double value) {
+            var dce = new ControlEvent(devRef)
                       {
                           Label        = GetLabelForValue(value),
                           ControlUse   = _controlUse,
@@ -171,13 +228,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (!(obj is StatusControl otherStatusControl)) {
                 return false;
             }
-			
-            if (_isControl != otherStatusControl._isControl) {
-                return false;
-            }
-            if (_isStatus != otherStatusControl._isStatus) {
-                return false;
-            }
+            
             if (_isRange != otherStatusControl._isRange) {
                 return false;
             }

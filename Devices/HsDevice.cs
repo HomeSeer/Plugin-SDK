@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using HomeSeer.PluginSdk.Devices.Identification;
+
 // ReSharper disable CollectionNeverUpdated.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -55,7 +57,7 @@ namespace HomeSeer.PluginSdk.Devices {
                       {
                           _address        = Address,
                           _assDevices     = AssociatedDevices,
-                          _deviceType     = DeviceType,
+                          _typeInfo     = TypeInfo,
                           _image          = Image,
                           _productImage   = ProductImage,
                           _interface      = Interface,
@@ -78,20 +80,20 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// Get the first feature of the specified type associated with this device.
         /// </summary>
-        /// <param name="featureType">The <see cref="DeviceTypeInfo"/> describing the desired feature</param>
+        /// <param name="featureType">The <see cref="TypeInfo"/> describing the desired feature</param>
         /// <returns>The feature associated with the device that matches that specified featureType</returns>
         /// <exception cref="KeyNotFoundException">
         /// Thrown if there are no features or if a feature with
         ///  the specified featureType was not found.
         /// </exception>
-        public HsFeature GetFeatureByType(DeviceTypeInfo featureType) {
+        public HsFeature GetFeatureByType(TypeInfo featureType) {
 
             if (Features.Count == 0) {
                 throw new KeyNotFoundException("There are no features on this device");
             }
 
             foreach (var feature in Features) {
-                var cFeatureType = feature.DeviceType;
+                var cFeatureType = feature.TypeInfo;
                 if (cFeatureType.ApiType != featureType.ApiType) {
                     continue;
                 }

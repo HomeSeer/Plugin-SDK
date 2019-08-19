@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Events;
 // ReSharper disable UnusedParameter.Global
 // ReSharper disable UnusedMemberInSuper.Global
@@ -134,10 +135,10 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </summary>
         /// <param name="controlEvents">
-        /// A collection of <see cref="DeviceControlEvent"/> objects,
+        /// A collection of <see cref="ControlEvent"/> objects,
         ///  one for each device being controlled
         /// </param>
-        void SetIOMulti(List<DeviceControlEvent> controlEvents);
+        void SetIOMulti(List<ControlEvent> controlEvents);
         
         /// <summary>
         /// Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device
@@ -159,16 +160,15 @@ namespace HomeSeer.PluginSdk {
         /// </returns>
         bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef);
         
-        //TODO remove?
         /// <summary>
-        /// Called by the HomeSeer system when it needs the current status for a device owned by the plugin.
+        /// Called by the HomeSeer system when it needs the current status for a device/feature owned by the plugin.
         /// <para>
-        /// This should force the device to report its current status to HomeSeer.
+        /// This should force the device/feature to update its current status on HomeSeer.
         /// </para>
         /// </summary>
-        /// <param name="devRef">The reference ID of the device to poll</param>
-        /// <returns>A <see cref="PollResultInfo"/> describing the current state of the device</returns>
-        PollResultInfo PollDevice(int devRef);
+        /// <param name="devOrFeatRef">The reference ID of the device/feature to poll</param>
+        /// <returns>An <see cref="EPollResponse"/> describing the result of the request</returns>
+        EPollResponse UpdateStatusNow(int devOrFeatRef);
         
         #endregion
         

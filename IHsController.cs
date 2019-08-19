@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Energy;
 using HomeSeer.PluginSdk.Events;
 using HomeSeer.PluginSdk.Logging;
@@ -154,11 +155,11 @@ namespace HomeSeer.PluginSdk {
         
         //Both
         List<int> GetRefsByInterface(string interfaceName, bool deviceOnly = false);
-        Dictionary<int, object> GetPropertyByInterface(string interfaceName, EDeviceProperty property, bool deviceOnly = false);
+        Dictionary<int, object> GetPropertyByInterface(string interfaceName, EProperty property, bool deviceOnly = false);
         string GetNameByRef(int devOrFeatRef);
         bool DoesRefExist(int devOrFeatRef);
-        object GetPropertyByRef(int devOrFeatRef, EDeviceProperty property);
-        bool IsFlagOnRef(int devOrFeatRef, EDeviceMiscFlag miscFlag);
+        object GetPropertyByRef(int devOrFeatRef, EProperty property);
+        bool IsFlagOnRef(int devOrFeatRef, EMiscFlag miscFlag);
         bool IsRefDevice(int devOrFeatRef);
         
         //Devices
@@ -187,10 +188,11 @@ namespace HomeSeer.PluginSdk {
         #endregion
         
         #region Update
-        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EDeviceProperty, object> changes);
-        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EDeviceProperty, object> changes);
+        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
+        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
+        //HsFeature UpdateFeatureValueByRef(int featRef, double value);
 
-        void UpdatePropertyByRef(int devOrFeatRef, EDeviceProperty property, object value);
+        void UpdatePropertyByRef(int devOrFeatRef, EProperty property, object value);
         
         void AddStatusControlToFeature(int featRef, StatusControl statusControl);
         bool DeleteStatusControlByValue(int featRef, double value);
@@ -251,7 +253,7 @@ namespace HomeSeer.PluginSdk {
         #region Update
         
         bool TriggerEventByRef(int eventRef);
-        string AddDeviceActionToEvent(int evRef, DeviceControlEvent CC);
+        string AddDeviceActionToEvent(int evRef, ControlEvent CC);
         bool EventSetTimeTrigger(int evRef, DateTime DT);
         bool EventSetRecurringTrigger(int evRef, TimeSpan Frequency, bool Once_Per_Hour, bool Reference_To_Hour);
         void AddActionRunScript(int @ref, string script, string method, string parms);

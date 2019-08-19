@@ -4,6 +4,7 @@ using System.Threading;
 using System.Text;
 using HomeSeer.Jui.Views;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Events;
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
@@ -396,16 +397,13 @@ namespace HomeSeer.PluginSdk {
 
         #region Devices
 
-        //TODO PollDevice
-        //Chris says he rarely uses this.  What is it used for?
         /// <inheritdoc />
-        public virtual PollResultInfo PollDevice(int devRef) {
-            var pollResult = new PollResultInfo {Result = Constants.enumPollResult.OK};
-            return pollResult;
+        public virtual EPollResponse UpdateStatusNow(int devOrFeatRef) {
+            return EPollResponse.Unknown;
         }
 
         /// <inheritdoc />
-        public virtual void SetIOMulti(List<DeviceControlEvent> colSend) {
+        public virtual void SetIOMulti(List<ControlEvent> colSend) {
             //Default behavior is to do nothing
         }
 

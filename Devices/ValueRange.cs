@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using HomeSeer.PluginSdk.Devices.Controls;
 
 namespace HomeSeer.PluginSdk.Devices {
 

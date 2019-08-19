@@ -262,18 +262,7 @@ namespace HomeSeer.PluginSdk {
             Windows = 0,
             Linux   = 1
         }
-        
-        public enum enumPollResult {
-            OK                     = 1,
-            Device_Not_Found       = 2,
-            Error_Getting_Status   = 3,
-            Could_Not_Reach_Plugin = 4,
-            Unknown                = 5,
-            Timeout_OK             = 6,
-            Other_Error            = 7,
-            Status_Not_Supported   = 8
-        }
-        
+
         [Serializable]
         public enum Device_Constants {
 

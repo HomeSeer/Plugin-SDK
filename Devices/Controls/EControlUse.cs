@@ -1,4 +1,4 @@
-namespace HomeSeer.PluginSdk.Devices {
+namespace HomeSeer.PluginSdk.Devices.Controls {
 
     public enum EControlUse {
 

@@ -9,10 +9,11 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class StatusGraphic {
 
+        private string       _label = "";
         private bool         _isRange = false;
         private string       _graphicPath = "";
         private double       _value;
-        private ValueRange   _range = new ValueRange(0,0);
+        private ValueRange   _targetRange = new ValueRange(0,0);
         
         public StatusGraphic(string imagePath, double targetValue) {
             _graphicPath = imagePath;
@@ -22,8 +23,13 @@ namespace HomeSeer.PluginSdk.Devices {
         public StatusGraphic(string imagePath, double minValue, double maxValue) {
             _graphicPath = imagePath;
             _isRange = true;
-            _range.Max = maxValue;
-            _range.Min = minValue;
+            _targetRange.Max = maxValue;
+            _targetRange.Min = minValue;
+        }
+        
+        public string Label {
+            get => _label;
+            set => _label = value;
         }
 
         public string Graphic {
@@ -37,23 +43,35 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public double RangeMin {
-            get => _range?.Min ?? 0;
-            set => _range.Min = value;
+            get => _targetRange?.Min ?? 0;
+            set => _targetRange.Min = value;
         }
 
         public double RangeMax {
-            get => _range?.Max ?? 0;
-            set => _range.Max = value;
+            get => _targetRange?.Max ?? 0;
+            set => _targetRange.Max = value;
         }
 
         public double Value {
             get => _value;
             set => _value = value;
         }
+        
+        public string GetLabelForValue(double value) {
+            if (!_isRange) {
+                return _label;
+            }
+            if (!_targetRange.IsValueInRange(value)) {
+                //TODO throw exception?
+                return "";
+            }
+
+            return _targetRange.GetStringForValue(value);
+        }
 
         public bool IsValueInRange(double value) {
             if (_isRange) {
-                return _range.IsValueInRange(value);
+                return _targetRange.IsValueInRange(value);
             }
 
             return Math.Abs(_value - value) < 0.01D;
@@ -77,7 +95,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_value != otherSg._value) {
                 return false;
             }
-            if (_range != otherSg._range) {
+            if (_targetRange != otherSg._targetRange) {
                 return false;
             }
 
@@ -85,7 +103,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         public override int GetHashCode() {
-            return _isRange ? _range.Min.GetHashCode() : _value.GetHashCode();
+            return _isRange ? _targetRange.Min.GetHashCode() : _value.GetHashCode();
         }
 
     }

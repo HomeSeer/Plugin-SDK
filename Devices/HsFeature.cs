@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using HomeSeer.PluginSdk.Devices.Controls;
+using HomeSeer.PluginSdk.Devices.Identification;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 [assembly: InternalsVisibleTo("Scheduler")]
@@ -32,8 +35,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public StatusControlCollection StatusControls {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                    return Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+                if (Changes.ContainsKey(EProperty.StatusControls)) {
+                    return Changes[EProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
                 }
                 
                 return _statusControls;
@@ -47,8 +50,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public StatusGraphicCollection StatusGraphics {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                    return Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+                if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                    return Changes[EProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
                 }
                 
                 return _statusGraphics;
@@ -87,7 +90,7 @@ namespace HomeSeer.PluginSdk.Devices {
                       {
                           _address        = Address,
                           _assDevices     = AssociatedDevices,
-                          _deviceType     = DeviceType,
+                          _typeInfo     = TypeInfo,
                           _image          = Image,
                           _productImage   = ProductImage,
                           _interface      = Interface,
@@ -106,6 +109,27 @@ namespace HomeSeer.PluginSdk.Devices {
                       };
             return dev;
         }
+        
+        public ControlEvent CreateControlEvent(double value) {
+            if (!HasControlForValue(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
+            var sc = StatusControls[value];
+            var dce = sc.CreateControlEvent(Ref, value);
+            if (!HasGraphicForValue(value)) {
+                return dce;
+            }
+            
+            var sg = StatusGraphics[value];
+            if (string.IsNullOrWhiteSpace(sg.Label)) {
+                return dce;
+            }
+
+            dce.Label = sg.GetLabelForValue(value);
+            
+            return dce;
+        }
 
         /// <inheritdoc />
         protected override bool IsValueValid() {
@@ -122,13 +146,13 @@ namespace HomeSeer.PluginSdk.Devices {
 
             var associatedDevices = _assDevices ?? new HashSet<int>();
 
-            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                associatedDevices = Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
+            if (Changes.ContainsKey(EProperty.AssociatedDevices)) {
+                associatedDevices = Changes[EProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
             }
 
             if (associatedDevices.Count > 0) {
-                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                    var cachedRelationshipChange = (ERelationship) Changes[EDeviceProperty.Relationship];
+                if (Changes.ContainsKey(EProperty.Relationship)) {
+                    var cachedRelationshipChange = (ERelationship) Changes[EProperty.Relationship];
                     if (cachedRelationshipChange == ERelationship.Device) {
                         throw new DeviceRelationshipException("This device is already a parent device with children.  Remove its associations before converting it to a child device.");
                     }
@@ -140,18 +164,18 @@ namespace HomeSeer.PluginSdk.Devices {
             
             var updatedDeviceList = new HashSet<int> {deviceRef};
 
-            if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                Changes[EDeviceProperty.Relationship] = ERelationship.Feature;
+            if (Changes.ContainsKey(EProperty.Relationship)) {
+                Changes[EProperty.Relationship] = ERelationship.Feature;
             }
             else {
-                Changes.Add(EDeviceProperty.Relationship, ERelationship.Feature);
+                Changes.Add(EProperty.Relationship, ERelationship.Feature);
             }
 
-            if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                Changes[EDeviceProperty.AssociatedDevices] = updatedDeviceList;
+            if (Changes.ContainsKey(EProperty.AssociatedDevices)) {
+                Changes[EProperty.AssociatedDevices] = updatedDeviceList;
             }
             else {
-                Changes.Add(EDeviceProperty.AssociatedDevices, updatedDeviceList);
+                Changes.Add(EProperty.AssociatedDevices, updatedDeviceList);
             }
 
             if (_cacheChanges) {
@@ -165,17 +189,17 @@ namespace HomeSeer.PluginSdk.Devices {
         internal void AddStatusControl(StatusControl statusControl) {
 
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                currentStatusControls = Changes[EProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
             }
             
             currentStatusControls.Add(statusControl);
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                Changes[EProperty.StatusControls] = currentStatusControls;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+                Changes.Add(EProperty.StatusControls, currentStatusControls);
             }
 
             if (_cacheChanges) {
@@ -187,17 +211,17 @@ namespace HomeSeer.PluginSdk.Devices {
 
         internal void AddStatusControls(List<StatusControl> statusControls) {
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                currentStatusControls = Changes[EProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
             }
             
             currentStatusControls.AddRange(statusControls);
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                Changes[EProperty.StatusControls] = currentStatusControls;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+                Changes.Add(EProperty.StatusControls, currentStatusControls);
             }
 
             if (_cacheChanges) {
@@ -218,8 +242,8 @@ namespace HomeSeer.PluginSdk.Devices {
         public bool HasControlForValue(double value) {
             
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                currentStatusControls = Changes[EProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
             }
 
             return currentStatusControls.ContainsValue(value);
@@ -236,8 +260,8 @@ namespace HomeSeer.PluginSdk.Devices {
         public bool HasControlForRange(ValueRange range) {
             
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                currentStatusControls = Changes[EProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
             }
 
             return currentStatusControls.ContainsValue(range.Min) || currentStatusControls.ContainsValue(range.Max);
@@ -246,17 +270,17 @@ namespace HomeSeer.PluginSdk.Devices {
         internal void RemoveStatusControl(StatusControl statusControl) {
             
             var currentStatusControls = _statusControls ?? new StatusControlCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                currentStatusControls = Changes[EDeviceProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                currentStatusControls = Changes[EProperty.StatusControls] as StatusControlCollection ?? new StatusControlCollection();
             }
             
             currentStatusControls.Remove(statusControl);
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                Changes[EProperty.StatusControls] = currentStatusControls;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+                Changes.Add(EProperty.StatusControls, currentStatusControls);
             }
 
             if (_cacheChanges) {
@@ -270,11 +294,11 @@ namespace HomeSeer.PluginSdk.Devices {
             
             var currentStatusControls = new StatusControlCollection();
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusControls)) {
-                Changes[EDeviceProperty.StatusControls] = currentStatusControls;
+            if (Changes.ContainsKey(EProperty.StatusControls)) {
+                Changes[EProperty.StatusControls] = currentStatusControls;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusControls, currentStatusControls);
+                Changes.Add(EProperty.StatusControls, currentStatusControls);
             }
 
             if (_cacheChanges) {
@@ -287,17 +311,17 @@ namespace HomeSeer.PluginSdk.Devices {
         internal void AddStatusGraphic(StatusGraphic statusGraphic) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
             }
             
             currentStatusGraphics.Add(statusGraphic);
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                Changes[EProperty.StatusGraphics] = currentStatusGraphics;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+                Changes.Add(EProperty.StatusGraphics, currentStatusGraphics);
             }
 
             if (_cacheChanges) {
@@ -309,17 +333,17 @@ namespace HomeSeer.PluginSdk.Devices {
         
         internal void AddStatusGraphics(List<StatusGraphic> statusGraphics) {
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
             }
             
             currentStatusGraphics.AddRange(statusGraphics);
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                Changes[EProperty.StatusGraphics] = currentStatusGraphics;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+                Changes.Add(EProperty.StatusGraphics, currentStatusGraphics);
             }
 
             if (_cacheChanges) {
@@ -340,8 +364,8 @@ namespace HomeSeer.PluginSdk.Devices {
         public bool HasGraphicForValue(double value) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
             }
 
             return currentStatusGraphics.ContainsValue(value);
@@ -358,8 +382,8 @@ namespace HomeSeer.PluginSdk.Devices {
         public bool HasGraphicForRange(ValueRange range) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
             }
 
             return currentStatusGraphics.ContainsValue(range.Min) || currentStatusGraphics.ContainsValue(range.Max);
@@ -368,17 +392,17 @@ namespace HomeSeer.PluginSdk.Devices {
         internal void RemoveStatusGraphic(StatusGraphic statusGraphic) {
             
             var currentStatusGraphics = _statusGraphics ?? new StatusGraphicCollection();
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                currentStatusGraphics = Changes[EDeviceProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                currentStatusGraphics = Changes[EProperty.StatusGraphics] as StatusGraphicCollection ?? new StatusGraphicCollection();
             }
             
             currentStatusGraphics.Remove(statusGraphic);
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                Changes[EProperty.StatusGraphics] = currentStatusGraphics;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+                Changes.Add(EProperty.StatusGraphics, currentStatusGraphics);
             }
 
             if (_cacheChanges) {
@@ -392,11 +416,11 @@ namespace HomeSeer.PluginSdk.Devices {
             
             var currentStatusGraphics = new StatusGraphicCollection();
             
-            if (Changes.ContainsKey(EDeviceProperty.StatusGraphics)) {
-                Changes[EDeviceProperty.StatusGraphics] = currentStatusGraphics;
+            if (Changes.ContainsKey(EProperty.StatusGraphics)) {
+                Changes[EProperty.StatusGraphics] = currentStatusGraphics;
             }
             else {
-                Changes.Add(EDeviceProperty.StatusGraphics, currentStatusGraphics);
+                Changes.Add(EProperty.StatusGraphics, currentStatusGraphics);
             }
 
             if (_cacheChanges) {

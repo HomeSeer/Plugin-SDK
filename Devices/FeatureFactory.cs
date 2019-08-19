@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomeSeer.PluginSdk.Devices.Controls;
+using HomeSeer.PluginSdk.Devices.Identification;
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -74,7 +76,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
-        public FeatureFactory WithMiscFlags(params EDeviceMiscFlag[] miscFlags) {
+        public FeatureFactory WithMiscFlags(params EMiscFlag[] miscFlags) {
 
             if (miscFlags == null || miscFlags.Length == 0) {
                 throw new ArgumentNullException(nameof(miscFlags));
@@ -91,7 +93,7 @@ namespace HomeSeer.PluginSdk.Devices {
         
         public FeatureFactory AsType(EFeatureType featureType, int featureSubType) {
 
-            _feature.DeviceType = new DeviceTypeInfo()
+            _feature.TypeInfo = new TypeInfo()
                                  {
                                      ApiType = EApiType.Feature,
                                      Type    = (int) featureType,

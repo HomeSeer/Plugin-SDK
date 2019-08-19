@@ -1,19 +1,17 @@
 using System;
-using System.Collections.Generic;
-using HomeSeer.PluginSdk.Devices;
 
-namespace HomeSeer.PluginSdk.Devices {
+namespace HomeSeer.PluginSdk.Devices.Controls {
 
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
-    public class DeviceControlEvent {
+    public class ControlEvent {
         
         private string _label = "";
         private EControlUse _controlUse = EControlUse.NotSpecified;
         private EControlType _controlType;
         private double _controlValue;
         private string _controlString = "";
-        private int _deviceRef;
+        private int _ref;
         private int _index = -1;
         
         public int CCIndex {
@@ -21,9 +19,9 @@ namespace HomeSeer.PluginSdk.Devices {
             set => _index = value;
         }
         
-        public int DeviceRef {
-            get => _deviceRef;
-            set => _deviceRef = value;
+        public int TargetRef {
+            get => _ref;
+            set => _ref = value;
         }
 
         public string Label {
@@ -55,8 +53,8 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
     
-        public DeviceControlEvent(int devRef) {
-            _deviceRef = devRef;
+        public ControlEvent(int devRef) {
+            _ref = devRef;
         }
         
     }

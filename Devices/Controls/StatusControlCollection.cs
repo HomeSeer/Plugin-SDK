@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
-using HomeSeer.PluginSdk;
-using HomeSeer.PluginSdk.Devices;
 
-namespace HomeSeer.PluginSdk.Devices {
+namespace HomeSeer.PluginSdk.Devices.Controls {
 
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]

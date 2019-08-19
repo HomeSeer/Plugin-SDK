@@ -1,8 +1,8 @@
-namespace HomeSeer.PluginSdk.Devices {
+namespace HomeSeer.PluginSdk.Devices.Identification {
 
     public enum EDeviceType {
 
-        Unknown = 0,
+        Generic = 0,
         Door,
         Fan,
         Light,

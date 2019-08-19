@@ -1,7 +1,8 @@
 using System;
 
-namespace HomeSeer.PluginSdk.Devices {
+namespace HomeSeer.PluginSdk.Devices.Controls {
 
+    //TODO preset locations
     /// <summary>
     /// The location and size of a control available on an <see cref="HsFeature"/>.
     /// <para>

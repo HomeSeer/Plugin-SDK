@@ -1,6 +1,6 @@
 namespace HomeSeer.PluginSdk.Devices {
 
-    public enum EDeviceProperty {
+    public enum EProperty {
         Ref                       = 0,
         Address                   = 2,
         CanDim                    = 8,

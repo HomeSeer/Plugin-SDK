@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomeSeer.PluginSdk.Devices.Identification;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace HomeSeer.PluginSdk.Devices {
@@ -18,7 +20,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// A collection of properties describing the feature to be created.
         /// </summary>
-        public Dictionary<EDeviceProperty, object> Feature;
+        public Dictionary<EProperty, object> Feature;
         
         internal NewFeatureData(int deviceRef, HsFeature feature) {
             if (feature == null) {
@@ -30,8 +32,8 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             
             Feature = feature.Changes;
-            Feature[EDeviceProperty.Relationship] = ERelationship.Feature;
-            Feature[EDeviceProperty.AssociatedDevices] = new HashSet<int>() {deviceRef};
+            Feature[EProperty.Relationship] = ERelationship.Feature;
+            Feature[EProperty.AssociatedDevices] = new HashSet<int>() {deviceRef};
         }
         
         internal NewFeatureData(HsFeature feature) {
@@ -41,13 +43,13 @@ namespace HomeSeer.PluginSdk.Devices {
 
             Feature = feature.Changes;
 
-            if (!(Feature[EDeviceProperty.AssociatedDevices] is HashSet<int> assDevices) || 
+            if (!(Feature[EProperty.AssociatedDevices] is HashSet<int> assDevices) || 
                 assDevices.Count == 0 || assDevices.Count >= 2 || assDevices.First() <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(feature), 
                                                       "Invalid associated device ref");
             }
 
-            Feature[EDeviceProperty.Relationship] = ERelationship.Feature;
+            Feature[EProperty.Relationship] = ERelationship.Feature;
         }
 
     }

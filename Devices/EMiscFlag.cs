@@ -1,6 +1,6 @@
 namespace HomeSeer.PluginSdk.Devices {
 
-    public enum EDeviceMiscFlag : uint {
+    public enum EMiscFlag : uint {
             // for device class misc flags, bits in long value
             // PRESET_DIM = 1         ' supports preset dim if set
             // EXTENDED_DIM = 2            ' extended dim command

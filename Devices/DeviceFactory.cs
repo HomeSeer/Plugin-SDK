@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomeSeer.PluginSdk.Devices.Identification;
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -66,7 +67,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
-        public DeviceFactory WithMiscFlags(params EDeviceMiscFlag[] miscFlags) {
+        public DeviceFactory WithMiscFlags(params EMiscFlag[] miscFlags) {
 
             if (miscFlags == null || miscFlags.Length == 0) {
                 throw new ArgumentNullException(nameof(miscFlags));
@@ -116,7 +117,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
         public DeviceFactory AsType(EDeviceType deviceType, int deviceSubType) {
 
-            _device.DeviceType = new DeviceTypeInfo()
+            _device.TypeInfo = new TypeInfo()
                                  {
                                      ApiType = EApiType.Device,
                                      Type    = (int) deviceType,

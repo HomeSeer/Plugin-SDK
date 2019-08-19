@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using HomeSeer.PluginSdk.Devices.Controls;
+using HomeSeer.PluginSdk.Devices.Identification;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeProtected.Global
@@ -31,7 +34,7 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  send all of the changes to HomeSeer as a bundle via <see cref="IHsController.UpdateDeviceByRef"/>
         ///  or <see cref="IHsController.UpdateFeatureByRef"/>
         /// </remarks>
-        public Dictionary<EDeviceProperty, object> Changes { get; private set; } = new Dictionary<EDeviceProperty, object>();
+        public Dictionary<EProperty, object> Changes { get; private set; } = new Dictionary<EProperty, object>();
         
         /// <summary>
         /// The unique identifier for this device/feature. This is the primary key for devices and features in HomeSeer.
@@ -48,8 +51,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string Address {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Address)) {
-                    return (string) Changes[EDeviceProperty.Address];
+                if (Changes.ContainsKey(EProperty.Address)) {
+                    return (string) Changes[EProperty.Address];
                 }
                 
                 return _address ?? "";
@@ -57,15 +60,15 @@ namespace HomeSeer.PluginSdk.Devices {
             set {
 
                 if (value == _address) {
-                    Changes.Remove(EDeviceProperty.Address);
+                    Changes.Remove(EProperty.Address);
                     return;
                 }
                 
-                if (Changes.ContainsKey(EDeviceProperty.Address)) {
-                    Changes[EDeviceProperty.Address] = value;
+                if (Changes.ContainsKey(EProperty.Address)) {
+                    Changes[EProperty.Address] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Address, value);
+                    Changes.Add(EProperty.Address, value);
                 }
 
                 if (_cacheChanges) {
@@ -80,8 +83,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public HashSet<int> AssociatedDevices {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    return Changes[EDeviceProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
+                if (Changes.ContainsKey(EProperty.AssociatedDevices)) {
+                    return Changes[EProperty.AssociatedDevices] as HashSet<int> ?? new HashSet<int>();
                 }
                 
                 return _assDevices;
@@ -89,15 +92,15 @@ namespace HomeSeer.PluginSdk.Devices {
             set {
 
                 if (value == _assDevices) {
-                    Changes.Remove(EDeviceProperty.AssociatedDevices);
+                    Changes.Remove(EProperty.AssociatedDevices);
                     return;
                 }
                 
-                if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    Changes[EDeviceProperty.AssociatedDevices] = value ?? new HashSet<int>();
+                if (Changes.ContainsKey(EProperty.AssociatedDevices)) {
+                    Changes[EProperty.AssociatedDevices] = value ?? new HashSet<int>();
                 }
                 else {
-                    Changes.Add(EDeviceProperty.AssociatedDevices, value ?? new HashSet<int>());
+                    Changes.Add(EProperty.AssociatedDevices, value ?? new HashSet<int>());
                 }
                 
                 if (_cacheChanges) {
@@ -108,64 +111,27 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// Type info for this device/feature
-        /// </summary>
-        /// <remarks>
-        /// This is used to describe this device/feature in a manner that is easily understood by UI generation engines
-        ///  and other smart home platforms. When these systems can understand what this device/feature is, they are
-        ///  better able to tailor the experience of the user to their expectations.
-        /// </remarks>
-        /// <seealso cref="DeviceTypeInfo"/>
-        public DeviceTypeInfo DeviceType {
-            get {
-                if (Changes.ContainsKey(EDeviceProperty.DeviceType)) {
-                    return (DeviceTypeInfo) Changes[EDeviceProperty.DeviceType];
-                }
-
-                return _deviceType;
-            }
-            set {
-                if (value == _deviceType) {
-                    Changes.Remove(EDeviceProperty.DeviceType);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EDeviceProperty.DeviceType)) {
-                    Changes[EDeviceProperty.DeviceType] = value;
-                }
-                else {
-                    Changes.Add(EDeviceProperty.DeviceType, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _deviceType = value ?? new DeviceTypeInfo();
-            }
-        }
-        
-        /// <summary>
         /// The address of an image that represents the current status of the device/feature
         /// </summary>
         public string Image {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Image)) {
-                    return (string) Changes[EDeviceProperty.Image];
+                if (Changes.ContainsKey(EProperty.Image)) {
+                    return (string) Changes[EProperty.Image];
                 }
 
                 return _image;
             }
             set {
                 if (value == _image) {
-                    Changes.Remove(EDeviceProperty.Image);
+                    Changes.Remove(EProperty.Image);
                     return;
                 }
                 
-                if (Changes.ContainsKey(EDeviceProperty.Image)) {
-                    Changes[EDeviceProperty.Image] = value;
+                if (Changes.ContainsKey(EProperty.Image)) {
+                    Changes[EProperty.Image] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Image, value);
+                    Changes.Add(EProperty.Image, value);
                 }
                 
                 if (_cacheChanges) {
@@ -180,22 +146,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string Interface {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Interface)) {
-                    return (string) Changes[EDeviceProperty.Interface];
+                if (Changes.ContainsKey(EProperty.Interface)) {
+                    return (string) Changes[EProperty.Interface];
                 }
 
                 return _interface;
             }
             set {
                 if (value == _interface) {
-                    Changes.Remove(EDeviceProperty.Interface);
+                    Changes.Remove(EProperty.Interface);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Interface)) {
-                    Changes[EDeviceProperty.Interface] = value;
+                if (Changes.ContainsKey(EProperty.Interface)) {
+                    Changes[EProperty.Interface] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Interface, value);
+                    Changes.Add(EProperty.Interface, value);
                 }
                 
                 if (_cacheChanges) {
@@ -215,22 +181,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         public bool IsValueInvalid {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.InvalidValue)) {
-                    return (bool) Changes[EDeviceProperty.InvalidValue];
+                if (Changes.ContainsKey(EProperty.InvalidValue)) {
+                    return (bool) Changes[EProperty.InvalidValue];
                 }
 
                 return _invalidValue || !IsValueValid();
             }
             set {
                 if (value == _invalidValue) {
-                    Changes.Remove(EDeviceProperty.InvalidValue);
+                    Changes.Remove(EProperty.InvalidValue);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.InvalidValue)) {
-                    Changes[EDeviceProperty.InvalidValue] = value;
+                if (Changes.ContainsKey(EProperty.InvalidValue)) {
+                    Changes[EProperty.InvalidValue] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.InvalidValue, value);
+                    Changes.Add(EProperty.InvalidValue, value);
                 }
                 
                 if (_cacheChanges) {
@@ -245,22 +211,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public DateTime LastChange {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.LastChange)) {
-                    return (DateTime) Changes[EDeviceProperty.LastChange];
+                if (Changes.ContainsKey(EProperty.LastChange)) {
+                    return (DateTime) Changes[EProperty.LastChange];
                 }
 
                 return _lastChange;
             }
             set {
                 if (value == _lastChange) {
-                    Changes.Remove(EDeviceProperty.LastChange);
+                    Changes.Remove(EProperty.LastChange);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.LastChange)) {
-                    Changes[EDeviceProperty.LastChange] = value;
+                if (Changes.ContainsKey(EProperty.LastChange)) {
+                    Changes[EProperty.LastChange] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.LastChange, value);
+                    Changes.Add(EProperty.LastChange, value);
                 }
                 
                 if (_cacheChanges) {
@@ -283,22 +249,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         public string Location {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Location)) {
-                    return (string) Changes[EDeviceProperty.Location];
+                if (Changes.ContainsKey(EProperty.Location)) {
+                    return (string) Changes[EProperty.Location];
                 }
 
                 return _location;
             }
             set {
                 if (value == _location) {
-                    Changes.Remove(EDeviceProperty.Location);
+                    Changes.Remove(EProperty.Location);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Location)) {
-                    Changes[EDeviceProperty.Location] = value;
+                if (Changes.ContainsKey(EProperty.Location)) {
+                    Changes[EProperty.Location] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Location, value);
+                    Changes.Add(EProperty.Location, value);
                 }
                 
                 if (_cacheChanges) {
@@ -321,22 +287,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         public string Location2 {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Location2)) {
-                    return (string) Changes[EDeviceProperty.Location2];
+                if (Changes.ContainsKey(EProperty.Location2)) {
+                    return (string) Changes[EProperty.Location2];
                 }
 
                 return _location2;
             }
             set {
                 if (value == _location2) {
-                    Changes.Remove(EDeviceProperty.Location2);
+                    Changes.Remove(EProperty.Location2);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Location2)) {
-                    Changes[EDeviceProperty.Location2] = value;
+                if (Changes.ContainsKey(EProperty.Location2)) {
+                    Changes[EProperty.Location2] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Location2, value);
+                    Changes.Add(EProperty.Location2, value);
                 }
                 
                 if (_cacheChanges) {
@@ -353,25 +319,25 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  <see cref="RemoveMiscFlag"/>, and <see cref="ContainsMiscFlag"/> to interface with this property
         /// </para>
         /// </summary>
-        /// <seealso cref="EDeviceMiscFlag"/>
+        /// <seealso cref="EMiscFlag"/>
         public uint Misc {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                    return (uint) Changes[EDeviceProperty.Misc];
+                if (Changes.ContainsKey(EProperty.Misc)) {
+                    return (uint) Changes[EProperty.Misc];
                 }
 
                 return _misc;
             }
             set {
                 if (value == _misc) {
-                    Changes.Remove(EDeviceProperty.Misc);
+                    Changes.Remove(EProperty.Misc);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                    Changes[EDeviceProperty.Misc] = value;
+                if (Changes.ContainsKey(EProperty.Misc)) {
+                    Changes[EProperty.Misc] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Misc, value);
+                    Changes.Add(EProperty.Misc, value);
                 }
                 
                 if (_cacheChanges) {
@@ -393,22 +359,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         public string Name {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Name)) {
-                    return (string) Changes[EDeviceProperty.Name];
+                if (Changes.ContainsKey(EProperty.Name)) {
+                    return (string) Changes[EProperty.Name];
                 }
 
                 return _name;
             }
             set {
                 if (value == _name) {
-                    Changes.Remove(EDeviceProperty.Name);
+                    Changes.Remove(EProperty.Name);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Name)) {
-                    Changes[EDeviceProperty.Name] = value;
+                if (Changes.ContainsKey(EProperty.Name)) {
+                    Changes[EProperty.Name] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Name, value);
+                    Changes.Add(EProperty.Name, value);
                 }
                 
                 if (_cacheChanges) {
@@ -427,8 +393,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <seealso cref="PlugExtraData"/>
         public PlugExtraData PlugExtraData {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.PlugExtraData)) {
-                    return Changes[EDeviceProperty.PlugExtraData] as PlugExtraData ?? new PlugExtraData();
+                if (Changes.ContainsKey(EProperty.PlugExtraData)) {
+                    return Changes[EProperty.PlugExtraData] as PlugExtraData ?? new PlugExtraData();
                 }
                 
                 return _plugExtraData;
@@ -436,14 +402,14 @@ namespace HomeSeer.PluginSdk.Devices {
             set {
                 
                 if (value == _plugExtraData) {
-                    Changes.Remove(EDeviceProperty.PlugExtraData);
+                    Changes.Remove(EProperty.PlugExtraData);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.PlugExtraData)) {
-                    Changes[EDeviceProperty.PlugExtraData] = value;
+                if (Changes.ContainsKey(EProperty.PlugExtraData)) {
+                    Changes[EProperty.PlugExtraData] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.PlugExtraData, value);
+                    Changes.Add(EProperty.PlugExtraData, value);
                 }
                 
                 if (_cacheChanges) {
@@ -458,22 +424,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string ProductImage {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.ProductImage)) {
-                    return (string) Changes[EDeviceProperty.ProductImage];
+                if (Changes.ContainsKey(EProperty.ProductImage)) {
+                    return (string) Changes[EProperty.ProductImage];
                 }
 
                 return _productImage;
             }
             set {
                 if (value == _productImage) {
-                    Changes.Remove(EDeviceProperty.ProductImage);
+                    Changes.Remove(EProperty.ProductImage);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.ProductImage)) {
-                    Changes[EDeviceProperty.ProductImage] = value;
+                if (Changes.ContainsKey(EProperty.ProductImage)) {
+                    Changes[EProperty.ProductImage] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.ProductImage, value);
+                    Changes.Add(EProperty.ProductImage, value);
                 }
                 
                 if (_cacheChanges) {
@@ -493,16 +459,16 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </exception>
         public ERelationship Relationship {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                    return (ERelationship) Changes[EDeviceProperty.Relationship];
+                if (Changes.ContainsKey(EProperty.Relationship)) {
+                    return (ERelationship) Changes[EProperty.Relationship];
                 }
                 return _relationship;
             }
             set {
 
                 var currentAssociatedDeviceList = _assDevices ?? new HashSet<int>();
-                if (Changes.ContainsKey(EDeviceProperty.AssociatedDevices)) {
-                    currentAssociatedDeviceList = (HashSet<int>) Changes[EDeviceProperty.AssociatedDevices];
+                if (Changes.ContainsKey(EProperty.AssociatedDevices)) {
+                    currentAssociatedDeviceList = (HashSet<int>) Changes[EProperty.AssociatedDevices];
                 }
 
                 if (currentAssociatedDeviceList.Count > 0) {
@@ -510,14 +476,14 @@ namespace HomeSeer.PluginSdk.Devices {
                 }
                 
                 if (value == _relationship) {
-                    Changes.Remove(EDeviceProperty.Relationship);
+                    Changes.Remove(EProperty.Relationship);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Relationship)) {
-                    Changes[EDeviceProperty.Relationship] = value;
+                if (Changes.ContainsKey(EProperty.Relationship)) {
+                    Changes[EProperty.Relationship] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Relationship, value);
+                    Changes.Add(EProperty.Relationship, value);
                 }
                 
                 if (_cacheChanges) {
@@ -535,28 +501,65 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string Status {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Status)) {
-                    return (string) Changes[EDeviceProperty.Status];
+                if (Changes.ContainsKey(EProperty.Status)) {
+                    return (string) Changes[EProperty.Status];
                 }
                 
                 return _status;
             }
             set {
                 if (value == _status) {
-                    Changes.Remove(EDeviceProperty.Status);
+                    Changes.Remove(EProperty.Status);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Status)) {
-                    Changes[EDeviceProperty.Status] = value;
+                if (Changes.ContainsKey(EProperty.Status)) {
+                    Changes[EProperty.Status] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Status, value);
+                    Changes.Add(EProperty.Status, value);
                 }
                 
                 if (_cacheChanges) {
                     return;
                 }
                 _status = value ?? "";
+            }
+        }
+        
+        /// <summary>
+        /// Type info for this device/feature
+        /// </summary>
+        /// <remarks>
+        /// This is used to describe this device/feature in a manner that is easily understood by UI generation engines
+        ///  and other smart home platforms. When these systems can understand what this device/feature is, they are
+        ///  better able to tailor the experience of the user to their expectations.
+        /// </remarks>
+        /// <seealso cref="Identification.TypeInfo"/>
+        public TypeInfo TypeInfo {
+            get {
+                if (Changes.ContainsKey(EProperty.DeviceType)) {
+                    return (TypeInfo) Changes[EProperty.DeviceType];
+                }
+
+                return _typeInfo;
+            }
+            set {
+                if (value == _typeInfo) {
+                    Changes.Remove(EProperty.DeviceType);
+                    return;
+                }
+                
+                if (Changes.ContainsKey(EProperty.DeviceType)) {
+                    Changes[EProperty.DeviceType] = value;
+                }
+                else {
+                    Changes.Add(EProperty.DeviceType, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _typeInfo = value ?? new TypeInfo();
             }
         }
 
@@ -566,22 +569,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string UserAccess {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.UserAccess)) {
-                    return (string) Changes[EDeviceProperty.UserAccess];
+                if (Changes.ContainsKey(EProperty.UserAccess)) {
+                    return (string) Changes[EProperty.UserAccess];
                 }
 
                 return _userAccess;
             }
             set {
                 if (value == _userAccess) {
-                    Changes.Remove(EDeviceProperty.UserAccess);
+                    Changes.Remove(EProperty.UserAccess);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.UserAccess)) {
-                    Changes[EDeviceProperty.UserAccess] = value;
+                if (Changes.ContainsKey(EProperty.UserAccess)) {
+                    Changes[EProperty.UserAccess] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.UserAccess, value);
+                    Changes.Add(EProperty.UserAccess, value);
                 }
                 
                 if (_cacheChanges) {
@@ -596,22 +599,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string UserNote {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.UserNote)) {
-                    return (string) Changes[EDeviceProperty.UserNote];
+                if (Changes.ContainsKey(EProperty.UserNote)) {
+                    return (string) Changes[EProperty.UserNote];
                 }
 
                 return _userNote;
             }
             set {
                 if (value == _userNote) {
-                    Changes.Remove(EDeviceProperty.UserNote);
+                    Changes.Remove(EProperty.UserNote);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.UserNote)) {
-                    Changes[EDeviceProperty.UserNote] = value;
+                if (Changes.ContainsKey(EProperty.UserNote)) {
+                    Changes[EProperty.UserNote] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.UserNote, value);
+                    Changes.Add(EProperty.UserNote, value);
                 }
                 
                 if (_cacheChanges) {
@@ -635,22 +638,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         public double Value {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.Value)) {
-                    return (double) Changes[EDeviceProperty.Value];
+                if (Changes.ContainsKey(EProperty.Value)) {
+                    return (double) Changes[EProperty.Value];
                 }
                 
                 return _value;
             }
             set {
                 if (Math.Abs(value - _value) < 0.001) {
-                    Changes.Remove(EDeviceProperty.Value);
+                    Changes.Remove(EProperty.Value);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.Value)) {
-                    Changes[EDeviceProperty.Value] = value;
+                if (Changes.ContainsKey(EProperty.Value)) {
+                    Changes[EProperty.Value] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.Value, value);
+                    Changes.Add(EProperty.Value, value);
                 }
                 
                 if (_cacheChanges) {
@@ -667,22 +670,22 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public string VoiceCommand {
             get {
-                if (Changes.ContainsKey(EDeviceProperty.VoiceCommand)) {
-                    return (string) Changes[EDeviceProperty.VoiceCommand];
+                if (Changes.ContainsKey(EProperty.VoiceCommand)) {
+                    return (string) Changes[EProperty.VoiceCommand];
                 }
 
                 return _voiceCommand ?? "";
             }
             set {
                 if (value == _voiceCommand) {
-                    Changes.Remove(EDeviceProperty.VoiceCommand);
+                    Changes.Remove(EProperty.VoiceCommand);
                     return;
                 }
-                if (Changes.ContainsKey(EDeviceProperty.VoiceCommand)) {
-                    Changes[EDeviceProperty.VoiceCommand] = value;
+                if (Changes.ContainsKey(EProperty.VoiceCommand)) {
+                    Changes[EProperty.VoiceCommand] = value;
                 }
                 else {
-                    Changes.Add(EDeviceProperty.VoiceCommand, value);
+                    Changes.Add(EProperty.VoiceCommand, value);
                 }
                 
                 if (_cacheChanges) {
@@ -701,8 +704,6 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <inheritdoc cref="AssociatedDevices"/>
         protected HashSet<int>   _assDevices        = new HashSet<int>();
         protected bool           _cacheChanges      = false;
-        /// <inheritdoc cref="DeviceType"/>
-        protected DeviceTypeInfo _deviceType        = new DeviceTypeInfo();
         /// <inheritdoc cref="Image"/>
         protected string         _image             = "";
         /// <inheritdoc cref="Interface"/>
@@ -716,7 +717,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <inheritdoc cref="Location2"/>
         protected string         _location2         = "Unknown";
         /// <inheritdoc cref="Misc"/>
-        protected uint           _misc              = (uint) EDeviceMiscFlag.SHOW_VALUES;
+        protected uint           _misc              = (uint) EMiscFlag.SHOW_VALUES;
         /// <inheritdoc cref="Name"/>
         protected string         _name              = "";
         /// <inheritdoc cref="PlugExtraData"/>
@@ -727,6 +728,8 @@ namespace HomeSeer.PluginSdk.Devices {
         protected ERelationship  _relationship      = ERelationship.NotSet;
         /// <inheritdoc cref="Status"/>
         protected string         _status            = "";
+        /// <inheritdoc cref="TypeInfo"/>
+        protected TypeInfo       _typeInfo          = new TypeInfo();
         /// <inheritdoc cref="UserAccess"/>
         protected string         _userAccess        = "Any";
         /// <inheritdoc cref="UserNote"/>
@@ -750,7 +753,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Clear all changes since initialization and reset the <see cref="Changes"/> property
         /// </summary>
         public void RevertChanges() {
-            Changes = new Dictionary<EDeviceProperty, object>();
+            Changes = new Dictionary<EProperty, object>();
         }
 
         /// <summary>
@@ -762,23 +765,23 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// Add the specified <see cref="EDeviceMiscFlag"/> to the device/feature
+        /// Add the specified <see cref="EMiscFlag"/> to the device/feature
         /// </summary>
-        /// <param name="misc">The <see cref="EDeviceMiscFlag"/> to add</param>
-        public void AddMiscFlag(EDeviceMiscFlag misc) {
+        /// <param name="misc">The <see cref="EMiscFlag"/> to add</param>
+        public void AddMiscFlag(EMiscFlag misc) {
             
             var currentMisc = _misc;
-            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                currentMisc = (uint) Changes[EDeviceProperty.Misc];
+            if (Changes.ContainsKey(EProperty.Misc)) {
+                currentMisc = (uint) Changes[EProperty.Misc];
             }
             
             var tempMisc = currentMisc | (uint) misc;
             
-            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                Changes[EDeviceProperty.Misc] = tempMisc;
+            if (Changes.ContainsKey(EProperty.Misc)) {
+                Changes[EProperty.Misc] = tempMisc;
             }
             else {
-                Changes.Add(EDeviceProperty.Misc, tempMisc);
+                Changes.Add(EProperty.Misc, tempMisc);
             }
 
             if (_cacheChanges) {
@@ -789,39 +792,39 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// Determine if the device/feature contains the specified <see cref="EDeviceMiscFlag"/>
+        /// Determine if the device/feature contains the specified <see cref="EMiscFlag"/>
         /// </summary>
-        /// <param name="misc">The <see cref="EDeviceMiscFlag"/> to look for</param>
+        /// <param name="misc">The <see cref="EMiscFlag"/> to look for</param>
         /// <returns>
-        /// TRUE if the device/feature contains the <see cref="EDeviceMiscFlag"/>,
+        /// TRUE if the device/feature contains the <see cref="EMiscFlag"/>,
         ///  FALSE if it does not.
         /// </returns>
-        public bool ContainsMiscFlag(EDeviceMiscFlag misc) {
+        public bool ContainsMiscFlag(EMiscFlag misc) {
             var currentMisc = _misc;
-            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                currentMisc = (uint) Changes[EDeviceProperty.Misc];
+            if (Changes.ContainsKey(EProperty.Misc)) {
+                currentMisc = (uint) Changes[EProperty.Misc];
             }
             
             return (currentMisc & (uint) misc) != 0;
         }
 
         /// <summary>
-        /// Remove the specified <see cref="EDeviceMiscFlag"/> from the device/feature
+        /// Remove the specified <see cref="EMiscFlag"/> from the device/feature
         /// </summary>
-        /// <param name="misc">The <see cref="EDeviceMiscFlag"/> to remove</param>
-        public void RemoveMiscFlag(EDeviceMiscFlag misc) {
+        /// <param name="misc">The <see cref="EMiscFlag"/> to remove</param>
+        public void RemoveMiscFlag(EMiscFlag misc) {
             var currentMisc = _misc;
-            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                currentMisc = (uint) Changes[EDeviceProperty.Misc];
+            if (Changes.ContainsKey(EProperty.Misc)) {
+                currentMisc = (uint) Changes[EProperty.Misc];
             }
             
             var tempMisc = currentMisc ^ (uint) misc;
             
-            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                Changes[EDeviceProperty.Misc] = tempMisc;
+            if (Changes.ContainsKey(EProperty.Misc)) {
+                Changes[EProperty.Misc] = tempMisc;
             }
             else {
-                Changes.Add(EDeviceProperty.Misc, tempMisc);
+                Changes.Add(EProperty.Misc, tempMisc);
             }
 
             if (_cacheChanges) {
@@ -832,14 +835,14 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// Clear all <see cref="EDeviceMiscFlag"/>s on the device/feature.
+        /// Clear all <see cref="EMiscFlag"/>s on the device/feature.
         /// </summary>
         public void ClearMiscFlags() {
-            if (Changes.ContainsKey(EDeviceProperty.Misc)) {
-                Changes[EDeviceProperty.Misc] = (uint) 0;
+            if (Changes.ContainsKey(EProperty.Misc)) {
+                Changes[EProperty.Misc] = (uint) 0;
             }
             else {
-                Changes.Add(EDeviceProperty.Misc, (uint) 0);
+                Changes.Add(EProperty.Misc, (uint) 0);
             }
 
             if (_cacheChanges) {
