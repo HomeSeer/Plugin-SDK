@@ -175,6 +175,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// </summary>
         /// <param name="value">The value to get the label for</param>
         /// <returns>The value as a string formatted according to the <see cref="TargetRange"/> configuration.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not targeted by the <see cref="StatusControl"/></exception>
         public string GetLabelForValue(double value) {
             if (!_isRange) {
                 return _label;
@@ -211,6 +212,14 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return dce;
         }
 
+        /// <summary>
+        /// Determine if a specified value is targeted by the <see cref="StatusControl"/>"/>
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>
+        /// TRUE if the value is targeted by the <see cref="StatusControl"/>,
+        ///  FALSE if it is not
+        /// </returns>
         public bool IsValueInRange(double value) {
             if (_isRange) {
                 return _targetRange.IsValueInRange(value);
