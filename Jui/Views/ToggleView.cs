@@ -82,7 +82,7 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
-			sb.Append("<div class=\"jui-view jui-toggle\">");
+			sb.Append($"<div id=\"{Id}.par\" class=\"jui-view jui-toggle\">");
 			sb.Append(Environment.NewLine);
 			//Add the text
 			sb.Append(GetIndentStringFromNumber(indent+1));

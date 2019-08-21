@@ -140,7 +140,7 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
-			sb.Append("<div class=\"jui-view\">");
+			sb.Append($"<div id=\"{Id}.par\" class=\"jui-view\">");
 			sb.Append(Environment.NewLine);
 			//Add the select list
 			switch (Style) {

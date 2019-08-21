@@ -139,7 +139,7 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the form div
-			sb.Append("<div class=\"md-form md-outline jui-view\">");
+			sb.Append($"<div id=\"{Id}.par\" class=\"md-form md-outline jui-view\">");
 			sb.Append(Environment.NewLine);
             //Add the input
             sb.Append(GetIndentStringFromNumber(indent+1));

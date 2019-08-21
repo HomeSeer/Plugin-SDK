@@ -169,20 +169,15 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			//Open the containing div
 			sb.Append(AbstractView.GetIndentStringFromNumber(indent));
-			sb.Append("<div class=\"container\">");
+			sb.Append("<div class=\"container jui-page\" pageid=\"{Id}\">");
 			sb.Append(Environment.NewLine);
 			indent++;
-			sb.Append(AbstractView.GetIndentStringFromNumber(indent));
-			sb.Append("<form>");
-			sb.Append(Environment.NewLine);
-			indent++;
+			//sb.Append(AbstractView.GetIndentStringFromNumber(indent));
+			//sb.Append($"<input type=\"hidden\" class=\"jui-page\" pageid=\"{Id}\" >");
 			//Add all of the child views
 			foreach (var view in _views) {
 				sb.Append(view.ToHtml(indent));
 			}
-			indent--;
-			sb.Append(AbstractView.GetIndentStringFromNumber(indent));
-			sb.Append("</form>");
 			sb.Append(Environment.NewLine);
 			indent--;
 			sb.Append(AbstractView.GetIndentStringFromNumber(indent));
