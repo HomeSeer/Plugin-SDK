@@ -22,7 +22,7 @@ namespace HomeSeer.PluginSdk.Events {
             if (triggerType?.FullName == null) {
                 throw new ArgumentException(nameof(triggerType));
             }
-            if (triggerType.IsSubclassOf(typeof(AbstractTriggerType))) {
+            if (!triggerType.IsSubclassOf(typeof(AbstractTriggerType))) {
                 throw new ArgumentException($"{triggerType} is not derived from AbstractTriggerType", nameof(triggerType));
             }
             AssertTypeHasConstructors(triggerType);

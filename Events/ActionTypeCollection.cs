@@ -22,7 +22,7 @@ namespace HomeSeer.PluginSdk.Events {
             if (actionType?.FullName == null) {
                 throw new ArgumentException(nameof(actionType));
             }
-            if (actionType.IsSubclassOf(typeof(AbstractActionType))) {
+            if (!actionType.IsSubclassOf(typeof(AbstractActionType))) {
                 throw new ArgumentException($"{actionType} is not derived from AbstractActionType", nameof(actionType));
             }
             AssertTypeHasConstructors(actionType);
