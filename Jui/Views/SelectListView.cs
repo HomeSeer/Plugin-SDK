@@ -133,6 +133,18 @@ namespace HomeSeer.Jui.Views {
 		public override string GetStringValue() {
 			return Selection.ToString();
 		}
+
+		/// <summary>
+		/// Get the currently selected option text.
+		/// </summary>
+		/// <returns>The text of the option at the index specified by <see cref="Selection"/>.</returns>
+		public string GetSelectedOption() {
+			if (Options == null || Selection >= Options.Count) {
+				return "";
+			}
+			
+			return Options[Selection];
+		}
 		
 		/// <inheritdoc/>
 		public override string ToHtml(int indent = 0) {
