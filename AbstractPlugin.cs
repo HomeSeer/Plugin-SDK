@@ -88,7 +88,7 @@ namespace HomeSeer.PluginSdk {
         ///  the plugin may be inoperable. This is also queried when users navigate to the plugin management page.
         /// </remarks>
         /// <seealso cref="PluginStatus"/>
-        protected PluginStatus Status { get; set; } = PluginStatus.Ok();
+        protected virtual PluginStatus Status { get; set; } = PluginStatus.Ok();
 
         /// <summary>
         /// The name of the settings INI file for the plugin.
@@ -471,21 +471,6 @@ namespace HomeSeer.PluginSdk {
         #region Actions
 
         /// <inheritdoc />
-        public virtual AbstractActionType OnBuildActionUi(AbstractActionType action) {
-            return action;
-        }
-
-        /// <inheritdoc />
-        public virtual AbstractActionType OnActionConfigChange(AbstractActionType action) {
-            return action;
-        }
-
-        /// <inheritdoc />
-        public virtual AbstractActionType BeforeRunAction(AbstractActionType action) {
-            return action;
-        }
-
-        /// <inheritdoc />
         public bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
             return ActionTypes?.ActionReferencesDeviceOrFeature(dvRef, actInfo) ?? false;
         }
@@ -526,21 +511,6 @@ namespace HomeSeer.PluginSdk {
         #endregion
 
         #region Triggers
-
-        /// <inheritdoc />
-        public AbstractTriggerType OnBuildTriggerUi(AbstractTriggerType trigger) {
-            return trigger;
-        }
-
-        /// <inheritdoc />
-        public AbstractTriggerType OnTriggerConfigChange(AbstractTriggerType trigger) {
-            return trigger;
-        }
-
-        /// <inheritdoc />
-        public AbstractTriggerType BeforeCheckTrigger(AbstractTriggerType trigger) {
-            return trigger;
-        }
 
         /// <inheritdoc />
         public virtual string TriggerBuildUI(TrigActInfo trigInfo) {

@@ -34,7 +34,7 @@ namespace HomeSeer.Jui.Views {
 		public ESelectListType Style { get; set; }
 		
 		/// <summary>
-		/// The index of the currently selected option in the list
+		/// The index of the currently selected option in the list. This is the value for this view.
 		/// </summary>
 		[JsonProperty("selection")]
 		public int Selection { get; set; }

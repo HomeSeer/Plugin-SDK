@@ -85,7 +85,7 @@ namespace HomeSeer.PluginSdk.Events {
 
             try {
                 var curTrig = GetObjectFromTrigInfo(trigInfo);
-                curTrig = _listener?.OnBuildTriggerUi(curTrig) ?? curTrig;
+                //curTrig = _listener?.OnBuildTriggerUi(curTrig) ?? curTrig;
                 return curTrig.ToHtml();
             }
             catch (Exception exception) {
@@ -107,7 +107,7 @@ namespace HomeSeer.PluginSdk.Events {
             try {
                 var curTrig = GetObjectFromTrigInfo(trigInfo);
                 var result = curTrig.ProcessPostData(postData);
-                curTrig = _listener?.OnTriggerConfigChange(curTrig) ?? curTrig;
+                //curTrig = _listener?.OnTriggerConfigChange(curTrig) ?? curTrig;
                 mr.sResult = result ? "" : "Unknown Plugin Error";
                 mr.DataOut = curTrig.Data;
                 return mr;
@@ -152,7 +152,7 @@ namespace HomeSeer.PluginSdk.Events {
         public virtual bool IsTriggerTrue(TrigActInfo trigInfo, bool isCondition) {
             try {
                 var curTrig = GetObjectFromTrigInfo(trigInfo);
-                curTrig = _listener?.BeforeCheckTrigger(curTrig) ?? curTrig;
+                //curTrig = _listener?.BeforeCheckTrigger(curTrig) ?? curTrig;
                 return curTrig.IsTriggerTrue(isCondition);
             }
             catch (Exception exception) {
@@ -219,6 +219,7 @@ namespace HomeSeer.PluginSdk.Events {
             }
 
             curTrig.LogDebug = LogDebug;
+            curTrig.TriggerListener = _listener;
             return curTrig;
         }
 
@@ -248,13 +249,7 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
         
-        public interface ITriggerTypeListener {
-
-            AbstractTriggerType OnBuildTriggerUi(AbstractTriggerType trigger);
-            AbstractTriggerType OnTriggerConfigChange(AbstractTriggerType trigger);
-            AbstractTriggerType BeforeCheckTrigger(AbstractTriggerType trigger);
-
-        }
+        public interface ITriggerTypeListener {}
 
     }
 

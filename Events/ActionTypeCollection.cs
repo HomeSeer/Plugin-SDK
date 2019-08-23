@@ -53,7 +53,7 @@ namespace HomeSeer.PluginSdk.Events {
 
             try {
                 var curAct = GetObjectFromActInfo(actInfo);
-                curAct = _listener?.OnBuildActionUi(curAct) ?? curAct;
+                //curAct = _listener?.OnBuildActionUi(curAct) ?? curAct;
                 return curAct.ToHtml();
             }
             catch (Exception exception) {
@@ -75,7 +75,7 @@ namespace HomeSeer.PluginSdk.Events {
             try {
                 var curAct = GetObjectFromActInfo(actInfo);
                 var result = curAct.ProcessPostData(postData);
-                curAct = _listener?.OnActionConfigChange(curAct) ?? curAct;
+                //curAct = _listener?.OnActionConfigChange(curAct) ?? curAct;
                 mr.sResult = result ? "" : "Unknown Plugin Error";
                 mr.DataOut = curAct.Data;
                 return mr;
@@ -121,7 +121,7 @@ namespace HomeSeer.PluginSdk.Events {
         public virtual bool HandleAction(TrigActInfo actInfo) {
             try {
                 var curAct = GetObjectFromActInfo(actInfo);
-                curAct = _listener?.BeforeRunAction(curAct) ?? curAct;
+                //curAct = _listener?.BeforeRunAction(curAct) ?? curAct;
                 return curAct.OnRunAction();
             }
             catch (Exception exception) {
@@ -175,6 +175,7 @@ namespace HomeSeer.PluginSdk.Events {
             }
 
             curAct.LogDebug = LogDebug;
+            curAct.ActionListener = _listener;
             return curAct;
         }
 
@@ -204,37 +205,7 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
         
-        public interface IActionTypeListener {
-
-            /// <summary>
-            /// Called during HomeSeer's request for the HTML to display for a given event action.
-            /// <para>
-            /// Use this opportunity to load in any additional data needed for the action configuration
-            /// </para>
-            /// </summary>
-            /// <param name="action">The action being configured</param>
-            /// <returns>The modified action being configured</returns>
-            AbstractActionType OnBuildActionUi(AbstractActionType action);
-            /// <summary>
-            /// Called when configuration changes to an action needs to be processed.
-            /// <para>
-            /// Use this opportunity to load in any additional data needed for the action configuration
-            /// </para>
-            /// </summary>
-            /// <param name="action">The action being configured</param>
-            /// <returns>The modified action being configured</returns>
-            AbstractActionType OnActionConfigChange(AbstractActionType action);
-            /// <summary>
-            /// Called before an action is executed
-            /// <para>
-            /// Use this opportunity to load in any additional data needed for the operation of the action
-            /// </para>
-            /// </summary>
-            /// <param name="action">The action being executed</param>
-            /// <returns>The modified action to execute</returns>
-            AbstractActionType BeforeRunAction(AbstractActionType action);
-
-        }
+        public interface IActionTypeListener {}
 
     }
 

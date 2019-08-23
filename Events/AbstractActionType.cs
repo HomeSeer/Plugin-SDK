@@ -11,6 +11,8 @@ namespace HomeSeer.PluginSdk.Events {
     public abstract class AbstractActionType {
 
         public bool LogDebug { get; set; } = false;
+
+        public ActionTypeCollection.IActionTypeListener ActionListener { get; internal set; }
         
         /// <summary>
         /// The unique ID for the action.
@@ -45,8 +47,7 @@ namespace HomeSeer.PluginSdk.Events {
         protected AbstractActionType(int id, int eventRef, byte[] dataIn) {
             _id           = id;
             _eventRef     = eventRef;
-            _data         = dataIn;
-            ProcessData();
+            ProcessData(dataIn);
         }
 
         /// <summary>
@@ -70,7 +71,25 @@ namespace HomeSeer.PluginSdk.Events {
         
         private readonly int _id;
         private readonly int _eventRef;
-        private readonly byte[] _data;
+        private byte[] _data;
+        
+        /// <summary>
+        /// Called by HomeSeer to obtain the name of this action type.
+        /// </summary>
+        /// <returns>A generic name for this action to be displayed in the list of available actions.</returns>
+        protected abstract string GetName();
+
+        /// <summary>
+        /// Called when a new action of this type is being created. Initialize the <see cref="ConfigPage"/> to
+        ///  the action's starting state so users can begin configuring it.
+        /// <para>
+        /// A new <see cref="Jui.Views.Page"/> is already created at this point with a unique ID provided
+        ///  by <see cref="PageId"/>. Any JUI view added to the <see cref="ConfigPage"/> must use a unique ID as it will
+        ///  be displayed on an event page that could also be housing HTML from other plugins. It is recommended
+        ///  to use the <see cref="PageId"/> as a prefix for all views added to ensure that their IDs are unique.
+        /// </para>
+        /// </summary>
+        protected abstract void OnNewAction();
         
         /// <summary>
         /// Called to determine if this action is configured completely or if there is still more to configure.
@@ -80,6 +99,12 @@ namespace HomeSeer.PluginSdk.Events {
         ///  FALSE if there are more options to configure before the action can be used.
         /// </returns>
         public abstract bool IsFullyConfigured();
+        
+        /// <summary>
+        /// Called when an action of this type is being edited and changes need to be propagated to the <see cref="ConfigPage"/>
+        /// </summary>
+        /// <param name="viewChanges">A <see cref="Page"/> containing changes to the <see cref="ConfigPage"/></param>
+        protected abstract void OnEditAction(Page viewChanges);
 
         /// <summary>
         /// Called by HomeSeer when the action is configured and needs to be displayed to the user as an
@@ -105,30 +130,6 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="devOrFeatRef"></param>
         /// <returns></returns>
         public abstract bool ReferencesDeviceOrFeature(int devOrFeatRef);
-        
-        /// <summary>
-        /// Called when an action of this type is being edited and changes need to be propagated to the <see cref="ConfigPage"/>
-        /// </summary>
-        /// <param name="viewChanges">A <see cref="Page"/> containing changes to the <see cref="ConfigPage"/></param>
-        protected abstract void OnEditAction(Page viewChanges);
-        
-        /// <summary>
-        /// Called by HomeSeer to obtain the name of this action type.
-        /// </summary>
-        /// <returns>A generic name for this action to be displayed in the list of available actions.</returns>
-        protected abstract string GetName();
-
-        /// <summary>
-        /// Called when a new action of this type is being created. Initialize the <see cref="ConfigPage"/> to
-        ///  the action's starting state so users can begin configuring it.
-        /// <para>
-        /// A new <see cref="Jui.Views.Page"/> is already created at this point with a unique ID provided
-        ///  by <see cref="PageId"/>. Any JUI view added to the <see cref="ConfigPage"/> must use a unique ID as it will
-        ///  be displayed on an event page that could also be housing HTML from other plugins. It is recommended
-        ///  to use the <see cref="PageId"/> as a prefix for all views added to ensure that their IDs are unique.
-        /// </para>
-        /// </summary>
-        protected abstract void OnNewAction();
 
         /// <summary>
         /// Called by <see cref="ActionTypeCollection"/> when <see cref="IPlugin.ActionBuildUI"/> is called to get
@@ -142,10 +143,11 @@ namespace HomeSeer.PluginSdk.Events {
             return ConfigPage?.ToHtml() ?? "";
         }
 
-        protected virtual void InitializePage() {
+        protected virtual void Initialize() {
+            _data = new byte[0];
             ConfigPage = PageFactory.CreateEventActionPage(PageId, Name).Page;
         }
-        
+
         internal bool ProcessPostData(Dictionary<string, string> changes) {
             if (ConfigPage == null) {
                 throw new Exception("Cannot process update.  There is no page to map changes to.");
@@ -183,24 +185,38 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        private void ProcessData() {
+        /// <summary>
+        /// Deserialize the action data to a <see cref="HomeSeer.Jui.Views.Page"/>.
+        /// <para>
+        /// Override this if you need to support legacy actions. Convert the UI to the new format and save it in
+        ///  the <see cref="ConfigPage"/>. Finally, call the base implementation of this method passing
+        ///  <see cref="Data"/> for <see cref="inData"/>.  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
+        ///  deserialize the data using the legacy method.
+        /// </para>
+        /// </summary>
+        /// <param name="inData">A byte array describing the current action configuration.</param>
+        protected virtual void ProcessData(byte[] inData) {
             //Is data null/empty?
-            if (_data == null || _data.Length == 0) {
-                InitializePage();
+            if (inData == null || inData.Length == 0) {
+                
+                Initialize();
                 OnNewAction();
             }
             else {
                 try {
                     //Get JSON string from byte[]
-                    var pageJson = Encoding.UTF8.GetString(_data);
+                    var pageJson = Encoding.UTF8.GetString(inData);
                     //Deserialize to page
                     ConfigPage = Page.FromJsonString(pageJson);
+                    //Save the data
+                    _data = inData;
                 }
                 catch (Exception exception) {
                     if (LogDebug) {
                         Console.WriteLine(exception);
                     }
-                    InitializePage();
+                    
+                    Initialize();
                     OnNewAction();
                 }
             }

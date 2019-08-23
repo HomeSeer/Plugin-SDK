@@ -9,6 +9,8 @@ namespace HomeSeer.PluginSdk.Events {
 
         public bool LogDebug { get; set; } = false;
         
+        public TriggerTypeCollection.ITriggerTypeListener TriggerListener { get; internal set; }
+        
         public int Id => _id;
         public int EventRef => _eventRef;
         public byte[] Data => GetData();
@@ -24,8 +26,7 @@ namespace HomeSeer.PluginSdk.Events {
         protected AbstractTriggerType(int id, int eventRef, byte[] dataIn) {
             _id           = id;
             _eventRef     = eventRef;
-            _data         = dataIn;
-            ProcessData();
+            ProcessData(dataIn);
         }
 
         protected AbstractTriggerType() {}
@@ -35,7 +36,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// </summary>
         protected string PageId => $"{_eventRef}-{_id}";
 
-        protected Page _page;
+        protected Page ConfigPage;
         
         protected List<string> SubTriggerTypeNames = new List<string>();
         
@@ -68,15 +69,16 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         public string ToHtml() {
-            return _page?.ToHtml() ?? "";
+            return ConfigPage?.ToHtml() ?? "";
         }
         
-        protected virtual void InitializePage() {
-            _page = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
+        protected virtual void Initialize() {
+            _data = new byte[0];
+            ConfigPage = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
         }
         
         internal bool ProcessPostData(Dictionary<string, string> changes) {
-            if (_page == null) {
+            if (ConfigPage == null) {
                 throw new Exception("Cannot process update.  There is no page to map changes to.");
             }
 
@@ -84,15 +86,15 @@ namespace HomeSeer.PluginSdk.Events {
                 return true;
             }
 
-            var pageChanges = PageFactory.CreateGenericPage(_page.Id, _page.Name).Page;
+            var pageChanges = PageFactory.CreateGenericPage(ConfigPage.Id, ConfigPage.Name).Page;
 
             foreach (var viewId in changes.Keys) {
                 
-                if (!_page.ContainsViewWithId(viewId)) {
+                if (!ConfigPage.ContainsViewWithId(viewId)) {
                     continue;
                 }
 
-                var viewType = _page.GetViewById(viewId).Type;
+                var viewType = ConfigPage.GetViewById(viewId).Type;
                 try {
                     pageChanges.AddViewDelta(viewId, (int) viewType, changes[viewId]);
                 }
@@ -107,10 +109,20 @@ namespace HomeSeer.PluginSdk.Events {
             return OnEditTrigger(pageChanges);
         }
 
-        private void ProcessData() {
+        /// <summary>
+        /// Deserialize the trigger data to a <see cref="HomeSeer.Jui.Views.Page"/>.
+        /// <para>
+        /// Override this if you need to support legacy triggers. Convert the UI to the new format and save it in
+        ///  the <see cref="ConfigPage"/>. Finally, call the base implementation of this method passing
+        ///  <see cref="Data"/> for <see cref="inData"/>.  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
+        ///  deserialize the data using the legacy method.
+        /// </para>
+        /// </summary>
+        /// <param name="inData">A byte array describing the current trigger configuration.</param>
+        protected virtual void ProcessData(byte[] inData) {
             //Is data null/empty?
-            if (_data == null || _data.Length == 0) {
-                InitializePage();
+            if (inData == null || inData.Length == 0) {
+                Initialize();
                 OnNewTrigger();
             }
             else {
@@ -118,21 +130,23 @@ namespace HomeSeer.PluginSdk.Events {
                     //Get JSON string from byte[]
                     var pageJson = Encoding.UTF8.GetString(_data);
                     //Deserialize to page
-                    _page = Page.FromJsonString(pageJson);
+                    ConfigPage = Page.FromJsonString(pageJson);
+                    //Save the data
+                    _data = inData;
                 }
                 catch (Exception exception) {
                     if (LogDebug) {
                         Console.WriteLine(exception);
                     }
 
-                    InitializePage();
+                    Initialize();
                     OnNewTrigger();
                 }
             }
         }
 
         private byte[] GetData() {
-            var pageJson = _page.ToJsonString();
+            var pageJson = ConfigPage.ToJsonString();
             return Encoding.UTF8.GetBytes(pageJson);
         }
 
