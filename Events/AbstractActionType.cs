@@ -141,6 +141,10 @@ namespace HomeSeer.PluginSdk.Events {
         public string ToHtml() {
             return ConfigPage?.ToHtml() ?? "";
         }
+
+        protected virtual void InitializePage() {
+            ConfigPage = PageFactory.CreateEventActionPage(PageId, Name).Page;
+        }
         
         internal bool ProcessPostData(Dictionary<string, string> changes) {
             if (ConfigPage == null) {
@@ -182,7 +186,7 @@ namespace HomeSeer.PluginSdk.Events {
         private void ProcessData() {
             //Is data null/empty?
             if (_data == null || _data.Length == 0) {
-                ConfigPage = PageFactory.CreateEventActionPage(PageId, Name).Page;
+                InitializePage();
                 OnNewAction();
             }
             else {
@@ -196,7 +200,7 @@ namespace HomeSeer.PluginSdk.Events {
                     if (LogDebug) {
                         Console.WriteLine(exception);
                     }
-                    ConfigPage = PageFactory.CreateEventActionPage(PageId, Name).Page;
+                    InitializePage();
                     OnNewAction();
                 }
             }

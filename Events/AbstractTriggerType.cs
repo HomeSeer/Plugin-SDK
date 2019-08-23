@@ -71,6 +71,10 @@ namespace HomeSeer.PluginSdk.Events {
             return _page?.ToHtml() ?? "";
         }
         
+        protected virtual void InitializePage() {
+            _page = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
+        }
+        
         internal bool ProcessPostData(Dictionary<string, string> changes) {
             if (_page == null) {
                 throw new Exception("Cannot process update.  There is no page to map changes to.");
@@ -106,7 +110,7 @@ namespace HomeSeer.PluginSdk.Events {
         private void ProcessData() {
             //Is data null/empty?
             if (_data == null || _data.Length == 0) {
-                _page = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
+                InitializePage();
                 OnNewTrigger();
             }
             else {
@@ -120,7 +124,8 @@ namespace HomeSeer.PluginSdk.Events {
                     if (LogDebug) {
                         Console.WriteLine(exception);
                     }
-                    _page = PageFactory.CreateEventTriggerPage(PageId, Name).Page;
+
+                    InitializePage();
                     OnNewTrigger();
                 }
             }
