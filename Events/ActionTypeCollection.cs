@@ -38,7 +38,7 @@ namespace HomeSeer.PluginSdk.Events {
         public virtual string GetName(int actionIndex) {
             
             try {
-                var targetAct = GetObjectFromInfo(actionIndex);
+                var targetAct = GetObjectFromInfo(actionIndex-1);
                 return targetAct.Name;
             }
             catch (Exception exception) {
@@ -146,11 +146,11 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         private AbstractActionType GetObjectFromActInfo(TrigActInfo actInfo) {
-            return GetObjectFromInfo(actInfo.TANumber, actInfo.UID, actInfo.evRef, actInfo.DataIn);
+            return GetObjectFromInfo(actInfo.TANumber-1, actInfo.UID, actInfo.evRef, actInfo.DataIn ?? new byte[0]);
         }
 
         private AbstractActionType GetObjectFromInfo(int actNumber, params object[] actInfoParams) {
-            if (_actionTypes.Count >= actNumber) {
+            if (_actionTypes.Count < actNumber) {
                 throw new KeyNotFoundException("No action type exists with that number");
             }
 

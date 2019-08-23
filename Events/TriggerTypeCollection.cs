@@ -38,7 +38,7 @@ namespace HomeSeer.PluginSdk.Events {
         public virtual string GetName(int triggerIndex) {
             
             try {
-                var targetTrig = GetObjectFromInfo(triggerIndex);
+                var targetTrig = GetObjectFromInfo(triggerIndex-1);
                 return targetTrig.Name;
             }
             catch (Exception exception) {
@@ -51,7 +51,7 @@ namespace HomeSeer.PluginSdk.Events {
         
         public virtual int GetSubTriggerCount(int triggerIndex) {
             try {
-                var targetTrig = GetObjectFromInfo(triggerIndex);
+                var targetTrig = GetObjectFromInfo(triggerIndex-1);
                 return targetTrig.SubTriggerCount;
             }
             catch (ArgumentOutOfRangeException) {
@@ -67,8 +67,8 @@ namespace HomeSeer.PluginSdk.Events {
 
         public virtual string GetSubTriggerName(int triggerIndex, int subTriggerIndex) {
             try {
-                var targetTrig = GetObjectFromInfo(triggerIndex);
-                return targetTrig.GetSubTriggerName(subTriggerIndex);
+                var targetTrig = GetObjectFromInfo(triggerIndex-1);
+                return targetTrig.GetSubTriggerName(subTriggerIndex-1);
             }
             catch (ArgumentOutOfRangeException) {
                 return "No sub-trigger type for that index";
@@ -190,11 +190,11 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         private AbstractTriggerType GetObjectFromTrigInfo(TrigActInfo trigInfo) {
-            return GetObjectFromInfo(trigInfo.TANumber, trigInfo.UID, trigInfo.evRef, trigInfo.DataIn);
+            return GetObjectFromInfo(trigInfo.TANumber-1, trigInfo.UID, trigInfo.evRef, trigInfo.DataIn ?? new byte[0]);
         }
 
         private AbstractTriggerType GetObjectFromInfo(int trigNumber, params object[] trigInfoParams) {
-            if (_triggerTypes.Count >= trigNumber) {
+            if (_triggerTypes.Count < trigNumber) {
                 throw new KeyNotFoundException("No trigger type exists with that number");
             }
 
