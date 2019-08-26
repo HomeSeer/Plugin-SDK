@@ -129,6 +129,20 @@ namespace HomeSeer.PluginSdk.Devices {
             return _targetRange.GetStringForValue(value);
         }
 
+        internal bool TryGetLabelForValue(out string label, double value) {
+            if (!_isRange) {
+                label = _label;
+                return true;
+            }
+            if (!_targetRange.IsValueInRange(value)) {
+                label = null;
+                return false;
+            }
+
+            label = _targetRange.GetStringForValue(value);
+            return true;
+        }
+
         /// <summary>
         /// Determine if a specified value is targeted by the <see cref="StatusGraphic"/>"/>
         /// </summary>
