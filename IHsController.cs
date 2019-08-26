@@ -280,8 +280,8 @@ namespace HomeSeer.PluginSdk {
         //This doesn't exist in the legacy API?
         //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
-        //TrigActInfo[] TriggerMatches(string Plug_Name, int TrigID, int SubTrig);
-        void TriggerFire(string Plug_Name, TrigActInfo TrigInfo);
+        TrigActInfo[] TriggerMatches(string pluginName, int trigId, int subTrigId);
+        void TriggerFire(string pluginName, TrigActInfo trigInfo);
 
         #endregion
         
