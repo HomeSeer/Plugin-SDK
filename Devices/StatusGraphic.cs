@@ -129,8 +129,18 @@ namespace HomeSeer.PluginSdk.Devices {
             return _targetRange.GetStringForValue(value);
         }
 
-        internal bool TryGetLabelForValue(out string label, double value) {
-            if (!_isRange) {
+        /// <summary>
+        /// Try to get the label for the specified value correctly formatted according to the
+        ///  <see cref="StatusGraphic"/>'s configuration.
+        /// </summary>
+        /// <param name="label">The string variable the label will be written to</param>
+        /// <param name="value">The value to get the label for</param>
+        /// <returns>
+        /// TRUE if a label is available for the <see cref="StatusGraphic"/>,
+        ///  FALSE if the value is not valid for this <see cref="StatusGraphic"/>
+        /// </returns>
+        public bool TryGetLabelForValue(out string label, double value) {
+            if (!_isRange || _targetRange == null) {
                 label = _label;
                 return true;
             }
