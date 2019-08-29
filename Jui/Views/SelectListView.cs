@@ -24,7 +24,7 @@ namespace HomeSeer.Jui.Views {
 		/// For internal use by a plugin.  This is not displayed or used in any fashion otherwise.
 		/// </para>
 		/// </summary>
-		[JsonIgnore]
+		[JsonProperty("keys")]
 		public List<string> OptionKeys { get; private set; }
 
 		/// <summary>
