@@ -20,6 +20,8 @@ namespace HomeSeer.PluginSdk.Devices {
                              Relationship = ERelationship.Device,
                              Interface = pluginId
                          };
+            device.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            device.Changes.Add(EProperty.UserAccess, "Any");
             df._device = device;
 
             return df;
