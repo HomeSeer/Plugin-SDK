@@ -29,7 +29,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         private EControlType _controlType;
         private List<string> _controlStates = new List<string>();
         private double _targetValue;
-        private bool _isRange = false;
+        private bool _isRange;
         private ValueRange _targetRange = new ValueRange(0,0);
         private ControlLocation _location = new ControlLocation();
 
@@ -166,8 +166,6 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// The number of columns the <see cref="StatusControl"/> occupies
         /// </summary>
         public int Width => _location?.Width ?? 0;
-
-        public double ValueOffset => _targetRange?.ValueOffset ?? 0;
         
         /// <summary>
         /// Get the label for the specified value correctly formatted according to the <see cref="StatusControl"/>'s

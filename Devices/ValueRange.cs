@@ -11,14 +11,14 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class ValueRange {
         
-        public double ValueOffset  { get; set; } = 0;
-        public int    Steps        { get; set; } = 10;
+        //TODO public int Steps { get; set; } = 10;
         
         private int    _decimalPlaces;
         private double _min;
         private double _max;
         private string _prefix = "";
         private string _suffix = "";
+        //TODO private int _divisor = 1;
 
         /// <summary>
         /// Initialize a new range of values
@@ -104,8 +104,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <param name="value">The value to use in the string</param>
         /// <returns>The value correctly formatted according to the range</returns>
         public string GetStringForValue(double value) {
-            var offsetValue = value - ValueOffset;
-            var stringValue = $"{_prefix}{offsetValue.ToString($"F{_decimalPlaces}")}{_suffix}";
+            var stringValue = $"{_prefix}{value.ToString($"F{_decimalPlaces}")}{_suffix}";
 
             return stringValue;
         }
@@ -147,12 +146,12 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_decimalPlaces != otherValueRange._decimalPlaces) {
                 return false;
             }
-            if (ValueOffset != otherValueRange.ValueOffset) {
+            /*if (_divisor != otherValueRange._divisor) {
                 return false;
-            }
-            if (Steps != otherValueRange.Steps) {
+            }*/
+            /*if (Steps != otherValueRange.Steps) {
                 return false;
-            }
+            }*/
 
             return true;
         }
