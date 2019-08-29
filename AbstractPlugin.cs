@@ -58,13 +58,10 @@ namespace HomeSeer.PluginSdk {
         public virtual bool SupportsConfigDeviceAll { get; } = false;
 
         /// <inheritdoc />
-        public virtual bool HasTriggers { get; } = false;
+        public int TriggerCount => TriggerTypes?.Count ?? 0;
 
         /// <inheritdoc />
-        public virtual int TriggerCount { get; } = 0;
-
-        /// <inheritdoc />
-        public virtual int ActionCount { get; } = 0;
+        public int ActionCount => ActionTypes?.Count ?? 0;
 
         /// <summary>
         /// Default section name for storing settings in an INI file
@@ -315,28 +312,75 @@ namespace HomeSeer.PluginSdk {
             }
             try {
                 var deserializedPages = SettingsCollection.FromJsonString(jsonString).Pages;
-                return OnSettingsChange(deserializedPages);
+                foreach (var pageDelta in deserializedPages) {
+                    OnSettingPageSave(pageDelta);
+                }
+
+                return true;
             }
             catch (KeyNotFoundException exception) {
                 if (LogDebug) {
                     Console.WriteLine(exception);
                 }
-                throw new KeyNotFoundException("Cannot save settings; no settings pages exist with that ID.",
+                throw new KeyNotFoundException("Cannot save settings.",
                                                exception);
             }
         }
 
         /// <summary>
-        /// Called when there are changes to the plugin settings that need to be processed and saved
+        /// Called when there are changes to settings that need to be processed for a specific page.
         /// </summary>
-        /// <param name="pages">A list of JUI pages containing only the new state of any changed views</param>
+        /// <param name="pageDelta">The page with view changes to be processed</param>
+        /// <exception cref="KeyNotFoundException">
+        /// Thrown when a view change targets a view that doesn't exist on the page
+        /// </exception>
+        protected virtual void OnSettingPageSave(Page pageDelta) {
+            var page = Settings[pageDelta.Id];
+                    
+            foreach (var settingDelta in pageDelta.Views) {
+                //process settings changes
+                if (!page.ContainsViewWithId(settingDelta.Id)) {
+                    throw new KeyNotFoundException($"No view with the ID of {settingDelta.Id} exists on page {page.Id}");
+                }
+
+                if (!OnSettingChange(page.Id, page.GetViewById(settingDelta.Id), settingDelta)) {
+                    continue;
+                }
+                
+                page.UpdateViewById(settingDelta);
+                try {
+                    var newValue = settingDelta.GetStringValue();
+                    if (newValue == null) {
+                        continue;
+                    }
+                            
+                    //TODO revise INI setting saving
+                    HomeSeerSystem.SaveINISetting(SettingsSectionName, settingDelta.Id, newValue, SettingsFileName);
+                }
+                catch (InvalidOperationException exception) {
+                    Console.WriteLine(exception);
+                    //TODO Process ViewGroup?
+                }
+
+            }
+
+            //Make sure the new state is stored
+            Settings[pageDelta.Id] = page;
+        }
+
+        /// <summary>
+        /// Called when there is a change to a setting that needs to be processed
+        /// </summary>
+        /// <param name="pageId">The ID of the page the view is on</param>
+        /// <param name="currentView">The state of the setting before the change</param>
+        /// <param name="changedView">The state of the settings after the change</param>
         /// <returns>
-        /// TRUE if the save was successful; FALSE if it was not
+        /// TRUE if the change should be saved, FALSE if it should not
         /// <para>
         /// You should throw an exception including a detailed message whenever possible over returning FALSE
         /// </para>
         /// </returns>
-        protected abstract bool OnSettingsChange(List<Page> pages);
+        protected abstract bool OnSettingChange(string pageId, AbstractView currentView, AbstractView changedView);
 
         /// <summary>
         /// Loads the plugin settings saved to INI to Settings and saves default values if none exist.
@@ -399,7 +443,7 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc />
         public virtual EPollResponse UpdateStatusNow(int devOrFeatRef) {
-            return EPollResponse.Unknown;
+            return EPollResponse.NotFound;
         }
 
         /// <inheritdoc />
@@ -491,10 +535,10 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public MultiReturn ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo actInfo) {
+        public EventUpdateReturnData ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo actInfo) {
             return ActionTypes?.OnUpdateActionConfig(postData, actInfo) ?? 
-                   new MultiReturn {
-                       DataOut = actInfo.DataIn, sResult = "Plugin returned malformed data", TrigActInfo = actInfo
+                   new EventUpdateReturnData {
+                       DataOut = actInfo.DataIn, Result = "Plugin returned malformed data", TrigActInfo = actInfo
                    };
         }
 
@@ -523,10 +567,10 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual MultiReturn TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
+        public virtual EventUpdateReturnData TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
             return TriggerTypes?.OnUpdateTriggerConfig(postData, trigInfoIn) ?? 
-                   new MultiReturn {
-                                       DataOut = trigInfoIn.DataIn, sResult = "Plugin returned malformed data", 
+                   new EventUpdateReturnData {
+                                       DataOut = trigInfoIn.DataIn, Result = "Plugin returned malformed data", 
                                        TrigActInfo = trigInfoIn
                                    };
         }

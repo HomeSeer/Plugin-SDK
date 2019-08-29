@@ -82,12 +82,7 @@ namespace HomeSeer.PluginSdk {
         /// The number of unique event actions the plugin supports
         /// </summary>
         int ActionCount { get; }
-        
-        /// <summary>
-        /// Whether the plugin has triggers or not
-        /// </summary>
-        bool HasTriggers { get; }
-        
+
         /// <summary>
         /// The number of unique event triggers the plugin supports
         /// </summary>
@@ -250,7 +245,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="postData">A collection of name value pairs that include the user's selections.</param>
         /// <param name="trigInfoIn">Object that contains information about the action.</param>
         /// <returns>Object the holds the parsed information for the action. HomeSeer will save this information for you in the database.</returns>
-        MultiReturn ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn);
+        EventUpdateReturnData ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn);
         
         /// <summary>
         /// Called by the HomeSeer system to determine if a specified device is referenced by a certain action.
@@ -328,7 +323,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="postData">A collection of name value pairs that include the user's selections.</param>
         /// <param name="trigInfoIn">Object that contains information about the trigger.</param>
         /// <returns>Object the holds the parsed information for the trigger. HomeSeer will save this information for you in the database.</returns>
-        MultiReturn TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn);
+        EventUpdateReturnData TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn);
         
         /// <summary>
         /// Called by the HomeSeer system to determine if a specified device is referenced by a certain trigger.

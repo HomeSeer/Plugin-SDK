@@ -3,9 +3,12 @@ using HomeSeer.PluginSdk.Events;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// Data returned to HomeSeer by a plugin when an event action/trigger's configuration is updated
+    /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
-    public struct MultiReturn {
+    public struct EventUpdateReturnData {
 
         /// <summary>
         /// When plug-in calls such as ...BuildUI, ...ProcessPostUI, or ...FormatUI are called and there is
@@ -14,7 +17,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// HomeSeer after it is displayed to the user.
         /// </summary>
         /// <remarks></remarks>
-        public string sResult;
+        public string Result;
 
 
         /// <summary>
