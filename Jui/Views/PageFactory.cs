@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HomeSeer.Jui.Types;
 
 namespace HomeSeer.Jui.Views {
@@ -78,8 +79,21 @@ namespace HomeSeer.Jui.Views {
             return pf;
         }
 
-        public PageFactory WithLabel(LabelView label) {
-            Page.AddView(label);
+        public static PageFactory CopyPage(Page page) {
+            var pf = new PageFactory();
+            pf.Page = new Page(page.Id, page.Name, page.Type);
+            pf.Page.SetViews(page.Views);
+            return pf;
+        }
+
+        public PageFactory WithView(AbstractView view) {
+            Page.AddView(view);
+            return this;
+        }
+
+        public PageFactory WithLabel(string id, string name) {
+            var nl = new LabelView(id, name);
+            Page.AddView(nl);
             return this;
         }
 
@@ -89,23 +103,61 @@ namespace HomeSeer.Jui.Views {
             return this;
         }
 
-        public PageFactory WithInput(InputView input) {
-            Page.AddView(input);
+        public PageFactory WithInput(string id, string name, EInputType type = EInputType.Text) {
+            var iv = new InputView(id, name, type);
+            Page.AddView(iv);
             return this;
         }
         
-        public PageFactory WithSelectList(SelectListView selectList) {
-            Page.AddView(selectList);
+        public PageFactory WithInput(string id, string name, string value, EInputType type = EInputType.Text) {
+            var iv = new InputView(id, name, value, type);
+            Page.AddView(iv);
+            return this;
+        }
+
+        public PageFactory WithDropDownSelectList(string id, string name, List<string> options, int selection = 0) {
+            var slv = new SelectListView(id, name, options, ESelectListType.DropDown, selection);
+            Page.AddView(slv);
             return this;
         }
         
-        public PageFactory WithToggle(ToggleView toggle) {
-            Page.AddView(toggle);
+        public PageFactory WithDropDownSelectList(string id, string name, List<string> options, List<string> optionKeys,
+                                                  int selection = 0) {
+            var slv = new SelectListView(id, name, options, optionKeys, ESelectListType.DropDown, selection);
+            Page.AddView(slv);
             return this;
         }
         
-        public PageFactory WithGroup(ViewGroup group) {
-            Page.AddView(group);
+        public PageFactory WithRadioSelectList(string id, string name, List<string> options, int selection = 0) {
+            var slv = new SelectListView(id, name, options, ESelectListType.RadioList, selection);
+            Page.AddView(slv);
+            return this;
+        }
+        
+        public PageFactory WithRadioSelectList(string id, string name, List<string> options, List<string> optionKeys,
+                                               int selection = 0) {
+            var slv = new SelectListView(id, name, options, optionKeys, ESelectListType.RadioList, selection);
+            Page.AddView(slv);
+            return this;
+        }
+
+        public PageFactory WithToggle(string id, string name, bool isEnabled = false) {
+            var tv = new ToggleView(id, name, isEnabled);
+            Page.AddView(tv);
+            return this;
+        }
+        
+        public PageFactory WithCheckBox(string id, string name, bool isEnabled = false) {
+            var tv = new ToggleView(id, name, isEnabled);
+            tv.ToggleType = EToggleType.Checkbox;
+            Page.AddView(tv);
+            return this;
+        }
+
+        public PageFactory WithGroup(string id, string name, IEnumerable<AbstractView> views) {
+            var vg = new ViewGroup(id, name);
+            vg.AddViews(views);
+            Page.AddView(vg);
             return this;
         }
 
