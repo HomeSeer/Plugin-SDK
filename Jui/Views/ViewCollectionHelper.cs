@@ -332,6 +332,100 @@ namespace HomeSeer.Jui.Views {
 		#region Delete
 
 		/// <summary>
+		/// Remove a view with the specified ID from the collection.
+		/// <para>
+		/// Remaining views at indexes greater than the specified view will be moved down one index to fill the empty space
+		/// </para>
+		/// </summary>
+		/// <param name="viewId">The ID of the view to remove</param>
+		/// <param name="viewList">The current list of views in the collection</param>
+		/// <param name="viewIds">The current view ID to index map for the collection</param>
+		/// <exception cref="ArgumentNullException">
+		/// Thrown when any of the supplied parameters is null of empty
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		/// Thrown when the number of items in the <see cref="viewList"/> and <see cref="viewIds"/> do not match
+		/// </exception>
+		/// <exception cref="KeyNotFoundException">Thrown when a view with the specified ID was not found</exception>
+		internal static void RemoveViewById(string viewId, ref List<AbstractView> viewList,
+		                                    ref Dictionary<string, int> viewIds) {
+			if (string.IsNullOrWhiteSpace(viewId)) {
+				throw new ArgumentNullException(nameof(viewId), "Invalid view ID specified.");
+			}
+
+			if (viewList == null || viewList.Count == 0) {
+				throw new ArgumentNullException(nameof(viewList), "Cannot remove a view from an empty list.");
+			}
+
+			if (viewIds == null || viewIds.Count == 0) {
+				throw new ArgumentNullException(nameof(viewIds), "Cannot remove a view from an empty list");
+			}
+
+			if (viewList.Count != viewIds.Count) {
+				throw new ArgumentException("The number of views and IDs do not match");
+			}
+
+			if (!viewIds.Remove(viewId)) {
+				throw new KeyNotFoundException("No view with that ID exists in the collection");
+			}
+
+			var numViews = viewList.Count;
+			var newList = new List<AbstractView>();
+			for (var i = 0; i < numViews; i++) {
+
+				var curView = viewList[i];
+				newList.Add(curView);
+				viewIds[viewId] = i;
+			}
+
+			viewList = new List<AbstractView>(newList);
+		}
+
+		/// <summary>
+		/// Trim all views in the collection following the view with the specified ID
+		/// </summary>
+		/// <param name="viewId">The ID of the view that should be at the end of the collection</param>
+		/// <param name="viewList">The current list of views in the collection</param>
+		/// <param name="viewIds">The current view ID to index map for the collection</param>
+		/// <exception cref="ArgumentNullException">
+		/// Thrown when any of the supplied parameters is null of empty
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		/// Thrown when the number of items in the <see cref="viewList"/> and <see cref="viewIds"/> do not match
+		/// </exception>
+		internal static void RemoveViewsAfterId(string viewId, ref List<AbstractView> viewList,
+		                                        ref Dictionary<string, int> viewIds) {
+			if (string.IsNullOrWhiteSpace(viewId)) {
+				throw new ArgumentNullException(nameof(viewId), "Invalid view ID specified.");
+			}
+
+			if (viewList == null || viewList.Count == 0) {
+				throw new ArgumentNullException(nameof(viewList), "Cannot remove a view from an empty list.");
+			}
+
+			if (viewIds == null || viewIds.Count == 0) {
+				throw new ArgumentNullException(nameof(viewIds), "Cannot remove a view from an empty list");
+			}
+
+			if (viewList.Count != viewIds.Count) {
+				throw new ArgumentException("The number of views and IDs do not match");
+			}
+			
+			var lastIndex = viewIds[viewId];
+			var newList  = new List<AbstractView>();
+			var newDict  = new Dictionary<string, int>();
+			for (var i = 0; i <= lastIndex; i++) {
+
+				var curView = viewList[i];
+				newList.Add(curView);
+				newDict.Add(curView.Id, i);
+			}
+
+			viewList = new List<AbstractView>(newList);
+			viewIds = new Dictionary<string, int>(newDict);
+		}
+
+		/// <summary>
 		/// Clear a collection of views
 		/// </summary>
 		/// <param name="viewList">A reference to the current list of views</param>
