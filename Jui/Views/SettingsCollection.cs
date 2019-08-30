@@ -25,7 +25,7 @@ namespace HomeSeer.Jui.Views {
 	    public int Count => _pages?.Count ?? 0;
 
 	    /// <summary>
-	    /// The list of pages in this collection
+	    /// The list of pages in this collection, excluding hidden pages.
 	    /// </summary>
 	    /// <seealso cref="Views.Page"/>
         [JsonProperty("pages")]
@@ -60,6 +60,34 @@ namespace HomeSeer.Jui.Views {
                 }
             }
         }
+	    
+	    /// <summary>
+	    /// The list of all of the pages in the collection, including hidden ones.
+	    /// </summary>
+	    [JsonIgnore]
+	    public List<Page> AllPages {
+		    get {
+			    if (_pageOrder == null || _pageOrder.Count == 0) {
+				    return new List<Page>();
+			    }
+
+			    var pages = new List<Page>();
+			    foreach (var pageId in _pageOrder) {
+				    if (!_pages.ContainsKey(pageId)) {
+					    if (!_hiddenPages.ContainsKey(pageId)) {
+						    continue;
+					    }
+					    
+					    pages.Add(_hiddenPages[pageId]);
+					    continue;
+				    }
+
+				    pages.Add(_pages[pageId]);
+			    }
+
+			    return pages;
+		    }
+	    }
 
         /// <summary>
         /// The index of the page that is selected and will be shown first to users
@@ -72,6 +100,9 @@ namespace HomeSeer.Jui.Views {
         
         [JsonIgnore]
         private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
+        
+        [JsonIgnore]
+        private Dictionary<string, Page> _hiddenPages = new Dictionary<string, Page>();
 
         /// <summary>
         /// Default, empty constructor
@@ -108,6 +139,66 @@ namespace HomeSeer.Jui.Views {
             _pages.Add(page.Id, page);
             _pageOrder.Add(page.Id);
         }
+
+        /// <summary>
+        /// Mark the page with the specified ID as hidden when the collection is converted to HTML so that it is
+        ///  not included.
+        /// </summary>
+        /// <param name="pageId">The ID of the page to hide</param>
+        /// <exception cref="ArgumentNullException">Thrown when an invalid page ID is specified</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a page with the specified ID doesn't exist</exception>
+        public void HidePageById(string pageId) {
+	        if (string.IsNullOrWhiteSpace(pageId)) {
+		        throw new ArgumentNullException(nameof(pageId));
+	        }
+
+	        if (!ContainsPageId(pageId)) {
+		        throw new KeyNotFoundException("A page with that ID was not found in the collection");
+	        }
+
+	        if (!_pages.ContainsKey(pageId)) {
+		        return;
+	        }
+	        
+	        if (!_hiddenPages.ContainsKey(pageId)) {
+		        _hiddenPages.Add(pageId, _pages[pageId]);
+	        }
+	        else {
+		        _hiddenPages[pageId] = _pages[pageId];
+	        }
+	        
+	        _pages.Remove(pageId);
+        }
+        
+        /// <summary>
+        /// Mark the page with the specified ID as shown when the collection is converted to HTML so that it is
+        ///  included.
+        /// </summary>
+        /// <param name="pageId">The ID of the page to show</param>
+        /// <exception cref="ArgumentNullException">Thrown when an invalid page ID is specified</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a page with the specified ID doesn't exist</exception>
+        public void ShowPageById(string pageId) {
+	        if (string.IsNullOrWhiteSpace(pageId)) {
+		        throw new ArgumentNullException(nameof(pageId));
+	        }
+
+	        if (!ContainsPageId(pageId)) {
+		        throw new KeyNotFoundException("A page with that ID was not found in the collection");
+	        }
+
+	        if (!_hiddenPages.ContainsKey(pageId)) {
+		        return;
+	        }
+	        
+	        if (!_pages.ContainsKey(pageId)) {
+		        _pages.Add(pageId, _hiddenPages[pageId]);
+	        }
+	        else {
+		        _pages[pageId] = _hiddenPages[pageId];
+	        }
+	        
+	        _hiddenPages.Remove(pageId);
+        }
         
         /// <summary>
         /// Get the page with the specified ID
@@ -117,19 +208,28 @@ namespace HomeSeer.Jui.Views {
         public Page this[string pageId] {
 
             get {
-                if (!_pages.ContainsKey(pageId)) {
-                    //TODO
+	            if (_pages.ContainsKey(pageId)) {
+		            return _pages[pageId];
+	            }
+	            
+	            if (!_hiddenPages.ContainsKey(pageId)) {
+	                throw new KeyNotFoundException();
                 }
-
-                return _pages[pageId];
+                
+	            return _hiddenPages[pageId];
             }
 
             set {
-                if (!_pages.ContainsKey(pageId)) {
-                    //TODO
+                if (_pages.ContainsKey(pageId)) {
+	                _pages[pageId] = value;
+	                return;
                 }
 
-                _pages[pageId] = value;
+                if (!_hiddenPages.ContainsKey(pageId)) {
+	                throw new KeyNotFoundException();
+                }
+                
+                _hiddenPages[pageId] = value;
             }
         }
 
@@ -146,10 +246,10 @@ namespace HomeSeer.Jui.Views {
                 throw new ArgumentNullException(nameof(pageId));
             }
 
-            if (!_pages.ContainsKey(pageId)) {
+            if (!ContainsPageId(pageId)) {
                 throw new KeyNotFoundException("A page with that ID was not found in the collection");
             }
-
+            
             return _pageOrder.IndexOf(pageId);
         }
 
@@ -167,7 +267,7 @@ namespace HomeSeer.Jui.Views {
 		        throw new ArgumentNullException(nameof(pageId));
 	        }
 
-	        return _pages.ContainsKey(pageId);
+	        return _pages.ContainsKey(pageId) || _hiddenPages.ContainsKey(pageId);
         }
 
         /// <inheritdoc />
@@ -217,11 +317,12 @@ namespace HomeSeer.Jui.Views {
                 throw new ArgumentNullException(nameof(pageId));
             }
 
-            if (!_pages.ContainsKey(pageId)) {
+            if (!ContainsPageId(pageId)) {
                 throw new KeyNotFoundException("A page with that ID was not found in the collection");
             }
 
             _pages.Remove(pageId);
+            _hiddenPages.Remove(pageId);
             _pageOrder.Remove(pageId);
         }
 
@@ -231,6 +332,7 @@ namespace HomeSeer.Jui.Views {
         public void RemoveAll() {
             
             _pages = new Dictionary<string, Page>();
+            _hiddenPages = new Dictionary<string, Page>();
             _pageOrder = new List<string>();
         }
 

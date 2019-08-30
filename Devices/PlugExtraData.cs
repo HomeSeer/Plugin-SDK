@@ -6,18 +6,41 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// A collection of keyed and non-keyed data items attached to a <see cref="AbstractHsDevice"/>
+    /// </summary>
+    /// <remarks>
+    /// Use this to store any data specific to the operation of your plugin.
+    /// </remarks>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class PlugExtraData {
         
         #region Named
         
+        /// <summary>
+        /// A list of keys for data items stored in this <see cref="PlugExtraData"/>
+        /// </summary>
         public List<string> NamedKeys => _namedData?.Keys.ToList() ?? new List<string>();
+        /// <summary>
+        /// The number of keyed data items stored in the <see cref="PlugExtraData"/>
+        /// </summary>
         public int NamedCount => _namedData?.Count ?? 0;
         
         private Dictionary<string, string> _namedData = new Dictionary<string, string>();
         
-        //Create
+        /// <summary>
+        /// Add a new keyed data item to the collection
+        /// </summary>
+        /// <param name="key">The key for the data</param>
+        /// <param name="data">The data to save</param>
+        /// <returns>
+        /// TRUE if the item was saved,
+        ///  FALSE if it already exists
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when the key is null or whitespace
+        /// </exception>
         public bool AddNamed(string key, string data) {
             if (string.IsNullOrWhiteSpace(key)) {
                 throw new ArgumentNullException(nameof(key));
@@ -31,8 +54,17 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
         
-        //Read
-        public object GetNamed<TData>(string key) {
+        /// <summary>
+        /// Get the item with the specified key deserialized as the specified type
+        /// </summary>
+        /// <param name="key">The key of the item to get</param>
+        /// <typeparam name="TData">The type of the object stored as a JSON serialized string</typeparam>
+        /// <returns>
+        /// The data stored at the specified key as an instance of the specified object type
+        /// </returns>
+        /// <exception cref="JsonDataException">Thrown when there was a problem deserializing the data</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the specified key is null or whitespace.</exception>
+        public TData GetNamed<TData>(string key) {
 
             var jsonString = this[key];
             
@@ -47,6 +79,11 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
+        /// <summary>
+        /// Get the item with the specified key
+        /// </summary>
+        /// <param name="key">The key of the item to get</param>
+        /// <exception cref="ArgumentNullException">Thrown when the specified key is null or whitespace.</exception>
         public string this[string key] {
             get {
                 if (string.IsNullOrWhiteSpace(key)) {
@@ -64,6 +101,15 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// Determine if a data item with the specified key exists in the collection
+        /// </summary>
+        /// <param name="key">The key of the data item to look for</param>
+        /// <returns>
+        /// TRUE if the item exists in the collection,
+        ///  FALSE if it does not.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified key is null or whitespace.</exception>
         public bool ContainsNamed(string key) {
             if (string.IsNullOrWhiteSpace(key)) {
                 throw new ArgumentNullException(nameof(key));
@@ -72,7 +118,15 @@ namespace HomeSeer.PluginSdk.Devices {
             return _namedData.ContainsKey(key);
         }
         
-        //Delete
+        /// <summary>
+        /// Remove the data item with the specified key from the collection.
+        /// </summary>
+        /// <param name="key">The key of the data item to remove</param>
+        /// <returns>
+        /// TRUE if the item was removed from the collection,
+        ///  FALSE if it was not.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified key is null or whitespace.</exception>
         public bool RemoveNamed(string key) {
             
             if (string.IsNullOrWhiteSpace(key)) {
@@ -82,6 +136,9 @@ namespace HomeSeer.PluginSdk.Devices {
             return _namedData.Remove(key);
         }
         
+        /// <summary>
+        /// Remove all keyed items from the collection.
+        /// </summary>
         public void RemoveAllNamed() {
             _namedData = new Dictionary<string, string>();
         }
@@ -90,12 +147,23 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region UnNamed
         
+        /// <summary>
+        /// A collection of non-keyed data items stored in the <see cref="PlugExtraData"/>
+        /// </summary>
         public List<string> UnNamed      => _unNamedData ?? new List<string>();
+        /// <summary>
+        /// The number of non-keyed items in the <see cref="PlugExtraData"/>
+        /// </summary>
         public int          UnNamedCount => _unNamedData?.Count ?? 0;
         
         private List<string> _unNamedData = new List<string>();
         
-        //Create
+        /// <summary>
+        /// Add a new item to the collection without a key.
+        /// </summary>
+        /// <param name="data">The data for the item to save.</param>
+        /// <returns>The index of the item in the collection.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the data to be stored is null or whitespace.</exception>
         public int AddUnNamed(string data) {
 
             if (string.IsNullOrWhiteSpace(data)) {
@@ -106,8 +174,18 @@ namespace HomeSeer.PluginSdk.Devices {
             return _unNamedData.Count - 1;
         }
         
-        //Read
-        public object GetUnNamed<TData>(int index) {
+        /// <summary>
+        /// Get the non-keyed item located at the specified index in the collection deserialized to the specified type.
+        /// </summary>
+        /// <param name="index">The index of the non-keyed item to get.</param>
+        /// <typeparam name="TData">The type the data should be deserialized to.</typeparam>
+        /// <returns>
+        /// An instance of the specified type of the data at the specified index in the collection.
+        /// </returns>
+        /// <exception cref="JsonDataException">
+        /// Thrown when there is an error deserializing the data to the type specified.
+        /// </exception>
+        public TData GetUnNamed<TData>(int index) {
 
             var jsonString = this[index];
             
@@ -122,17 +200,30 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// Get the non-keyed item located at the specified index in the collection.
+        /// </summary>
+        /// <param name="index">The index of the non-keyed item to get.</param>
         public string this[int index] {
             get => _unNamedData[index];
             set => _unNamedData[index] = value;
         }
         
-        //Delete
+        /// <summary>
+        /// Remove the non-keyed item at the specified index from the collection.
+        /// </summary>
+        /// <param name="index">The index of the non-keyed item to remove from the collection.</param>
         public void RemoveUnNamedAt(int index) {
             
             _unNamedData.RemoveAt(index);
         }
         
+        /// <summary>
+        /// Remove the specified non-keyed item from the collection using the default Equals implementation of the strings.
+        /// </summary>
+        /// <param name="data">The non-keyed item to remove from the collection.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified data is null or an empty string.</exception>
         public bool RemoveUnNamed(string data) {
             
             if (string.IsNullOrWhiteSpace(data)) {
@@ -142,6 +233,9 @@ namespace HomeSeer.PluginSdk.Devices {
             return _unNamedData.Remove(data);
         }
     
+        /// <summary>
+        /// Remove all non-keyed items from the collection.
+        /// </summary>
         public void RemoveAllUnNamed() {
             _unNamedData = new List<string>();
         }

@@ -79,7 +79,7 @@
     <Compile Include="Devices\NewFeatureData.cs" />
     <Compile Include="Devices\StatusGraphicCollection.cs" />
     <Compile Include="Devices\HsDevice.cs" />
-    <Compile Include="Devices\MultiReturn.cs" />
+    <Compile Include="Devices\EventUpdateReturnData.cs" />
     <Compile Include="Devices\PlugExtraData.cs" />
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />

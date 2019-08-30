@@ -713,11 +713,11 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <inheritdoc cref="LastChange"/>
         protected DateTime       _lastChange        = DateTime.Now;
         /// <inheritdoc cref="Location"/>
-        protected string         _location          = "Unknown";
+        protected string         _location          = "";
         /// <inheritdoc cref="Location2"/>
-        protected string         _location2         = "Unknown";
+        protected string         _location2         = "";
         /// <inheritdoc cref="Misc"/>
-        protected uint           _misc              = (uint) EMiscFlag.SHOW_VALUES;
+        protected uint           _misc              = (uint) EMiscFlag.ShowValues;
         /// <inheritdoc cref="Name"/>
         protected string         _name              = "";
         /// <inheritdoc cref="PlugExtraData"/>

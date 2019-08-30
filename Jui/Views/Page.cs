@@ -408,6 +408,17 @@ namespace HomeSeer.Jui.Views {
 		
 		#region Delete
 
+		/// <inheritdoc cref="ViewCollectionHelper.RemoveViewById"/>
+		public void RemoveViewById(string viewId) {
+			
+			ViewCollectionHelper.RemoveViewById(viewId, ref _views, ref _viewIds);
+		}
+
+		/// <inheritdoc cref="ViewCollectionHelper.RemoveViewsAfterId"/>
+		public void RemoveViewsAfterId(string viewId) {
+			ViewCollectionHelper.RemoveViewsAfterId(viewId, ref _views, ref _viewIds);
+		}
+
 		/// <inheritdoc cref="ViewCollectionHelper.RemoveAllViews"/>
 		public void RemoveAllViews() {
 			

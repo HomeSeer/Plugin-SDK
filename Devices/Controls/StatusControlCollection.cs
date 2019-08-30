@@ -10,9 +10,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
     public class StatusControlCollection {
 
         private SortedDictionary<double, StatusControl> _statusControls = new SortedDictionary<double, StatusControl>();
-
-        public StatusControlCollection() { }
-
+        
         //Create
         
         public void Add(StatusControl statusControl) {
