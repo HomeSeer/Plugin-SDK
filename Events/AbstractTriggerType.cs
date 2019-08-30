@@ -119,7 +119,7 @@ namespace HomeSeer.PluginSdk.Events {
                     throw new Exception($"The page ID must be {PageId}");
                 }
 
-                if (value.Type == EPageType.EventTrigger) {
+                if (value.Type != EPageType.EventTrigger) {
                     throw new ViewTypeMismatchException("The page type must be EPageType.EventAction");
                 }
 

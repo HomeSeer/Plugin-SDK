@@ -115,27 +115,27 @@ namespace HomeSeer.Jui.Views {
             return this;
         }
 
-        public PageFactory WithDropDownSelectList(string id, string name, List<string> options, int selection = 0) {
+        public PageFactory WithDropDownSelectList(string id, string name, List<string> options, int selection = -1) {
             var slv = new SelectListView(id, name, options, ESelectListType.DropDown, selection);
             Page.AddView(slv);
             return this;
         }
         
         public PageFactory WithDropDownSelectList(string id, string name, List<string> options, List<string> optionKeys,
-                                                  int selection = 0) {
+                                                  int selection = -1) {
             var slv = new SelectListView(id, name, options, optionKeys, ESelectListType.DropDown, selection);
             Page.AddView(slv);
             return this;
         }
         
-        public PageFactory WithRadioSelectList(string id, string name, List<string> options, int selection = 0) {
+        public PageFactory WithRadioSelectList(string id, string name, List<string> options, int selection = -1) {
             var slv = new SelectListView(id, name, options, ESelectListType.RadioList, selection);
             Page.AddView(slv);
             return this;
         }
         
         public PageFactory WithRadioSelectList(string id, string name, List<string> options, List<string> optionKeys,
-                                               int selection = 0) {
+                                               int selection = -1) {
             var slv = new SelectListView(id, name, options, optionKeys, ESelectListType.RadioList, selection);
             Page.AddView(slv);
             return this;

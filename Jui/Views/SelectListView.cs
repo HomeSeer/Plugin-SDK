@@ -32,12 +32,15 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		[JsonProperty("style")]
 		public ESelectListType Style { get; set; }
-		
-		/// <summary>
-		/// The index of the currently selected option in the list. This is the value for this view.
-		/// </summary>
-		[JsonProperty("selection")]
-		public int Selection { get; set; }
+
+        /// <summary>
+        /// The index of the currently selected option in the list. This is the value for this view.
+        /// </summary>
+        /// <remarks>
+        /// Set this to -1 to display a default "Choose an Option" text
+        /// </remarks>
+        [JsonProperty("selection")]
+        public int Selection { get; set; } = -1;
 
         /// <inheritdoc />
         /// <summary>
@@ -51,12 +54,12 @@ namespace HomeSeer.Jui.Views {
         /// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
         [JsonConstructor]
-		public SelectListView(string id, string name, List<string> options, ESelectListType style = ESelectListType.DropDown, int selection = 0) : base(id, name) {
+		public SelectListView(string id, string name, List<string> options, ESelectListType style = ESelectListType.DropDown, int selection = -1) : base(id, name) {
 
 			if (options == null || options.Count == 0) {
 				throw new ArgumentNullException(nameof(options));
 			}
-            if (selection < 0 || selection >= options.Count ){
+            if (selection < -1 || selection >= options.Count ){
                 throw new ArgumentOutOfRangeException(nameof(selection));
             }
 			
@@ -79,7 +82,7 @@ namespace HomeSeer.Jui.Views {
         /// <param name="optionKeys">The list of keys corresponding to the list of options</param>
         /// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
-        public SelectListView(string id, string name, List<string> options, List<string> optionKeys, ESelectListType style = ESelectListType.DropDown, int selection = 0) : base(id, name) {
+        public SelectListView(string id, string name, List<string> options, List<string> optionKeys, ESelectListType style = ESelectListType.DropDown, int selection = -1) : base(id, name) {
 
 	        if (options == null || options.Count == 0) {
 		        throw new ArgumentNullException(nameof(options));
@@ -90,7 +93,7 @@ namespace HomeSeer.Jui.Views {
 	        if (options.Count != optionKeys.Count) {
 		        throw new ArgumentException("Options and Option Keys must match in size.");
 	        }
-	        if (selection < 0 || selection >= options.Count ){
+	        if (selection < -1 || selection >= options.Count ){
 		        throw new ArgumentOutOfRangeException(nameof(selection));
 	        }
 			
@@ -139,7 +142,7 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		/// <returns>The text of the option at the index specified by <see cref="Selection"/>.</returns>
 		public string GetSelectedOption() {
-			if (Options == null || Selection >= Options.Count) {
+			if (Options == null || Selection >= Options.Count || Selection == -1) {
 				return "";
 			}
 			
@@ -165,7 +168,7 @@ namespace HomeSeer.Jui.Views {
 					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
-					sb.Append("<option value=\"\" disabled>Select an option</option>");
+					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>Select an option</option>");
 					sb.Append(Environment.NewLine);
 					for (var i = 0; i < Options.Count; i++) {
 						var option = Options[i];
