@@ -184,7 +184,7 @@ namespace HomeSeer.Jui.Views {
 			//Open the containing div
 			sb.Append("<div id=\"");
 			sb.Append(Id);
-			sb.Append("\" class=\"jui-view\">");
+			sb.Append("\" class=\"jui-view jui-group\">");
 			sb.Append(Environment.NewLine);
 			//Add the title
 			sb.Append(GetIndentStringFromNumber(indent+1));
