@@ -65,7 +65,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// </summary>
         public int SelectedSubTriggerIndex {
             get => _selectedSubTriggerIndex;
-            internal set => _selectedSubTriggerIndex = (value >= SubTriggerCount) ? -1 : value;
+            set => _selectedSubTriggerIndex = (value >= SubTriggerCount) ? -1 : value;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// A <see cref="List"/> of names for the available sub-trigger types users can select from for this trigger type.
         ///  Leave this list empty if the trigger type does not support any subtypes.
         /// </summary>
-        protected List<string> SubTriggerTypeNames = new List<string>();
+        protected virtual List<string> SubTriggerTypeNames { get; set; } = new List<string>();
         
         private int _id;
         private int _eventRef;
@@ -227,6 +227,10 @@ namespace HomeSeer.PluginSdk.Events {
         /// <summary>
         /// Called by HomeSeer to determine if this trigger's conditions have been met.
         /// </summary>
+        /// <remarks>
+        /// Always return TRUE if the trigger cannot be a condition and there is nothing to check when an event is
+        ///  manually executed by a user.
+        /// </remarks>
         /// <param name="isCondition">TRUE if the trigger is paired with other triggers, FALSE if it is alone.</param>
         /// <returns>
         /// TRUE if the trigger's conditions have been met,
