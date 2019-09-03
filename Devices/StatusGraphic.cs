@@ -137,9 +137,14 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <param name="value">The value to get the label for</param>
         /// <returns>
         /// TRUE if a label is available for the <see cref="StatusGraphic"/>,
-        ///  FALSE if the value is not valid for this <see cref="StatusGraphic"/>
+        ///  FALSE if the value is not valid for this <see cref="StatusGraphic"/> or there is no label defined.
         /// </returns>
         public bool TryGetLabelForValue(out string label, double value) {
+            if (string.IsNullOrWhiteSpace(_label)) {
+                label = null;
+                return false;
+            }
+            
             if (!_isRange || _targetRange == null) {
                 label = _label;
                 return true;
