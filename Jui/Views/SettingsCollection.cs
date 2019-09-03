@@ -156,6 +156,8 @@ namespace HomeSeer.Jui.Views {
 		        throw new KeyNotFoundException("A page with that ID was not found in the collection");
 	        }
 
+	        Console.WriteLine($"Hiding page with ID {pageId}");
+
 	        if (!_pages.ContainsKey(pageId)) {
 		        return;
 	        }
@@ -185,6 +187,8 @@ namespace HomeSeer.Jui.Views {
 	        if (!ContainsPageId(pageId)) {
 		        throw new KeyNotFoundException("A page with that ID was not found in the collection");
 	        }
+	        
+	        Console.WriteLine($"Showing page with ID {pageId}");
 
 	        if (!_hiddenPages.ContainsKey(pageId)) {
 		        return;

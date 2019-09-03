@@ -281,6 +281,7 @@ namespace HomeSeer.PluginSdk {
         //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
         TrigActInfo[] TriggerMatches(string pluginName, int trigId, int subTrigId);
+        TrigActInfo[] TriggerMatches(string pluginName, int trigId);
         void TriggerFire(string pluginName, TrigActInfo trigInfo);
 
         #endregion
