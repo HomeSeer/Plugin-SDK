@@ -63,9 +63,9 @@ namespace HomeSeer.PluginSdk.Events {
         /// <summary>
         /// The currently selected sub-trigger index
         /// </summary>
-        public int SelectedSubTriggerIndex {
+        protected int SelectedSubTriggerIndex {
             get => _selectedSubTriggerIndex;
-            set => _selectedSubTriggerIndex = (value >= SubTriggerCount) ? -1 : value;
+            private set => _selectedSubTriggerIndex = (value >= SubTriggerCount) ? -1 : value;
         }
 
         /// <summary>
@@ -82,11 +82,20 @@ namespace HomeSeer.PluginSdk.Events {
         /// </summary>
         /// <param name="id">The unique ID of this trigger in HomeSeer</param>
         /// <param name="eventRef">The event reference ID that this trigger is associated with in HomeSeer</param>
+        /// <param name="selectedSubTriggerIndex">The 0 based index of the sub-trigger type selected for this trigger</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
-        protected AbstractTriggerType(int id, int eventRef, byte[] dataIn) {
+        protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn) {
             _id           = id;
             _eventRef     = eventRef;
+            SelectedSubTriggerIndex = selectedSubTriggerIndex;
             InflateTriggerFromData(dataIn);
+        }
+
+        protected AbstractTriggerType(TrigActInfo trigInfo) {
+            _id = trigInfo.UID;
+            _eventRef = trigInfo.evRef;
+            SelectedSubTriggerIndex = trigInfo.SubTANumber-1;
+            InflateTriggerFromData(trigInfo.DataIn);
         }
 
         /// <summary>

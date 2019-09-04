@@ -305,7 +305,7 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         private AbstractTriggerType GetObjectFromTrigInfo(TrigActInfo trigInfo) {
-            return GetObjectFromInfo(trigInfo.TANumber-1, trigInfo.UID, trigInfo.evRef, trigInfo.DataIn ?? new byte[0]);
+            return GetObjectFromInfo(trigInfo.TANumber-1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0]);
         }
 
         private AbstractTriggerType GetObjectFromInfo(int trigNumber, params object[] trigInfoParams) {
@@ -340,6 +340,7 @@ namespace HomeSeer.PluginSdk.Events {
 
         private static void AssertTypeHasConstructors(Type targetType) {
             var paramTypes = new[] {
+                                       typeof(int),
                                        typeof(int),
                                        typeof(int),
                                        typeof(byte[])
