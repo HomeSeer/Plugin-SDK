@@ -122,7 +122,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// The ID of this page must be equal to the automatic <see cref="PageId"/>.
         /// </remarks>
         protected Page ConfigPage {
-            get => _configPage ?? (_configPage = PageFactory.CreateEventActionPage(PageId, Name).Page);
+            get => _configPage ?? (_configPage = PageFactory.CreateEventTriggerPage(PageId, Name).Page);
             set {
                 if (value.Id != PageId) {
                     throw new Exception($"The page ID must be {PageId}");
@@ -175,10 +175,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called when a new trigger of this type is being created. Initialize the <see cref="ConfigPage"/> to
         ///  the trigger's starting state so users can begin configuring it.
         /// <para>
-        /// A new <see cref="Jui.Views.Page"/> is already created at this point with a unique ID provided
-        ///  by <see cref="PageId"/>. Any JUI view added to the <see cref="ConfigPage"/> must use a unique ID as it will
+        /// You must create a new <see cref="Jui.Views.Page"/> with a unique ID provided by <see cref="PageId"/>
+        ///  and be of the type <see cref="EPageType.EventTrigger"/>.
+        ///  Any JUI view added to the <see cref="ConfigPage"/> must use a unique ID as it will
         ///  be displayed on an event page that could also be housing HTML from other plugins. It is recommended
         ///  to use the <see cref="PageId"/> as a prefix for all views added to ensure that their IDs are unique.
+        /// </para>
+        /// <para>
+        /// If no page is set, a blank page will be auto initialized.
         /// </para>
         /// </summary>
         protected abstract void OnNewTrigger();
@@ -194,6 +198,10 @@ namespace HomeSeer.PluginSdk.Events {
 
         /// <summary>
         /// Called when a trigger of this type is being edited and changes need to be propagated to the <see cref="ConfigPage"/>
+        /// <para>
+        /// We do not recommend overriding this method unless you specifically want to adjust the way view changes
+        ///  are processed as a whole.
+        /// </para>
         /// </summary>
         /// <param name="viewChanges">A <see cref="Page"/> containing changes to the <see cref="ConfigPage"/></param>
         protected virtual void OnEditTrigger(Page viewChanges) {
@@ -227,9 +235,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// <summary>
         /// Called by HomeSeer when the trigger is configured and needs to be displayed to the user as an
         ///  easy to read sentence that flows with an IF... THEN... format.
+        /// <para>
+        /// This is currently a WIP (Work in Progress) The end goal is to provide a StringBuilder-like class that
+        ///  makes it easy to output pre-formatted HTML so that all common items are quickly identifiable by users.
+        ///  (ex. All device/feature names are colored the same and bolded)
+        /// </para>
         /// </summary>
         /// <returns>
-        /// An easy to read, HTML formatted string describing the trigger as it would follow an IF...
+        /// An easy to read string describing the trigger as it would follow an IF...
         /// </returns>
         public abstract string GetPrettyString();
         

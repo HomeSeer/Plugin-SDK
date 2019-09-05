@@ -19,7 +19,7 @@ namespace HomeSeer.PluginSdk.Devices {
                               Relationship = ERelationship.Feature,
                               Interface    = pluginId
                           };
-            feature.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
             feature.Changes.Add(EProperty.UserAccess, "Any");
             ff._feature = feature;
 
