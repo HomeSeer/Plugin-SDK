@@ -75,9 +75,10 @@ namespace HomeSeer.Jui.Views {
 				throw new ViewTypeMismatchException("The original view type does not match the type in the update");
 			}
 
-			if (updatedInputView.InputType != InputType) {
+			// Removing until we figure out how to handle input types in view changes from HTML -JLW
+			/*if (updatedInputView.InputType != InputType) {
 				throw new InvalidOperationException("The original view type does not match the type in the update");
-			}
+			}*/
 
 			if (!IsValueValidForType(updatedInputView.Value)) {
 				throw new InvalidValueForTypeException("The new value is invalid for the input type");
