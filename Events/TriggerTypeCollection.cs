@@ -335,6 +335,7 @@ namespace HomeSeer.PluginSdk.Events {
 
             curTrig.LogDebug = LogDebug;
             curTrig.TriggerListener = _listener;
+            curTrig.InflateTriggerFromData();
             return curTrig;
         }
 

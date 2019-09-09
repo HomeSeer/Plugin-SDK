@@ -68,6 +68,8 @@ namespace HomeSeer.PluginSdk.Events {
             private set => _selectedSubTriggerIndex = (value >= SubTriggerCount) ? -1 : value;
         }
 
+        private readonly byte[] _inData;
+
         /// <summary>
         /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, and Data byte array.
         ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
@@ -88,14 +90,14 @@ namespace HomeSeer.PluginSdk.Events {
             _id           = id;
             _eventRef     = eventRef;
             SelectedSubTriggerIndex = selectedSubTriggerIndex;
-            InflateTriggerFromData(dataIn);
+            _inData = dataIn;
         }
 
         protected AbstractTriggerType(TrigActInfo trigInfo) {
             _id = trigInfo.UID;
             _eventRef = trigInfo.evRef;
             SelectedSubTriggerIndex = trigInfo.SubTANumber-1;
-            InflateTriggerFromData(trigInfo.DataIn);
+            _inData = trigInfo.DataIn;
         }
 
         /// <summary>
@@ -356,10 +358,10 @@ namespace HomeSeer.PluginSdk.Events {
             return new byte[0];
         }
 
-        private void InflateTriggerFromData(byte[] inData) {
+        internal void InflateTriggerFromData() {
 
             try {
-                var processedData = ProcessData(inData);
+                var processedData = ProcessData(_inData);
                 if (processedData.Length == 0) {
                     _data = new byte[0];
                     OnNewTrigger();

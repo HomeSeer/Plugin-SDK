@@ -268,6 +268,7 @@ namespace HomeSeer.PluginSdk.Events {
 
             curAct.LogDebug = LogDebug;
             curAct.ActionListener = _listener;
+            curAct.InflateActionFromData();
             return curAct;
         }
 

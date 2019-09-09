@@ -76,7 +76,7 @@ namespace HomeSeer.PluginSdk.Events {
         protected AbstractActionType(int id, int eventRef, byte[] dataIn) {
             _id           = id;
             _eventRef     = eventRef;
-            InflateActionFromData(dataIn);
+            _inData = dataIn;
         }
 
         /// <summary>
@@ -121,6 +121,8 @@ namespace HomeSeer.PluginSdk.Events {
         private readonly int _eventRef;
         private byte[] _data;
         private Page _configPage;
+
+        private readonly byte[] _inData;
         
         /// <summary>
         /// Called by HomeSeer to obtain the name of this action type.
@@ -292,10 +294,10 @@ namespace HomeSeer.PluginSdk.Events {
             return new byte[0];
         }
 
-        private void InflateActionFromData(byte[] inData) {
+        internal void InflateActionFromData() {
 
             try {
-                var processedData = ProcessData(inData);
+                var processedData = ProcessData(_inData);
                 if (processedData.Length == 0) {
                     _data = new byte[0];
                     OnNewAction();
