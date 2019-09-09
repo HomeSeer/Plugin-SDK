@@ -294,7 +294,7 @@ namespace HomeSeer.PluginSdk.Events {
             return new byte[0];
         }
 
-        internal void InflateActionFromData() {
+        public void InflateActionFromData() {
 
             try {
                 var processedData = ProcessData(_inData);
