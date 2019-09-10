@@ -73,10 +73,13 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="id">The unique ID of this action in HomeSeer</param>
         /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
-        protected AbstractActionType(int id, int eventRef, byte[] dataIn) {
+        protected AbstractActionType(int id, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener, bool logDebug = false) {
             _id           = id;
             _eventRef     = eventRef;
             _inData = dataIn;
+            ActionListener = listener;
+            LogDebug = logDebug;
+            InflateActionFromData();
         }
 
         /// <summary>
@@ -219,7 +222,7 @@ namespace HomeSeer.PluginSdk.Events {
         public string ToHtml() {
             return ConfigPage?.ToHtml() ?? "";
         }
-        
+
         internal bool ProcessPostData(Dictionary<string, string> changes) {
             if (ConfigPage == null) {
                 throw new Exception("Cannot process update.  There is no page to map changes to.");
@@ -294,7 +297,7 @@ namespace HomeSeer.PluginSdk.Events {
             return new byte[0];
         }
 
-        public void InflateActionFromData() {
+        private void InflateActionFromData() {
 
             try {
                 var processedData = ProcessData(_inData);

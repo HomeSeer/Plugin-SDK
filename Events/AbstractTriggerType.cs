@@ -86,18 +86,24 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="eventRef">The event reference ID that this trigger is associated with in HomeSeer</param>
         /// <param name="selectedSubTriggerIndex">The 0 based index of the sub-trigger type selected for this trigger</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
-        protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn) {
+        protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener, bool logDebug = false) {
             _id           = id;
             _eventRef     = eventRef;
             SelectedSubTriggerIndex = selectedSubTriggerIndex;
             _inData = dataIn;
+            TriggerListener = listener;
+            LogDebug = logDebug;
+            InflateTriggerFromData();
         }
 
-        protected AbstractTriggerType(TrigActInfo trigInfo) {
+        protected AbstractTriggerType(TrigActInfo trigInfo, TriggerTypeCollection.ITriggerTypeListener listener, bool logDebug = false) {
             _id = trigInfo.UID;
             _eventRef = trigInfo.evRef;
             SelectedSubTriggerIndex = trigInfo.SubTANumber-1;
             _inData = trigInfo.DataIn;
+            TriggerListener = listener;
+            LogDebug        = logDebug;
+            InflateTriggerFromData();
         }
 
         /// <summary>
@@ -358,7 +364,7 @@ namespace HomeSeer.PluginSdk.Events {
             return new byte[0];
         }
 
-        public void InflateTriggerFromData() {
+        private void InflateTriggerFromData() {
 
             try {
                 var processedData = ProcessData(_inData);
