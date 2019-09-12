@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>HomeSeer-PluginSDK</id>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <title>$title$</title>
     <authors>HomeSeer</authors>
     <owners>HomeSeer</owners>
@@ -11,7 +11,7 @@
 	<iconUrl>http://homeseer.com/images/HS4/hs4-64.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Include missing dependencies</releaseNotes>
+    <releaseNotes>Update event trigger/action initialization</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>HomeSeer Home Seer Plugin pluginsdk hs4</tags>
   </metadata>
