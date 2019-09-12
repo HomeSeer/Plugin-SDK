@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>HomeSeer-PluginSDK</id>
+    <version>1.0.1</version>
+    <title>$title$</title>
+    <authors>HomeSeer</authors>
+    <owners>HomeSeer</owners>
+	<projectUrl>https://docs.homeseer.com/display/HSPI/Overview</projectUrl>
+	<repository type="git" url="https://github.com/HomeSeer/Plugin-SDK.git" branch="master"/>
+	<iconUrl>http://homeseer.com/images/HS4/hs4-64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Include missing dependencies</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>HomeSeer Home Seer Plugin pluginsdk hs4</tags>
+  </metadata>
+  <files>
+    <file src="bin\PluginDev\PluginSDK.dll" target="lib\net462" />
+    <file src="bin\PluginDev\PluginSDK.xml" target="lib\net462" />
+	<file src="bin\PluginDev\HSCF.dll" target="lib\net462" />
+	</files>
+</package>
