@@ -73,10 +73,13 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="id">The unique ID of this action in HomeSeer</param>
         /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
-        protected AbstractActionType(int id, int eventRef, byte[] dataIn) {
+        protected AbstractActionType(int id, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener, bool logDebug = false) {
             _id           = id;
             _eventRef     = eventRef;
-            InflateActionFromData(dataIn);
+            _inData = dataIn;
+            ActionListener = listener;
+            LogDebug = logDebug;
+            InflateActionFromData();
         }
 
         /// <summary>
@@ -121,6 +124,8 @@ namespace HomeSeer.PluginSdk.Events {
         private readonly int _eventRef;
         private byte[] _data;
         private Page _configPage;
+
+        private readonly byte[] _inData;
         
         /// <summary>
         /// Called by HomeSeer to obtain the name of this action type.
@@ -217,7 +222,7 @@ namespace HomeSeer.PluginSdk.Events {
         public string ToHtml() {
             return ConfigPage?.ToHtml() ?? "";
         }
-        
+
         internal bool ProcessPostData(Dictionary<string, string> changes) {
             if (ConfigPage == null) {
                 throw new Exception("Cannot process update.  There is no page to map changes to.");
@@ -292,10 +297,10 @@ namespace HomeSeer.PluginSdk.Events {
             return new byte[0];
         }
 
-        private void InflateActionFromData(byte[] inData) {
+        private void InflateActionFromData() {
 
             try {
-                var processedData = ProcessData(inData);
+                var processedData = ProcessData(_inData);
                 if (processedData.Length == 0) {
                     _data = new byte[0];
                     OnNewAction();

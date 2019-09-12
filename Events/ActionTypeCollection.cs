@@ -251,6 +251,14 @@ namespace HomeSeer.PluginSdk.Events {
             foreach (var infoParam in actInfoParams) {
                 paramTypes.Add(infoParam.GetType());
             }
+
+            var constructorParams = new List<object>(actInfoParams);
+            if (paramTypes.Count > 0) {
+                paramTypes.Add(typeof(IActionTypeListener));
+                constructorParams.Add(_listener);
+                paramTypes.Add(typeof(bool));
+                constructorParams.Add(LogDebug);
+            }
             var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
                                                             null,
                                                             CallingConventions.Standard,
@@ -262,12 +270,10 @@ namespace HomeSeer.PluginSdk.Events {
             }
 
             //new object[] { actInfo.UID, actInfo.evRef, actInfo.DataIn };
-            if (!(typeConstructor.Invoke(actInfoParams) is AbstractActionType curAct)) {
+            if (!(typeConstructor.Invoke(constructorParams.ToArray()) is AbstractActionType curAct)) {
                 throw new TypeLoadException("This constructor did not produce a class derived from AbstractActionType");
             }
-
-            curAct.LogDebug = LogDebug;
-            curAct.ActionListener = _listener;
+            
             return curAct;
         }
 
@@ -275,7 +281,9 @@ namespace HomeSeer.PluginSdk.Events {
             var paramTypes = new[] {
                                        typeof(int),
                                        typeof(int),
-                                       typeof(byte[])
+                                       typeof(byte[]),
+                                       typeof(IActionTypeListener),
+                                       typeof(bool)
                                    };
             var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
                                                             null,
@@ -283,7 +291,7 @@ namespace HomeSeer.PluginSdk.Events {
                                                             paramTypes,
                                                             null);
             if (typeConstructor == null) {
-                throw new TypeLoadException("Type does not have a constructor with parameters (int id, int eventRef, byte[] dataIn)");
+                throw new TypeLoadException("Type does not have a constructor with parameters (int id, int eventRef, byte[] dataIn, IActionTypeListener listener, bool logDebug)");
             }
 
             paramTypes = new Type[0];
