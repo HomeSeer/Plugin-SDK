@@ -452,7 +452,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual string GetJuiDeviceConfigPage(string deviceRef) {
+        public virtual string GetJuiDeviceConfigPage(int deviceRef) {
             return $"No device config page registered by plugin {Id}";
         }
 
@@ -557,17 +557,17 @@ namespace HomeSeer.PluginSdk {
         #region Triggers
 
         /// <inheritdoc />
-        public virtual string TriggerBuildUI(TrigActInfo trigInfo) {
+        public string TriggerBuildUI(TrigActInfo trigInfo) {
             return TriggerTypes?.OnGetTriggerUi(trigInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
-        public virtual string TriggerFormatUI(TrigActInfo trigInfo) {
+        public string TriggerFormatUI(TrigActInfo trigInfo) {
             return TriggerTypes?.OnGetTriggerPrettyString(trigInfo) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
-        public virtual EventUpdateReturnData TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
+        public EventUpdateReturnData TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
             return TriggerTypes?.OnUpdateTriggerConfig(postData, trigInfoIn) ?? 
                    new EventUpdateReturnData {
                                        DataOut = trigInfoIn.DataIn, Result = "Plugin returned malformed data", 
@@ -576,37 +576,37 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
-        public virtual bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef) {
+        public bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef) {
             return TriggerTypes?.TriggerReferencesDeviceOrFeature(devOrFeatRef, trigInfo) ?? false;
         }
 
         /// <inheritdoc />
-        public virtual bool TriggerCanBeCondition(int triggerNum) {
+        public bool TriggerCanBeCondition(int triggerNum) {
             return TriggerTypes?.TriggerCanBeCondition(triggerNum) ?? false;
         }
 
         /// <inheritdoc />
-        public virtual int GetSubTriggerCount(int triggerNum) {
+        public int GetSubTriggerCount(int triggerNum) {
             return TriggerTypes?.GetSubTriggerCount(triggerNum) ?? 0;
         }
 
         /// <inheritdoc />
-        public virtual string GetSubTriggerNameByNumber(int triggerNum, int subTriggerNum) {
+        public string GetSubTriggerNameByNumber(int triggerNum, int subTriggerNum) {
             return TriggerTypes?.GetSubTriggerName(triggerNum, subTriggerNum) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
-        public virtual bool IsTriggerConfigValid(TrigActInfo trigInfo) {
+        public bool IsTriggerConfigValid(TrigActInfo trigInfo) {
             return TriggerTypes?.IsTriggerConfigured(trigInfo) ?? true;
         }
 
         /// <inheritdoc />
-        public virtual string GetTriggerNameByNumber(int triggerNum) {
+        public string GetTriggerNameByNumber(int triggerNum) {
             return TriggerTypes?.GetName(triggerNum) ?? "Plugin returned malformed data";
         }
 
         /// <inheritdoc />
-        public virtual bool TriggerTrue(TrigActInfo trigInfo, bool isCondition = false) {
+        public bool TriggerTrue(TrigActInfo trigInfo, bool isCondition = false) {
             return TriggerTypes?.IsTriggerTrue(trigInfo, isCondition) ?? false;
         }
 
