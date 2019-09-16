@@ -3,8 +3,8 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
     public enum EApiType {
 
         NotSpecified     = 0,
-        LegacyPlugin     = 4,
-        LegacyThermostat = 16,
+        //LegacyPlugin     = 4,
+        //LegacyThermostat = 16,
         Device           = 512,
         Feature          = 513
         
