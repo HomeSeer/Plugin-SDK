@@ -140,7 +140,7 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="deviceRef">The device reference to get the page for</param>
         /// <returns>A JSON serialized Jui.Page</returns>
-        string GetJuiDeviceConfigPage(string deviceRef);
+        string GetJuiDeviceConfigPage(int deviceRef);
     
         /// <summary>
         /// Save updated values for a HS-JUI formatted device config page
