@@ -68,6 +68,9 @@
     <Compile Include="Devices\AbstractHsDevice.cs" />
     <Compile Include="Devices\HsFeature.cs" />
     <Compile Include="Devices\Identification\DeviceRelationshipException.cs" />
+    <Compile Include="Devices\Identification\EMediaFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\EThermostatControlFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\EThermostatStatusFeatureSubType.cs" />
     <Compile Include="Devices\Identification\TypeInfo.cs" />
     <Compile Include="Devices\Identification\EApiType.cs" />
     <Compile Include="Devices\Identification\EDeviceType.cs" />
