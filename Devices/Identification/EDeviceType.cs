@@ -11,7 +11,8 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         RemoteControl,
         Switch,
         Thermostat,
-        Window
+        Window,
+        Media
 
     }
 
