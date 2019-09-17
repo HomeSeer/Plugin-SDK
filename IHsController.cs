@@ -364,6 +364,45 @@ namespace HomeSeer.PluginSdk {
         
         #endregion
 
+        /// <summary>
+        /// This procedure is used to cause HomeSeer to speak something when a speak proxy is registered and active.
+        ///  Since speak commands when a speak proxy plug-in is registered are trapped and passed to the SpeakIn
+        ///  procedure of the speak proxy plug-in, this command is used when the speak proxy plug-in is ready to do
+        ///  the real speaking.
+        /// </summary>
+        /// <param name="speechDevice">
+        /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
+        ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
+        ///  for HomeSeer Phone (device - 100 = phone line), or the WAV audio device to use.
+        ///  Although this is still used for HomeSeer Phone, speaks for HomeSeer phone are never proxied and so
+        ///  values >= 100 should never been seen in the device parameter.
+        ///  Pass the device parameter unchanged to SpeakProxy.
+        /// </param>
+        /// <param name="spokenText">
+        /// This is the text to be spoken, or if it is a WAV file to be played, then the characters ":\" will be
+        ///  found starting at position 2 of the string as playing a WAV file with the speak command in HomeSeer
+        ///  REQUIRES a fully qualified path and filename of the WAV file to play.
+        /// </param>
+        /// <param name="wait">
+        /// This parameter tells HomeSeer whether to continue processing commands immediately or to wait until
+        ///  the speak command is finished - pass this parameter unchanged to SpeakProxy.
+        /// </param>
+        /// <param name="host">
+        /// This is a list of host:instances to speak or play the WAV file on.
+        ///  An empty string or a single asterisk (*) indicates all connected speaker clients on all hosts.
+        ///  Normally this parameter is passed to SpeakProxy unchanged.
+        /// </param>
+        void SpeakProxy(int speechDevice, string spokenText, bool wait, string host = "");
+
+        /// <summary>
+        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
+        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
+        ///  in HomeSeer's help file.
+        /// </summary>
+        /// <param name="strIn">A string with the replacement variables</param>
+        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
+        string ReplaceVariables(string strIn);
+
         #region Not Implemented
 
         #region Scripts

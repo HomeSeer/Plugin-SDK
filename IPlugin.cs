@@ -381,6 +381,38 @@ namespace HomeSeer.PluginSdk {
         /// <returns>A string of data that is returned to the requester</returns>
         string PostBackProc(string page, string data, string user, int userRights);
 
+        /// <summary>
+        /// If your plug-in is registered as a Speak proxy plug-in, then when HomeSeer is asked to speak something.
+        ///  It will pass the speak information to your plug-in using this procedure.
+        ///  When your plug-in is ready to do the actual speaking, it should call SpeakProxy, and pass the information
+        ///  that it got from this procedure to SpeakProxy.
+        ///  It may be necessary or a feature of your plug-in to modify the text being spoken or the host/instance
+        ///  list provided in the host parameter - this is acceptable.
+        /// </summary>
+        /// <param name="speechDevice">
+        /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
+        ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
+        ///  for HomeSeer Phone (device - 100 = phone line), or the WAV audio device to use.
+        ///  Although this is still used for HomeSeer Phone, speaks for HomeSeer phone are never proxied and so
+        ///  values >= 100 should never been seen in the device parameter.
+        ///  Pass the device parameter unchanged to SpeakProxy.
+        /// </param>
+        /// <param name="spokenText">
+        /// This is the text to be spoken, or if it is a WAV file to be played, then the characters ":\" will be
+        ///  found starting at position 2 of the string as playing a WAV file with the speak command in HomeSeer
+        ///  REQUIRES a fully qualified path and filename of the WAV file to play.
+        /// </param>
+        /// <param name="wait">
+        /// This parameter tells HomeSeer whether to continue processing commands immediately or to wait until
+        ///  the speak command is finished - pass this parameter unchanged to SpeakProxy.
+        /// </param>
+        /// <param name="host">
+        /// This is a list of host:instances to speak or play the WAV file on.
+        ///  An empty string or a single asterisk (*) indicates all connected speaker clients on all hosts.
+        ///  Normally this parameter is passed to SpeakProxy unchanged.
+        /// </param>
+        void SpeakIn(int speechDevice, string spokenText, bool wait, string host);
+
     }
 
 }

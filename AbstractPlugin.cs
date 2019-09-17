@@ -673,6 +673,9 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        /// <inheritdoc />
+        public virtual void SpeakIn(int speechDevice, string spokenText, bool wait, string host) {}
+
     }
 
 }
