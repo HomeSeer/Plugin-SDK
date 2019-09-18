@@ -304,7 +304,7 @@ namespace HomeSeer.PluginSdk.Devices {
         
         //Add Status Graphics
 
-        public FeatureFactory AddGraphicForValue(string imagePath, double targetValue) {
+        public FeatureFactory AddGraphicForValue(string imagePath, double targetValue, string statusText = "") {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {
                 throw new ArgumentNullException(nameof(imagePath));
@@ -315,12 +315,13 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             
             var statusGraphic = new StatusGraphic(imagePath, targetValue);
+            statusGraphic.Label = statusText;
             _feature.AddStatusGraphic(statusGraphic);
             
             return this;
         }
         
-        public FeatureFactory AddGraphicForRange(string imagePath, double minValue, double maxValue) {
+        public FeatureFactory AddGraphicForRange(string imagePath, double minValue, double maxValue, string statusText = "") {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {
                 throw new ArgumentNullException(nameof(imagePath));
@@ -333,6 +334,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             
             var statusGraphic = new StatusGraphic(imagePath, minValue, maxValue);
+            statusGraphic.Label = statusText;
             _feature.AddStatusGraphic(statusGraphic);
             
             return this;
