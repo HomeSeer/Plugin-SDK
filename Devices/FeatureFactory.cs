@@ -45,6 +45,66 @@ namespace HomeSeer.PluginSdk.Devices {
             return ff;
         }
         
+        public static FeatureFactory CreateBinaryControlFeature(string pluginId, string name, 
+                                                                string onText, string offText, 
+                                                                double onValue = 1, double offValue = 0) {
+
+            var ff = new FeatureFactory();
+            var feature = new HsFeature
+                          {
+                              Name = name,
+                              Relationship = ERelationship.Feature,
+                              Interface    = pluginId
+                          };
+            feature.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.UserAccess, "Any");
+            ff._feature = feature;
+            ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinaryControl);
+            ff.AddButton(offValue,
+                         offText,
+                         new ControlLocation
+                         {
+                             Column = 0,
+                             Row    = 0,
+                             Width  = 1
+                         },
+                         EControlUse.Off);
+            ff.AddButton(onValue,
+                         onText,
+                         new ControlLocation
+                         {
+                             Column = 1,
+                             Row    = 0,
+                             Width  = 1
+                         },
+                         EControlUse.On);
+            ff.AddGraphicForValue("/images/HomeSeer/status/off.gif", offValue, offText);
+            ff.AddGraphicForValue("/images/HomeSeer/status/on.gif", onValue, onText);
+
+            return ff;
+        }
+        
+        public static FeatureFactory CreateBinarySensorFeature(string pluginId, string name, 
+                                                               string onText, string offText, 
+                                                               double onValue = 1, double offValue = 0) {
+
+            var ff = new FeatureFactory();
+            var feature = new HsFeature
+                          {
+                              Name         = name,
+                              Relationship = ERelationship.Feature,
+                              Interface    = pluginId
+                          };
+            feature.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.UserAccess, "Any");
+            ff._feature = feature;
+            ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinarySensor);
+            ff.AddGraphicForValue("/images/HomeSeer/status/noevent.png", offValue, offText);
+            ff.AddGraphicForValue("/images/HomeSeer/status/on-open-motion.png", onValue, onText);
+
+            return ff;
+        }
+        
         #region Device Properties
 
         public FeatureFactory OnDevice(int devRef) {
