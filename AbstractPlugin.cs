@@ -93,7 +93,7 @@ namespace HomeSeer.PluginSdk {
         /// It is recommended to use [PLUGIN-ID].ini where [PLUGIN-ID] is the ID of this plugin
         /// </para>
         /// </summary>
-        protected abstract string SettingsFileName { get; }
+        protected virtual string SettingsFileName => $"{Id}.ini";
 
         /// <summary>
         /// The collection of settings pages for the plugin.
