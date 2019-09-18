@@ -4,7 +4,8 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
 
         Battery,
         CentralScene,
-        Switch
+        BinaryControl,
+        BinarySensor
 
     }
 
