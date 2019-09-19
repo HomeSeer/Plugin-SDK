@@ -99,7 +99,11 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// <see cref="AbstractHsDevice.IsValueInvalid"/>
         /// </summary>
-        InvalidValue              = 40
+        InvalidValue              = 40,
+        /// <summary>
+        /// <see cref="HsDevice.FeaturePriority"/>
+        /// </summary>
+        FeaturePriority           = 41
 
     }
 

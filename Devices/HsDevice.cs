@@ -28,9 +28,48 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         public List<HsFeature> Features { get; } = new List<HsFeature>();
 
+        /// <summary>
+        /// The order of priority for the features of the device. This helps HomeSeer determine the "primary" feature
+        ///  for a device. Order the refs for associated features according to their importance to the user.
+        /// </summary>
+        /// <remarks>
+        /// PLACEHOLDER - This is a Work In Progress
+        /// </remarks>
+        [Obsolete("This is a work in progress and use may produce unexpected behavior.")]
+        public List<int> FeaturePriority {
+            get {
+                if (Changes.ContainsKey(EProperty.FeaturePriority)) {
+                    return (List<int>) Changes[EProperty.FeaturePriority];
+                }
+                
+                return _featurePriority ?? new List<int>();
+            }
+            set {
+
+                if (value == _featurePriority) {
+                    Changes.Remove(EProperty.FeaturePriority);
+                    return;
+                }
+                
+                if (Changes.ContainsKey(EProperty.FeaturePriority)) {
+                    Changes[EProperty.FeaturePriority] = value;
+                }
+                else {
+                    Changes.Add(EProperty.FeaturePriority, value);
+                }
+
+                if (_cacheChanges) {
+                    return;
+                }
+                _featurePriority = value ?? new List<int>();
+            }
+        }
+
         #endregion
 
         #region Private
+
+        private List<int> _featurePriority;
         
         #endregion
 
