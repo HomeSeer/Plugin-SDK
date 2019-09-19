@@ -29,7 +29,10 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         MotionActive    = 24,
         MotionInActive  = 25,
         ContactActive   = 26,
-        ContactInActive = 27
+        ContactInActive = 27,
+        Mute            = 28,
+        UnMute          = 29,
+        MuteToggle      = 30
 
     }
 
