@@ -9,7 +9,7 @@
 	<projectUrl>https://docs.homeseer.com/display/HSPI/Overview</projectUrl>
 	<repository type="git" url="https://github.com/HomeSeer/Plugin-SDK.git" branch="master"/>
 	<iconUrl>http://homeseer.com/images/HS4/hs4-64.png</iconUrl>
-    <license type="expression">AGPL-1.0-or-later</license>
+    <license type="expression">AGPL-3.0-or-later</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>New device types, feature factory and control location updates, and bug fixes.</releaseNotes>
@@ -17,8 +17,6 @@
     <tags>HomeSeer Home Seer Plugin pluginsdk hs4 sdk hs api pluginapi plugins</tags>
   </metadata>
   <files>
-    <file src="bin\PluginDev\PluginSDK.dll" target="lib\net462" />
-    <file src="bin\PluginDev\PluginSDK.xml" target="lib\net462" />
 	<file src="bin\PluginDev\HSCF.dll" target="lib\net462" />
-	</files>
+  </files>
 </package>
