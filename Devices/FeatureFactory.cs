@@ -105,7 +105,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return ff;
         }
         
-        #region Device Properties
+        #region Feature Properties
 
         public FeatureFactory OnDevice(int devRef) {
 
@@ -150,6 +150,48 @@ namespace HomeSeer.PluginSdk.Devices {
                 _feature.AddMiscFlag(miscFlag);
             }
             
+            return this;
+        }
+        
+        /// <summary>
+        /// Set the Location property on the feature.
+        /// </summary>
+        /// <remarks>
+        /// You should only adjust this if the location on the owning device is insufficient for this feature.
+        ///  This will be a location IN ADDITION to the device location.
+        /// </remarks>
+        /// <param name="location">The location to set on the feature</param>
+        /// <returns>The FeatureFactory updated with the specified location</returns>
+        /// <exception cref="ArgumentNullException">Thrown when in invalid location was specified</exception>
+        public FeatureFactory WithLocation(string location) {
+
+            if (string.IsNullOrWhiteSpace(location)) {
+                throw new ArgumentNullException(nameof(location));
+            }
+
+            _feature.Location = location;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Set the Location2 property on the feature.
+        /// </summary>
+        /// <remarks>
+        /// You should only adjust this if the location2 on the owning device is insufficient for this feature.
+        ///  This will be a location2 IN ADDITION to the device location2.
+        /// </remarks>
+        /// <param name="location2">The location2 to set on the feature</param>
+        /// <returns>The FeatureFactory updated with the specified location2</returns>
+        /// <exception cref="ArgumentNullException">Thrown when in invalid location2 was specified</exception>
+        public FeatureFactory WithLocation2(string location2) {
+
+            if (string.IsNullOrWhiteSpace(location2)) {
+                throw new ArgumentNullException(nameof(location2));
+            }
+
+            _feature.Location2 = location2;
+
             return this;
         }
         
