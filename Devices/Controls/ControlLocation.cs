@@ -29,35 +29,35 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <summary>
         /// Initialize a new location with the specified row and column position and desired width.
         /// </summary>
-        /// <param name="row">The 0 index of the location row. Must be >= 0</param>
-        /// <param name="column">The 0 index of the location column. Must be >= 0</param>
+        /// <param name="row">The 1 index of the location row. Must be >= 1</param>
+        /// <param name="column">The 1 index of the location column. Must be >= 1</param>
         /// <param name="width">The number of columns the control occupies. Must be >= 1</param>
         public ControlLocation(int row, int column, int width = 1) {
-            _row    = row < 0 ? 0 : row;
-            _column = column < 0 ? 0 : column;
+            _row    = row < 1 ? 1 : row;
+            _column = column < 1 ? 1 : column;
             _width  = width < 1 ? 1 : width;
         }
 
         /// <summary>
         /// The row the control is located in.
         /// <para>
-        /// This is a 0 based index starting from the top and going down.
+        /// This is a 1 based index starting from the top and going down.
         /// </para>
         /// </summary>
         public int Row {
             get => _row;
-            set => _row = value < 0 ? 0 : value;
+            set => _row = value < 1 ? 1 : value;
         }
 
         /// <summary>
         /// The column the control is located in.
         /// <para>
-        /// This is a 0 based index starting from the left side and going right.
+        /// This is a 1 based index starting from the left side and going right.
         /// </para>
         /// </summary>
         public int Column {
             get => _column;
-            set => _column = value < 0 ? 0 : value;
+            set => _column = value < 1 ? 1 : value;
         }
 
         /// <summary>
