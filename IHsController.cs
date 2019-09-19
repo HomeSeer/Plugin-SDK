@@ -312,7 +312,7 @@ namespace HomeSeer.PluginSdk {
         //bool IsApplicationRunning(string ApplicationName);
         //string RecurseFiles(string SourceDir);
         //string[] RecurseFilesEx(string SourceDir);
-        //string GetAppPath();
+        
         //string GetOSVersion();
         //string HSMemoryUsed();
         //int HSModules();
@@ -402,6 +402,12 @@ namespace HomeSeer.PluginSdk {
         /// <param name="strIn">A string with the replacement variables</param>
         /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
         string ReplaceVariables(string strIn);
+
+        /// <summary>
+        /// Returns the path to the HS executable. Some plugins need this when running remotely
+        /// </summary>
+        /// <returns>String</returns>
+        string GetAppPath();
 
         #region Not Implemented
 
