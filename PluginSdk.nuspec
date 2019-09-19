@@ -12,7 +12,7 @@
     <license type="expression">AGPL-1.0-or-later</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Update event trigger/action initialization</releaseNotes>
+    <releaseNotes>New device types, feature factory and control location updates, and bug fixes.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>HomeSeer Home Seer Plugin pluginsdk hs4 sdk hs api pluginapi plugins</tags>
   </metadata>
