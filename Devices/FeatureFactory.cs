@@ -37,7 +37,7 @@ namespace HomeSeer.PluginSdk.Devices {
                               Relationship = ERelationship.Feature,
                               Interface    = pluginId
                           };
-            feature.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
             feature.Changes.Add(EProperty.UserAccess, "Any");
             ff._feature = feature;
             ff._feature.AssociatedDevices = new HashSet<int> {devRef};
@@ -56,7 +56,7 @@ namespace HomeSeer.PluginSdk.Devices {
                               Relationship = ERelationship.Feature,
                               Interface    = pluginId
                           };
-            feature.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
             feature.Changes.Add(EProperty.UserAccess, "Any");
             ff._feature = feature;
             ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinaryControl);
@@ -95,7 +95,7 @@ namespace HomeSeer.PluginSdk.Devices {
                               Relationship = ERelationship.Feature,
                               Interface    = pluginId
                           };
-            feature.Changes.Add(EProperty.Misc, EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.Misc,  (uint)EMiscFlag.ShowValues);
             feature.Changes.Add(EProperty.UserAccess, "Any");
             ff._feature = feature;
             ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinarySensor);
