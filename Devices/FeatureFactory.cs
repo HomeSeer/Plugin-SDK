@@ -53,7 +53,7 @@ namespace HomeSeer.PluginSdk.Devices {
                                                                 double onValue = 1, double offValue = 0) {
 
             var ff = CreateFeature(pluginId).WithName(name);
-            ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinaryControl);
+            ff.AsType(EFeatureType.Generic, (int) EGenericFeatureSubType.BinaryControl);
             ff.AddButton(offValue,
                          offText,
                          new ControlLocation(1,1,1),
@@ -84,7 +84,7 @@ namespace HomeSeer.PluginSdk.Devices {
                                                                double onValue = 1, double offValue = 0) {
 
             var ff = CreateFeature(pluginId).WithName(name);
-            ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinarySensor);
+            ff.AsType(EFeatureType.Generic, (int) EGenericFeatureSubType.BinarySensor);
             ff.AddGraphicForValue("/images/HomeSeer/status/noevent.png", offValue, offText);
             ff.AddGraphicForValue("/images/HomeSeer/status/on-open-motion.png", onValue, onText);
 
@@ -402,8 +402,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 throw new ArgumentException($"The value {targetValue} already has a graphic bound to it.", nameof(targetValue));
             }
             
-            var statusGraphic = new StatusGraphic(imagePath, targetValue);
-            statusGraphic.Label = statusText;
+            var statusGraphic = new StatusGraphic(imagePath, targetValue, statusText);
             _feature.AddStatusGraphic(statusGraphic);
             
             return this;

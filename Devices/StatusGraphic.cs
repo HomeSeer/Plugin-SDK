@@ -14,15 +14,17 @@ namespace HomeSeer.PluginSdk.Devices {
         private string       _graphicPath;
         private double       _value;
         private ValueRange   _targetRange = new ValueRange(0,0);
-        
+
         /// <summary>
         /// Initialize a new StatusGraphic with the specified image that targets a single value
         /// </summary>
         /// <param name="imagePath">The path to the image used for the graphic</param>
         /// <param name="targetValue">The value targeted by the <see cref="StatusGraphic"/></param>
-        public StatusGraphic(string imagePath, double targetValue) {
+        /// <param name="label">The status text</param>
+        public StatusGraphic(string imagePath, double targetValue, string label="") {
             _graphicPath = imagePath;
             _value = targetValue;
+            _label = label;
         }
         
         /// <summary>
@@ -37,7 +39,18 @@ namespace HomeSeer.PluginSdk.Devices {
             _targetRange.Max = maxValue;
             _targetRange.Min = minValue;
         }
-        
+
+        /// <summary>
+        /// Initialize a new StatusGraphic with the specified image that targets a range of values
+        /// </summary>
+        /// <param name="imagePath">The path to the image used for the graphic</param>
+        /// <param name="targetRange">The range of values targeted by the <see cref="StatusGraphic"/></param>
+        public StatusGraphic(string imagePath, ValueRange targetRange) {
+            _graphicPath = imagePath;
+            _isRange = true;
+            _targetRange = targetRange;
+        }
+
         /// <summary>
         /// The text displayed when the associated <see cref="HsFeature"/>'s <see cref="HsFeature.Value"/> field matches
         ///  the <see cref="Value"/> or <see cref="TargetRange"/>.
