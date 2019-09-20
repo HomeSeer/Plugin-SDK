@@ -454,7 +454,7 @@ namespace HomeSeer.PluginSdk {
         /// </remarks>
         public virtual void SetIOMulti(List<ControlEvent> colSend) {
             foreach (var controlEvent in colSend) {
-                HomeSeerSystem.ControlFeatureByValue(controlEvent.TargetRef, controlEvent.ControlValue);
+                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
             }
         }
 

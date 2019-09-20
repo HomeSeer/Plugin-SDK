@@ -201,6 +201,8 @@ namespace HomeSeer.PluginSdk {
         void AddStatusGraphicToFeature(int featRef, StatusGraphic statusGraphic);
         bool DeleteStatusGraphicByValue(int featRef, double value);
         void ClearStatusGraphicsByRef(int featRef);
+        
+        
 
         #endregion
         
@@ -213,8 +215,33 @@ namespace HomeSeer.PluginSdk {
         
         #region Control
 
-        string ControlFeatureByValue(int featRef, double value);
-        string ControlFeatureByString(int featRef, string value);
+        /// <summary>
+        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// <para>
+        /// To update the value without triggering HomeSeer to process the update, call
+        ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueByRef(int featRef, double value);
+        /// <summary>
+        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
+        ///  accordingly
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueStringByRef(int featRef, string value);
+
+        //bool SendControlForFeatureByValue(int featRef, double value);
         
         #endregion
 
