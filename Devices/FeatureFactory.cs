@@ -25,31 +25,34 @@ namespace HomeSeer.PluginSdk.Devices {
 
             return ff;
         }
-        
+
         public static FeatureFactory CreateFeature(string pluginId, int devRef) {
             if (devRef <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(devRef));
             }
-            
-            var ff = new FeatureFactory();
-            var feature = new HsFeature
-                          {
-                              Relationship = ERelationship.Feature,
-                              Interface    = pluginId
-                          };
-            feature.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
-            feature.Changes.Add(EProperty.UserAccess, "Any");
-            ff._feature = feature;
+
+            var ff = CreateFeature(pluginId);
             ff._feature.AssociatedDevices = new HashSet<int> {devRef};
 
             return ff;
         }
         
-        public static FeatureFactory CreateBinaryControlFeature(string pluginId, string name, 
+        /// <summary>
+        /// Create a new generic, binary control feature that has 2 button controls and 2
+        ///  corresponding status graphics.
+        /// </summary>
+        /// <param name="pluginId">The Id of the plugin to be used as the interface property</param>
+        /// <param name="name">The name of the feature</param>
+        /// <param name="onText">The text on the On button</param>
+        /// <param name="offText">The text on the Off button</param>
+        /// <param name="onValue">The corresponding value for the On state</param>
+        /// <param name="offValue">The corresponding value for the Off state</param>
+        /// <returns>A FeatureFactory representing the desired feature</returns>
+        public static FeatureFactory CreateGenericBinaryControl(string pluginId, string name, 
                                                                 string onText, string offText, 
                                                                 double onValue = 1, double offValue = 0) {
 
-            var ff = FeatureFactory.CreateFeature(pluginId).WithName(name);
+            var ff = CreateFeature(pluginId).WithName(name);
             ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinaryControl);
             ff.AddButton(offValue,
                          offText,
@@ -65,11 +68,22 @@ namespace HomeSeer.PluginSdk.Devices {
             return ff;
         }
         
-        public static FeatureFactory CreateBinarySensorFeature(string pluginId, string name, 
+        /// <summary>
+        /// Create a new generic, binary sensor feature that has 2 status graphics representing 2 different
+        ///  sensor states.
+        /// </summary>
+        /// <param name="pluginId">The Id of the plugin to be used as the interface property</param>
+        /// <param name="name">The name of the feature</param>
+        /// <param name="onText">The text displayed when the status is active</param>
+        /// <param name="offText">The text displayed when the status is passive</param>
+        /// <param name="onValue">The corresponding value for the active state</param>
+        /// <param name="offValue">The corresponding value for the passive state</param>
+        /// <returns>A FeatureFactory representing the desired feature</returns>
+        public static FeatureFactory CreateGenericBinarySensor(string pluginId, string name, 
                                                                string onText, string offText, 
                                                                double onValue = 1, double offValue = 0) {
 
-            var ff = FeatureFactory.CreateFeature(pluginId).WithName(name);
+            var ff = CreateFeature(pluginId).WithName(name);
             ff.AsType(EFeatureType.Generic, (int) EGenericFeatureType.BinarySensor);
             ff.AddGraphicForValue("/images/HomeSeer/status/noevent.png", offValue, offText);
             ff.AddGraphicForValue("/images/HomeSeer/status/on-open-motion.png", onValue, onText);
