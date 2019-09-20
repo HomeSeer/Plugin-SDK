@@ -228,7 +228,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="featRef">The unique reference of the feature to control</param>
         /// <param name="value">The new value to set on the feature</param>
         /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool ControlFeatureByValue(int featRef, double value);
+        bool UpdateFeatureValueByRef(int featRef, double value);
         /// <summary>
         /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
         ///  accordingly
@@ -239,7 +239,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="featRef">The unique reference of the feature to control</param>
         /// <param name="value">The new value to set on the feature</param>
         /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool ControlFeatureByString(int featRef, string value);
+        bool UpdateFeatureValueStringByRef(int featRef, string value);
 
         //bool SendControlForFeatureByValue(int featRef, double value);
         
