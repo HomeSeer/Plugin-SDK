@@ -336,6 +336,12 @@ namespace HomeSeer.PluginSdk {
 
         int GetOsType();
         
+        /// <summary>
+        /// Obtain the IP address the HomeSeer system is accessible through
+        /// </summary>
+        /// <returns>A string representation of the IP address HomeSeer is running on</returns>
+        string GetIpAddress();
+        
         #region DateTime
         
         DateTime SolarNoon { get; }
