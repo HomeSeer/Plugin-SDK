@@ -201,6 +201,8 @@ namespace HomeSeer.PluginSdk {
         void AddStatusGraphicToFeature(int featRef, StatusGraphic statusGraphic);
         bool DeleteStatusGraphicByValue(int featRef, double value);
         void ClearStatusGraphicsByRef(int featRef);
+        
+        
 
         #endregion
         
@@ -208,13 +210,48 @@ namespace HomeSeer.PluginSdk {
         
         bool DeleteDevice(int devRef);
         bool DeleteFeature(int featRef);
+
+        /// <summary>
+        /// Delete all devices, and their corresponding features, from the HomeSeer system that are managed by
+        ///  the specified plugin interface
+        /// </summary>
+        /// <param name="interfaceName">
+        /// The name of the interface that owns all of the devices and features to delete. This is usually the plugin Id
+        /// </param>
+        /// <returns>TRUE if the delete was successful, FALSE if there was a problem during the process.</returns>
+        bool DeleteDevicesByInterface(string interfaceName);
         
         #endregion
         
         #region Control
 
-        string ControlFeatureByValue(int featRef, double value);
-        string ControlFeatureByString(int featRef, string value);
+        /// <summary>
+        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// <para>
+        /// To update the value without triggering HomeSeer to process the update, call
+        ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueByRef(int featRef, double value);
+        /// <summary>
+        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
+        ///  accordingly
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueStringByRef(int featRef, string value);
+
+        //bool SendControlForFeatureByValue(int featRef, double value);
         
         #endregion
 
@@ -298,6 +335,12 @@ namespace HomeSeer.PluginSdk {
         int CheckRegistrationStatus(string piname);
 
         int GetOsType();
+        
+        /// <summary>
+        /// Obtain the IP address the HomeSeer system is accessible through
+        /// </summary>
+        /// <returns>A string representation of the IP address HomeSeer is running on</returns>
+        string GetIpAddress();
         
         #region DateTime
         
@@ -406,8 +449,68 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Returns the path to the HS executable. Some plugins need this when running remotely
         /// </summary>
-        /// <returns>String</returns>
+        /// <returns>The path to the HomeSeer executable</returns>
         string GetAppPath();
+        
+        #region Images
+
+        /// <summary>
+        /// Save the specified image, as a byte array, to file in the HomeSeer html images directory
+        /// </summary>
+        /// <param name="imageBytes">A byte array of the image to save</param>
+        /// <param name="destinationFile">The path of the image following "\html\images\"</param>
+        /// <param name="overwriteExistingFile">TRUE to overwrite any existing file, FALSE to not</param>
+        /// <returns>TRUE if the file was saved successfully, FALSE if there was a problem</returns>
+        /// <example>
+        /// The following example shows how to download an image from a URL and save the bytes to file from the HSPI class.
+        /// 
+        /// <code>
+        /// var url = "http://homeseer.com/images/HS4/hs4-64.png";
+        /// var webClient = new WebClient();
+        /// var imageBytes = webClient.DownloadData(url);
+        /// var filePath = $"{Id}\\{Path.GetFileName(url)}";
+        /// if (!HomeSeerSystem.SaveImageFile(imageBytes, filePath, true)) {
+        ///     Console.WriteLine($"Error saving {url} to {filePath}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <example>
+        /// The following example shows how to convert an image to bytes and save them from the HSPI class.
+        ///
+        /// <code>
+        /// var myImage = System.Drawing.Image.FromFile("sampleImage.png");
+        /// var imageBytes = new byte[0];
+        /// using (var ms = new MemoryStream()) {
+        ///     myImage.Save(ms, myImage.RawFormat);
+        ///     imageBytes = ms.toArray();
+        /// }
+        /// var filePath = $"{Id}\\sampleImage.png";
+        /// if (!HomeSeerSystem.SaveImageFile(imageBytes, filePath, true)) {
+        ///     Console.WriteLine($"Error saving sampleImage.png to {filePath}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="DeleteImageFile"/>
+        bool SaveImageFile(byte[] imageBytes, string destinationFile, bool overwriteExistingFile);
+        /// <summary>
+        /// Delete the specified file from HomeSeer's HTML image directory.
+        /// </summary>
+        /// <param name="targetFile">The path of the image following "\html\images\"</param>
+        /// <returns>TRUE if the file was deleted successfully, FALSE if it still exists</returns>
+        /// <example>
+        /// The following example shows how to delete an image from HomeSeer's HTML image directory.
+        /// 
+        /// <code>
+        /// var filePath = $"{Id}\\sampleImage.png";
+        /// if (!HomeSeerSystem.DeleteImageFile(filePath)) {
+        ///     Console.WriteLine($"Error deleting {filePath}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="SaveImageFile"/>
+        bool DeleteImageFile(string targetFile);
+
+        #endregion
 
         #region Not Implemented
 
@@ -452,7 +555,6 @@ namespace HomeSeer.PluginSdk {
         //bool WEBCheckUserRights(int rights);
         //string WEBLoggedInUser();
         //bool WEBValidateUser(string username, string password);
-        //string GetIPAddress();
         //string GetLastRemoteIP();
         //string LANIP();
         //string WANIP();
@@ -460,15 +562,6 @@ namespace HomeSeer.PluginSdk {
         //int WebServerSSLPort();
 
         //string GenCookieString(string Name, string Value, string expire = "", string path = "/");
-
-        #endregion
-
-        #region Images
-
-        //TODO image methods
-        //bool WriteHTMLImageFile(byte[] ImageFile, string Dest, bool OverWrite);
-        //bool WriteHTMLImage(System.Drawing.Image Image, string Dest, bool OverWrite);
-        //bool DeleteImageFile(string DeleteFile);
 
         #endregion
 

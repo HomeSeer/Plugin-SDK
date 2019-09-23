@@ -447,8 +447,15 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// The default behavior is to clear the current status text and set the value on the target feature and then
+        ///  let HomeSeer assign the status text based on the configured <see cref="StatusControl"/>s
+        ///  and <see cref="StatusGraphic"/>s
+        /// </remarks>
         public virtual void SetIOMulti(List<ControlEvent> colSend) {
-            //Default behavior is to do nothing
+            foreach (var controlEvent in colSend) {
+                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+            }
         }
 
         /// <inheritdoc />
