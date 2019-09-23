@@ -449,7 +449,7 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Returns the path to the HS executable. Some plugins need this when running remotely
         /// </summary>
-        /// <returns>String</returns>
+        /// <returns>The path to the HomeSeer executable</returns>
         string GetAppPath();
 
         #region Not Implemented
@@ -495,7 +495,6 @@ namespace HomeSeer.PluginSdk {
         //bool WEBCheckUserRights(int rights);
         //string WEBLoggedInUser();
         //bool WEBValidateUser(string username, string password);
-        //string GetIPAddress();
         //string GetLastRemoteIP();
         //string LANIP();
         //string WANIP();
