@@ -451,6 +451,66 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <returns>The path to the HomeSeer executable</returns>
         string GetAppPath();
+        
+        #region Images
+
+        /// <summary>
+        /// Save the specified image, as a byte array, to file in the HomeSeer html images directory
+        /// </summary>
+        /// <param name="imageBytes">A byte array of the image to save</param>
+        /// <param name="destinationFile">The path of the image following "\html\images\"</param>
+        /// <param name="overwriteExistingFile">TRUE to overwrite any existing file, FALSE to not</param>
+        /// <returns>TRUE if the file was saved successfully, FALSE if there was a problem</returns>
+        /// <example>
+        /// The following example shows how to download an image from a URL and save the bytes to file from the HSPI class.
+        /// 
+        /// <code>
+        /// var url = "http://homeseer.com/images/HS4/hs4-64.png";
+        /// var webClient = new WebClient();
+        /// var imageBytes = webClient.DownloadData(url);
+        /// var filePath = $"{Id}\\{Path.GetFileName(url)}";
+        /// if (!HomeSeerSystem.SaveImageFile(imageBytes, filePath, true)) {
+        ///     Console.WriteLine($"Error saving {url} to {filePath}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <example>
+        /// The following example shows how to convert an image to bytes and save them from the HSPI class.
+        ///
+        /// <code>
+        /// var myImage = System.Drawing.Image.FromFile("sampleImage.png");
+        /// var imageBytes = new byte[0];
+        /// using (var ms = new MemoryStream()) {
+        ///     myImage.Save(ms, myImage.RawFormat);
+        ///     imageBytes = ms.toArray();
+        /// }
+        /// var filePath = $"{Id}\\sampleImage.png";
+        /// if (!HomeSeerSystem.SaveImageFile(imageBytes, filePath, true)) {
+        ///     Console.WriteLine($"Error saving sampleImage.png to {filePath}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="DeleteImageFile"/>
+        bool SaveImageFile(byte[] imageBytes, string destinationFile, bool overwriteExistingFile);
+        /// <summary>
+        /// Delete the specified file from HomeSeer's HTML image directory.
+        /// </summary>
+        /// <param name="targetFile">The path of the image following "\html\images\"</param>
+        /// <returns>TRUE if the file was deleted successfully, FALSE if it still exists</returns>
+        /// <example>
+        /// The following example shows how to delete an image from HomeSeer's HTML image directory.
+        /// 
+        /// <code>
+        /// var filePath = $"{Id}\\sampleImage.png";
+        /// if (!HomeSeerSystem.DeleteImageFile(filePath)) {
+        ///     Console.WriteLine($"Error deleting {filePath}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="SaveImageFile"/>
+        bool DeleteImageFile(string targetFile);
+
+        #endregion
 
         #region Not Implemented
 
@@ -502,15 +562,6 @@ namespace HomeSeer.PluginSdk {
         //int WebServerSSLPort();
 
         //string GenCookieString(string Name, string Value, string expire = "", string path = "/");
-
-        #endregion
-
-        #region Images
-
-        //TODO image methods
-        //bool WriteHTMLImageFile(byte[] ImageFile, string Dest, bool OverWrite);
-        //bool WriteHTMLImage(System.Drawing.Image Image, string Dest, bool OverWrite);
-        //bool DeleteImageFile(string DeleteFile);
 
         #endregion
 
