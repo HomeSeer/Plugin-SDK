@@ -1,6 +1,6 @@
 namespace HomeSeer.PluginSdk.Devices.Identification {
 
-    public enum EGenericFeatureType {
+    public enum EGenericFeatureSubType {
 
         Battery,
         CentralScene,

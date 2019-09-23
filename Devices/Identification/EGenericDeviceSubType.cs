@@ -1,6 +1,6 @@
 namespace HomeSeer.PluginSdk.Devices.Identification {
 
-    public enum EGenericDeviceType {
+    public enum EGenericDeviceSubType {
 
         Light,
         Fan,
