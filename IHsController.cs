@@ -210,6 +210,16 @@ namespace HomeSeer.PluginSdk {
         
         bool DeleteDevice(int devRef);
         bool DeleteFeature(int featRef);
+
+        /// <summary>
+        /// Delete all devices, and their corresponding features, from the HomeSeer system that are managed by
+        ///  the specified plugin interface
+        /// </summary>
+        /// <param name="interfaceName">
+        /// The name of the interface that owns all of the devices and features to delete. This is usually the plugin Id
+        /// </param>
+        /// <returns>TRUE if the delete was successful, FALSE if there was a problem during the process.</returns>
+        bool DeleteDevicesByInterface(string interfaceName);
         
         #endregion
         
