@@ -422,6 +422,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// The address of an image of the physical device this HomeSeer device/feature is associated with
         /// </summary>
+        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
         public string ProductImage {
             get {
                 if (Changes.ContainsKey(EProperty.ProductImage)) {
@@ -723,6 +724,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <inheritdoc cref="PlugExtraData"/>
         protected PlugExtraData  _plugExtraData     = new PlugExtraData();
         /// <inheritdoc cref="ProductImage"/>
+        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
         protected string         _productImage      = "";
         /// <inheritdoc cref="Relationship"/>
         protected ERelationship  _relationship      = ERelationship.NotSet;
