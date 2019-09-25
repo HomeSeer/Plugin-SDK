@@ -1,3 +1,5 @@
+using System;
+
 namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>
@@ -28,6 +30,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// <see cref="AbstractHsDevice.ProductImage"/>
         /// </summary>
+        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
         ProductImage              = 13,
         /// <summary>
         /// <see cref="AbstractHsDevice.Interface"/>

@@ -82,6 +82,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
         public DeviceFactory WithProductImage(string imagePath) {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {

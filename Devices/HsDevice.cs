@@ -98,7 +98,6 @@ namespace HomeSeer.PluginSdk.Devices {
                           _assDevices     = AssociatedDevices,
                           _typeInfo     = TypeInfo,
                           _image          = Image,
-                          _productImage   = ProductImage,
                           _interface      = Interface,
                           _lastChange     = LastChange,
                           _location       = Location,
