@@ -180,6 +180,18 @@ namespace HomeSeer.PluginSdk.Devices {
 
             return this;
         }
+
+        /// <summary>
+        /// Set the value the feature is created with
+        /// </summary>
+        /// <param name="value">The value the feature should default to when it is created</param>
+        /// <returns>The FeatureFactory updated with the specified value</returns>
+        public FeatureFactory WithDefaultValue(double value) {
+
+            _feature.Value = value;
+
+            return this;
+        }
         
         #endregion
         
