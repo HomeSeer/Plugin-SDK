@@ -16,8 +16,10 @@ namespace HomeSeer.PluginSdk.Devices {
         private int    _decimalPlaces;
         private double _min;
         private double _max;
+        private double _offset;
         private string _prefix = "";
         private string _suffix = "";
+
         //TODO private int _divisor = 1;
 
         /// <summary>
@@ -68,6 +70,17 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
+        /// The amount to subtract from the value for display.
+        /// <para>
+        /// E.G. A value of 501 will be displayed as 1 with an offset of 500
+        /// </para>
+        /// </summary>
+        public double Offset {
+            get => _offset;
+            set => _offset = value;
+        }
+        
+        /// <summary>
         /// The number of decimal places of accuracy displayed by the range
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -104,7 +117,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <param name="value">The value to use in the string</param>
         /// <returns>The value correctly formatted according to the range</returns>
         public string GetStringForValue(double value) {
-            var stringValue = $"{_prefix}{value.ToString($"F{_decimalPlaces}")}{_suffix}";
+            var stringValue = $"{_prefix}{(value - _offset).ToString($"F{_decimalPlaces}")}{_suffix}";
 
             return stringValue;
         }
