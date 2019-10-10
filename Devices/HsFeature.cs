@@ -49,10 +49,10 @@ namespace HomeSeer.PluginSdk.Devices {
                 }
                 
                 if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
-                    Changes[EProperty.AdditionalStatusData] = value.ToArray();
+                    Changes[EProperty.AdditionalStatusData] = value?.ToArray();
                 }
                 else {
-                    Changes.Add(EProperty.AdditionalStatusData, value.ToArray());
+                    Changes.Add(EProperty.AdditionalStatusData, value?.ToArray());
                 }
 
                 if (_cacheChanges) {
