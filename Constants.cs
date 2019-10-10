@@ -239,19 +239,6 @@ namespace HomeSeer.PluginSdk {
             SPEAK_ERROR_SENDING = 3
         }
 
-        public enum media_operation_values {
-            media_stop       = 1,
-            media_pause      = 2,
-            media_mute       = 3,
-            media_is_playing = 4, // returns true if media player is currently playing
-            media_set_volume = 5, // 0 -> 100  100=FULL
-            media_get_volume   = 6,
-            media_get_filename = 7,
-            media_set_filename = 8,
-            media_unpause      = 9,
-            media_unmute       = 10
-        }
-
         public enum speak_type_values {
             SPEAK_TTS = 1, // TTS voice
             SPEAK_MESSAGE = 2, // Text message
