@@ -12,6 +12,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         Ref                       = 0,
         /// <summary>
+        /// <see cref="HsFeature.AdditionalStatusData"/>
+        /// </summary>
+        AdditionalStatusData      = 1,
+        /// <summary>
         /// <see cref="AbstractHsDevice.Address"/>
         /// </summary>
         Address                   = 2,
