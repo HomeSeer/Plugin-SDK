@@ -20,7 +20,7 @@ namespace HomeSeer.PluginSdk.Speech {
         short  GetPauseStatus();
         string GetVoiceName();
         int    MEDIAPlay(string filename, int fsize);
-        string MEDIAFunction(Constants.media_operation_values operation, string p);
+        string MEDIAFunction(EMediaOperation operation, string p);
         int    GetVolume();
         void   SetVolume(int vol);
         bool   Disconnect();
