@@ -1,4 +1,5 @@
 using System;
+using HomeSeer.PluginSdk.Devices.Controls;
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -10,6 +11,7 @@ namespace HomeSeer.PluginSdk.Devices {
     public class StatusGraphic {
 
         private string       _label = "";
+        private EControlUse  _controlUse = EControlUse.NotSpecified;
         private bool         _isRange;
         private string       _graphicPath;
         private double       _value;
@@ -61,6 +63,16 @@ namespace HomeSeer.PluginSdk.Devices {
         public string Label {
             get => _label;
             set => _label = value;
+        }
+        
+        /// <summary>
+        /// What the <see cref="StatusGraphic"/> is used for.
+        ///  See <see cref="EControlUse"/> for more information.
+        /// </summary>
+        /// <seealso cref="EControlUse"/>
+        public EControlUse ControlUse {
+            get => _controlUse;
+            set => _controlUse = value;
         }
 
         /// <summary>
