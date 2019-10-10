@@ -515,7 +515,7 @@ namespace HomeSeer.PluginSdk {
         #region Events
 
         /// <inheritdoc />
-        public virtual void HsEvent(EHsSystemEvent eventType, object[] @params) {
+        public virtual void HsEvent(Constants.HSEvent eventType, object[] @params) {
             //process events?
         }
 
