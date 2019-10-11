@@ -208,15 +208,18 @@ namespace HomeSeer.PluginSdk {
                     Console.WriteLine(exception);
                 }
                 Console.WriteLine($"Cannot connect attempt {attempts.ToString()}");
-                if (exception.Message.ToLower().Contains("timeout occurred.") && attempts < 6) {
+                if (exception.Message.ToLower().Contains("timeout occured.") && attempts < 6) {
                     Connect(attempts + 1);
-                    if (_client != null) {
+                }
+                else
+                {
+                    if (_client != null)
+                    {
                         _client.Dispose();
                         _client = null;
                     }
-
-                    return;
                 }
+                return;
             }
 
             try {

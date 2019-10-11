@@ -3,6 +3,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
     public enum EControlType {
 
         StatusOnly         = 1, //Not rendered
+        Values             = 2,
         TextSelectList     = 3,
         Button             = 5,
         ValueRangeDropDown = 6, // Rendered as a drop-list by default.

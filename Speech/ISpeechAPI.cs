@@ -37,7 +37,7 @@ namespace HomeSeer.PluginSdk.Speech {
     DateTime GetFileDate(string fname);
     string GetFilePart(string fname, int start, int fsize);
     void MEDIAPlay(string filename, string host_instance);
-    string MEDIAFunction(Constants.media_operation_values operation, string p, string host_instance);
+    string MEDIAFunction(EMediaOperation operation, string p, string host_instance);
     int GetVolume(string host_instance);
     bool GetMuteStatus(string host_instance);
     bool GetListenStatus(string host_instance);

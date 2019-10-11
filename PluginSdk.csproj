@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractPlugin.cs" />
+    <Compile Include="Devices\AbstractStatus.cs" />
     <Compile Include="Devices\Controls\ControlLocation.cs" />
     <Compile Include="Devices\Controls\ControlEvent.cs" />
     <Compile Include="Devices\Controls\EControlType.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Devices\PlugExtraData.cs" />
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
+    <Compile Include="EHsSystemEvent.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
@@ -104,6 +106,8 @@
     <Compile Include="IHsController.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
     <Compile Include="Logging\ELogType.cs" />
+    <Compile Include="Speech\EMediaOperation.cs" />
+    <Compile Include="Speech\AbstractSpeakerClient.cs" />
     <None Include="Logging\LogEntry.cs" />
     <Compile Include="PluginStatus.cs" />
     <Compile Include="IPlugin.cs" />
