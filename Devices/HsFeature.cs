@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Devices.Identification;
@@ -27,6 +28,39 @@ namespace HomeSeer.PluginSdk.Devices {
         #region Properties
         
         #region Public
+
+        /// <summary>
+        /// A list of strings used in the displayed status for the <see cref="HsFeature"/>. The strings in this list
+        ///  are used to replace the replacement tokens corresponding to each index in the status - @%INDEX@
+        /// </summary>
+        public List<string> AdditionalStatusData {
+            get {
+                if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
+                    return ((string[]) Changes[EProperty.AdditionalStatusData]).ToList();
+                }
+                
+                return _additionalStatusData ?? new List<string>();
+            }
+            set {
+
+                if (value == _additionalStatusData) {
+                    Changes.Remove(EProperty.AdditionalStatusData);
+                    return;
+                }
+                
+                if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
+                    Changes[EProperty.AdditionalStatusData] = value?.ToArray();
+                }
+                else {
+                    Changes.Add(EProperty.AdditionalStatusData, value?.ToArray());
+                }
+
+                if (_cacheChanges) {
+                    return;
+                }
+                _additionalStatusData = value ?? new List<string>();
+            }
+        }
 
         //TODO don't edit directly remarks
         /// <summary>
@@ -61,6 +95,8 @@ namespace HomeSeer.PluginSdk.Devices {
         #endregion
 
         #region Private
+        
+        private List<string> _additionalStatusData = new List<string>();
         
         private StatusGraphicCollection _statusGraphics = new StatusGraphicCollection();
         private StatusControlCollection _statusControls = new StatusControlCollection();
@@ -107,6 +143,19 @@ namespace HomeSeer.PluginSdk.Devices {
                           _voiceCommand   = VoiceCommand
                       };
             return dev;
+        }
+
+        /// <summary>
+        /// Get the additional data token corresponding to the specified index $%tokenIndex$
+        /// </summary>
+        /// <remarks>
+        /// This is used as a replacement token for the status of a feature. Tokens are replaced with data from
+        ///  <see cref="AdditionalStatusData"/>
+        /// </remarks>
+        /// <param name="tokenIndex">The index for the token</param>
+        /// <returns>An additional data token used in the status eg for a tokenIndex of 0 returns $%0$</returns>
+        public static string GetAdditionalDataToken(int tokenIndex) {
+            return $"$%{tokenIndex}$";
         }
         
         public ControlEvent CreateControlEvent(double value) {

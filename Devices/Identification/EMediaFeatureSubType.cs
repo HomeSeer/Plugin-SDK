@@ -15,6 +15,7 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         MediaPlaylist = 11,
         MediaType = 12,
         PlayerMute = 13,
+        PlayerAlbumArt = 14,
         MediaSelectorControl = 20 // Used to track which instance of MusicAPI and selection mode (e.g. album, artists, playlists)
 
     }

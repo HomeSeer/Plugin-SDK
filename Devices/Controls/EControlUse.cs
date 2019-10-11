@@ -32,7 +32,10 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         ContactInActive = 27,
         Mute            = 28,
         UnMute          = 29,
-        MuteToggle      = 30
+        MuteToggle      = 30,
+        Next            = 31,
+        Previous        = 32,
+        Volume          = 33
 
     }
 

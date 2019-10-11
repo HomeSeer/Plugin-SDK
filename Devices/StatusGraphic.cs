@@ -1,4 +1,5 @@
 using System;
+using HomeSeer.PluginSdk.Devices.Controls;
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -10,7 +11,9 @@ namespace HomeSeer.PluginSdk.Devices {
     public class StatusGraphic {
 
         private string       _label = "";
+        private EControlUse  _controlUse = EControlUse.NotSpecified;
         private bool         _isRange;
+        private bool         _hasAdditionalData;
         private string       _graphicPath;
         private double       _value;
         private ValueRange   _targetRange = new ValueRange(0,0);
@@ -62,6 +65,16 @@ namespace HomeSeer.PluginSdk.Devices {
             get => _label;
             set => _label = value;
         }
+        
+        /// <summary>
+        /// What the <see cref="StatusGraphic"/> is used for.
+        ///  See <see cref="EControlUse"/> for more information.
+        /// </summary>
+        /// <seealso cref="EControlUse"/>
+        public EControlUse ControlUse {
+            get => _controlUse;
+            set => _controlUse = value;
+        }
 
         /// <summary>
         /// The path to an image displayed by the associated <see cref="HsFeature"/> when its
@@ -83,6 +96,15 @@ namespace HomeSeer.PluginSdk.Devices {
         public bool IsRange {
             get => _isRange;
             set => _isRange = value;
+        }
+        
+        /// <summary>
+        /// Whether the <see cref="StatusGraphic"/> label includes additional data tokens to be replaced by strings
+        ///  in <see cref="HsFeature.AdditionalStatusData"/>
+        /// </summary>
+        public bool HasAdditionalData {
+            get => _hasAdditionalData;
+            set => _hasAdditionalData = value;
         }
         
         /// <summary>
@@ -129,17 +151,25 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  configuration
         /// </summary>
         /// <param name="value">The value to get the label for</param>
+        /// <param name="additionalData">
+        /// Additional data to include in the status label that replaces any tokens from
+        ///  <see cref="HsFeature.GetAdditionalDataToken"/> included in the status.
+        /// </param>
         /// <returns>The value as a string formatted according to the <see cref="TargetRange"/> configuration.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not targeted by the <see cref="StatusGraphic"/></exception>
-        public string GetLabelForValue(double value) {
+        public string GetLabelForValue(double value, string[] additionalData = null) {
             if (!_isRange) {
-                return _label;
+                return additionalData == null || !_hasAdditionalData ? 
+                    _label : 
+                    ReplaceAdditionalData(_label, additionalData);
             }
             if (!_targetRange.IsValueInRange(value)) {
                 throw new ArgumentOutOfRangeException(nameof(value), $"{value} is not valid for this graphic");
             }
 
-            return _targetRange.GetStringForValue(value);
+            return additionalData == null || !_hasAdditionalData ? 
+                _targetRange.GetStringForValue(value) : 
+                ReplaceAdditionalData(_targetRange.GetStringForValue(value), additionalData);
         }
 
         /// <summary>
@@ -148,18 +178,26 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         /// <param name="label">The string variable the label will be written to</param>
         /// <param name="value">The value to get the label for</param>
+        /// <param name="additionalData">
+        /// Additional data to include in the status label that replaces any tokens from
+        ///  <see cref="HsFeature.GetAdditionalDataToken"/> included in the status.
+        /// </param>
         /// <returns>
         /// TRUE if a label is available for the <see cref="StatusGraphic"/>,
         ///  FALSE if the value is not valid for this <see cref="StatusGraphic"/> or there is no label defined.
         /// </returns>
-        public bool TryGetLabelForValue(out string label, double value) {
-            if (string.IsNullOrWhiteSpace(_label)) {
-                label = null;
-                return false;
-            }
-            
+        public bool TryGetLabelForValue(out string label, double value, string[] additionalData = null) {
+
             if (!_isRange || _targetRange == null) {
                 label = _label;
+                if (string.IsNullOrWhiteSpace(_label)) {
+                    return false;
+                }
+                if (additionalData == null || !_hasAdditionalData) {
+                    return true;
+                }
+
+                label = ReplaceAdditionalData(label, additionalData);
                 return true;
             }
             if (!_targetRange.IsValueInRange(value)) {
@@ -168,6 +206,11 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             label = _targetRange.GetStringForValue(value);
+            if (additionalData == null || !_hasAdditionalData) {
+                return true;
+            }
+
+            label = ReplaceAdditionalData(label, additionalData);
             return true;
         }
 
@@ -185,6 +228,17 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             return Math.Abs(_value - value) < 0.01D;
+        }
+
+        private string ReplaceAdditionalData(string label, string[] additionalData) {
+
+            var finalLabel = label;
+
+            for (var i = 0; i < additionalData.Length; i++) {
+                finalLabel = finalLabel.Replace(HsFeature.GetAdditionalDataToken(i), additionalData[i]);
+            }
+
+            return finalLabel;
         }
 
         /// <inheritdoc />

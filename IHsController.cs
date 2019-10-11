@@ -406,7 +406,9 @@ namespace HomeSeer.PluginSdk {
         int Energy_RemoveData(int dvRef, DateTime dteStart);
         
         #endregion
-
+        
+        #region Speech
+        
         /// <summary>
         /// This procedure is used to cause HomeSeer to speak something when a speak proxy is registered and active.
         ///  Since speak commands when a speak proxy plug-in is registered are trapped and passed to the SpeakIn
@@ -436,6 +438,32 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakProxy(int speechDevice, string spokenText, bool wait, string host = "");
+        
+        #if WIP
+        /// <summary>
+        /// Register your plug-in as a Speak Proxy plug-in.
+        /// <para>
+        /// After this registration, whenever a Speak command is issued in HomeSeer,
+        ///  your plug-in's SpeakIn procedure will be called instead.
+        ///  When your plug-in wishes to have HomeSeer actually speak something, it uses SpeakProxy instead of Speak.
+        /// </para>
+        /// <para>
+        /// If you no longer wish to proxy Speak commands in your plug-in, or when your plug-in has its Shutdown
+        ///  procedure called, use UnRegisterProxySpeakPlug to remove the registration as a speak proxy.
+        /// </para>
+        /// </summary>
+        /// <param name="pluginId">The Id of your plugin</param>
+        void RegisterProxySpeakPlug(string pluginId);
+        
+        /// <summary>
+        /// Unregister a plug-in as a Speak proxy that was previously
+        ///  registered using RegisterProxySpeakPlug.
+        /// </summary>
+        /// <param name="pluginId">The Id of your plugin</param>
+        void UnRegisterProxySpeakPlug(string pluginId);
+        #endif
+        
+        #endregion
 
         /// <summary>
         /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
@@ -568,11 +596,7 @@ namespace HomeSeer.PluginSdk {
         #region AppCallback
 
         //TODO AppCallback methods
-        //void RegisterProxySpeakPlug(string   PIName, string PIInstance);
-        //void UnRegisterProxySpeakPlug(string PIName, string PIInstance);
-
-        //string UpdatePlugAction(string PlugName, int evRef, TrigActInfo ActionInfo);
-
+        
         #endregion
 
         //TODO other methods
