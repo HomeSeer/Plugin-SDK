@@ -376,6 +376,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        [Obsolete("This signature has been deprecated. Use one of the new signatures.", false)]
         public FeatureFactory AddColorPicker(ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
             
             var targetRange = new ValueRange(0,16777215);
@@ -390,6 +391,67 @@ namespace HomeSeer.PluginSdk.Devices {
                              ControlUse  = controlUse,
                              Location    = location ?? new ControlLocation()
                          };
+
+            _feature.AddStatusControl(colorPicker);
+            
+            return this;
+        }
+        
+        /// <summary>
+        /// Add a color picker control to the feature
+        /// </summary>
+        /// <remarks>
+        /// Color pickers do not use the value of the feature to operate. They use a control string;
+        ///  so the <see cref="targetValue"/> is superficial and does not correspond to the actual selected color.
+        /// </remarks>
+        /// <param name="targetValue">The value this control occupies on the feature.</param>
+        /// <param name="location">The location of the control in the grid</param>
+        /// <param name="controlUse">The specific use for this control</param>
+        /// <returns>A FeatureFactory with the new color control added</returns>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified value, already exists</exception>
+        public FeatureFactory AddColorPicker(double targetValue, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
+            
+            if (_feature.HasControlForValue(targetValue)) {
+                throw new ArgumentException($"The value {targetValue} already has a control bound to it.", nameof(targetValue));
+            }
+            
+            var colorPicker = new StatusControl(EControlType.ColorPicker)
+                              {
+                                  TargetValue = targetValue, 
+                                  ControlUse  = controlUse,
+                                  Location    = location ?? new ControlLocation()
+                              };
+
+            _feature.AddStatusControl(colorPicker);
+            
+            return this;
+        }
+        
+        /// <summary>
+        /// Add a color picker control to the feature
+        /// </summary>
+        /// <remarks>
+        /// Color pickers do not use the value of the feature to operate. They use a control string;
+        ///  so the <see cref="targetRange"/> is superficial and does not correspond to the actual selected color.
+        /// </remarks>
+        /// <param name="targetRange">The values this control occupies on the feature.</param>
+        /// <param name="location">The location of the control in the grid</param>
+        /// <param name="controlUse">The specific use for this control</param>
+        /// <returns>A FeatureFactory with the new color control added</returns>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified value, already exists</exception>
+        public FeatureFactory AddColorPicker(ValueRange targetRange, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
+            
+            if (_feature.HasControlForRange(targetRange)) {
+                throw new ArgumentException($"Some or all of the values in the range {targetRange.Min}-{targetRange.Max} already has a control bound to it.", nameof(targetRange));
+            }
+            
+            var colorPicker = new StatusControl(EControlType.ColorPicker)
+                              {
+                                  TargetRange = targetRange, 
+                                  IsRange = true,
+                                  ControlUse  = controlUse,
+                                  Location    = location ?? new ControlLocation()
+                              };
 
             _feature.AddStatusControl(colorPicker);
             

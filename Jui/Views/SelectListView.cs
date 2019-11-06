@@ -148,6 +148,22 @@ namespace HomeSeer.Jui.Views {
 			
 			return Options[Selection];
 		}
+
+		/// <summary>
+		/// Get the currently selected option key
+		/// </summary>
+		/// <returns>The key of the option at the index specified by <see cref="Selection"/>.</returns>
+		public string GetSelectedOptionKey() {
+			if (Options == null || Selection >= Options.Count || Selection == -1) {
+				return "";
+			}
+			
+			if (OptionKeys == null || Selection >= OptionKeys.Count || Selection == -1) {
+				return "";
+			}
+
+			return OptionKeys[Selection];
+		}
 		
 		/// <inheritdoc/>
 		public override string ToHtml(int indent = 0) {
