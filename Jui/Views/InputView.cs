@@ -105,13 +105,17 @@ namespace HomeSeer.Jui.Views {
 		/// <returns>TRUE if the value is valid for the type or FALSE if it is not</returns>
 		public bool IsValueValidForType(string value) {
 
+			if (string.IsNullOrWhiteSpace(value)) {
+				return true;
+			}
+
 			switch (InputType) {
 				case EInputType.Text:
 					//Anything is valid for text
 					return true;
 				case EInputType.Number:
 				case EInputType.Decimal:
-					return float.TryParse(string.IsNullOrWhiteSpace(value) ? "0" : value, out _);
+					return float.TryParse(value, out _);
 				case EInputType.Email:
 					try {
 						var address = new System.Net.Mail.MailAddress(value);
