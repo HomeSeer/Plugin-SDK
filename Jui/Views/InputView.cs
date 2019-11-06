@@ -110,6 +110,7 @@ namespace HomeSeer.Jui.Views {
 					//Anything is valid for text
 					return true;
 				case EInputType.Number:
+				case EInputType.Decimal:
 					return float.TryParse(string.IsNullOrWhiteSpace(value) ? "0" : value, out _);
 				case EInputType.Email:
 					try {
