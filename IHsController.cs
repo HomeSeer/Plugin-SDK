@@ -508,7 +508,16 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakProxy(int speechDevice, string spokenText, bool wait, string host = "");
-        
+
+        /// <summary>
+        /// Sends TTS to a file using the system voice
+        /// </summary>
+        /// <param name="Text">The text to speak</param>
+        /// <param name="Voice">The voice to use, SAPI only on Windows</param>
+        /// <param name="FileName">Filename to send the speech to</param>
+        /// <returns></returns>
+        bool SpeakToFileV2(string Text, string Voice, string FileName);
+
         #if WIP
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
@@ -531,8 +540,8 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void UnRegisterProxySpeakPlug(string pluginId);
-        #endif
-        
+#endif
+
         #endregion
 
         /// <summary>
