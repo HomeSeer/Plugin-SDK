@@ -135,6 +135,9 @@ namespace HomeSeer.Jui.Views {
 		}
 		
 		/// <inheritdoc/>
+		/// <remarks>
+		/// The same as <see cref="Value"/>
+		/// </remarks>
 		public override string GetStringValue() {
 			return Value;
 		}

@@ -133,6 +133,9 @@ namespace HomeSeer.Jui.Views {
 		}
 
 		/// <inheritdoc/>
+		/// <remarks>
+		/// Get the selected index as a string
+		/// </remarks>
 		public override string GetStringValue() {
 			return Selection.ToString();
 		}
