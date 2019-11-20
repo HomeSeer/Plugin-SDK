@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using HomeSeer.PluginSdk.Devices;
 
 namespace HomeSeer.PluginSdk.Events {
@@ -21,13 +20,8 @@ namespace HomeSeer.PluginSdk.Events {
     ///  and signature of the action type do not match.
     /// </para>
     /// </remarks>
-    public class ActionTypeCollection {
-        
-        /// <summary>
-        /// The number of action types that are supported by the plugin
-        /// </summary>
-        public int Count => _actionTypes?.Count ?? 0;
-        
+    public class ActionTypeCollection : BaseTypeCollection<AbstractActionType> {
+
         /// <summary>
         /// Used to enable/disable internal logging to the console
         /// <para>
@@ -38,15 +32,47 @@ namespace HomeSeer.PluginSdk.Events {
 
         private IActionTypeListener _listener;
 
-        private List<Type> _actionTypes = new List<Type>();
-        private HashSet<string> _actionTypeNames = new HashSet<string>();
-
         /// <summary>
         /// Initialize a new instance of an <see cref="ActionTypeCollection"/> with the specified listener
         /// </summary>
         /// <param name="listener">An <see cref="IActionTypeListener"/> that will be passed to action types</param>
         public ActionTypeCollection(IActionTypeListener listener) {
             _listener = listener;
+            MatchAllSignatures = false;
+            ConstructorSignatures = new List<Type[]>();
+            //Signature including Sub-Action number and excluding LogDebug
+            //actInfo.UID, actInfo.SubTANumber, actInfo.evRef, actInfo.DataIn, _listener
+            var paramTypes = new[] {
+                                       typeof(int),
+                                       typeof(int),
+                                       typeof(int),
+                                       typeof(byte[]),
+                                       typeof(IActionTypeListener)
+                                   };
+            ConstructorSignatures.Add(paramTypes);
+            
+            //??? actInfo.UID, actInfo.SubTANumber, actInfo.evRef, actInfo.DataIn ???
+            //Original default signature excluding Sub-Action numbers
+            //actInfo.UID, actInfo.evRef, actInfo.DataIn, _listener, LogDebug
+            paramTypes = new[] {
+                                   typeof(int),
+                                   typeof(int),
+                                   typeof(byte[]),
+                                   typeof(IActionTypeListener),
+                                   typeof(bool)
+                               };
+            ConstructorSignatures.Add(paramTypes);
+            //Signature excluding LogDebug and Sub-Action number
+            //actInfo.UID, actInfo.evRef, actInfo.DataIn, _listener
+            paramTypes = new[] {
+                                   typeof(int),
+                                   typeof(int),
+                                   typeof(byte[]),
+                                   typeof(IActionTypeListener)
+                               };
+            ConstructorSignatures.Add(paramTypes);
+            
+            //??? actInfo.UID, actInfo.evRef, actInfo.DataIn ???
         }
 
         /// <summary>
@@ -57,20 +83,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// </param>
         /// <exception cref="ArgumentException">Thrown when the specified class type will not work as an action</exception>
         public void AddActionType(Type actionType) {
-            if (actionType?.FullName == null) {
-                throw new ArgumentException(nameof(actionType));
-            }
-            if (!actionType.IsSubclassOf(typeof(AbstractActionType))) {
-                throw new ArgumentException($"{actionType} is not derived from AbstractActionType", nameof(actionType));
-            }
-            AssertTypeHasConstructors(actionType);
-            if (_actionTypeNames.Contains(actionType.FullName)) {
-                throw new ArgumentException($"{actionType.FullName} has already been added to the collection.");
-            }
-
-            if (_actionTypeNames.Add(actionType.FullName)) {
-                _actionTypes.Add(actionType);
-            }
+            AddItemType(actionType);
         }
 
         /// <summary>
@@ -238,73 +251,21 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         private AbstractActionType GetObjectFromActInfo(TrigActInfo actInfo) {
-            return GetObjectFromInfo(actInfo.TANumber-1, actInfo.UID, actInfo.evRef, actInfo.DataIn ?? new byte[0]);
+            //actInfo.UID, actInfo.SubTANumber, actInfo.evRef, actInfo.DataIn, _listener
+            if (TypeHasConstructor(actInfo.TANumber - 1, 0)) {
+                return GetObjectFromInfo(actInfo.TANumber-1, 0, actInfo.UID, actInfo.SubTANumber, actInfo.evRef, actInfo.DataIn ?? new byte[0], _listener);
+            }
+            //actInfo.UID, actInfo.evRef, actInfo.DataIn, _listener, LogDebug
+            if (TypeHasConstructor(actInfo.TANumber - 1, 1)) {
+                return GetObjectFromInfo(actInfo.TANumber-1, 1, actInfo.UID, actInfo.evRef, actInfo.DataIn ?? new byte[0], _listener, LogDebug);
+            }
+            //actInfo.UID, actInfo.evRef, actInfo.DataIn, _listener
+            if (TypeHasConstructor(actInfo.TANumber - 1, 2)) {
+                return GetObjectFromInfo(actInfo.TANumber-1, 2, actInfo.UID, actInfo.evRef, actInfo.DataIn ?? new byte[0], _listener);
+            }
+            throw new TypeLoadException("Action instance cannot be created because no constructor was found that takes TrigActInfo data");
         }
 
-        private AbstractActionType GetObjectFromInfo(int actNumber, params object[] actInfoParams) {
-            if (_actionTypes.Count < actNumber) {
-                throw new KeyNotFoundException("No action type exists with that number");
-            }
-
-            var targetType = _actionTypes[actNumber];
-            var paramTypes = new List<Type>();
-            foreach (var infoParam in actInfoParams) {
-                paramTypes.Add(infoParam.GetType());
-            }
-
-            var constructorParams = new List<object>(actInfoParams);
-            if (paramTypes.Count > 0) {
-                paramTypes.Add(typeof(IActionTypeListener));
-                constructorParams.Add(_listener);
-                paramTypes.Add(typeof(bool));
-                constructorParams.Add(LogDebug);
-            }
-            var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
-                                                            null,
-                                                            CallingConventions.Standard,
-                                                            paramTypes.ToArray(),
-                                                            null);
-
-            if (typeConstructor == null) {
-                throw new TypeLoadException("Cannot find the correct constructor for this action type");
-            }
-
-            //new object[] { actInfo.UID, actInfo.evRef, actInfo.DataIn };
-            if (!(typeConstructor.Invoke(constructorParams.ToArray()) is AbstractActionType curAct)) {
-                throw new TypeLoadException("This constructor did not produce a class derived from AbstractActionType");
-            }
-            
-            return curAct;
-        }
-
-        private static void AssertTypeHasConstructors(Type targetType) {
-            var paramTypes = new[] {
-                                       typeof(int),
-                                       typeof(int),
-                                       typeof(byte[]),
-                                       typeof(IActionTypeListener),
-                                       typeof(bool)
-                                   };
-            var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
-                                                            null,
-                                                            CallingConventions.Standard,
-                                                            paramTypes,
-                                                            null);
-            if (typeConstructor == null) {
-                throw new TypeLoadException("Type does not have a constructor with parameters (int id, int eventRef, byte[] dataIn, IActionTypeListener listener, bool logDebug)");
-            }
-
-            paramTypes = new Type[0];
-            typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
-                                                        null,
-                                                        CallingConventions.Standard,
-                                                        paramTypes, 
-                                                        null);
-            if (typeConstructor == null) {
-                throw new TypeLoadException("Type does not have a constructor with parameters ()");
-            }
-        }
-        
         /// <summary>
         /// The base implementation of an action type interface that facilitates communication between
         ///  <see cref="AbstractActionType"/>s and the <see cref="AbstractPlugin"/> that owns them.
