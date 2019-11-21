@@ -62,6 +62,8 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                     break;
                 case EControlType.ColorPicker:
                     break;
+                case EControlType.Values:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, "You must specify a valid control type");
             }

@@ -330,8 +330,78 @@ namespace HomeSeer.PluginSdk {
         string GetUsers();        
         bool IsLicensed();
         bool IsRegistered();
+        
+        /// <summary>
+        /// Determine if Location1 is used first on devices/features.
+        /// </summary>
+        /// <remarks>
+        /// By default, Location2 is used as the first logical location when organizing devices/features.
+        ///  For this reason, it is important to check which location is marked as the first location before working
+        ///  with locations.
+        /// </remarks>
+        /// <returns>TRUE if Location1 is used first, FALSE if Location2 is used first</returns>
+        bool IsLocation1First();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of Location1 strings
+        /// </summary>
+        /// <returns>A SortedList of Location1 location strings</returns>
         System.Collections.SortedList GetLocationsList();
+        
+        /// <summary>
+        /// Get the name of the Location1 location
+        /// </summary>
+        /// <returns>The user defined name of Location1</returns>
+        string GetLocation1Name();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of Location2 strings
+        /// </summary>
+        /// <returns>A SortedList of Location2 location strings</returns>
         System.Collections.SortedList GetLocations2List();
+        
+        /// <summary>
+        /// Get the name of the Location2 location
+        /// </summary>
+        /// <returns>The user defined name of Location2</returns>
+        string GetLocation2Name();
+
+        /// <summary>
+        /// Get the name of the first location.
+        /// <para>
+        /// This is the name of the location that is marked as first according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>The name of the first location</returns>
+        string GetFirstLocationName();
+        
+        /// <summary>
+        /// Get the name of the second location.
+        /// <para>
+        /// This is the name of the location that is marked as second according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>The name of the second location</returns>
+        string GetSecondLocationName();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of the location strings marked as first
+        /// <para>
+        /// This is the list of location strings that are marked as first according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A List of the first location strings</returns>
+        List<string> GetFirstLocationList();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of the location strings marked as second
+        /// <para>
+        /// This is the list of location strings that are marked as second according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A List of the second location strings</returns>
+        List<string> GetSecondLocationList();
+        
         int CheckRegistrationStatus(string piname);
 
         int GetOsType();
@@ -438,7 +508,16 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakProxy(int speechDevice, string spokenText, bool wait, string host = "");
-        
+
+        /// <summary>
+        /// Sends TTS to a file using the system voice
+        /// </summary>
+        /// <param name="Text">The text to speak</param>
+        /// <param name="Voice">The voice to use, SAPI only on Windows</param>
+        /// <param name="FileName">Filename to send the speech to</param>
+        /// <returns></returns>
+        bool SpeakToFileV2(string Text, string Voice, string FileName);
+
         #if WIP
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
@@ -461,8 +540,8 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void UnRegisterProxySpeakPlug(string pluginId);
-        #endif
-        
+#endif
+
         #endregion
 
         /// <summary>

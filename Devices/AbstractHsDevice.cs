@@ -401,10 +401,6 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
                 
-                if (value == _plugExtraData) {
-                    Changes.Remove(EProperty.PlugExtraData);
-                    return;
-                }
                 if (Changes.ContainsKey(EProperty.PlugExtraData)) {
                     Changes[EProperty.PlugExtraData] = value;
                 }
