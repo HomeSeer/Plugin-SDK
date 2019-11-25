@@ -516,7 +516,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="Voice">The voice to use, SAPI only on Windows</param>
         /// <param name="FileName">Filename to send the speech to</param>
         /// <returns></returns>
-        bool SpeakToFileV2(string Text, string Voice, string FileName);
+        bool SpeakToFile(string Text, string Voice, string FileName);
 
         #if WIP
         /// <summary>
