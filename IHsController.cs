@@ -216,7 +216,9 @@ namespace HomeSeer.PluginSdk {
         /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system with or without associated features linked.
         /// </returns>
         List<HsDevice> GetAllDevices(bool withFeatures);
-
+        
+#if BETA
+        
         /// <summary>
         /// Get a list of all of the device refs present in the HomeSeer system that match the specified pattern
         /// </summary>
@@ -248,6 +250,8 @@ namespace HomeSeer.PluginSdk {
         /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system that match the specified pattern.
         /// </returns>
         List<HsDevice> GetAllMatchingDevices(Dictionary<EProperty, object> matchPattern, bool withFeatures);
+
+#endif
         
         //Features
         HsFeature GetFeatureByRef(int featRef);
@@ -264,6 +268,8 @@ namespace HomeSeer.PluginSdk {
         /// <returns>A list of integers corresponding to the feature refs managed by the HomeSeer system</returns>
         List<int> GetAllFeatureRefs();
 
+#if BETA
+        
         /// <summary>
         /// Get a list of all of the feature refs present in the HomeSeer system that match the specified pattern
         /// </summary>
@@ -289,6 +295,8 @@ namespace HomeSeer.PluginSdk {
         /// </param>
         /// <returns>A list of features managed by the HomeSeer system that match the specified pattern.</returns>
         List<HsFeature> GetAllMatchingFeatures(Dictionary<EProperty, object> matchPattern);
+
+#endif
 
         StatusControl GetStatusControlForValue(int featRef, double value);
         StatusControl GetStatusControlForLabel(int featRef, string label);
