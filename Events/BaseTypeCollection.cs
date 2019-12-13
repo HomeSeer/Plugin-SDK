@@ -141,7 +141,7 @@ namespace HomeSeer.PluginSdk.Events {
             var matchingSignatures = 0;
 
             foreach (var constructorSignature in ConstructorSignatures) {
-                
+
                 try {
                     AssertTypeHasConstructor(targetType, constructorSignature);
                     //Constructor match found
@@ -152,6 +152,12 @@ namespace HomeSeer.PluginSdk.Events {
                     if (MatchAllSignatures) {
                         throw new TypeLoadException(exception.Message);
                     }
+                }
+                catch (Exception exception) {
+                    #if DEBUG
+                        Console.WriteLine($"Exception while checking for constructor with {constructorSignature.Length} params on {targetType.FullName} : {exception.Message} at {exception.StackTrace}");
+                    #endif
+                    throw exception;
                 }
             }
 
