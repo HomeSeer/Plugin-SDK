@@ -57,6 +57,7 @@
     <Compile Include="Devices\AbstractStatus.cs" />
     <Compile Include="Devices\Controls\ControlLocation.cs" />
     <Compile Include="Devices\Controls\ControlEvent.cs" />
+    <Compile Include="Devices\Controls\EControlFlag.cs" />
     <Compile Include="Devices\Controls\EControlType.cs" />
     <Compile Include="Devices\Controls\EControlUse.cs" />
     <Compile Include="Devices\Controls\StatusControl.cs" />

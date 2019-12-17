@@ -30,9 +30,9 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         private List<string> _controlStates = new List<string>();
         private double _targetValue;
         private bool _isRange;
-        private bool _hasAdditionalData;
         private ValueRange _targetRange = new ValueRange(0,0);
         private ControlLocation _location = new ControlLocation();
+        private uint _flags;
 
         /// <summary>
         /// Initialize a new StatusControl of the specified type
@@ -139,8 +139,15 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         ///  in <see cref="HsFeature.AdditionalStatusData"/>
         /// </summary>
         public bool HasAdditionalData {
-            get => _hasAdditionalData;
-            set => _hasAdditionalData = value;
+            get => ContainsFlag(EControlFlag.HasAdditionalData);
+            set {
+                if (value) {
+                    AddFlag(EControlFlag.HasAdditionalData);
+                }
+                else {
+                    RemoveFlag(EControlFlag.HasAdditionalData);
+                }
+            }
         }
 
         /// <summary>
@@ -162,6 +169,26 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         public ControlLocation Location {
             get => _location;
             set => _location = value;
+        }
+
+        /// <summary>
+        /// Whether the StatusControl should be available as a status target for events and other platform integrations
+        /// </summary>
+        /// <returns>
+        /// FALSE if the StatusControl is a valid status target,
+        ///  TRUE if it is not.
+        /// </returns>
+        /// See also: <seealso cref="EControlFlag.InvalidStatusTarget"/>
+        public bool IsInvalidStatusTarget {
+            get => ContainsFlag(EControlFlag.InvalidStatusTarget);
+            set {
+                if (value) {
+                    AddFlag(EControlFlag.InvalidStatusTarget);
+                }
+                else {
+                    RemoveFlag(EControlFlag.InvalidStatusTarget);
+                }
+            }
         }
 
         /// <summary>
@@ -293,6 +320,47 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
 
             return finalLabel;
         }
+        
+        /// <summary>
+        /// Add the specified <see cref="EControlFlag"/> to the StatusControl
+        /// </summary>
+        /// <param name="controlFlag">The <see cref="EControlFlag"/> to add</param>
+        private void AddFlag(EControlFlag controlFlag) {
+            
+            var currentFlags = _flags | (uint) controlFlag;;
+            _flags = currentFlags;
+        }
+
+        /// <summary>
+        /// Determine if the StatusControl contains the specified <see cref="EControlFlag"/>
+        /// </summary>
+        /// <param name="controlFlag">The <see cref="EControlFlag"/> to look for</param>
+        /// <returns>
+        /// TRUE if the StatusControl contains the <see cref="EControlFlag"/>,
+        ///  FALSE if it does not.
+        /// </returns>
+        private bool ContainsFlag(EControlFlag controlFlag) {
+
+            return (_flags & (uint) controlFlag) != 0;
+        }
+
+        /// <summary>
+        /// Remove the specified <see cref="EControlFlag"/> from the StatusControl
+        /// </summary>
+        /// <param name="controlFlag">The <see cref="EControlFlag"/> to remove</param>
+        private void RemoveFlag(EControlFlag controlFlag) {
+            
+            var currentFlags = _flags ^ (uint) controlFlag;;
+            _flags = currentFlags;
+        }
+
+        /// <summary>
+        /// Clear all <see cref="EControlFlag"/>s on the StatusControl.
+        /// </summary>
+        private void ClearFlags() {
+            
+            _flags = 0;
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object obj) {
@@ -326,6 +394,9 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                 return false;
             }
             if (_targetRange != otherStatusControl._targetRange) {
+                return false;
+            }
+            if (_flags != otherStatusControl._flags) {
                 return false;
             }
 
