@@ -39,7 +39,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// The unique identifier for this device/feature. This is the primary key for devices and features in HomeSeer.
         /// </summary>
-        public int Ref { get; } = -1;
+        public int Ref { get; private set; } = -1;
 
         #region Public
         
@@ -707,9 +707,9 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
-        internal AbstractHsDevice() {}
+        protected AbstractHsDevice() {}
 
-        internal AbstractHsDevice(int featureRef) {
+        protected AbstractHsDevice(int featureRef) {
             Ref = featureRef;
         }
 
