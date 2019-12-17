@@ -21,6 +21,8 @@ namespace HomeSeer.PluginSdk.Devices {
                           };
             feature.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
             feature.Changes.Add(EProperty.UserAccess, "Any");
+            feature.Changes.Add(EProperty.Location2, "Plugin");
+            feature.Changes.Add(EProperty.Location, pluginId);
             ff._feature = feature;
 
             return ff;
