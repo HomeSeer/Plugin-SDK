@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>HomeSeer-PluginSDK</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <title>$title$</title>
     <authors>HomeSeer</authors>
     <owners>HomeSeer</owners>
@@ -12,7 +12,7 @@
     <license type="expression">AGPL-3.0-or-later</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>https://docs.homeseer.com/display/HSPI/Plugin+SDK+v1.0.7.1</releaseNotes>
+    <releaseNotes>https://docs.homeseer.com/display/HSPI/Plugin+SDK+v1.0.8.0</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>HomeSeer Home Seer Plugin pluginsdk hs4 sdk hs api pluginapi plugins</tags>
   </metadata>
