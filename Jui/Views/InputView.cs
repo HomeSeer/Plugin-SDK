@@ -158,7 +158,7 @@ namespace HomeSeer.Jui.Views {
 		            typeString = "text\" ";
 		            break;
 	            case EInputType.Number:
-		            typeString = "number\" pattern=\"[0-9]*\" ";
+		            typeString = "number\" step=\"1\" pattern=\"[0-9]*\" ";
 		            break;
 	            case EInputType.Email:
 		            typeString = "email\" ";
@@ -170,7 +170,7 @@ namespace HomeSeer.Jui.Views {
 		            typeString = "password\" ";
 		            break;
 	            case EInputType.Decimal:
-		            typeString = "text\" pattern=\"[0-9.]*\" ";
+		            typeString = "number\" step=\"0.001\" ";
 		            break;
 	            default:
 		            throw new ArgumentOutOfRangeException();

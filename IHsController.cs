@@ -154,7 +154,22 @@ namespace HomeSeer.PluginSdk {
         #region Read
         
         //Both
+        
+        /// <summary>
+        /// Get a list of device/feature references that are associated with the specified plugin interface
+        /// </summary>
+        /// <param name="interfaceName">The ID of the plugin interface to get devices and features for</param>
+        /// <param name="deviceOnly"> Whether to get refs for devices or both devices and features</param>
+        /// <returns>A list of device/feature reference IDs</returns>
         List<int> GetRefsByInterface(string interfaceName, bool deviceOnly = false);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="interfaceName"></param>
+        /// <param name="property"></param>
+        /// <param name="deviceOnly"></param>
+        /// <returns></returns>
         Dictionary<int, object> GetPropertyByInterface(string interfaceName, EProperty property, bool deviceOnly = false);
         string GetNameByRef(int devOrFeatRef);
         bool DoesRefExist(int devOrFeatRef);
@@ -162,15 +177,126 @@ namespace HomeSeer.PluginSdk {
         bool IsFlagOnRef(int devOrFeatRef, EMiscFlag miscFlag);
         bool IsRefDevice(int devOrFeatRef);
         
+        /// <summary>
+        /// Get a list of all of the device and feature refs present in the HomeSeer system
+        /// <para>
+        /// To get just a list of devices, call <see cref="GetAllDeviceRefs"/>
+        ///  or to get a list of features, call <see cref="GetAllFeatureRefs"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the device and feature refs managed by the HomeSeer system</returns>
+        List<int> GetAllRefs();
+        
         //Devices
         HsDevice GetDeviceByRef(int devRef);
         HsDevice GetDeviceWithFeaturesByRef(int devRef);
         HsDevice GetDeviceByAddress(string devAddress);
+
+        /// <summary>
+        /// Get a list of all of the device refs present in the HomeSeer system
+        /// <para>
+        /// This does not include refs for features. To get those in addition to these, use <see cref="GetAllRefs"/>
+        ///  or call <see cref="GetAllFeatureRefs"/> to get a list of just features
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the device refs managed by the HomeSeer system</returns>
+        List<int> GetAllDeviceRefs();
+        
+        /// <summary>
+        /// Get a list of all of the devices managed by the HomeSeer system without associated features.
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="withFeatures">
+        /// TRUE if associated features should be attached to their devices,
+        ///  or FALSE if features should be left out.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system with or without associated features linked.
+        /// </returns>
+        List<HsDevice> GetAllDevices(bool withFeatures);
+        
+#if BETA
+        
+        /// <summary>
+        /// Get a list of all of the device refs present in the HomeSeer system that match the specified pattern
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match devices to. Create an instance of <see cref="HsDevice"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>
+        /// A list of integers corresponding to the device refs managed by the HomeSeer system that match
+        ///  the specified pattern.
+        /// </returns>
+        List<int> GetAllMatchingDeviceRefs(Dictionary<EProperty, object> matchPattern);
+        
+        /// <summary>
+        /// Get a list of all of the devices present in the HomeSeer system that match the specified pattern
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match devices to. Create an instance of <see cref="HsDevice"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <param name="withFeatures">
+        /// TRUE if associated features should be attached to their devices,
+        ///  or FALSE if features should be left out.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system that match the specified pattern.
+        /// </returns>
+        List<HsDevice> GetAllMatchingDevices(Dictionary<EProperty, object> matchPattern, bool withFeatures);
+
+#endif
         
         //Features
         HsFeature GetFeatureByRef(int featRef);
         HsFeature GetFeatureByAddress(string featAddress);
         bool IsFeatureValueValid(int featRef);
+
+        /// <summary>
+        /// Get a list of all of the feature refs present in the HomeSeer system
+        /// <para>
+        /// This does not include refs for devices. To get those in addition to these, use <see cref="GetAllRefs"/>
+        ///  or call <see cref="GetAllDeviceRefs"/> to get a list of just devices
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the feature refs managed by the HomeSeer system</returns>
+        List<int> GetAllFeatureRefs();
+
+#if BETA
+        
+        /// <summary>
+        /// Get a list of all of the feature refs present in the HomeSeer system that match the specified pattern
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match features to. Create an instance of <see cref="HsFeature"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>
+        /// A list of integers corresponding to the feature refs managed by the HomeSeer system that match
+        ///  the specified pattern.
+        /// </returns>
+        List<int> GetAllMatchingFeatureRefs(Dictionary<EProperty, object> matchPattern);
+        
+        /// <summary>
+        /// Get a list of all of the features present in the HomeSeer system that match the specified pattern
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match features to. Create an instance of <see cref="HsFeature"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>A list of features managed by the HomeSeer system that match the specified pattern.</returns>
+        List<HsFeature> GetAllMatchingFeatures(Dictionary<EProperty, object> matchPattern);
+
+#endif
 
         StatusControl GetStatusControlForValue(int featRef, double value);
         StatusControl GetStatusControlForLabel(int featRef, string label);
@@ -516,7 +642,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="Voice">The voice to use, SAPI only on Windows</param>
         /// <param name="FileName">Filename to send the speech to</param>
         /// <returns></returns>
-        bool SpeakToFileV2(string Text, string Voice, string FileName);
+        bool SpeakToFile(string Text, string Voice, string FileName);
 
         #if WIP
         /// <summary>

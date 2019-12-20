@@ -60,6 +60,9 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <para>
         /// Leaving this blank will cause the StatusControl's Label field to be used instead
         /// </para>
+        /// <para>
+        /// Set this to a single space " " to ensure that the corresponding status is left blank when displayed
+        /// </para>
         /// </summary>
         public string Label {
             get => _label;
@@ -190,7 +193,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
             if (!_isRange || _targetRange == null) {
                 label = _label;
-                if (string.IsNullOrWhiteSpace(_label)) {
+                if (string.IsNullOrEmpty(_label)) {
                     return false;
                 }
                 if (additionalData == null || !_hasAdditionalData) {

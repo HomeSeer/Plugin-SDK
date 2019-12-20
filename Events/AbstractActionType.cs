@@ -61,7 +61,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// The currently selected sub-action index
         /// </summary>
         /// <remarks>
-        /// -1 is it is not set
+        /// -1 if it is not set
         /// </remarks>
         protected int SelectedSubActionIndex { get; private set; } = -1;
         

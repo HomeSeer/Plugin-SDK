@@ -39,7 +39,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// The unique identifier for this device/feature. This is the primary key for devices and features in HomeSeer.
         /// </summary>
-        public int Ref { get; } = -1;
+        public int Ref { get; private set; } = -1;
 
         #region Public
         
@@ -414,37 +414,6 @@ namespace HomeSeer.PluginSdk.Devices {
                 _plugExtraData = value;
             }
         }
-        
-        /// <summary>
-        /// The address of an image of the physical device this HomeSeer device/feature is associated with
-        /// </summary>
-        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
-        public string ProductImage {
-            get {
-                if (Changes.ContainsKey(EProperty.ProductImage)) {
-                    return (string) Changes[EProperty.ProductImage];
-                }
-
-                return _productImage;
-            }
-            set {
-                if (value == _productImage) {
-                    Changes.Remove(EProperty.ProductImage);
-                    return;
-                }
-                if (Changes.ContainsKey(EProperty.ProductImage)) {
-                    Changes[EProperty.ProductImage] = value;
-                }
-                else {
-                    Changes.Add(EProperty.ProductImage, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _productImage = value ?? "";
-            }
-        }
 
         /// <summary>
         /// The type of relationship this device/feature has with other devices/features.
@@ -719,9 +688,6 @@ namespace HomeSeer.PluginSdk.Devices {
         protected string         _name              = "";
         /// <inheritdoc cref="PlugExtraData"/>
         protected PlugExtraData  _plugExtraData     = new PlugExtraData();
-        /// <inheritdoc cref="ProductImage"/>
-        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
-        protected string         _productImage      = "";
         /// <inheritdoc cref="Relationship"/>
         protected ERelationship  _relationship      = ERelationship.NotSet;
         /// <inheritdoc cref="Status"/>
@@ -741,9 +707,9 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
-        internal AbstractHsDevice() {}
+        protected AbstractHsDevice() {}
 
-        internal AbstractHsDevice(int featureRef) {
+        protected AbstractHsDevice(int featureRef) {
             Ref = featureRef;
         }
 
