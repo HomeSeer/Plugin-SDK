@@ -27,7 +27,7 @@ This SDK is available for your use according to the [GNU Affero General Public L
 <!-- Images & Badges -->
 
 [release-badge]: https://img.shields.io/nuget/v/HomeSeer-PluginSDK
-[hs-version-badge]: https://img.shields.io/badge/Works%20With-HS4.0.0.27-blue
+[hs-version-badge]: https://img.shields.io/badge/Works%20With-HS4.0.1.2-blue
 [maintained-badge]: https://img.shields.io/github/last-commit/HomeSeer/Plugin-SDK
 [hs-logo]: http://homeseer.com/images/HS4/hs4-64.png
 [nuget-downloads]: https://img.shields.io/nuget/dt/HomeSeer-PluginSDK
