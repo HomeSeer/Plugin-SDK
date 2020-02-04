@@ -13,10 +13,16 @@ namespace HomeSeer.Jui.Views {
 	/// </summary>
 	public sealed class LabelView : AbstractView {
 
-		/// <summary>
-		/// The value displayed; leave blank to just show the name
-		/// </summary>
-		[JsonProperty("value")]
+        /// <summary>
+        /// Set this to true if the value should be displayed as preformatted text
+        /// </summary>
+        [JsonProperty("preformatted_text")]
+        public bool PreformattedText { get; set; }
+
+        /// <summary>
+        /// The value displayed; leave blank to just show the name
+        /// </summary>
+        [JsonProperty("value")]
 		public string Value { get; set; }
 		
 		/// <inheritdoc />
@@ -58,7 +64,8 @@ namespace HomeSeer.Jui.Views {
 		public override string ToHtml(int indent = 0) {
 			
 			var sb = new StringBuilder();
-			sb.Append(GetIndentStringFromNumber(indent));
+            string elementType = PreformattedText ? "pre" : "p";
+            sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
 			sb.Append($"<div id=\"{Id}\" class=\"jui-view\">");
 			sb.Append(Environment.NewLine);
@@ -68,8 +75,10 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Environment.NewLine);
 			//Add the label text
 			sb.Append(GetIndentStringFromNumber(indent+1));
-			sb.Append($"<p id=\"{Id}.value\">{Value}</p>");
-			sb.Append(Environment.NewLine);
+
+			sb.Append($"<{elementType} id=\"{Id}.value\">{Value}</{elementType}> ");
+
+            sb.Append(Environment.NewLine);
 			//Close the containing div
 			sb.Append(GetIndentStringFromNumber(indent));
 			sb.Append("</div>");
