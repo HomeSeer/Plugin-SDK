@@ -106,6 +106,7 @@
     <Compile Include="Energy\EnergyGraphData.cs" />
     <Compile Include="Events\TriggerTypeCollection.cs" />
     <Compile Include="IHsController.cs" />
+    <Compile Include="Jui\Types\ELabelType.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
     <Compile Include="Logging\ELogType.cs" />
     <Compile Include="Speech\EMediaOperation.cs" />

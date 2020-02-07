@@ -14,10 +14,10 @@ namespace HomeSeer.Jui.Views {
 	public sealed class LabelView : AbstractView {
 
         /// <summary>
-        /// Set this to true if the value should be displayed as preformatted text
+        /// The type of the label
         /// </summary>
-        [JsonProperty("preformatted_text")]
-        public bool PreformattedText { get; set; }
+        [JsonProperty("label_type")]
+        public ELabelType LabelType { get; set; }
 
         /// <summary>
         /// The value displayed; leave blank to just show the name
@@ -35,7 +35,8 @@ namespace HomeSeer.Jui.Views {
 		public LabelView(string id, string name) : base(id, name ?? "") {
 			
 			Type = EViewType.Label;
-		}
+            LabelType = ELabelType.Default;
+        }
 		
 		/// <inheritdoc />
 		/// <summary>
@@ -64,7 +65,6 @@ namespace HomeSeer.Jui.Views {
 		public override string ToHtml(int indent = 0) {
 			
 			var sb = new StringBuilder();
-            string elementType = PreformattedText ? "pre" : "p";
             sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
 			sb.Append($"<div id=\"{Id}\" class=\"jui-view\">");
@@ -75,9 +75,17 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Environment.NewLine);
 			//Add the label text
 			sb.Append(GetIndentStringFromNumber(indent+1));
-
-			sb.Append($"<{elementType} id=\"{Id}.value\">{Value}</{elementType}> ");
-
+            switch (LabelType)
+            {
+                case ELabelType.Default:
+                    sb.Append($"<p id=\"{Id}.value\">{Value}</p> ");
+                    break;
+                case ELabelType.Preformatted:
+                    sb.Append($"<pre id=\"{Id}.value\">{Value}</pre> ");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             sb.Append(Environment.NewLine);
 			//Close the containing div
 			sb.Append(GetIndentStringFromNumber(indent));
