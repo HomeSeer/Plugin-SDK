@@ -179,7 +179,7 @@ namespace HomeSeer.PluginSdk.Devices {
             return dce;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="AbstractHsDevice.IsValueValid"/>
         protected override bool IsValueValid() {
             try {
                 return HasControlForValue(_value) || HasGraphicForValue(_value);

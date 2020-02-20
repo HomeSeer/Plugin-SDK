@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.Jui.Views {
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="AbstractView"/>
 	/// <summary>
 	/// A button is used to execute an action with the plugin.
 	/// A plugin will then instruct the client on how to proceed by either responding
@@ -18,11 +18,11 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		[JsonProperty("action_id")]
 		public string ActionId { get; set; }
-		
+
 		/*[JsonProperty("params")]
 		public List<string> Parameters { get; set; }*/
-		
-		/// <inheritdoc />
+
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create an instance of a ButtonView with an ID, Name, and ActionID
 		/// </summary>
@@ -45,12 +45,12 @@ namespace HomeSeer.Jui.Views {
 			ActionId = actionId;
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		public override string GetStringValue() {
 			return null;
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 			//TODO attach to button click event
 			var sb = new StringBuilder();

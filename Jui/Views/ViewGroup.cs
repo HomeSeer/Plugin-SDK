@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.Jui.Views {
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="AbstractView"/>
 	/// <summary>
 	/// View groups define a vertical sub-grouping of views with a header.
 	/// </summary>
@@ -49,10 +49,10 @@ namespace HomeSeer.Jui.Views {
 		private Dictionary<string, int> _viewIds = new Dictionary<string, int>();
 
 		#endregion
-		
+
 		#region Constructors
-		
-		/// <inheritdoc />
+
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a view group with an ID
 		/// </summary>
@@ -63,7 +63,7 @@ namespace HomeSeer.Jui.Views {
 			_views = new List<AbstractView>();
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a view group with an ID and Name
 		/// </summary>
@@ -138,8 +138,8 @@ namespace HomeSeer.Jui.Views {
 			
 			return ViewCollectionHelper.GetViewById<TViewType>(viewId, ref _views, ref _viewIds);
 		}
-		
-		/// <inheritdoc/>
+
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		/// <exception cref="InvalidOperationException">Thrown to indicate that this ViewGroup contains other views</exception>
 		public override string GetStringValue() {
 			if (_views.Count > 0) {
@@ -171,7 +171,7 @@ namespace HomeSeer.Jui.Views {
 			ViewCollectionHelper.MapViewIds(_views, out _viewIds, true);
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.Update"/>
 		/// <summary>
 		/// Not used by ViewGroups
 		/// </summary>
@@ -188,11 +188,12 @@ namespace HomeSeer.Jui.Views {
 			
 			ViewCollectionHelper.RemoveAllViews(out _views, out _viewIds);
 		}
-		
-		#endregion
-		
+
 		#endregion
 
+		#endregion
+
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 
 			var sb = new StringBuilder();
