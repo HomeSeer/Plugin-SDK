@@ -111,6 +111,10 @@ namespace HomeSeer.Jui.Views {
 
 			switch (InputType) {
 				case EInputType.Text:
+				//TODO validate date and time input
+				case EInputType.Date:
+				case EInputType.Time:
+				case EInputType.DateTime:
 					//Anything is valid for text
 					return true;
 				case EInputType.Number:
