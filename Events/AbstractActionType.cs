@@ -378,7 +378,6 @@ namespace HomeSeer.PluginSdk.Events {
             return Encoding.UTF8.GetBytes(pageJson);
         }
 
-        /// <inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -403,7 +402,6 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        /// <inheritdoc/>
         public override int GetHashCode() {
             return 271828 * _id.GetHashCode() * _eventRef.GetHashCode();
         }

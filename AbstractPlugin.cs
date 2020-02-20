@@ -31,7 +31,7 @@ namespace HomeSeer.PluginSdk {
 
         #region Properties
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.HasSettings" />
         /// <remarks>
         /// The default implementation should be sufficient for all purposes;
         ///  returning TRUE if the <see cref="Settings"/> property contains pages
@@ -41,26 +41,26 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </remarks>
         public virtual bool HasSettings => (Settings?.Count ?? 0) > 0;
-        
-        /// <inheritdoc />
+
+        /// <inheritdoc cref="IPlugin.Id" />
         public abstract string Id { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.Name" />
         public abstract string Name { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.AccessLevel" />
         public virtual int AccessLevel { get; } = 1;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.SupportsConfigDevice" />
         public virtual bool SupportsConfigDevice { get; } = false;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.SupportsConfigDeviceAll" />
         public virtual bool SupportsConfigDeviceAll { get; } = false;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerCount" />
         public int TriggerCount => TriggerTypes?.Count ?? 0;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ActionCount" />
         public int ActionCount => ActionTypes?.Count ?? 0;
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ShutdownIO" />
         public void ShutdownIO() {
             try {
                 Console.WriteLine("Disconnecting from HomeSeer...");
@@ -425,7 +425,7 @@ namespace HomeSeer.PluginSdk {
 
         #region Configuration and Status Info
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.OnStatusCheck" />
         public PluginStatus OnStatusCheck() {
             BeforeReturnStatus();
             return Status ?? PluginStatus.Warning("Current plugin status is unknown (null)");
@@ -444,12 +444,12 @@ namespace HomeSeer.PluginSdk {
 
         #region Devices
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.UpdateStatusNow" />
         public virtual EPollResponse UpdateStatusNow(int devOrFeatRef) {
             return EPollResponse.NotFound;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.SetIOMulti" />
         /// <remarks>
         /// The default behavior is to clear the current status text and set the value on the target feature and then
         ///  let HomeSeer assign the status text based on the configured <see cref="StatusControl"/>s
@@ -461,12 +461,12 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.GetJuiDeviceConfigPage" />
         public virtual string GetJuiDeviceConfigPage(int deviceRef) {
             return $"No device config page registered by plugin {Id}";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.SaveJuiDeviceConfigPage" />
         public bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
             if (LogDebug) {
                 Console.WriteLine("SaveJuiDeviceConfigPage");
@@ -501,14 +501,14 @@ namespace HomeSeer.PluginSdk {
             
             return true;
         }
-        
+
         // ReSharper restore UnusedParameter.Global
 
         #endregion
 
         #region Features
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.PostBackProc" />
         public virtual string PostBackProc(string page, string data, string user, int userRights) {
             return "";
         }
@@ -517,34 +517,34 @@ namespace HomeSeer.PluginSdk {
 
         #region Events
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.HsEvent" />
         public virtual void HsEvent(Constants.HSEvent eventType, object[] @params) {
             //process events?
         }
 
         #region Actions
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ActionReferencesDevice" />
         public bool ActionReferencesDevice(TrigActInfo actInfo, int dvRef) {
             return ActionTypes?.ActionReferencesDeviceOrFeature(dvRef, actInfo) ?? false;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ActionBuildUI" />
         public string ActionBuildUI(TrigActInfo actInfo) {
             return ActionTypes?.OnGetActionUi(actInfo) ?? "Plugin returned malformed data";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ActionConfigured" />
         public bool ActionConfigured(TrigActInfo actInfo) {
             return ActionTypes?.IsActionConfigured(actInfo) ?? true;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ActionFormatUI" />
         public string ActionFormatUI(TrigActInfo actInfo) {
             return ActionTypes?.OnGetActionPrettyString(actInfo) ?? "Plugin returned malformed data";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.ActionProcessPostUI" />
         public EventUpdateReturnData ActionProcessPostUI(Dictionary<string, string> postData, TrigActInfo actInfo) {
             return ActionTypes?.OnUpdateActionConfig(postData, actInfo) ?? 
                    new EventUpdateReturnData {
@@ -552,12 +552,12 @@ namespace HomeSeer.PluginSdk {
                    };
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.HandleAction" />
         public bool HandleAction(TrigActInfo actInfo) {
             return ActionTypes?.HandleAction(actInfo) ?? false;
         }
-        
-        /// <inheritdoc />
+
+        /// <inheritdoc cref="IPlugin.GetActionNameByNumber" />
         public string GetActionNameByNumber(int actionNum) {
             return ActionTypes?.GetName(actionNum) ?? "Error retrieving action name";
         }
@@ -566,17 +566,17 @@ namespace HomeSeer.PluginSdk {
 
         #region Triggers
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerBuildUI" />
         public string TriggerBuildUI(TrigActInfo trigInfo) {
             return TriggerTypes?.OnGetTriggerUi(trigInfo) ?? "Plugin returned malformed data";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerFormatUI" />
         public string TriggerFormatUI(TrigActInfo trigInfo) {
             return TriggerTypes?.OnGetTriggerPrettyString(trigInfo) ?? "Plugin returned malformed data";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerProcessPostUI" />
         public EventUpdateReturnData TriggerProcessPostUI(Dictionary<string, string> postData, TrigActInfo trigInfoIn) {
             return TriggerTypes?.OnUpdateTriggerConfig(postData, trigInfoIn) ?? 
                    new EventUpdateReturnData {
@@ -585,37 +585,37 @@ namespace HomeSeer.PluginSdk {
                                    };
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerReferencesDeviceOrFeature" />
         public bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef) {
             return TriggerTypes?.TriggerReferencesDeviceOrFeature(devOrFeatRef, trigInfo) ?? false;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerCanBeCondition" />
         public bool TriggerCanBeCondition(int triggerNum) {
             return TriggerTypes?.TriggerCanBeCondition(triggerNum) ?? false;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.GetSubTriggerCount" />
         public int GetSubTriggerCount(int triggerNum) {
             return TriggerTypes?.GetSubTriggerCount(triggerNum) ?? 0;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.GetSubTriggerNameByNumber" />
         public string GetSubTriggerNameByNumber(int triggerNum, int subTriggerNum) {
             return TriggerTypes?.GetSubTriggerName(triggerNum, subTriggerNum) ?? "Plugin returned malformed data";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.IsTriggerConfigValid" />
         public bool IsTriggerConfigValid(TrigActInfo trigInfo) {
             return TriggerTypes?.IsTriggerConfigured(trigInfo) ?? true;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.GetTriggerNameByNumber" />
         public string GetTriggerNameByNumber(int triggerNum) {
             return TriggerTypes?.GetName(triggerNum) ?? "Plugin returned malformed data";
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.TriggerTrue" />
         public bool TriggerTrue(TrigActInfo trigInfo, bool isCondition = false) {
             return TriggerTypes?.IsTriggerTrue(trigInfo, isCondition) ?? false;
         }
@@ -626,7 +626,7 @@ namespace HomeSeer.PluginSdk {
 
         #region Dynamic Method/Property Calls
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.PluginFunction" />
         public object PluginFunction(string procName, object[] @params) {
             try {
                 var ty = GetType();
@@ -642,7 +642,7 @@ namespace HomeSeer.PluginSdk {
             return null;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.PluginPropertyGet" />
         public object PluginPropertyGet(string propName, object[] @params) {
             try {
                 var ty = GetType();
@@ -658,7 +658,7 @@ namespace HomeSeer.PluginSdk {
             return null;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.PluginPropertySet" />
         public void PluginPropertySet(string propName, object value) {
             try {
                 var ty = GetType();
@@ -683,7 +683,7 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPlugin.SpeakIn" />
         public virtual void SpeakIn(int speechDevice, string spokenText, bool wait, string host) {}
 
     }

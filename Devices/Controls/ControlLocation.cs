@@ -81,7 +81,6 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             }
         }
 
-        /// <inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -104,7 +103,6 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return true;
         }
 
-        /// <inheritdoc/>
         public override int GetHashCode() {
             return _row.GetHashCode() * _column.GetHashCode() * _width.GetHashCode();
         }

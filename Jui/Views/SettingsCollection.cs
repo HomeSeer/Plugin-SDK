@@ -274,7 +274,6 @@ namespace HomeSeer.Jui.Views {
 	        return _pages.ContainsKey(pageId) || _hiddenPages.ContainsKey(pageId);
         }
 
-        /// <inheritdoc />
         public IEnumerator<Page> GetEnumerator() {
 	        return Pages.GetEnumerator();
         }

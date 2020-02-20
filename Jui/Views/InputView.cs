@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.Jui.Views {
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="AbstractView"/>
 	/// <summary>
 	/// An input view is an editable text box for the user to enter strings, numbers, etc.
 	/// </summary>
@@ -26,7 +26,7 @@ namespace HomeSeer.Jui.Views {
 		[JsonProperty("value")]
 		public string Value { get; set; }
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of an InputView with an ID, a Name, and the specified style.
 		/// </summary>
@@ -44,7 +44,7 @@ namespace HomeSeer.Jui.Views {
 			InputType = type;
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of an InputView with an ID, a Name, a Value, and the specified style.
 		/// </summary>
@@ -62,7 +62,7 @@ namespace HomeSeer.Jui.Views {
 			Value = value;
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.Update"/>
 		/// <summary>
 		/// Update the view to the new state.  This will change the inputted value 
 		/// </summary>
@@ -88,7 +88,7 @@ namespace HomeSeer.Jui.Views {
 
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.UpdateValue"/>
 		public override void UpdateValue(string value) {
 			
 			if (!IsValueValidForType(value)) {
@@ -111,6 +111,10 @@ namespace HomeSeer.Jui.Views {
 
 			switch (InputType) {
 				case EInputType.Text:
+				//TODO validate date and time input
+				case EInputType.Date:
+				case EInputType.Time:
+				case EInputType.DateTime:
 					//Anything is valid for text
 					return true;
 				case EInputType.Number:
@@ -133,8 +137,8 @@ namespace HomeSeer.Jui.Views {
 					return false;
 			}
 		}
-		
-		/// <inheritdoc/>
+
+		/// <inheritdoc cref="AbstractView.Value"/>
 		/// <remarks>
 		/// The same as <see cref="Value"/>
 		/// </remarks>
@@ -142,7 +146,7 @@ namespace HomeSeer.Jui.Views {
 			return Value;
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 
 			var sb = new StringBuilder();

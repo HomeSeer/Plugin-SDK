@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.Jui.Views {
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="AbstractView"/>
 	/// <summary>
 	/// Labels define static text displayed to the user.
 	/// This can either be as a single set of text or as a combination of a name and value to indicate
@@ -18,8 +18,8 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		[JsonProperty("value")]
 		public string Value { get; set; }
-		
-		/// <inheritdoc />
+
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a Label with an ID and text value
 		/// </summary>
@@ -30,8 +30,8 @@ namespace HomeSeer.Jui.Views {
 			
 			Type = EViewType.Label;
 		}
-		
-		/// <inheritdoc />
+
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a Label with an ID, Name, and text value
 		/// </summary>
@@ -48,13 +48,13 @@ namespace HomeSeer.Jui.Views {
 			Type = EViewType.Label;
 			Value = value;
 		}
-		
-		/// <inheritdoc/>
+
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		public override string GetStringValue() {
 			return null;
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 			
 			var sb = new StringBuilder();

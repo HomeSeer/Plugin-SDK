@@ -244,7 +244,6 @@ namespace HomeSeer.PluginSdk.Devices {
             return finalLabel;
         }
 
-        /// <inheritdoc />
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -270,7 +269,6 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
-        /// <inheritdoc />
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _value.GetHashCode();
         }

@@ -440,12 +440,11 @@ namespace HomeSeer.Jui.Views {
 			
 			ViewCollectionHelper.RemoveAllViews(out _views, out _viewIds);
 		}
-		
-		#endregion
-		
+
 		#endregion
 
-		/// <inheritdoc />
+		#endregion
+
 		/// <summary>
 		/// Compares the Id, Name, and the number of views
 		/// </summary>
@@ -473,7 +472,6 @@ namespace HomeSeer.Jui.Views {
 			return true;
 		}
 
-		/// <inheritdoc />
 		/// <summary>
 		/// Compares the Id, Name, and the number of views
 		/// </summary>
