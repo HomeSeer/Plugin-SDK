@@ -287,14 +287,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called by HomeSeer to determine if a particular trigger can be used as a condition or not.
         ///  A condition is a trigger that operates in conjunction with another trigger in an AND/OR pattern.
         /// </summary>
-        /// <param name="triggerIndex">The index of the trigger type to check</param>
+        /// <param name="triggerIndex">The 1 based index of the trigger type to check</param>
         /// <returns>
         /// TRUE if the trigger can be used as a condition,
         ///  FALSE if it can not.
         /// </returns>
         public bool TriggerCanBeCondition(int triggerIndex) {
             try {
-                var targetTrig = GetObjectFromInfo(triggerIndex);
+                var targetTrig = GetObjectFromInfo(triggerIndex - 1);
                 return targetTrig.CanBeCondition;
             }
             catch (Exception exception) {

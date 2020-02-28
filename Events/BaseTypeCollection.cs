@@ -179,7 +179,7 @@ namespace HomeSeer.PluginSdk.Events {
                 throw new TypeLoadException(logMessage);
             }
         }
-        
+
         private void AssertTypeHasConstructor(Type targetType, Type[] constructorParams) {
             var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
                                                             null,
@@ -191,10 +191,12 @@ namespace HomeSeer.PluginSdk.Events {
                 //Constructor match found
                 return;
             }
-            
+
             //Constructor match not found
             var logMessage = new StringBuilder("Type does not have a constructor with parameters ");
-            constructorParams.Select(t => logMessage.Append($"{t.FullName} "));
+            foreach (var param in constructorParams) {
+                logMessage.Append($"{param.FullName} ");
+            }
             throw new TypeLoadException(logMessage.ToString());
         }
         
