@@ -1,8 +1,9 @@
 ---
-name: Bug report
-about: Report a problem or inconsistency in expected behavior
+name: Incident Report
+about: A generic report for an incident like a crash, application lock-up, or unexpected
+  behavior. If you are seeking help create a Support Inquiry issue instead.
 title: ''
-labels: further investigation needed
+labels: Feedback, Incident Report
 assignees: ''
 
 ---
@@ -14,8 +15,8 @@ assignees: ''
 - HomeSeer Version: [v4.0.0.30]
 - PluginSDK Version: [v1.0.6.0]
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Describe the issue**
+A clear and concise description of what the issue is to the best of your ability.
 
 **Steps to Reproduce**
 Steps to reproduce the behavior:
