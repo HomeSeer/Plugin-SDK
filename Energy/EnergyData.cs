@@ -2,6 +2,11 @@ using System;
 
 namespace HomeSeer.PluginSdk.Energy {
 
+    /// <summary>
+    /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+    ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+    ///  significant changes in the near future. Please use with caution.
+    /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class EnergyData {

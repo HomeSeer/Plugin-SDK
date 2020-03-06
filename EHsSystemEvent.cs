@@ -1,5 +1,5 @@
 namespace HomeSeer.PluginSdk {
-
+    
     public enum EHsSystemEvent {
         // For HSEvent callbacks
         
