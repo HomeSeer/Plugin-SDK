@@ -111,6 +111,11 @@
     <Compile Include="Logging\ELogType.cs" />
     <Compile Include="Speech\EMediaOperation.cs" />
     <Compile Include="Speech\AbstractSpeakerClient.cs" />
+    <Compile Include="Speech\ESpeakErrorValue.cs" />
+    <Compile Include="Speech\ESpeakTypeValue.cs" />
+    <Compile Include="Types\EHsSystemEvent.cs" />
+    <Compile Include="Types\EOsType.cs" />
+    <Compile Include="Types\ERegistrationMode.cs" />
     <None Include="Logging\LogEntry.cs" />
     <Compile Include="PluginStatus.cs" />
     <Compile Include="IPlugin.cs" />
