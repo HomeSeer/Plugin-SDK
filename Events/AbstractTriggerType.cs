@@ -352,19 +352,6 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        /// <summary>
-        /// Deserialize the trigger data to a <see cref="HomeSeer.Jui.Views.Page"/>.
-        /// <para>
-        /// Override this if you need to support legacy triggers. Convert the UI to the new format and save it in
-        ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
-        ///  serialize the ConfigPage to byte[].  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
-        ///  deserialize the data using the legacy method.
-        /// </para>
-        /// </summary>
-        /// <param name="inData">A byte array describing the current trigger configuration.</param>
-        /// <returns>
-        /// A byte array describing the current trigger configuration.
-        /// </returns>
         protected virtual byte[] ProcessData(byte[] inData) {
             //Is data null/empty?
             if (inData == null || inData.Length == 0) {
@@ -380,12 +367,27 @@ namespace HomeSeer.PluginSdk.Events {
 
                 return inData;
             }
-            catch (Exception exception) {
-                if (LogDebug) {
-                    Console.WriteLine(exception);
-                }
+            catch (Exception) {
             }
-            
+
+            return ConvertLegacyData(inData);
+        }
+
+        /// <summary>
+        /// Called when legacy trigger data needs to be converted to the new format
+        /// <para>
+        /// Override this if you need to support legacy triggers. Convert the UI to the new format and save it in
+        ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
+        ///  serialize the ConfigPage to byte[].  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
+        ///  deserialize the data using the legacy method.
+        /// </para>
+        /// </summary>
+        /// <param name="inData">A byte array describing the current trigger configuration in legacy format.</param>
+        /// <returns>
+        /// A byte array describing the current trigger configuration in new format.
+        /// </returns>
+        protected virtual byte[] ConvertLegacyData(byte[] inData)
+        {
             return new byte[0];
         }
 
