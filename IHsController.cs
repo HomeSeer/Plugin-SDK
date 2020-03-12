@@ -384,14 +384,41 @@ namespace HomeSeer.PluginSdk {
 
 #endif
 
+        /// <summary>
+        /// Get the <see cref="StatusControl"/> for a value on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="value">The <see cref="AbstractHsDevice.Value"/> managed by the <see cref="StatusControl"/></param>
+        /// <returns>A <see cref="StatusControl"/> that manages the value specified for the <see cref="HsFeature"/></returns>
         StatusControl GetStatusControlForValue(int featRef, double value);
+        
+        /// <summary>
+        /// Get the <see cref="StatusControl"/> for a <see cref="StatusControl.Label"/> on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="label">The <see cref="StatusControl.Label"/> used by the <see cref="StatusControl"/></param>
+        /// <returns>A <see cref="StatusControl"/> with the specified <see cref="StatusControl.Label"/> for the <see cref="HsFeature"/></returns>
         StatusControl GetStatusControlForLabel(int featRef, string label);
+        
+        /// <summary>
+        /// Get a list of <see cref="StatusControl"/>s for a range of values on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="min">The minimum </param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         List<StatusControl> GetStatusControlsForRange(int featRef, double min, double max);
         int GetStatusControlCountByRef(int featRef);
         List<StatusControl> GetStatusControlsByRef(int featRef);
 
         StatusControlCollection GetStatusControlCollectionByRef(int featRef);
         
+        /// <summary>
+        /// Get the <see cref="StatusGraphic"/> for a value on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="value">The <see cref="AbstractHsDevice.Value"/> managed by the <see cref="StatusGraphic"/></param>
+        /// <returns>A <see cref="StatusGraphic"/> that manages the value specified for the <see cref="HsFeature"/></returns>
         StatusGraphic GetStatusGraphicForValue(int featRef, double value);
         List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
         int GetStatusGraphicCountByRef(int featRef);
