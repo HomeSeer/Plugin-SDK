@@ -105,6 +105,12 @@
     <Compile Include="Energy\EnergyGraph.cs" />
     <Compile Include="Energy\EnergyGraphData.cs" />
     <Compile Include="Events\TriggerTypeCollection.cs" />
+    <Compile Include="Features\AbstractFeaturePage.cs" />
+    <Compile Include="Features\FeatureJsonError.cs" />
+    <Compile Include="Features\FeatureJsonRequest.cs" />
+    <Compile Include="Features\FeatureJsonResponse.cs" />
+    <Compile Include="Features\GenericJsonData.cs" />
+    <Compile Include="Features\IFeaturePage.cs" />
     <Compile Include="IHsController.cs" />
     <Compile Include="Jui\Types\ELabelType.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
