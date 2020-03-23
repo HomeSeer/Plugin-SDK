@@ -644,7 +644,7 @@ namespace HomeSeer.PluginSdk {
         /// <returns></returns>
         bool SpeakToFile(string Text, string Voice, string FileName);
 
-        #if WIP
+
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
         /// <para>
@@ -659,14 +659,29 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void RegisterProxySpeakPlug(string pluginId);
-        
+
         /// <summary>
         /// Unregister a plug-in as a Speak proxy that was previously
         ///  registered using RegisterProxySpeakPlug.
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void UnRegisterProxySpeakPlug(string pluginId);
-#endif
+
+        /// <summary>
+        /// Plays audio from passed file
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <param name="Host"></param>
+        /// <param name="Wait"></param>
+        void PlayWavFile(string FileName, string Host, bool Wait);
+
+        /// <summary>
+        /// Set the volume on a speaker client
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="Host"></param>
+        void SetVolume(int level, string Host);
+
 
         #endregion
 

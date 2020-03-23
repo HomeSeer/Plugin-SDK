@@ -413,6 +413,21 @@ namespace HomeSeer.PluginSdk {
         /// </param>
         void SpeakIn(int speechDevice, string spokenText, bool wait, string host);
 
+        /// <summary>
+        /// Plays audio from passed file
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <param name="Host"></param>
+        /// <param name="Wait"></param>
+        void PlayWavFile(string FileName, string Host, bool Wait);
+
+        /// <summary>
+        /// Set the volume on a speaker client
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="Host"></param>
+        void SetVolume(int level, string Host);
+
     }
 
 }

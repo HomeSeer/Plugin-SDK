@@ -686,6 +686,12 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.SpeakIn" />
         public virtual void SpeakIn(int speechDevice, string spokenText, bool wait, string host) {}
 
+        /// <inheritdoc />
+        public virtual void PlayWavFile(string FileName, string Host, bool Wait) { }
+
+        /// <inheritdoc />
+        public virtual void SetVolume(int level, string Host) { }
+
     }
 
 }
