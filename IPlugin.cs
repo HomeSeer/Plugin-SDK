@@ -411,23 +411,7 @@ namespace HomeSeer.PluginSdk {
         ///  An empty string or a single asterisk (*) indicates all connected speaker clients on all hosts.
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
-        void SpeakIn(int speechDevice, string spokenText, bool wait, string host);
-
-        /// <summary>
-        /// Plays audio from passed file
-        /// </summary>
-        /// <param name="FileName"></param>
-        /// <param name="Host"></param>
-        /// <param name="Wait"></param>
-        void PlayWavFile(string FileName, string Host, bool Wait);
-
-        /// <summary>
-        /// Set the volume on a speaker client
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="Host"></param>
-        void SetVolume(int level, string Host);
-
+        void SpeakIn(int speechDevice, string spokenText, bool wait, string host);        
     }
 
 }

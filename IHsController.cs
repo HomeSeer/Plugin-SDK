@@ -760,6 +760,33 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region OS
+        /// <summary>
+        /// Shutdown the HS system
+        /// </summary>
+        void ShutDown();
+
+        /// <summary>
+        /// Shutdown and restart the HS system. This restarts the hardware
+        /// </summary>
+        void RestartSystem();
+
+        /// <summary>
+        /// Shut down HS and shutdown the hardware system
+        /// </summary>
+        void WindowsShutdownSystem();
+
+        /// <summary>
+        /// Shut down HS and reboot the hardware system
+        /// </summary>
+        void WindowsRebootSystem();
+
+        /// <summary>
+        /// Logs off the active user and closes all processes running under the user
+        /// </summary>
+        void WindowsLogoffSystem();
+        #endregion
+
         #region Not Implemented
 
         #region Scripts
@@ -775,8 +802,26 @@ namespace HomeSeer.PluginSdk {
         //string GetScriptPath();
         //string InstallScript(string scr_name, object param);
         //bool IsScriptRunning(string scr);
-        //object RunScript(string scr, bool Wait, bool SingleInstance);
-        //object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
+
+        /// <summary>
+        /// Run a script file
+        /// </summary>
+        /// <param name="scr"></param>
+        /// <param name="Wait"></param>
+        /// <param name="SingleInstance"></param>
+        /// <returns></returns>
+        object RunScript(string scr, bool Wait, bool SingleInstance);
+
+        /// <summary>
+        /// Run a script file calling the given function in the file
+        /// </summary>
+        /// <param name="scr"></param>
+        /// <param name="func"></param>
+        /// <param name="param"></param>
+        /// <param name="Wait"></param>
+        /// <param name="SingleInstance"></param>
+        /// <returns></returns>
+        object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
@@ -816,7 +861,7 @@ namespace HomeSeer.PluginSdk {
         #region AppCallback
 
         //TODO AppCallback methods
-        
+
         #endregion
 
         //TODO other methods
