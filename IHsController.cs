@@ -658,28 +658,32 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
-        void RegisterProxySpeakPlug(string pluginId);
+        //void RegisterProxySpeakPlug(string pluginId);
 
         /// <summary>
         /// Unregister a plug-in as a Speak proxy that was previously
         ///  registered using RegisterProxySpeakPlug.
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
-        void UnRegisterProxySpeakPlug(string pluginId);
+        //void UnRegisterProxySpeakPlug(string pluginId);
 
         /// <summary>
-        /// Plays audio from passed file
+        /// Plays audio from passed file to a specific speaker client
         /// </summary>
-        /// <param name="FileName"></param>
-        /// <param name="Host"></param>
-        /// <param name="Wait"></param>
+        /// <param name="FileName">The filename can be the full path to the file,
+        /// or just the name of file that is located in one of the following folders
+        /// in the HomeSeer root directory: wave/Mdia/scripts</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        /// <param name="Wait">If True, this function will not return until speaking has finished.
+        /// If False, the function returns immediately and the speaking is queued
+        /// </param>
         void PlayWavFile(string FileName, string Host, bool Wait);
 
         /// <summary>
         /// Set the volume on a speaker client
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="Host"></param>
+        /// <param name="level">Volume level in the range of 0-100</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
         void SetVolume(int level, string Host);
 
 
@@ -806,20 +810,21 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Run a script file
         /// </summary>
-        /// <param name="scr"></param>
-        /// <param name="Wait"></param>
-        /// <param name="SingleInstance"></param>
+        /// <param name="scr">Filename of the script to run. Script must be located in the scripts folder.</param>
+        /// <param name="Wait">If True, function does not return until script finishes, if false, the script is run in the background.</param>
+        /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
         /// <returns></returns>
         object RunScript(string scr, bool Wait, bool SingleInstance);
 
         /// <summary>
         /// Run a script file calling the given function in the file
         /// </summary>
-        /// <param name="scr"></param>
-        /// <param name="func"></param>
-        /// <param name="param"></param>
-        /// <param name="Wait"></param>
-        /// <param name="SingleInstance"></param>
+        /// <param name="scr">Filename of the script to run. Script must be located in the scripts folder.</param>
+        /// <param name="func">The name of the function to run. Normally the function "Main" is run if no function is specified.</param>
+        /// <param name="param">The parameter(s) to be passed to the function. This is an object and can be a sigle
+        /// parameter such as a string, or multiple paramaters in an array</param>
+        /// <param name="Wait">If True, function does not return until script finishes, if false, the script is run in the background.</param>
+        /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
         /// <returns></returns>
         object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
         //string ScriptsRunning();
