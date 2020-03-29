@@ -425,8 +425,24 @@ namespace HomeSeer.PluginSdk {
         void EnableEventByRef(int evref);
         void DeleteAfterTrigger_Clear(int evRef);
 
+        /// <summary>
+        /// Update an existing plugin action in an event
+        /// </summary>
+        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="evRef">Refernce # of the event to modify</param>
+        /// <param name="actInfo">The TrigActInfo that is to replace the existing trigger. The UID 
+        /// in this structure must match the UID in the original trigger</param>
+        /// <returns>Returns an empty string on success or an error message</returns>
         string UpdatePlugAction(string plugName, int evRef, TrigActInfo actInfo);
 
+        /// <summary>
+        /// Update an existing plugin trigger in an event
+        /// </summary>
+        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="evRef">Refernce # of the event to modify</param>
+        /// <param name="actInfo">The TrigActInfo that is to replace the existing trigger. The UID 
+        /// in this structure must match the UID in the original trigger</param>
+        /// <returns>Returns an empty string on success or an error message</returns>
         string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo actInfo);
 
         #endregion
