@@ -426,11 +426,13 @@ namespace HomeSeer.PluginSdk {
         void DeleteAfterTrigger_Clear(int evRef);
 
         string UpdatePlugAction(string plugName, int evRef, TrigActInfo actInfo);
-        
+
+        string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo actInfo);
+
         #endregion
-        
+
         #region Delete
-        
+
         void DeleteEventByRef(int evRef);
         
         #endregion
