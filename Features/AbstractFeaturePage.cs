@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HomeSeer.PluginSdk.Features.Responses;
 
 namespace HomeSeer.PluginSdk.Features {
 
@@ -21,7 +22,7 @@ namespace HomeSeer.PluginSdk.Features {
         /// A map of keys and methods used as callbacks for requests that match their key.
         ///  Use <see cref="RegisterRequestCallback"/> and <see cref="UnregisterRequestCallback"/>.
         /// </summary>
-        protected Dictionary<string, Func<FeatureJsonRequest, FeatureJsonResponse>> RequestMap { get; set; } = new Dictionary<string, Func<FeatureJsonRequest, FeatureJsonResponse>>();
+        protected Dictionary<string, Func<JsonRequest, JsonResponse>> RequestMap { get; set; } = new Dictionary<string, Func<JsonRequest, JsonResponse>>();
 
         /// <summary>
         /// Create a new instance of an <see cref="AbstractFeaturePage"/>.
@@ -32,33 +33,33 @@ namespace HomeSeer.PluginSdk.Features {
         }
 
         /// <inheritdoc cref="IFeaturePage.GetHtmlFragment"/>
-        public abstract string GetHtmlFragment(string fragmentId);
+        public virtual string GetHtmlFragment(string fragmentId) => $"{fragmentId} does not exist on page {Title}";
 
         /// <inheritdoc cref="IFeaturePage.PostBackProc"/>
         public virtual string PostBackProc(string data, string user, int userRights) {
             //TODO user
             //TODO userRights
             if (string.IsNullOrWhiteSpace(data)) {
-                return FeatureJsonError.CreateJson($"{Title} - POST error : data is null");
+                return JsonError.CreateJson($"{Title} - POST error : data is null");
             }
 
-            FeatureJsonRequest request;
+            JsonRequest request;
             try {
                 var featureJsonData = GenericJsonData.FromJson(data);
-                request = new FeatureJsonRequest(featureJsonData);
+                request = new JsonRequest(featureJsonData);
             }
             catch (Exception exception) {
                 //TODO better error catching
                 Console.WriteLine(exception);
-                return FeatureJsonError.CreateJson($"{Title} - POST error : {exception.Message}");
+                return JsonError.CreateJson($"{Title} - POST error : {exception.Message}");
             }
 
             if (RequestMap == null) {
-                RequestMap = new Dictionary<string, Func<FeatureJsonRequest, FeatureJsonResponse>>();
+                RequestMap = new Dictionary<string, Func<JsonRequest, JsonResponse>>();
             }
 
             if (!RequestMap.ContainsKey(request.Request)) {
-                return FeatureJsonError.CreateJson($"{Title} - POST error : no request callback registered for the key {request.Request}");
+                return JsonError.CreateJson($"{Title} - POST error : no request callback registered for the key {request.Request}");
             }
             
             try {
@@ -69,7 +70,7 @@ namespace HomeSeer.PluginSdk.Features {
             catch (Exception exception) {
                 //TODO better error catching
                 Console.WriteLine(exception);
-                return FeatureJsonError.CreateJson($"{Title} - POST error : {exception.Message}");
+                return JsonError.CreateJson($"{Title} - POST error : {exception.Message}");
             }
         }
 
@@ -78,15 +79,15 @@ namespace HomeSeer.PluginSdk.Features {
         /// </summary>
         /// <param name="requestKey">The key to match the callback method to</param>
         /// <param name="callback">
-        /// A method that takes a <see cref="FeatureJsonRequest"/> as a single parameter and returns a <see cref="FeatureJsonResponse"/>
+        /// A method that takes a <see cref="JsonRequest"/> as a single parameter and returns a <see cref="JsonResponse"/>
         /// </param>
         /// <remarks>
         /// Calling this successive times with the same key will replace any existing callback method tied to that key.
         /// </remarks>
-        protected void RegisterRequestCallback(string requestKey, Func<FeatureJsonRequest, FeatureJsonResponse> callback) {
+        protected void RegisterRequestCallback(string requestKey, Func<JsonRequest, JsonResponse> callback) {
             //TODO allow for registration based on method name alone
             if (RequestMap == null) {
-                RequestMap = new Dictionary<string, Func<FeatureJsonRequest, FeatureJsonResponse>>();
+                RequestMap = new Dictionary<string, Func<JsonRequest, JsonResponse>>();
             }
 
             if (RequestMap.ContainsKey(requestKey)) {
@@ -103,7 +104,7 @@ namespace HomeSeer.PluginSdk.Features {
         /// <param name="requestKey">The key to stop responding to</param>
         protected void UnregisterRequestCallback(string requestKey) {
             if (RequestMap == null) {
-                RequestMap = new Dictionary<string, Func<FeatureJsonRequest, FeatureJsonResponse>>();
+                RequestMap = new Dictionary<string, Func<JsonRequest, JsonResponse>>();
                 return;
             }
 
@@ -119,8 +120,8 @@ namespace HomeSeer.PluginSdk.Features {
         /// </summary>
         /// <param name="request">The request data submitted in the POST</param>
         /// <returns>Response message of "Title is alive"</returns>
-        private FeatureJsonResponse IsAlive(FeatureJsonRequest request) {
-            var response = new FeatureJsonResponse();
+        private JsonResponse IsAlive(JsonRequest request) {
+            var response = new JsonResponse();
             response.Response = $"{Title} is alive";
             return response;
         }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using HomeSeer.PluginSdk.Features.Responses;
 using Newtonsoft.Json;
 
 namespace HomeSeer.PluginSdk.Features {
 
     /// <summary>
     /// Generic data collection used as a JSON object. Takes the form of {"data":[]}.
-    /// See <see cref="FeatureJsonRequest"/>, <see cref="FeatureJsonResponse"/>, and <see cref="FeatureJsonError"/> for basic implementation
+    /// See <see cref="JsonRequest"/>, <see cref="JsonResponse"/>, and <see cref="JsonError"/> for basic implementation
     /// </summary>
     [Serializable, JsonObject]
     public class GenericJsonData {
