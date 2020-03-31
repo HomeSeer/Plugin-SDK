@@ -816,7 +816,16 @@ namespace HomeSeer.PluginSdk {
         /// <param name="actInfo">The data to save to the event action</param>
         /// <returns>A message describing the result. Empty if it was successful</returns>
         string UpdatePlugAction(string plugId, int evRef, TrigActInfo actInfo);
-        //TODO UpdatePlugTrigger
+        
+        /// <summary>
+        /// Update an existing plugin trigger in an event
+        /// </summary>
+        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="evRef">Reference # of the event to modify</param>
+        /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
+        /// in this structure must match the UID in the original trigger</param>
+        /// <returns>Returns an empty string on success or an error message</returns>
+        string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo trigInfo);
         
         #endregion
         
@@ -1080,6 +1089,31 @@ namespace HomeSeer.PluginSdk {
         /// <returns>A string representation of the IP address HomeSeer is running on</returns>
         string GetIpAddress();
         
+        /// <summary>
+        /// Shutdown the HS system
+        /// </summary>
+        void ShutDown();
+
+        /// <summary>
+        /// Shutdown and restart the HS system. This restarts the hardware
+        /// </summary>
+        void RestartSystem();
+
+        /// <summary>
+        /// Shut down HS and shutdown the hardware system
+        /// </summary>
+        void WindowsShutdownSystem();
+
+        /// <summary>
+        /// Shut down HS and reboot the hardware system
+        /// </summary>
+        void WindowsRebootSystem();
+
+        /// <summary>
+        /// Logs off the active user and closes all processes running under the user
+        /// </summary>
+        void WindowsLogoffSystem();
+        
         #region DateTime
         
         /// <summary>
@@ -1108,14 +1142,8 @@ namespace HomeSeer.PluginSdk {
         //int HSModules();
         //int HSThreads();
         //void PowerFailRecover();
-        //void RestartSystem();
-        //void ShutDown();
         //string SystemUpTime();
         //TimeSpan SystemUpTimeTS();
-        //void WindowsLockSystem();
-        //void WindowsLogoffSystem();
-        //void WindowsShutdownSystem();
-        //void WindowsRebootSystem();
 
         #endregion
         
@@ -1296,6 +1324,25 @@ namespace HomeSeer.PluginSdk {
         /// <param name="FileName">Filename to send the speech to</param>
         /// <returns></returns>
         bool SpeakToFile(string Text, string Voice, string FileName);
+        
+        /// <summary>
+        /// Plays audio from passed file to a specific speaker client
+        /// </summary>
+        /// <param name="FileName">The filename can be the full path to the file,
+        /// or just the name of file that is located in one of the following folders
+        /// in the HomeSeer root directory: wave/Mdia/scripts</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        /// <param name="Wait">If True, this function will not return until speaking has finished.
+        /// If False, the function returns immediately and the speaking is queued
+        /// </param>
+        void PlayWavFile(string FileName, string Host, bool Wait);
+
+        /// <summary>
+        /// Set the volume on a speaker client
+        /// </summary>
+        /// <param name="level">Volume level in the range of 0-100</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        void SetVolume(int level, string Host);
 
         #if WIP
         /// <summary>
@@ -1397,6 +1444,31 @@ namespace HomeSeer.PluginSdk {
         bool DeleteImageFile(string targetFile);
 
         #endregion
+        
+        #region Scripts
+        
+        /// <summary>
+        /// Run a script file
+        /// </summary>
+        /// <param name="scr">Filename of the script to run. Script must be located in the scripts folder.</param>
+        /// <param name="Wait">If True, function does not return until script finishes, if false, the script is run in the background.</param>
+        /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
+        /// <returns></returns>
+        object RunScript(string scr, bool Wait, bool SingleInstance);
+
+        /// <summary>
+        /// Run a script file calling the given function in the file
+        /// </summary>
+        /// <param name="scr">Filename of the script to run. Script must be located in the scripts folder.</param>
+        /// <param name="func">The name of the function to run. Normally the function "Main" is run if no function is specified.</param>
+        /// <param name="param">The parameter(s) to be passed to the function. This is an object and can be a single
+        /// parameter such as a string, or multiple parameters in an array</param>
+        /// <param name="Wait">If True, function does not return until script finishes, if false, the script is run in the background.</param>
+        /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
+        /// <returns></returns>
+        object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
+        
+        #endregion
 
         #region Not Implemented
 
@@ -1413,8 +1485,6 @@ namespace HomeSeer.PluginSdk {
         //string GetScriptPath();
         //string InstallScript(string scr_name, object param);
         //bool IsScriptRunning(string scr);
-        //object RunScript(string scr, bool Wait, bool SingleInstance);
-        //object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
