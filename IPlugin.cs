@@ -416,7 +416,8 @@ namespace HomeSeer.PluginSdk {
         ///  An empty string or a single asterisk (*) indicates all connected speaker clients on all hosts.
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
-        void SpeakIn(int speechDevice, string spokenText, bool wait, string host);        
+        void SpeakIn(int speechDevice, string spokenText, bool wait, string host);
+        
     }
 
 }
