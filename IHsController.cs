@@ -1315,6 +1315,25 @@ namespace HomeSeer.PluginSdk {
         /// <param name="FileName">Filename to send the speech to</param>
         /// <returns></returns>
         bool SpeakToFile(string Text, string Voice, string FileName);
+        
+        /// <summary>
+        /// Plays audio from passed file to a specific speaker client
+        /// </summary>
+        /// <param name="FileName">The filename can be the full path to the file,
+        /// or just the name of file that is located in one of the following folders
+        /// in the HomeSeer root directory: wave/Mdia/scripts</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        /// <param name="Wait">If True, this function will not return until speaking has finished.
+        /// If False, the function returns immediately and the speaking is queued
+        /// </param>
+        void PlayWavFile(string FileName, string Host, bool Wait);
+
+        /// <summary>
+        /// Set the volume on a speaker client
+        /// </summary>
+        /// <param name="level">Volume level in the range of 0-100</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        void SetVolume(int level, string Host);
 
         #if WIP
         /// <summary>
