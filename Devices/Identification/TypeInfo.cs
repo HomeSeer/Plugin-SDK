@@ -21,6 +21,7 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         private int _type;
         private int _subType;
         private string _subTypeDesc = "";
+        private string _summary = "";
 
         /// <summary>
         /// The primary type of the device/feature.
@@ -46,6 +47,11 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         public string SubTypeDescription {
             get => _subTypeDesc ?? "";
             set => _subTypeDesc = value ?? "";
+        }
+
+        public string Summary {
+            get => _summary ?? "";
+            set => _summary = value ?? "";
         }
 
     }

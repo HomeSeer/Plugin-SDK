@@ -388,6 +388,22 @@ namespace HomeSeer.Jui.Views {
 			return ViewCollectionHelper.GetViewById(viewId, ref _views, ref _viewIds);
 		}
 		
+		/// <summary>
+		/// Get the view with a specific ID from a collection cast as the target type
+		/// </summary>
+		/// <param name="viewId">The ID of the view to get</param>
+		/// <returns>
+		/// The view with the specified ID cast as the target type.
+		/// </returns>
+		/// <exception cref="ArgumentNullException">An invalid view ID was entered</exception>
+		/// <exception cref="ArgumentException">No views are on the page to get</exception>
+		/// <exception cref="IndexOutOfRangeException">The ID was found, but the view was not.  The page is probably malformed and should be recreated.</exception>
+		/// <exception cref="KeyNotFoundException">No views with that ID were found</exception>
+		public TViewType GetViewById<TViewType>(string viewId) where TViewType : AbstractView {
+			
+			return ViewCollectionHelper.GetViewById<TViewType>(viewId, ref _views, ref _viewIds);
+		}
+		
 		#endregion
 		
 		#region Update
@@ -424,12 +440,11 @@ namespace HomeSeer.Jui.Views {
 			
 			ViewCollectionHelper.RemoveAllViews(out _views, out _viewIds);
 		}
-		
-		#endregion
-		
+
 		#endregion
 
-		/// <inheritdoc />
+		#endregion
+
 		/// <summary>
 		/// Compares the Id, Name, and the number of views
 		/// </summary>
@@ -457,7 +472,6 @@ namespace HomeSeer.Jui.Views {
 			return true;
 		}
 
-		/// <inheritdoc />
 		/// <summary>
 		/// Compares the Id, Name, and the number of views
 		/// </summary>

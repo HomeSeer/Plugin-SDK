@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.Jui.Views {
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="AbstractView"/>
 	/// <summary>
 	/// A selection list allows a user to pick a value from a predefined collection.
 	/// </summary>
@@ -42,18 +42,18 @@ namespace HomeSeer.Jui.Views {
         [JsonProperty("selection")]
         public int Selection { get; set; } = -1;
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Create a new instance of a select list with the default, drop down style, an ID, Name, and the specified list of options
-        /// </summary>
-        /// <param name="id">The unique ID for this View</param>
-        /// <param name="name">The name of the view</param>
-        /// <param name="options">The list of options</param>
-        /// <param name="style">The display style of the select list. DEFAULT: drop down</param>
-        /// <param name="selection">The index of the currently selected option in the list. DEFAULT: 0</param>
-        /// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
-        [JsonConstructor]
+		/// <inheritdoc cref="AbstractView"/>
+		/// <summary>
+		/// Create a new instance of a select list with the default, drop down style, an ID, Name, and the specified list of options
+		/// </summary>
+		/// <param name="id">The unique ID for this View</param>
+		/// <param name="name">The name of the view</param>
+		/// <param name="options">The list of options</param>
+		/// <param name="style">The display style of the select list. DEFAULT: drop down</param>
+		/// <param name="selection">The index of the currently selected option in the list. DEFAULT: 0</param>
+		/// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
+		[JsonConstructor]
 		public SelectListView(string id, string name, List<string> options, ESelectListType style = ESelectListType.DropDown, int selection = -1) : base(id, name) {
 
 			if (options == null || options.Count == 0) {
@@ -69,20 +69,20 @@ namespace HomeSeer.Jui.Views {
 			Style = style;
 			Selection = selection;
 		}
-        
-        /// <inheritdoc />
-        /// <summary>
-        /// Create a new instance of a select list with the default, drop down style, an ID, Name, and the specified list of options and keys
-        /// </summary>
-        /// <param name="id">The unique ID for this View</param>
-        /// <param name="name">The name of the view</param>
-        /// <param name="options">The list of options</param>
-        /// <param name="style">The display style of the select list. DEFAULT: drop down</param>
-        /// <param name="selection">The index of the currently selected option in the list. DEFAULT: 0</param>
-        /// <param name="optionKeys">The list of keys corresponding to the list of options</param>
-        /// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
-        public SelectListView(string id, string name, List<string> options, List<string> optionKeys, ESelectListType style = ESelectListType.DropDown, int selection = -1) : base(id, name) {
+
+		/// <inheritdoc cref="AbstractView"/>
+		/// <summary>
+		/// Create a new instance of a select list with the default, drop down style, an ID, Name, and the specified list of options and keys
+		/// </summary>
+		/// <param name="id">The unique ID for this View</param>
+		/// <param name="name">The name of the view</param>
+		/// <param name="options">The list of options</param>
+		/// <param name="style">The display style of the select list. DEFAULT: drop down</param>
+		/// <param name="selection">The index of the currently selected option in the list. DEFAULT: 0</param>
+		/// <param name="optionKeys">The list of keys corresponding to the list of options</param>
+		/// <exception cref="ArgumentNullException">Thrown if select list is create with an invalid list of options</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if select list is created with an invalid index for the currently selected option</exception>
+		public SelectListView(string id, string name, List<string> options, List<string> optionKeys, ESelectListType style = ESelectListType.DropDown, int selection = -1) : base(id, name) {
 
 	        if (options == null || options.Count == 0) {
 		        throw new ArgumentNullException(nameof(options));
@@ -103,8 +103,8 @@ namespace HomeSeer.Jui.Views {
 	        Style      = style;
 	        Selection  = selection;
         }
-		
-		/// <inheritdoc />
+
+		/// <inheritdoc cref="AbstractView.Update"/>
 		/// <summary>
 		/// Update the view to the new state.  This will change the selected option 
 		/// </summary>
@@ -119,7 +119,7 @@ namespace HomeSeer.Jui.Views {
 			Selection = updatedSelectListView.Selection;
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.UpdateValue"/>
 		/// <exception cref="FormatException">Thrown when the value is not in the correct format</exception>
 		public override void UpdateValue(string value) {
 
@@ -132,7 +132,10 @@ namespace HomeSeer.Jui.Views {
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
+		/// <remarks>
+		/// Get the selected index as a string
+		/// </remarks>
 		public override string GetStringValue() {
 			return Selection.ToString();
 		}
@@ -148,8 +151,24 @@ namespace HomeSeer.Jui.Views {
 			
 			return Options[Selection];
 		}
-		
-		/// <inheritdoc/>
+
+		/// <summary>
+		/// Get the currently selected option key
+		/// </summary>
+		/// <returns>The key of the option at the index specified by <see cref="Selection"/>.</returns>
+		public string GetSelectedOptionKey() {
+			if (Options == null || Selection >= Options.Count || Selection == -1) {
+				return "";
+			}
+			
+			if (OptionKeys == null || Selection >= OptionKeys.Count || Selection == -1) {
+				return "";
+			}
+
+			return OptionKeys[Selection];
+		}
+
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 			
 			var sb = new StringBuilder();

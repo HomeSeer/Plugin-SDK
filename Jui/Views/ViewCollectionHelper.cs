@@ -192,6 +192,65 @@ namespace HomeSeer.Jui.Views {
 
 			throw new ViewNotFoundException("There are no views with that ID in the collection");
         }
+        
+        /// <summary>
+        /// Get the view with a specific ID from a collection cast as the target type
+        /// </summary>
+        /// <param name="viewId">The ID of the view to look for</param>
+        /// <param name="viewList">A reference to the current list of views</param>
+        /// <param name="viewIds">A reference to the map of view IDs and list indexes</param>
+        /// <returns>The view with the specified ID cast to the target type</returns>
+        /// <exception cref="ArgumentNullException">The viewId to look for is NULL</exception>
+        /// <exception cref="IndexOutOfRangeException">The ID was found, but the view is not in the collection</exception>
+        /// <exception cref="ArgumentException">There are no views in the collection</exception>
+        /// <exception cref="ViewNotFoundException">No views with that ID were found in the collection</exception>
+        /// <exception cref="ViewTypeMismatchException">Thrown when a view group's type does not match its class</exception>
+		internal static TViewType GetViewById<TViewType>(string viewId,
+		                                         ref List<AbstractView>      viewList, 
+		                                         ref Dictionary<string, int> viewIds) where TViewType : AbstractView {
+			
+			if (string.IsNullOrWhiteSpace(viewId)) {
+				throw new ArgumentNullException(nameof(viewId));
+			}
+
+			if (viewList == null || viewList.Count == 0) {
+				throw new ArgumentException("There are no views in this collection");
+			}
+
+			try {
+				var viewIndex = viewIds[viewId];
+				if (viewIndex >= viewList.Count) {
+					throw new IndexOutOfRangeException("That ID points to a view that does not exist in the collection.");
+				}
+				
+				var foundView = viewList[viewIndex];
+				if (foundView.Id == viewId) {
+					if (!(foundView is TViewType foundViewCast)) {
+						throw new ViewTypeMismatchException();
+					}
+					return foundViewCast;
+				}
+				
+				if (foundView.Type == EViewType.Group) {
+					
+					if (!(foundView is ViewGroup viewGroup)) {
+						throw new ViewTypeMismatchException();
+					}
+
+					if (!(viewGroup.GetViewById(viewId) is TViewType foundViewCast)) {
+						throw new ViewTypeMismatchException();
+					}
+					
+					return foundViewCast;
+				}
+				
+			}
+			catch (KeyNotFoundException exception) {
+				throw new ViewNotFoundException("There are no views with that ID in the collection", exception);
+			}
+
+			throw new ViewNotFoundException("There are no views with that ID in the collection");
+        }
 		
 		#endregion
 		

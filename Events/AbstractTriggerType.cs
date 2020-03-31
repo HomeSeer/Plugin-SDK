@@ -79,7 +79,7 @@ namespace HomeSeer.PluginSdk.Events {
         ///  derives from this type is added to its list.
         /// </para>
         /// <para>
-        /// You MUST implement this constructor in any class that derives from <see cref="AbstractTriggerType"/>
+        /// You MUST implement one of these constructor signatures in any class that derives from <see cref="AbstractTriggerType"/>
         /// </para>
         /// </summary>
         /// <param name="id">The unique ID of this trigger in HomeSeer</param>
@@ -93,6 +93,31 @@ namespace HomeSeer.PluginSdk.Events {
             _inData = dataIn;
             TriggerListener = listener;
             LogDebug = logDebug;
+            InflateTriggerFromData();
+        }
+        
+        /// <summary>
+        /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, and Data byte array.
+        ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="TriggerTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructor signatures in any class that derives from <see cref="AbstractTriggerType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="id">The unique ID of this trigger in HomeSeer</param>
+        /// <param name="eventRef">The event reference ID that this trigger is associated with in HomeSeer</param>
+        /// <param name="selectedSubTriggerIndex">The 0 based index of the sub-trigger type selected for this trigger</param>
+        /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener) {
+            _id                     = id;
+            _eventRef               = eventRef;
+            SelectedSubTriggerIndex = selectedSubTriggerIndex;
+            _inData                 = dataIn;
+            TriggerListener         = listener;
             InflateTriggerFromData();
         }
 

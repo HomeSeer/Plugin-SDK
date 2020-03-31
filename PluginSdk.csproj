@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;SDKDEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
@@ -57,6 +57,7 @@
     <Compile Include="Devices\AbstractStatus.cs" />
     <Compile Include="Devices\Controls\ControlLocation.cs" />
     <Compile Include="Devices\Controls\ControlEvent.cs" />
+    <Compile Include="Devices\Controls\EControlFlag.cs" />
     <Compile Include="Devices\Controls\EControlType.cs" />
     <Compile Include="Devices\Controls\EControlUse.cs" />
     <Compile Include="Devices\Controls\StatusControl.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Events\AbstractActionType.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
+    <Compile Include="Events\BaseTypeCollection.cs" />
     <Compile Include="Events\EEventFlag.cs" />
     <Compile Include="Events\EventData.cs" />
     <Compile Include="Events\EventGroupData.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Energy\EnergyGraphData.cs" />
     <Compile Include="Events\TriggerTypeCollection.cs" />
     <Compile Include="IHsController.cs" />
+    <Compile Include="Jui\Types\ELabelType.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
     <Compile Include="Logging\ELogType.cs" />
     <Compile Include="Speech\EMediaOperation.cs" />

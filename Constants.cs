@@ -33,6 +33,7 @@ namespace HomeSeer.PluginSdk {
             CallbackTimer = 5
         }
     
+        [Obsolete("Deprecated as of v1.0.1", true)]
         public enum DeviceScriptChange {
             DevValue = 1,
             DevString = 2,
@@ -67,6 +68,7 @@ namespace HomeSeer.PluginSdk {
             GENERIC = 0x8000        // RVCT added 3/10/08, 2.2.0.76ish
         }
     
+        [Obsolete("Deprecated as of v1.0.1", true)]
         public enum CAPIControlButtonImage {
             Not_Specified = 0,
             Use_Status_Value = 1,

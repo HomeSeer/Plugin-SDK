@@ -57,6 +57,37 @@ namespace HomeSeer.PluginSdk.Events {
         ///  a user can select from on the events page.
         /// </summary>
         public string Name => GetName();
+        /// <summary>
+        /// The currently selected sub-action index
+        /// </summary>
+        /// <remarks>
+        /// -1 if it is not set
+        /// </remarks>
+        protected int SelectedSubActionIndex { get; private set; } = -1;
+        
+        /// <summary>
+        /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
+        ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="ActionTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructors in any class that derives from <see cref="AbstractActionType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="id">The unique ID of this action in HomeSeer</param>
+        /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
+        /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        protected AbstractActionType(int id, int subTypeNumber, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener) {
+            _id                    = id;
+            SelectedSubActionIndex = subTypeNumber;
+            _eventRef              = eventRef;
+            _inData                = dataIn;
+            ActionListener         = listener;
+            InflateActionFromData();
+        }
 
         /// <summary>
         /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
@@ -79,6 +110,29 @@ namespace HomeSeer.PluginSdk.Events {
             _inData = dataIn;
             ActionListener = listener;
             LogDebug = logDebug;
+            InflateActionFromData();
+        }
+        
+        /// <summary>
+        /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
+        ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="ActionTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructors in any class that derives from <see cref="AbstractActionType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="id">The unique ID of this action in HomeSeer</param>
+        /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
+        /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        protected AbstractActionType(int id, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener) {
+            _id            = id;
+            _eventRef      = eventRef;
+            _inData        = dataIn;
+            ActionListener = listener;
             InflateActionFromData();
         }
 
@@ -324,7 +378,6 @@ namespace HomeSeer.PluginSdk.Events {
             return Encoding.UTF8.GetBytes(pageJson);
         }
 
-        /// <inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -349,7 +402,6 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        /// <inheritdoc/>
         public override int GetHashCode() {
             return 271828 * _id.GetHashCode() * _eventRef.GetHashCode();
         }

@@ -28,6 +28,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public int NamedCount => _namedData?.Count ?? 0;
         
         private Dictionary<string, string> _namedData = new Dictionary<string, string>();
+        //private Dictionary<string, object> _namedRawData = new Dictionary<string, object>();
         
         /// <summary>
         /// Add a new keyed data item to the collection
@@ -69,7 +70,7 @@ namespace HomeSeer.PluginSdk.Devices {
             var jsonString = this[key];
             
             try {
-                var data = JsonConvert.DeserializeObject<TData>(jsonString);
+                var data = JsonConvert.DeserializeObject<TData>(jsonString.Trim('\"', '\\'));
 				
                 return data;
             }
@@ -190,7 +191,7 @@ namespace HomeSeer.PluginSdk.Devices {
             var jsonString = this[index];
             
             try {
-                var data = JsonConvert.DeserializeObject<TData>(jsonString);
+                var data = JsonConvert.DeserializeObject<TData>(jsonString.Trim('\"', '\\'));
 				
                 return data;
             }

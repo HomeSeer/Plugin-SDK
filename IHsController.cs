@@ -154,7 +154,22 @@ namespace HomeSeer.PluginSdk {
         #region Read
         
         //Both
+        
+        /// <summary>
+        /// Get a list of device/feature references that are associated with the specified plugin interface
+        /// </summary>
+        /// <param name="interfaceName">The ID of the plugin interface to get devices and features for</param>
+        /// <param name="deviceOnly"> Whether to get refs for devices or both devices and features</param>
+        /// <returns>A list of device/feature reference IDs</returns>
         List<int> GetRefsByInterface(string interfaceName, bool deviceOnly = false);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="interfaceName"></param>
+        /// <param name="property"></param>
+        /// <param name="deviceOnly"></param>
+        /// <returns></returns>
         Dictionary<int, object> GetPropertyByInterface(string interfaceName, EProperty property, bool deviceOnly = false);
         string GetNameByRef(int devOrFeatRef);
         bool DoesRefExist(int devOrFeatRef);
@@ -162,15 +177,126 @@ namespace HomeSeer.PluginSdk {
         bool IsFlagOnRef(int devOrFeatRef, EMiscFlag miscFlag);
         bool IsRefDevice(int devOrFeatRef);
         
+        /// <summary>
+        /// Get a list of all of the device and feature refs present in the HomeSeer system
+        /// <para>
+        /// To get just a list of devices, call <see cref="GetAllDeviceRefs"/>
+        ///  or to get a list of features, call <see cref="GetAllFeatureRefs"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the device and feature refs managed by the HomeSeer system</returns>
+        List<int> GetAllRefs();
+        
         //Devices
         HsDevice GetDeviceByRef(int devRef);
         HsDevice GetDeviceWithFeaturesByRef(int devRef);
         HsDevice GetDeviceByAddress(string devAddress);
+
+        /// <summary>
+        /// Get a list of all of the device refs present in the HomeSeer system
+        /// <para>
+        /// This does not include refs for features. To get those in addition to these, use <see cref="GetAllRefs"/>
+        ///  or call <see cref="GetAllFeatureRefs"/> to get a list of just features
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the device refs managed by the HomeSeer system</returns>
+        List<int> GetAllDeviceRefs();
+        
+        /// <summary>
+        /// Get a list of all of the devices managed by the HomeSeer system without associated features.
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="withFeatures">
+        /// TRUE if associated features should be attached to their devices,
+        ///  or FALSE if features should be left out.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system with or without associated features linked.
+        /// </returns>
+        List<HsDevice> GetAllDevices(bool withFeatures);
+        
+#if BETA
+        
+        /// <summary>
+        /// Get a list of all of the device refs present in the HomeSeer system that match the specified pattern
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match devices to. Create an instance of <see cref="HsDevice"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>
+        /// A list of integers corresponding to the device refs managed by the HomeSeer system that match
+        ///  the specified pattern.
+        /// </returns>
+        List<int> GetAllMatchingDeviceRefs(Dictionary<EProperty, object> matchPattern);
+        
+        /// <summary>
+        /// Get a list of all of the devices present in the HomeSeer system that match the specified pattern
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match devices to. Create an instance of <see cref="HsDevice"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <param name="withFeatures">
+        /// TRUE if associated features should be attached to their devices,
+        ///  or FALSE if features should be left out.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system that match the specified pattern.
+        /// </returns>
+        List<HsDevice> GetAllMatchingDevices(Dictionary<EProperty, object> matchPattern, bool withFeatures);
+
+#endif
         
         //Features
         HsFeature GetFeatureByRef(int featRef);
         HsFeature GetFeatureByAddress(string featAddress);
         bool IsFeatureValueValid(int featRef);
+
+        /// <summary>
+        /// Get a list of all of the feature refs present in the HomeSeer system
+        /// <para>
+        /// This does not include refs for devices. To get those in addition to these, use <see cref="GetAllRefs"/>
+        ///  or call <see cref="GetAllDeviceRefs"/> to get a list of just devices
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the feature refs managed by the HomeSeer system</returns>
+        List<int> GetAllFeatureRefs();
+
+#if BETA
+        
+        /// <summary>
+        /// Get a list of all of the feature refs present in the HomeSeer system that match the specified pattern
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match features to. Create an instance of <see cref="HsFeature"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>
+        /// A list of integers corresponding to the feature refs managed by the HomeSeer system that match
+        ///  the specified pattern.
+        /// </returns>
+        List<int> GetAllMatchingFeatureRefs(Dictionary<EProperty, object> matchPattern);
+        
+        /// <summary>
+        /// Get a list of all of the features present in the HomeSeer system that match the specified pattern
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match features to. Create an instance of <see cref="HsFeature"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>A list of features managed by the HomeSeer system that match the specified pattern.</returns>
+        List<HsFeature> GetAllMatchingFeatures(Dictionary<EProperty, object> matchPattern);
+
+#endif
 
         StatusControl GetStatusControlForValue(int featRef, double value);
         StatusControl GetStatusControlForLabel(int featRef, string label);
@@ -330,8 +456,78 @@ namespace HomeSeer.PluginSdk {
         string GetUsers();        
         bool IsLicensed();
         bool IsRegistered();
+        
+        /// <summary>
+        /// Determine if Location1 is used first on devices/features.
+        /// </summary>
+        /// <remarks>
+        /// By default, Location2 is used as the first logical location when organizing devices/features.
+        ///  For this reason, it is important to check which location is marked as the first location before working
+        ///  with locations.
+        /// </remarks>
+        /// <returns>TRUE if Location1 is used first, FALSE if Location2 is used first</returns>
+        bool IsLocation1First();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of Location1 strings
+        /// </summary>
+        /// <returns>A SortedList of Location1 location strings</returns>
         System.Collections.SortedList GetLocationsList();
+        
+        /// <summary>
+        /// Get the name of the Location1 location
+        /// </summary>
+        /// <returns>The user defined name of Location1</returns>
+        string GetLocation1Name();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of Location2 strings
+        /// </summary>
+        /// <returns>A SortedList of Location2 location strings</returns>
         System.Collections.SortedList GetLocations2List();
+        
+        /// <summary>
+        /// Get the name of the Location2 location
+        /// </summary>
+        /// <returns>The user defined name of Location2</returns>
+        string GetLocation2Name();
+
+        /// <summary>
+        /// Get the name of the first location.
+        /// <para>
+        /// This is the name of the location that is marked as first according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>The name of the first location</returns>
+        string GetFirstLocationName();
+        
+        /// <summary>
+        /// Get the name of the second location.
+        /// <para>
+        /// This is the name of the location that is marked as second according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>The name of the second location</returns>
+        string GetSecondLocationName();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of the location strings marked as first
+        /// <para>
+        /// This is the list of location strings that are marked as first according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A List of the first location strings</returns>
+        List<string> GetFirstLocationList();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of the location strings marked as second
+        /// <para>
+        /// This is the list of location strings that are marked as second according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A List of the second location strings</returns>
+        List<string> GetSecondLocationList();
+        
         int CheckRegistrationStatus(string piname);
 
         int GetOsType();
@@ -438,7 +634,16 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakProxy(int speechDevice, string spokenText, bool wait, string host = "");
-        
+
+        /// <summary>
+        /// Sends TTS to a file using the system voice
+        /// </summary>
+        /// <param name="Text">The text to speak</param>
+        /// <param name="Voice">The voice to use, SAPI only on Windows</param>
+        /// <param name="FileName">Filename to send the speech to</param>
+        /// <returns></returns>
+        bool SpeakToFile(string Text, string Voice, string FileName);
+
         #if WIP
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
@@ -461,8 +666,8 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void UnRegisterProxySpeakPlug(string pluginId);
-        #endif
-        
+#endif
+
         #endregion
 
         /// <summary>

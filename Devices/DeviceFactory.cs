@@ -22,6 +22,8 @@ namespace HomeSeer.PluginSdk.Devices {
                          };
             device.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
             device.Changes.Add(EProperty.UserAccess, "Any");
+            device.Changes.Add(EProperty.Location2, "Plugin");
+            device.Changes.Add(EProperty.Location, pluginId);
             df._device = device;
 
             return df;
@@ -84,13 +86,6 @@ namespace HomeSeer.PluginSdk.Devices {
         
         [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
         public DeviceFactory WithProductImage(string imagePath) {
-
-            if (string.IsNullOrWhiteSpace(imagePath)) {
-                throw new ArgumentNullException(nameof(imagePath));
-            }
-
-            _device.ProductImage = imagePath;
-
             return this;
         }
 
