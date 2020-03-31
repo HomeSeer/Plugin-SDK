@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace HomeSeer.PluginSdk.Features {
 
     /// <summary>
-    /// Generic data collection used as a JSON object. Takes the form of {"data":[]}.
+    /// Generic data collection used as a JSON object. Takes the form of {"data":{}}.
     /// See <see cref="JsonRequest"/>, <see cref="JsonResponse"/>, and <see cref="JsonError"/> for basic implementation
     /// </summary>
     [Serializable, JsonObject]

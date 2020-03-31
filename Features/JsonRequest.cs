@@ -5,8 +5,22 @@ using Newtonsoft.Json;
 namespace HomeSeer.PluginSdk.Features {
 
     /// <summary>
+    /// <para>
     /// A POST request with JSON data from a web client to a feature page as a collection of key-value pairs
+    /// </para>
+    /// <para>
+    /// Use JSON stringify to build a request in JavaScript:
+    /// <code>
+    /// JSON.stringify({ data: {"request" : "load-page", "key" : "value"} });
+    /// </code>
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A default handler is provided for you in the FeaturePagePost.js page. Include that file with your plugin's
+    ///  feature pages and customize it as needed. A shared version will be implemented in a future release.
+    /// </para>
+    /// </remarks>
     [JsonObject]
     public class JsonRequest : GenericJsonData {
 

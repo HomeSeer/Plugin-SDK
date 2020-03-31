@@ -7,6 +7,12 @@ namespace HomeSeer.PluginSdk.Features.Responses {
     /// <summary>
     /// A POST error response for a feature page as a collection of key-value pairs 
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A default handler is provided for you in the FeaturePagePost.js page. Include that file with your plugin's
+    ///  feature pages and customize it as needed. A shared version will be implemented in a future release.
+    /// </para>
+    /// </remarks>
     [JsonObject]
     public class JsonError : GenericJsonData {
 
