@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginSdk", "PluginSdk.csproj", "{8D2165FA-0DBE-4F59-815C-72157B2401CF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Html", "Html", "{94833FB6-ECEB-4B9F-B08F-7ABDD3F9591E}"
+ProjectSection(SolutionItems) = preProject
+	Html\FeaturePagePost.js = Html\FeaturePagePost.js
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
