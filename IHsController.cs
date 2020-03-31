@@ -816,7 +816,16 @@ namespace HomeSeer.PluginSdk {
         /// <param name="actInfo">The data to save to the event action</param>
         /// <returns>A message describing the result. Empty if it was successful</returns>
         string UpdatePlugAction(string plugId, int evRef, TrigActInfo actInfo);
-        //TODO UpdatePlugTrigger
+        
+        /// <summary>
+        /// Update an existing plugin trigger in an event
+        /// </summary>
+        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="evRef">Reference # of the event to modify</param>
+        /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
+        /// in this structure must match the UID in the original trigger</param>
+        /// <returns>Returns an empty string on success or an error message</returns>
+        string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo trigInfo);
         
         #endregion
         
