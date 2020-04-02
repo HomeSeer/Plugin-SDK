@@ -389,6 +389,11 @@ namespace HomeSeer.PluginSdk {
         ///  It may be necessary or a feature of your plug-in to modify the text being spoken or the host/instance
         ///  list provided in the host parameter - this is acceptable.
         /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </remarks>
         /// <param name="speechDevice">
         /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
         ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
@@ -412,7 +417,7 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakIn(int speechDevice, string spokenText, bool wait, string host);
-
+        
     }
 
 }
