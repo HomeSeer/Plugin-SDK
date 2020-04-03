@@ -1483,7 +1483,31 @@ namespace HomeSeer.PluginSdk {
         #endregion
         
         #region Cross-Plugin
+        
+        /// <summary>
+        /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
+        /// </summary>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the function</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the function</param>
+        /// <param name="procName">The name of the function</param>
+        /// <param name="params">An array of parameters to pass to the function being called</param>
+        /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginFunction"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        object LegacyPluginFunction(string plugName, string plugInstance, string procName, object[] @params);
 
+        /// <summary>
+        /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the function</param>
+        /// <param name="procName">The name of the function</param>
+        /// <param name="params">An array of parameters to pass to the function being called</param>
+        /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        object PluginFunction(string pluginId, string procName, object[] @params);
+        
         /// <summary>
         /// Get the version of a particular plugin by its name.
         /// </summary>
