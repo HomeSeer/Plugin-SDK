@@ -1468,16 +1468,7 @@ namespace HomeSeer.PluginSdk {
         /// <returns></returns>
         object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
         
-        #endregion
-
-        #region Not Implemented
-
-        #region Scripts
-
         //TODO Script methods
-        //object PluginFunction(string plugname, string pluginstance, string func,object[] parms);
-        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
-        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
         //int SendMessage(string message, string host, bool showballoon);
         //int Launch(string Name, string @params, string direc, int LaunchPri);
         //bool RegisterStatusChangeCB(string script, string func);
@@ -1488,8 +1479,36 @@ namespace HomeSeer.PluginSdk {
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
+        
+        #endregion
+        
+        #region Cross-Plugin
+
+        /// <summary>
+        /// Get the version of a particular plugin by its name.
+        /// </summary>
+        /// <param name="pluginName">The <see cref="IPlugin.Name"/> of the plugin</param>
+        /// <returns>The version of the main dll for the plugin</returns>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="GetPluginVersionById"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        string GetPluginVersionByName(string pluginName);
+        
+        /// <summary>
+        /// Get the version of a particular plugin by its <see cref="IPlugin.Id"/>.
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin</param>
+        /// <returns>The version of the main dll for the plugin</returns>
+        string GetPluginVersionById(string pluginId);
+
+        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
+        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
 
         #endregion
+
+        #region Not Implemented
 
         #region COM
 
@@ -1524,7 +1543,7 @@ namespace HomeSeer.PluginSdk {
         #region AppCallback
 
         //TODO AppCallback methods
-        
+
         #endregion
 
         //TODO other methods
