@@ -1492,6 +1492,8 @@ namespace HomeSeer.PluginSdk {
         /// <param name="procName">The name of the function</param>
         /// <param name="params">An array of parameters to pass to the function being called</param>
         /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either the <paramref name="plugName"/> or <paramref name="procName"/> parameters are null or whitespace</exception>
+        /// <exception cref="AggregateException">Thrown when there was an error trying to execute the function. Check the enclosed exception for details.</exception>
         /// <remarks>
         /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
         ///  instead of a unique ID. You should use <see cref="PluginFunction"/> if you are trying to
@@ -1506,6 +1508,9 @@ namespace HomeSeer.PluginSdk {
         /// <param name="procName">The name of the function</param>
         /// <param name="params">An array of parameters to pass to the function being called</param>
         /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either the <paramref name="pluginId"/> or <paramref name="procName"/> parameters are null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
+        /// <exception cref="AggregateException">Thrown when there was an error trying to execute the function. Check the enclosed exception for details.</exception>
         object PluginFunction(string pluginId, string procName, object[] @params);
         
         /// <summary>
@@ -1513,6 +1518,8 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginName">The <see cref="IPlugin.Name"/> of the plugin</param>
         /// <returns>The version of the main dll for the plugin</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="pluginName"/> parameter is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified name is not found in the list of installed plugins</exception>
         /// <remarks>
         /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
         ///  instead of a unique ID. You should use <see cref="GetPluginVersionById"/> if you are trying to
@@ -1525,6 +1532,8 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin</param>
         /// <returns>The version of the main dll for the plugin</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="pluginId"/> parameter is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
         string GetPluginVersionById(string pluginId);
 
         //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
