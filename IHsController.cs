@@ -1514,7 +1514,7 @@ namespace HomeSeer.PluginSdk {
         object PluginFunction(string pluginId, string procName, object[] @params);
         
         /// <summary>
-        /// Get the version of a particular plugin by its name.
+        /// Get the version of a particular plugin by its name. For interfacing with legacy plugins.
         /// </summary>
         /// <param name="pluginName">The <see cref="IPlugin.Name"/> of the plugin</param>
         /// <returns>The version of the main dll for the plugin</returns>
@@ -1528,7 +1528,7 @@ namespace HomeSeer.PluginSdk {
         string GetPluginVersionByName(string pluginName);
         
         /// <summary>
-        /// Get the version of a particular plugin by its <see cref="IPlugin.Id"/>.
+        /// Get the version of a particular plugin by its <see cref="IPlugin.Id"/>. Do not use this for legacy plugins; it will not work.
         /// </summary>
         /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin</param>
         /// <returns>The version of the main dll for the plugin</returns>
