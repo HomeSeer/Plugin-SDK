@@ -132,6 +132,7 @@
     <Compile Include="Speech\AbstractSpeakerClient.cs" />
     <Compile Include="Speech\ESpeakErrorValue.cs" />
     <Compile Include="Speech\ESpeakTypeValue.cs" />
+    <Compile Include="Types\EAccessLevel.cs" />
     <Compile Include="Types\EHsSystemEvent.cs" />
     <Compile Include="Types\EOsType.cs" />
     <Compile Include="Types\ERegistrationMode.cs" />
