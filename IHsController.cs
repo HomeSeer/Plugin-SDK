@@ -481,10 +481,16 @@ namespace HomeSeer.PluginSdk {
         #region Control
 
         /// <summary>
+        /// <para>
         /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// </para>
         /// <para>
         /// To update the value without triggering HomeSeer to process the update, call
         ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -494,9 +500,16 @@ namespace HomeSeer.PluginSdk {
         /// <param name="value">The new value to set on the feature</param>
         /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
         bool UpdateFeatureValueByRef(int featRef, double value);
+        
         /// <summary>
+        /// <para>
         /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
         ///  accordingly
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
         /// </summary>
         /// <remarks>
         /// This is the same as the legacy method SetDeviceString(Integer, String, True)
@@ -506,7 +519,29 @@ namespace HomeSeer.PluginSdk {
         /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
         bool UpdateFeatureValueStringByRef(int featRef, string value);
 
-        //bool SendControlForFeatureByValue(int featRef, double value);
+        /// <summary>
+        /// <para>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
+        /// </para> 
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// </remarks>
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="value">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> to send a control event for
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByValue(int devOrFeatRef, double value);
         
         #endregion
 
