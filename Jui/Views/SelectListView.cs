@@ -184,7 +184,7 @@ namespace HomeSeer.Jui.Views {
 					sb.Append(Environment.NewLine);
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" data-orig-val=\"{Selection}\">");
+					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
 					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>Select an option</option>");
