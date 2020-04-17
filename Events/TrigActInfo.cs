@@ -4,6 +4,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HomeSeer.PluginSdk.Events {
 
+    /// <summary>
+    /// The internal data stored by HomeSeer describing a particular event action or trigger.
+    ///  Instances of this class are created and managed by HomeSeer and are passed through the <see cref="AbstractPlugin"/>
+    ///  to the <see cref="ActionTypeCollection"/> and <see cref="TriggerTypeCollection"/> respectively.
+    ///  You shouldn't need to work with this class directly and can rely on the decoded pieces exposed through the
+    ///  <see cref="AbstractActionType"/> and <see cref="AbstractTriggerType"/> classes in most situations.
+    /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class TrigActInfo {

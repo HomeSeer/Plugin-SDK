@@ -1,5 +1,3 @@
-using System;
-
 namespace HomeSeer.PluginSdk.Speech {
 
     /// <summary>
@@ -7,15 +5,10 @@ namespace HomeSeer.PluginSdk.Speech {
     ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
     ///  significant changes in the near future. Please use with caution.
     /// </summary>
-    public class clsLastVR {
-
-        public string   Raw      = "";
-        public string   Parsed   = "";
-        public string   Host     = "";
-        public string   Instance = "";
-        public int      ID       = -1;
-        public DateTime Time     = DateTime.MinValue;
-
+    public enum ESpeakErrorValue {
+        NoError      = 1,
+        NoClients    = 2,
+        ErrorSending = 3
     }
 
 }
