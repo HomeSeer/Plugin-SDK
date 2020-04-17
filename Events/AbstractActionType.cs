@@ -314,10 +314,9 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        internal byte[] ProcessData(byte[] inData) {
+        private byte[] ProcessData(byte[] inData) {
             //Is data null/empty?
             if (inData == null || inData.Length == 0) {
-                
                 return new byte[0];
             }
             
@@ -326,18 +325,24 @@ namespace HomeSeer.PluginSdk.Events {
                 var pageJson = Encoding.UTF8.GetString(inData);
                 //Deserialize to page
                 ConfigPage = Page.FromJsonString(pageJson);
-
+                //Save the data
                 return inData;
             }
-            catch (Exception) {
+            catch (Exception exception) {
+                //Exception is expected if the data is of a legacy type
+                if (LogDebug) {
+                    Console.WriteLine($"Exception while trying to execute ProcessData on action data, possibly legacy data - {exception.Message}");
+                }
             }
             
-            //If deserialization failed, convert legacy data to new format
+            //If deserialization failed, try to convert legacy data to new format
             return ConvertLegacyData(inData);
         }
 
         /// <summary>
-        /// Called when legacy action data needs to be converted to the new format
+        /// <para>
+        /// Called when legacy action data needs to be converted to the new format.
+        /// </para>
         /// <para>
         /// Override this if you need to support legacy actions. Convert the UI to the new format and save it in
         ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
@@ -345,17 +350,18 @@ namespace HomeSeer.PluginSdk.Events {
         ///  deserialize the data using the legacy method.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// This is also called if there was an error while trying to deserialize the modern data format as a fallback
+        /// </remarks>
         /// <param name="inData">A byte array describing the current action configuration in legacy format.</param>
         /// <returns>
         /// A byte array describing the current action configuration in new format.
         /// </returns>
-        protected virtual byte[] ConvertLegacyData(byte[] inData)
-        {
+        protected virtual byte[] ConvertLegacyData(byte[] inData) {
             return new byte[0];
         }
 
         private void InflateActionFromData() {
-
             try {
                 var processedData = ProcessData(_inData);
                 if (processedData.Length == 0) {
