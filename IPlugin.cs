@@ -51,13 +51,9 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         bool HasSettings { get; }
     
-        //TODO AccessLevel -> What are we doing with this? Leaving as is?
         /// <summary>
         /// Return the access level of this plug-in. Access level is the licensing mode.
-        /// <para>
-        /// 1 = Plug-in is not licensed and may be enabled and run without purchasing a license. Use this value for free plug-ins.
-        /// 2 = Plug-in is licensed and a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days.
-        /// </para>
+        ///  Use the integer value corresponding to the <see cref="Types.EAccessLevel"/> for your plugin
         /// </summary>
         int AccessLevel { get; }
         

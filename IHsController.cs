@@ -481,10 +481,16 @@ namespace HomeSeer.PluginSdk {
         #region Control
 
         /// <summary>
+        /// <para>
         /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// </para>
         /// <para>
         /// To update the value without triggering HomeSeer to process the update, call
         ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -494,9 +500,16 @@ namespace HomeSeer.PluginSdk {
         /// <param name="value">The new value to set on the feature</param>
         /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
         bool UpdateFeatureValueByRef(int featRef, double value);
+        
         /// <summary>
+        /// <para>
         /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
         ///  accordingly
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
         /// </summary>
         /// <remarks>
         /// This is the same as the legacy method SetDeviceString(Integer, String, True)
@@ -506,7 +519,29 @@ namespace HomeSeer.PluginSdk {
         /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
         bool UpdateFeatureValueStringByRef(int featRef, string value);
 
-        //bool SendControlForFeatureByValue(int featRef, double value);
+        /// <summary>
+        /// <para>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
+        /// </para> 
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// </remarks>
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="value">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> to send a control event for
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByValue(int devOrFeatRef, double value);
         
         #endregion
 
@@ -1468,16 +1503,7 @@ namespace HomeSeer.PluginSdk {
         /// <returns></returns>
         object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
         
-        #endregion
-
-        #region Not Implemented
-
-        #region Scripts
-
         //TODO Script methods
-        //object PluginFunction(string plugname, string pluginstance, string func,object[] parms);
-        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
-        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
         //int SendMessage(string message, string host, bool showballoon);
         //int Launch(string Name, string @params, string direc, int LaunchPri);
         //bool RegisterStatusChangeCB(string script, string func);
@@ -1488,8 +1514,69 @@ namespace HomeSeer.PluginSdk {
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
+        
+        #endregion
+        
+        #region Cross-Plugin
+        
+        /// <summary>
+        /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
+        /// </summary>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the function</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the function</param>
+        /// <param name="procName">The name of the function</param>
+        /// <param name="params">An array of parameters to pass to the function being called</param>
+        /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either the <paramref name="plugName"/> or <paramref name="procName"/> parameters are null or whitespace</exception>
+        /// <exception cref="AggregateException">Thrown when there was an error trying to execute the function. Check the enclosed exception for details.</exception>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginFunction"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        object LegacyPluginFunction(string plugName, string plugInstance, string procName, object[] @params);
+
+        /// <summary>
+        /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the function</param>
+        /// <param name="procName">The name of the function</param>
+        /// <param name="params">An array of parameters to pass to the function being called</param>
+        /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either the <paramref name="pluginId"/> or <paramref name="procName"/> parameters are null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
+        /// <exception cref="AggregateException">Thrown when there was an error trying to execute the function. Check the enclosed exception for details.</exception>
+        object PluginFunction(string pluginId, string procName, object[] @params);
+        
+        /// <summary>
+        /// Get the version of a particular plugin by its name. For interfacing with legacy plugins.
+        /// </summary>
+        /// <param name="pluginName">The <see cref="IPlugin.Name"/> of the plugin</param>
+        /// <returns>The version of the main dll for the plugin</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="pluginName"/> parameter is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified name is not found in the list of installed plugins</exception>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="GetPluginVersionById"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        string GetPluginVersionByName(string pluginName);
+        
+        /// <summary>
+        /// Get the version of a particular plugin by its <see cref="IPlugin.Id"/>. Do not use this for legacy plugins; it will not work.
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin</param>
+        /// <returns>The version of the main dll for the plugin</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="pluginId"/> parameter is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
+        string GetPluginVersionById(string pluginId);
+
+        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
+        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
 
         #endregion
+
+        #region Not Implemented
 
         #region COM
 
@@ -1524,7 +1611,7 @@ namespace HomeSeer.PluginSdk {
         #region AppCallback
 
         //TODO AppCallback methods
-        
+
         #endregion
 
         //TODO other methods
