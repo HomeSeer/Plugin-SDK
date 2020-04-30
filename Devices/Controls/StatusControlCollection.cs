@@ -44,7 +44,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                         if (foundStatusControl == null) {
                             foundStatusControl = (StatusControl) _statusControls[statusControlKey];
                         }
-                        if (value <= statusControlKey) {
+                        if (value < statusControlKey) {
                             break;
                         }
                         foundStatusControl = (StatusControl) _statusControls[statusControlKey];
@@ -84,7 +84,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                     if (foundStatusControl == null) {
                         foundStatusControl = (StatusControl) _statusControls[statusControlKey];
                     }
-                    if (value <= statusControlKey) {
+                    if (value < statusControlKey) {
                         break;
                     }
                     foundStatusControl = (StatusControl) _statusControls[statusControlKey];
