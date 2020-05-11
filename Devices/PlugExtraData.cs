@@ -10,7 +10,8 @@ namespace HomeSeer.PluginSdk.Devices {
     /// A collection of keyed and non-keyed data items attached to a <see cref="AbstractHsDevice"/>
     /// </summary>
     /// <remarks>
-    /// Use this to store any data specific to the operation of your plugin.
+    /// <para>Use this to store any data specific to the operation of your plugin.</para>
+    /// <para>Please note that all keys will be converted to lower case when stored in the HS database</para>
     /// </remarks>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
@@ -42,6 +43,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <exception cref="ArgumentNullException">
         /// Thrown when the key is null or whitespace
         /// </exception>
+        /// <para>Please note that all keys will be converted to lower case when stored in the HS database</para>
         public bool AddNamed(string key, string data) {
             if (string.IsNullOrWhiteSpace(key)) {
                 throw new ArgumentNullException(nameof(key));
@@ -165,6 +167,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <param name="data">The data for the item to save.</param>
         /// <returns>The index of the item in the collection.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the data to be stored is null or whitespace.</exception>
+        /// <para>Please note that all keys will be converted to lower case when stored in the HS database</para>
         public int AddUnNamed(string data) {
 
             if (string.IsNullOrWhiteSpace(data)) {
