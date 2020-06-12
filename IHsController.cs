@@ -1576,6 +1576,54 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region Categories
+
+        /// <summary>
+        /// Create a new category with the specified name and image path
+        /// </summary>
+        /// <param name="name">The display name of the category</param>
+        /// <param name="image">The path to the image for the category. Use the files in /html/images/Categories/</param>
+        /// <returns>The ID of the newly created category</returns>
+        /// <exception cref="ArgumentException">Thrown when the name is already in use by another category</exception>
+        string CreateCategory(string name, string image);
+
+        //GetCategories
+        Dictionary<string, string> GetAllCategories();
+        
+        //GetCategoryNameById
+        string GetCategoryNameById(string id);
+
+        //GetCategoryImageById
+        string GetCategoryImageById(string id);
+
+        //GetRefsByCategoryId
+        List<int> GetRefsByCategoryId(string id);
+
+        //SetImageForCategoryById
+        void SetImageForCategoryById(string id, string image);
+
+        void SetNameForCategoryById(string id, string name);
+        
+        //SetRefsForCategoryById
+        void SetRefsForCategoryById(string id, List<int> devRefs);
+        
+        //AddRefToCategory
+        void AddRefToCategory(string id, int devRef);
+        
+        //AddRefsToCategory
+        void AddRefsToCategory(string id, List<int> devRefs);
+        
+        //RemoveRefFromCategory
+        void RemoveRefFromCategory(string id, int devRef);
+
+        //RemoveRefsFromCategory
+        void RemoveRefsFromCategory(string id, List<int> devRefs);
+
+        //DeleteCategoryById
+        void DeleteCategoryById(string id);
+
+        #endregion
+
         #region Not Implemented
 
         #region COM
