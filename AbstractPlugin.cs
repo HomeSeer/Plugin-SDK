@@ -462,9 +462,13 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc cref="IPlugin.HasJuiDeviceConfigPage" />
+        /// <remarks>
+        /// Default behavior is to show a configuration page for every device when
+        ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to true.
+        ///  Adjust this behavior if the plugin only shows a configuration page for some, but not all, devices.
+        /// </remarks>
         public bool HasJuiDeviceConfigPage(int deviceRef) {
-            //No page to return by default
-            return false;
+            return true;
         }
 
         /// <inheritdoc cref="IPlugin.GetJuiDeviceConfigPage" />
