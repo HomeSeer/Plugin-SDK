@@ -461,6 +461,12 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
+        /// <inheritdoc cref="IPlugin.HasJuiDeviceConfigPage" />
+        public bool HasJuiDeviceConfigPage(int deviceRef) {
+            //No page to return by default
+            return false;
+        }
+
         /// <inheritdoc cref="IPlugin.GetJuiDeviceConfigPage" />
         public virtual string GetJuiDeviceConfigPage(int deviceRef) {
             return $"No device config page registered by plugin {Id}";
