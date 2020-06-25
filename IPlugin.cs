@@ -130,6 +130,17 @@ namespace HomeSeer.PluginSdk {
         ///  one for each device being controlled
         /// </param>
         void SetIOMulti(List<ControlEvent> controlEvents);
+
+        /// <summary>
+        /// Called by HomeSeer Core to determine if a device configuration page is available for a particular device.
+        ///  Only called if <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to TRUE.
+        /// </summary>
+        /// <param name="deviceRef">The <see cref="AbstractHsDevice.Ref"/> of the device</param>
+        /// <returns>
+        /// True if there is a page available, false if not.
+        ///  Returning True will cause HomeSeer Core to call <see cref="GetJuiDeviceConfigPage"/> for the device
+        /// </returns>
+        bool HasJuiDeviceConfigPage(int deviceRef);
         
         /// <summary>
         /// Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device
