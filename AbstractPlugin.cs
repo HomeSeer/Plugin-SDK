@@ -467,7 +467,7 @@ namespace HomeSeer.PluginSdk {
         ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to true.
         ///  Adjust this behavior if the plugin only shows a configuration page for some, but not all, devices.
         /// </remarks>
-        public bool HasJuiDeviceConfigPage(int deviceRef) {
+        public virtual bool HasJuiDeviceConfigPage(int deviceRef) {
             return true;
         }
 
