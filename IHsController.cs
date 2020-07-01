@@ -1576,6 +1576,115 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region Categories
+
+        /// <summary>
+        /// Create a new category with the specified name and image path
+        /// </summary>
+        /// <param name="name">The display name of the category</param>
+        /// <param name="image">The path to the image for the category. Use the files in /html/images/Categories/</param>
+        /// <returns>The ID of the newly created category</returns>
+        /// <exception cref="ArgumentException">Thrown when the name is already in use by another category</exception>
+        string CreateCategory(string name, string image);
+
+        /// <summary>
+        /// Get a Dictionary of all categories on the HomeSeer system where the key is the ID and the value is the name of each category
+        /// </summary>
+        /// <returns>A Dictionary of category names by ID</returns>
+        Dictionary<string, string> GetAllCategories();
+        
+        /// <summary>
+        /// Get the name of a category by its ID
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <returns>The name of the category. Null or empty string if the category does not exist</returns>
+        string GetCategoryNameById(string id);
+
+        /// <summary>
+        /// Get the image path of a category by its ID
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <returns>The image path of the category. Null if the category doesn't exist. Empty string if there is no image path for that category</returns>
+        string GetCategoryImageById(string id);
+
+        /// <summary>
+        /// Get a list of <see cref="AbstractHsDevice.Ref"/>s of devices and features included in the category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <returns>
+        /// A List of <see cref="AbstractHsDevice.Ref"/>s of devices and features included in the category.
+        ///  Null if the category doesn't exist. Empty list if no devices or features are included in the category.
+        /// </returns>
+        List<int> GetRefsByCategoryId(string id);
+
+        /// <summary>
+        /// Set the image path for a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="image">The path to the image for the category. Use /html/images/Categories/</param>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        void SetImageForCategoryById(string id, string image);
+
+        /// <summary>
+        /// Set the name for a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="name">The new name for the category</param>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        void SetNameForCategoryById(string id, string name);
+        
+        /// <summary>
+        /// Set the list of refs for a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRefs">The new list of refs for the category</param>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        void SetRefsForCategoryById(string id, List<int> devRefs);
+        
+        /// <summary>
+        /// Add a ref to a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRef">The ref to add to the category</param>
+        /// <returns>The current list of refs on the category after adding the one specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> AddRefToCategory(string id, int devRef);
+        
+        /// <summary>
+        /// Add a collection of refs to a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRefs">A list of refs to add to the category</param>
+        /// <returns>The current list of refs on the category after adding the ones specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> AddRefsToCategory(string id, List<int> devRefs);
+        
+        /// <summary>
+        /// Remove a ref from a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRef">The ref to remove from the category</param>
+        /// <returns>The current list of refs on the category after removing the one specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> RemoveRefFromCategory(string id, int devRef);
+
+        /// <summary>
+        /// Remove a list of refs from a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRefs">The refs to remove from the category</param>
+        /// <returns>The current list of refs on the category after removing the ones specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> RemoveRefsFromCategory(string id, List<int> devRefs);
+
+        /// <summary>
+        /// Delete a category by ID
+        /// </summary>
+        /// <param name="id">The ID of the category to delete</param>
+        void DeleteCategoryById(string id);
+
+        #endregion
+
         #region Not Implemented
 
         #region COM

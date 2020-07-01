@@ -816,6 +816,20 @@ namespace HomeSeer.PluginSdk.Devices {
             _misc = 0;
         }
 
+        /// <summary>
+        /// Get the value for any combination of <see cref="EMiscFlag"/>s
+        /// </summary>
+        /// <param name="misc"><see cref="EMiscFlag"/>s to combine</param>
+        /// <returns>A uint representing the combined <see cref="EMiscFlag"/>s</returns>
+        public static uint GetMiscForFlags(params EMiscFlag[] misc) {
+            uint finalMisc = 0;
+            foreach (var flag in misc) {
+                finalMisc |= (uint) flag;
+            }
+
+            return finalMisc;
+        }
+
     }
 
 }
