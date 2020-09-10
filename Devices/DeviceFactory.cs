@@ -89,24 +89,28 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
 
+        /// <summary>
+        /// Set the Location property on the device.
+        /// </summary>
+        /// <param name="location">The location to set on the device</param>
+        /// <returns>The DeviceFactory updated with the specified location</returns>
+        /// <remarks>Empty strings will be converted to "None"</remarks>
         public DeviceFactory WithLocation(string location) {
-
-            if (string.IsNullOrWhiteSpace(location)) {
-                throw new ArgumentNullException(nameof(location));
-            }
-
-            _device.Location = location;
+            // 09-10-2020 JLW - Default empty strings to "None" instead of throwing an exception PSDK-98
+            _device.Location = string.IsNullOrWhiteSpace(location) ? "None" : location;
 
             return this;
         }
 
+        /// <summary>
+        /// Set the Location2 property on the device.
+        /// </summary>
+        /// <param name="location2">The location2 to set on the device</param>
+        /// <returns>The DeviceFactory updated with the specified location2</returns>
+        /// <remarks>Empty strings will be converted to "None"</remarks>
         public DeviceFactory WithLocation2(string location2) {
-
-            if (string.IsNullOrWhiteSpace(location2)) {
-                throw new ArgumentNullException(nameof(location2));
-            }
-
-            _device.Location2 = location2;
+            // 09-10-2020 JLW - Default empty strings to "None" instead of throwing an exception PSDK-98
+            _device.Location2 = string.IsNullOrWhiteSpace(location2) ? "None" : location2;
 
             return this;
         }
