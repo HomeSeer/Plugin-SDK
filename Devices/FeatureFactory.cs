@@ -19,7 +19,11 @@ namespace HomeSeer.PluginSdk.Devices {
                               Relationship = ERelationship.Feature,
                               Interface    = pluginId
                           };
-            feature.Changes.Add(EProperty.Misc, (uint) EMiscFlag.ShowValues);
+            feature.Changes.Add(EProperty.Misc, 
+                                AbstractHsDevice.GetMiscForFlags(
+                                                                 EMiscFlag.ShowValues, 
+                                                                 EMiscFlag.SetDoesNotChangeLastChange)
+                                );
             feature.Changes.Add(EProperty.UserAccess, "Any");
             feature.Changes.Add(EProperty.Location2, "Plugin");
             feature.Changes.Add(EProperty.Location, pluginId);
@@ -150,14 +154,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         /// <param name="location">The location to set on the feature</param>
         /// <returns>The FeatureFactory updated with the specified location</returns>
-        /// <exception cref="ArgumentNullException">Thrown when in invalid location was specified</exception>
+        /// <remarks>Null or whitespace strings will be converted to empty strings ""</remarks>
         public FeatureFactory WithLocation(string location) {
-
-            if (string.IsNullOrWhiteSpace(location)) {
-                throw new ArgumentNullException(nameof(location));
-            }
-
-            _feature.Location = location;
+            // 09-15-2020 JLW - Default null or whitespace strings to empty string "" instead of throwing an exception PSDK-98
+            _feature.Location = string.IsNullOrWhiteSpace(location) ? "" : location;
 
             return this;
         }
@@ -171,14 +171,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         /// <param name="location2">The location2 to set on the feature</param>
         /// <returns>The FeatureFactory updated with the specified location2</returns>
-        /// <exception cref="ArgumentNullException">Thrown when in invalid location2 was specified</exception>
+        /// <remarks>Null or whitespace strings will be converted to empty strings ""</remarks>
         public FeatureFactory WithLocation2(string location2) {
-
-            if (string.IsNullOrWhiteSpace(location2)) {
-                throw new ArgumentNullException(nameof(location2));
-            }
-
-            _feature.Location2 = location2;
+            // 09-15-2020 JLW - Default null or whitespace strings to empty string "" instead of throwing an exception PSDK-98
+            _feature.Location2 = string.IsNullOrWhiteSpace(location2) ? "" : location2;
 
             return this;
         }

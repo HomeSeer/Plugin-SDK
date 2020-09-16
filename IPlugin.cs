@@ -51,13 +51,9 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         bool HasSettings { get; }
     
-        //TODO AccessLevel -> What are we doing with this? Leaving as is?
         /// <summary>
         /// Return the access level of this plug-in. Access level is the licensing mode.
-        /// <para>
-        /// 1 = Plug-in is not licensed and may be enabled and run without purchasing a license. Use this value for free plug-ins.
-        /// 2 = Plug-in is licensed and a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days.
-        /// </para>
+        ///  Use the integer value corresponding to the <see cref="Types.EAccessLevel"/> for your plugin
         /// </summary>
         int AccessLevel { get; }
         
@@ -134,6 +130,17 @@ namespace HomeSeer.PluginSdk {
         ///  one for each device being controlled
         /// </param>
         void SetIOMulti(List<ControlEvent> controlEvents);
+
+        /// <summary>
+        /// Called by HomeSeer Core to determine if a device configuration page is available for a particular device.
+        ///  Only called if <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to TRUE.
+        /// </summary>
+        /// <param name="deviceRef">The <see cref="AbstractHsDevice.Ref"/> of the device</param>
+        /// <returns>
+        /// True if there is a page available, false if not.
+        ///  Returning True will cause HomeSeer Core to call <see cref="GetJuiDeviceConfigPage"/> for the device
+        /// </returns>
+        bool HasJuiDeviceConfigPage(int deviceRef);
         
         /// <summary>
         /// Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device
@@ -389,6 +396,11 @@ namespace HomeSeer.PluginSdk {
         ///  It may be necessary or a feature of your plug-in to modify the text being spoken or the host/instance
         ///  list provided in the host parameter - this is acceptable.
         /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </remarks>
         /// <param name="speechDevice">
         /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
         ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
@@ -412,7 +424,7 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakIn(int speechDevice, string spokenText, bool wait, string host);
-
+        
     }
 
 }

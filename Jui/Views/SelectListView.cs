@@ -184,7 +184,7 @@ namespace HomeSeer.Jui.Views {
 					sb.Append(Environment.NewLine);
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\">");
+					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
 					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>Select an option</option>");
@@ -244,7 +244,7 @@ namespace HomeSeer.Jui.Views {
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
 						sb.Append("<span class=\"form-check jui-toggle-control\">");
-						sb.Append($"<input type=\"radio\" id=\"{optionId}\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionNum}\">");
+						sb.Append($"<input type=\"radio\" id=\"{optionId}\" par-id=\"{Id}.par\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionNum}\">");
 						sb.Append($"<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"{optionId}\"/></span>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+2));

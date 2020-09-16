@@ -461,6 +461,16 @@ namespace HomeSeer.PluginSdk {
             }
         }
 
+        /// <inheritdoc cref="IPlugin.HasJuiDeviceConfigPage" />
+        /// <remarks>
+        /// Default behavior is to show a configuration page for every device when
+        ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to true.
+        ///  Adjust this behavior if the plugin only shows a configuration page for some, but not all, devices.
+        /// </remarks>
+        public virtual bool HasJuiDeviceConfigPage(int deviceRef) {
+            return true;
+        }
+
         /// <inheritdoc cref="IPlugin.GetJuiDeviceConfigPage" />
         public virtual string GetJuiDeviceConfigPage(int deviceRef) {
             return $"No device config page registered by plugin {Id}";
@@ -685,7 +695,7 @@ namespace HomeSeer.PluginSdk {
 
         /// <inheritdoc cref="IPlugin.SpeakIn" />
         public virtual void SpeakIn(int speechDevice, string spokenText, bool wait, string host) {}
-
+        
     }
 
 }
