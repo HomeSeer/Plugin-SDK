@@ -97,7 +97,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <remarks>Null or whitespace strings will be converted to empty strings ""</remarks>
         public DeviceFactory WithLocation(string location) {
             // 09-15-2020 JLW - Default null or whitespace strings to empty string "" instead of throwing an exception PSDK-98
-            _device.Location = string.IsNullOrWhiteSpace(location) ? "None" : location;
+            _device.Location = string.IsNullOrWhiteSpace(location) ? "" : location;
 
             return this;
         }
