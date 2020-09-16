@@ -154,10 +154,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         /// <param name="location">The location to set on the feature</param>
         /// <returns>The FeatureFactory updated with the specified location</returns>
-        /// <remarks>Empty strings will be converted to "None"</remarks>
+        /// <remarks>Null or whitespace strings will be converted to empty strings ""</remarks>
         public FeatureFactory WithLocation(string location) {
-            // 09-10-2020 JLW - Default empty strings to "None" instead of throwing an exception
-            _feature.Location = string.IsNullOrWhiteSpace(location) ? "None" : location;
+            // 09-15-2020 JLW - Default null or whitespace strings to empty string "" instead of throwing an exception PSDK-98
+            _feature.Location = string.IsNullOrWhiteSpace(location) ? "" : location;
 
             return this;
         }
@@ -171,10 +171,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         /// <param name="location2">The location2 to set on the feature</param>
         /// <returns>The FeatureFactory updated with the specified location2</returns>
-        /// <remarks>Empty strings will be converted to "None"</remarks>
+        /// <remarks>Null or whitespace strings will be converted to empty strings ""</remarks>
         public FeatureFactory WithLocation2(string location2) {
-            // 09-10-2020 JLW - Default empty strings to "None" instead of throwing an exception
-            _feature.Location2 = string.IsNullOrWhiteSpace(location2) ? "None" : location2;
+            // 09-15-2020 JLW - Default null or whitespace strings to empty string "" instead of throwing an exception PSDK-98
+            _feature.Location2 = string.IsNullOrWhiteSpace(location2) ? "" : location2;
 
             return this;
         }
