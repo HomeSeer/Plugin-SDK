@@ -424,35 +424,48 @@ namespace HomeSeer.Jui.Views {
 				throw new ArgumentException("The number of views and IDs do not match");
 			}
 
-			if (!viewIds.Remove(viewId)) {
-				throw new KeyNotFoundException("No view with that ID exists in the collection");
-			}
+            var index = viewIds[viewId];
+            if (!viewIds.Remove(viewId))
+            {
+                throw new KeyNotFoundException("No view with that ID exists in the collection");
+            }
 
-			var numViews = viewList.Count;
-			var newList = new List<AbstractView>();
-			for (var i = 0; i < numViews; i++) {
+            // 09-26-2010 sjhill01: RemoveViewById does not remove views PSDK-95
+            var numViews = viewList.Count;
+            var newList = new List<AbstractView>();
+            for (var i = 0; i < numViews; i++)
+            {
 
-				var curView = viewList[i];
-				newList.Add(curView);
-				viewIds[viewId] = i;
-			}
+                // if it's below the removed index, add it as-is
+                if (i < index)
+                {
+                    newList.Add(viewList[i]);
+                }
+                // if it equals the removed index, do nothing
+                // if it's above the removed index, move the rest of the IDs down one
+                else if (i > index)
+                {
+                    newList.Add(viewList[i]);
+                    viewIds[viewList[i].Id] = i - 1;
+                }
+            }
 
-			viewList = new List<AbstractView>(newList);
-		}
+            viewList = new List<AbstractView>(newList);
+        }
 
-		/// <summary>
-		/// Trim all views in the collection following the view with the specified ID
-		/// </summary>
-		/// <param name="viewId">The ID of the view that should be at the end of the collection</param>
-		/// <param name="viewList">The current list of views in the collection</param>
-		/// <param name="viewIds">The current view ID to index map for the collection</param>
-		/// <exception cref="ArgumentNullException">
-		/// Thrown when any of the supplied parameters is null of empty
-		/// </exception>
-		/// <exception cref="ArgumentException">
-		/// Thrown when the number of items in the <see cref="viewList"/> and <see cref="viewIds"/> do not match
-		/// </exception>
-		internal static void RemoveViewsAfterId(string viewId, ref List<AbstractView> viewList,
+        /// <summary>
+        /// Trim all views in the collection following the view with the specified ID
+        /// </summary>
+        /// <param name="viewId">The ID of the view that should be at the end of the collection</param>
+        /// <param name="viewList">The current list of views in the collection</param>
+        /// <param name="viewIds">The current view ID to index map for the collection</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any of the supplied parameters is null of empty
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the number of items in the <see cref="viewList"/> and <see cref="viewIds"/> do not match
+        /// </exception>
+        internal static void RemoveViewsAfterId(string viewId, ref List<AbstractView> viewList,
 		                                        ref Dictionary<string, int> viewIds) {
 			if (string.IsNullOrWhiteSpace(viewId)) {
 				throw new ArgumentNullException(nameof(viewId), "Invalid view ID specified.");
