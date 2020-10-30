@@ -14,7 +14,8 @@ namespace HomeSeer.PluginSdk.Features.Responses {
     /// </para>
     /// </remarks>
     [JsonObject]
-    public class JsonError : GenericJsonData {
+    public class JsonError : JsonResponse
+    {
 
         /// <summary>
         /// Key that identifies the error message data
@@ -39,13 +40,15 @@ namespace HomeSeer.PluginSdk.Features.Responses {
         /// <summary>
         /// Create a new JsonError with a specific message
         /// </summary>
+        /// <param name="request">The <see cref="JsonRequest"/> to base this response on</param>
         /// <param name="errorMessage">The error message</param>
         /// <exception cref="ArgumentNullException">Thrown if no error message is provided</exception>
-        public JsonError(string errorMessage) {
-            if (string.IsNullOrWhiteSpace(errorMessage)) {
+        public JsonError(JsonRequest request, string errorMessage) : base(request, ErrorKey)
+        {
+            if (string.IsNullOrWhiteSpace(errorMessage)) 
+            {
                 throw new ArgumentNullException(nameof(errorMessage));
             }
-
             Error = errorMessage;
         }
         
@@ -72,7 +75,7 @@ namespace HomeSeer.PluginSdk.Features.Responses {
         /// <param name="message">The error message</param>
         /// <returns>A string of JSON describing a <see cref="JsonError"/></returns>
         public static string CreateJson(string message) {
-            var jsonError = new JsonError(message);
+            var jsonError = new JsonError(null, message);
             return jsonError.ToJson();
         }
 
