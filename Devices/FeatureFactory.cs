@@ -144,7 +144,22 @@ namespace HomeSeer.PluginSdk.Devices {
             
             return this;
         }
-        
+
+        public FeatureFactory WithoutMiscFlags(params EMiscFlag[] miscFlags)
+        {
+            if (miscFlags == null || miscFlags.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(miscFlags));
+            }
+
+            foreach (var miscFlag in miscFlags.Distinct())
+            {
+                _feature.RemoveMiscFlag(miscFlag);
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// Set the Location property on the feature.
         /// </summary>
