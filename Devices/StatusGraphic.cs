@@ -230,7 +230,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_value - value) < 0.01D;
+            return Math.Abs(_value - value) < 1E-10;
         }
 
         private string ReplaceAdditionalData(string label, string[] additionalData) {
