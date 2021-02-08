@@ -1685,6 +1685,18 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region Encryption
+        /// <summary>
+        /// Decrypt a string using a decryption password that you specify.
+        /// </summary>
+        /// <param name="text">The text to decrypt</param>
+        /// <param name="password">The user-created text string to decrypt the text with</param>
+        /// <param name="keyModifier">The modifier used with the password to create the decryption key. 
+        /// If EncryptString was used with a key modifier was, you must specify the same key modifier here.</param>
+        /// <returns>A string containing a decrypted form of the text parameter, decrypted using password (and keyModifier if provided)</returns>
+        string DecryptString(string text, string password, string keyModifier = "");
+        #endregion
+
         #region Not Implemented
 
         #region COM
