@@ -430,7 +430,7 @@ namespace HomeSeer.Jui.Views {
                 throw new KeyNotFoundException("No view with that ID exists in the collection");
             }
 
-            // 09-26-2010 sjhill01: RemoveViewById does not remove views PSDK-95
+            // 09-26-2020 sjhill01: RemoveViewById does not remove views PSDK-125, GitHub PSDK #95 // 02-09-2021 JLW: Fix date and issue keys
             var numViews = viewList.Count;
             var newList = new List<AbstractView>();
             for (var i = 0; i < numViews; i++)
