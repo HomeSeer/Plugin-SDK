@@ -34,16 +34,24 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PluginDev|AnyCPU' ">
-    <OutputPath>bin\PluginDev\</OutputPath>
-    <DocumentationFile>bin\PluginDev\PluginSdk.xml</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\Docs\</OutputPath>
+    <DocumentationFile>bin\Docs\PluginSdk.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HSCF">
-      <HintPath>..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">.\HSCF.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" >
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
