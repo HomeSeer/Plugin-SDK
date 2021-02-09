@@ -1,10 +1,12 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace HomeSeer.Jui.Views {
 
     /// <summary>
     /// The exception thrown when there is a problem serializing/deserializing JSON data
     /// </summary>
+    [Serializable]
     public class JsonDataException : Exception {
 
         /// <summary>
@@ -27,6 +29,14 @@ namespace HomeSeer.Jui.Views {
         /// <param name="message">The message to include with the exception</param>
         /// <param name="innerException">The exception to wrap</param>
         public JsonDataException(string message, Exception innerException) : base(message, innerException) { }
+
+        /// <summary>
+        /// Special constructor used for deserialization. 
+        /// This is mandatory in order for HSCF to be able to deserialize this exception.
+        /// </summary>
+        /// <param name="info">The data to deserialize from</param>
+        /// <param name="context">The context of the source stream</param>
+        protected JsonDataException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
     }
 

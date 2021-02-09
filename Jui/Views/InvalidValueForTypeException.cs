@@ -1,10 +1,12 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace HomeSeer.Jui.Views {
 
     /// <summary>
     /// The exception that is thrown when a value is invalid for a view's configured type
     /// </summary>
+    [Serializable]
     public class InvalidValueForTypeException : Exception {
 
         /// <summary>
@@ -23,6 +25,13 @@ namespace HomeSeer.Jui.Views {
         /// <param name="innerException">The exception to wrap</param>
         public InvalidValueForTypeException(string message, Exception innerException) : base(message, innerException) { }
 
+        /// <summary>
+        /// Special constructor used for deserialization. 
+        /// This is mandatory in order for HSCF to be able to deserialize this exception.
+        /// </summary>
+        /// <param name="info">The data to deserialize from</param>
+        /// <param name="context">The context of the source stream</param>
+        protected InvalidValueForTypeException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
 }
