@@ -1723,6 +1723,39 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region Global Variables
+        
+        /// <summary>
+        /// Create a new global variable
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <returns>An empty string no error occured, or an error string if one did occur.</returns>
+        string CreateVar(string name);
+
+        /// <summary>
+        /// Delete a global variable
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        void DeleteVar(string name);
+
+        /// <summary>
+        /// Find the global variable associated with the name parameter and return it.
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <returns>The global variable saved.</returns>
+        object GetVar(string name);
+
+        /// <summary>
+        /// Save the global variable contained in the obj parameter. 
+        /// The parameter may be any variable type such as a string or integer, or it may be a reference to an object created with CreateObject
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <param name="obj">The object to be saved</param>
+        /// <returns>An empty string no error occured, or an error string if one did occur.</returns>
+        string SaveVar(string name, object obj);
+        
+        #endregion
+        
         #region Encryption
         /// <summary>
         /// Decrypt a string using a decryption password that you specify.
