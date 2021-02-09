@@ -52,7 +52,7 @@ namespace HomeSeer.PluginSdk.Features.Responses {
         /// <param name="request">The <see cref="JsonRequest"/> to base this response on</param>
         /// <param name="response">The type of response</param>
         public JsonResponse(JsonRequest request, string response) {
-            Request = request.Request;
+            Request = request?.Request?? "";
             Response = response;
         }
 
