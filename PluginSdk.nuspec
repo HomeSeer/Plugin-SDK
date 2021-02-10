@@ -1,22 +1,27 @@
 <?xml version="1.0"?>
 <package >
-  <metadata>
-    <id>HomeSeer-PluginSDK</id>
-    <version>1.2.2.0</version>
-    <title>$title$</title>
-    <authors>HomeSeer</authors>
-    <owners>HomeSeer</owners>
-	<projectUrl>https://docs.homeseer.com/display/HSPI/Overview</projectUrl>
-	<repository type="git" url="https://github.com/HomeSeer/Plugin-SDK.git" branch="master"/>
-	<iconUrl>http://homeseer.com/images/HS4/hs4-64.png</iconUrl>
-    <license type="expression">AGPL-3.0-or-later</license>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <releaseNotes>https://homeseer.github.io/Plugin-SDK-Docs/release_notes/pluginsdk_releasenotes_1_2_2_0.html</releaseNotes>
-    <copyright>Copyright 2020</copyright>
-    <tags>HomeSeer Home Seer Plugin pluginsdk hs4 sdk hs api pluginapi plugins</tags>
-  </metadata>
-  <files>
-	<file src="bin\PluginDev\HSCF.dll" target="lib\net462" />
-  </files>
+    <metadata>
+        <id>HomeSeer-PluginSDK</id>
+        <version>1.2.2.0</version>
+        <title>HomeSeer PluginSDK</title>
+        <authors>HomeSeer</authors>
+        <owners>HomeSeer</owners>
+        <description>Plugin development kit that integrates with HomeSeer's HS4 platform.</description>
+        <projectUrl>https://docs.homeseer.com/display/HSPI/Overview</projectUrl>
+        <repository type="git" url="https://github.com/HomeSeer/Plugin-SDK.git" branch="master"/>
+        <iconUrl>http://homeseer.com/images/HS4/hs4-64.png</iconUrl>
+        <icon>images\icon-hs-128.png</icon>
+        <license type="expression">AGPL-3.0-or-later</license>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <releaseNotes>https://homeseer.github.io/Plugin-SDK-Docs/release_notes/pluginsdk_releasenotes_1_2_2_0.html</releaseNotes>
+        <copyright>Copyright 2021</copyright>
+        <tags>HomeSeer Home Seer Plugin pluginsdk hs4 sdk hs api pluginapi plugins smart auto automation control monitor</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.6.2" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="HSCF.dll" target="lib\net462" />
+        <file src="icon-hs-128.png" target="images\" />
+    </files>
 </package>
