@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HomeSeer Technologies")]
 [assembly: AssemblyProduct("HomeSeer PluginSDK")]
-[assembly: AssemblyCopyright("Copyright© 2019 HomeSeer Technologies, LLC")]
+[assembly: AssemblyCopyright("Copyright© 2021 HomeSeer Technologies, LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
