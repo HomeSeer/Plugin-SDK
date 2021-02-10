@@ -1,24 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginSdk", "PluginSdk.csproj", "{8D2165FA-0DBE-4F59-815C-72157B2401CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Html", "Html", "{94833FB6-ECEB-4B9F-B08F-7ABDD3F9591E}"
-ProjectSection(SolutionItems) = preProject
-	Html\FeaturePagePost.js = Html\FeaturePagePost.js
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		Html\FeaturePagePost.js = Html\FeaturePagePost.js
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Docs|Any CPU = Docs|Any CPU
 		Release|Any CPU = Release|Any CPU
-		PluginDev|Any CPU = PluginDev|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.Docs|Any CPU.ActiveCfg = Docs|Any CPU
+		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.Docs|Any CPU.Build.0 = Docs|Any CPU
 		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.PluginDev|Any CPU.ActiveCfg = PluginDev|Any CPU
-		{8D2165FA-0DBE-4F59-815C-72157B2401CF}.PluginDev|Any CPU.Build.0 = PluginDev|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D62B41B0-1DBB-42A0-9CDB-7C51EC840E83}
 	EndGlobalSection
 EndGlobal

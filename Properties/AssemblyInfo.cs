@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HomeSeer Technologies")]
 [assembly: AssemblyProduct("HomeSeer PluginSDK")]
-[assembly: AssemblyCopyright("Copyright© 2019 HomeSeer Technologies, LLC")]
+[assembly: AssemblyCopyright("Copyright© 2021 HomeSeer Technologies, LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.2.1.0")]
+[assembly: AssemblyFileVersion("1.2.2.0")]

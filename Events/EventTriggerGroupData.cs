@@ -1,3 +1,5 @@
+using System;
+
 namespace HomeSeer.PluginSdk.Events {
 
     /// <summary>
@@ -5,6 +7,8 @@ namespace HomeSeer.PluginSdk.Events {
     ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
     ///  Please use with caution.
     /// </summary>
+    [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [Serializable]
     public struct EventTriggerGroupData {
 
         public int      GroupNumber;

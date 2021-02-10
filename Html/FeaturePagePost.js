@@ -21,7 +21,7 @@ function onFeaturePagePostSuccess(response) {
         var responseObj = JSON.parse(response);
         if (responseObj.data.response === "error") {
             //Process error
-            alert("ERROR : POST to page errored : " + responseObj.error);
+            alert("ERROR : " + responseObj.data.error);
             return;
         }
         if (responseObj.data.response === "page_actions") {
