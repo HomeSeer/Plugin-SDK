@@ -144,7 +144,28 @@ namespace HomeSeer.PluginSdk.Devices {
             
             return this;
         }
-        
+
+        /// <summary>
+        /// Remove a <see cref="EMiscFlag"/> from the feature
+        /// </summary>
+        /// <param name="miscFlags"><see cref="EMiscFlag"/>(s) to remove</param>
+        /// <returns>The FeatureFactory updated by removing the specified <see cref="EMiscFlag"/>(s)</returns>
+        /// <exception cref="ArgumentNullException">Thrown when no <paramref name="miscFlags"/> are specified</exception>
+        public FeatureFactory WithoutMiscFlags(params EMiscFlag[] miscFlags)
+        {
+            if (miscFlags == null || miscFlags.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(miscFlags));
+            }
+
+            foreach (var miscFlag in miscFlags.Distinct())
+            {
+                _feature.RemoveMiscFlag(miscFlag);
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// Set the Location property on the feature.
         /// </summary>

@@ -1306,11 +1306,42 @@ namespace HomeSeer.PluginSdk {
         ///  significant changes in the near future. Please use with caution.
         /// </summary>
         int Energy_RemoveData(int dvRef, DateTime dteStart);
-        
+
         #endregion
-        
+
         #region Speech
-        
+
+        /// <summary>
+        /// This function speaks some text
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </remarks>
+        /// <param name="speechDevice">
+        /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
+        ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
+        ///  for HomeSeer Phone (device - 100 = phone line), or the WAV audio device to use.
+        ///  Although this is still used for HomeSeer Phone, speaks for HomeSeer phone are never proxied and so
+        ///  values >= 100 should never been seen in the device parameter.
+        /// </param>
+        /// <param name="spokenText">
+        /// This is the text to be spoken, or if it is a WAV file to be played, then the characters ":\" will be
+        ///  found starting at position 2 of the string as playing a WAV file with the speak command in HomeSeer
+        ///  REQUIRES a fully qualified path and filename of the WAV file to play.
+        /// </param>
+        /// <param name="wait">
+        /// This parameter tells HomeSeer whether to continue processing commands immediately or to wait until
+        ///  the speak command is finished.
+        /// </param>
+        /// <param name="host">
+        /// This is a list of host:instances to speak or play the WAV file on.
+        ///  An empty string or a single asterisk (*) indicates all connected speaker clients on all hosts.
+        /// </param>
+        void Speak(int speechDevice, string spokenText, bool wait, string host = "");
+
+
         /// <summary>
         /// This procedure is used to cause HomeSeer to speak something when a speak proxy is registered and active.
         ///  Since speak commands when a speak proxy plug-in is registered are trapped and passed to the SpeakIn
@@ -1379,7 +1410,15 @@ namespace HomeSeer.PluginSdk {
         /// <param name="Host">The speaker host to speak to in the format host:instance</param>
         void SetVolume(int level, string Host);
 
-        #if WIP
+        /// <summary>
+        /// This function can let you know if a specific speaker client (host or host:instance) is currently busy speaking or playing WAV audio.
+        /// </summary>
+        /// <param name="host">Leaving this a null string will return the busy status for the first instance HomeSeer finds, 
+        /// otherwise use the hostname of the computer you are interested in determining the busy status of. 
+        /// If more than one instance of the Speaker application is running on "host" then you may need to specify the instance as well in the format host:instance.</param>
+        /// <returns> TRUE indicates that the speaker application instance is busy</returns>
+        bool IsSpeakerBusy(string host);
+
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
         /// <para>
@@ -1401,7 +1440,6 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void UnRegisterProxySpeakPlug(string pluginId);
-#endif
 
         #endregion
 
@@ -1683,6 +1721,51 @@ namespace HomeSeer.PluginSdk {
         /// <param name="id">The ID of the category to delete</param>
         void DeleteCategoryById(string id);
 
+        #endregion
+
+        #region Global Variables
+        
+        /// <summary>
+        /// Create a new global variable
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <returns>An empty string no error occured, or an error string if one did occur.</returns>
+        string CreateVar(string name);
+
+        /// <summary>
+        /// Delete a global variable
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        void DeleteVar(string name);
+
+        /// <summary>
+        /// Find the global variable associated with the name parameter and return it.
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <returns>The global variable saved.</returns>
+        object GetVar(string name);
+
+        /// <summary>
+        /// Save the global variable contained in the obj parameter. 
+        /// The parameter may be any variable type such as a string or integer, or it may be a reference to an object created with CreateObject
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <param name="obj">The object to be saved</param>
+        /// <returns>An empty string no error occured, or an error string if one did occur.</returns>
+        string SaveVar(string name, object obj);
+        
+        #endregion
+        
+        #region Encryption
+        /// <summary>
+        /// Decrypt a string using a decryption password that you specify.
+        /// </summary>
+        /// <param name="text">The text to decrypt</param>
+        /// <param name="password">The user-created text string to decrypt the text with</param>
+        /// <param name="keyModifier">The modifier used with the password to create the decryption key. 
+        /// If EncryptString was used with a key modifier was, you must specify the same key modifier here.</param>
+        /// <returns>A string containing a decrypted form of the text parameter, decrypted using password (and keyModifier if provided)</returns>
+        string DecryptString(string text, string password, string keyModifier = "");
         #endregion
 
         #region Not Implemented

@@ -1,11 +1,14 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace HomeSeer.Jui.Views {
 
     /// <summary>
     /// The exception that is thrown when a view's type doesn't match its class
     /// </summary>
-    public class ViewTypeMismatchException : Exception {
+    [Serializable]
+    public class ViewTypeMismatchException : Exception
+    {
 
         /// <summary>
         /// Create an exception with the default message
@@ -23,6 +26,12 @@ namespace HomeSeer.Jui.Views {
         /// <param name="innerException">The exception to wrap</param>
         public ViewTypeMismatchException(string message, Exception innerException) : base(message, innerException) { }
 
+        /// <summary>
+        /// Special constructor used for deserialization. 
+        /// This is mandatory in order for HSCF to be able to deserialize this exception.
+        /// </summary>
+        /// <param name="info">The data to deserialize from</param>
+        /// <param name="context">The context of the source stream</param>
+        protected ViewTypeMismatchException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
-
 }
