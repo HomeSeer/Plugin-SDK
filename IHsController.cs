@@ -1540,7 +1540,14 @@ namespace HomeSeer.PluginSdk {
         /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
         /// <returns></returns>
         object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
-        
+
+        /// <summary>
+        /// This function indicates if a specified script is currently running.
+        /// </summary>
+        /// <param name="scr">Filename of the script to check.</param>
+        /// <returns>TRUE if the specified script is currently running and FALSE if it doesn't.</returns>
+        bool IsScriptRunning(string scr);
+
         //TODO Script methods
         //int SendMessage(string message, string host, bool showballoon);
         //int Launch(string Name, string @params, string direc, int LaunchPri);
@@ -1548,15 +1555,14 @@ namespace HomeSeer.PluginSdk {
         //void UnRegisterStatusChangeCB(string script);
         //string GetScriptPath();
         //string InstallScript(string scr_name, object param);
-        //bool IsScriptRunning(string scr);
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
-        
+
         #endregion
-        
+
         #region Cross-Plugin
-        
+
         /// <summary>
         /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
         /// </summary>
