@@ -1411,6 +1411,13 @@ namespace HomeSeer.PluginSdk {
         void SetVolume(int level, string Host);
 
         /// <summary>
+        /// Get the volume on a speaker client
+        /// </summary>
+        /// <param name="host">The speaker host to speak to in the format host:instance</param>
+        /// <returns>Volume level in the range of 0-100</returns>
+        int GetVolume(string host);
+
+        /// <summary>
         /// This function can let you know if a specific speaker client (host or host:instance) is currently busy speaking or playing WAV audio.
         /// </summary>
         /// <param name="host">Leaving this a null string will return the busy status for the first instance HomeSeer finds, 
