@@ -1420,6 +1420,12 @@ namespace HomeSeer.PluginSdk {
         bool IsSpeakerBusy(string host);
 
         /// <summary>
+        /// This function retrieves a comma separated list of host:instance names for Speaker client instances currently connected to HomeSeer.
+        /// </summary>
+        /// <returns>The returned instance list is a comma separated list of host:instance pairs</returns>
+        string GetSpeakerInstanceList();
+
+        /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
         /// <para>
         /// After this registration, whenever a Speak command is issued in HomeSeer,
