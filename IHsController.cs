@@ -1148,9 +1148,24 @@ namespace HomeSeer.PluginSdk {
         /// Logs off the active user and closes all processes running under the user
         /// </summary>
         void WindowsLogoffSystem();
-        
+
+        /// <summary>
+        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
+        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
+        ///  in HomeSeer's help file.
+        /// </summary>
+        /// <param name="strIn">A string with the replacement variables</param>
+        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
+        string ReplaceVariables(string strIn);
+
+        /// <summary>
+        /// Returns the path to the HS executable. Some plugins need this when running remotely
+        /// </summary>
+        /// <returns>The path to the HomeSeer executable</returns>
+        string GetAppPath();
+
         #region DateTime
-        
+
         /// <summary>
         /// Get the DateTime for Solar Noon from the HomeSeer system
         /// </summary>
@@ -1443,20 +1458,15 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region Media
         /// <summary>
-        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
-        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
-        ///  in HomeSeer's help file.
+        /// This function checks if the media player is currently playing a selection
         /// </summary>
-        /// <param name="strIn">A string with the replacement variables</param>
-        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
-        string ReplaceVariables(string strIn);
-
-        /// <summary>
-        /// Returns the path to the HS executable. Some plugins need this when running remotely
-        /// </summary>
-        /// <returns>The path to the HomeSeer executable</returns>
-        string GetAppPath();
+        /// <param name="host">Leaving this a null string will apply the command to the first instance HomeSeer finds, otherwise use the hostname of the computer for this command.  
+        /// If more than one instance of the Speaker application is running on "host" then you may need to specify the instance as well in the format host:instance.</param>
+        /// <returns>TRUE if a media selection is currently playing and the sound card is most likely busy, FALSE if a media selection is not playing and the sound is most likely free.</returns>
+        bool IsMediaPlaying(string host);
+        #endregion
         
         #region Images
 
