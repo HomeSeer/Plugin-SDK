@@ -846,7 +846,7 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="plugId">The ID of the plugin</param>
+        /// <param name="plugId">The ID of the plugin that owns the action</param>
         /// <param name="evRef">The Ref of the event</param>
         /// <param name="actInfo">The data to save to the event action</param>
         /// <returns>A message describing the result. Empty if it was successful</returns>
@@ -855,12 +855,12 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Update an existing plugin trigger in an event
         /// </summary>
-        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="plugId">The ID of the plugin that owns the trigger</param>
         /// <param name="evRef">Reference # of the event to modify</param>
         /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
         /// in this structure must match the UID in the original trigger</param>
         /// <returns>Returns an empty string on success or an error message</returns>
-        string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo trigInfo);
+        string UpdatePlugTrigger(string plugId, int evRef, TrigActInfo trigInfo);
         
         #endregion
         
@@ -981,10 +981,10 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginName">The ID of the plugin that owns the trigger type</param>
+        /// <param name="pluginId">The ID of the plugin that owns the trigger type</param>
         /// <param name="trigId">The ID of the trigger type</param>
         /// <returns>An array of trigger data</returns>
-        TrigActInfo[] GetTriggersByType(string pluginName, int trigId);
+        TrigActInfo[] GetTriggersByType(string pluginId, int trigId);
         
         /// <summary>
         /// This function is a callback function and is called when a plugin detects that a trigger condition is true.
