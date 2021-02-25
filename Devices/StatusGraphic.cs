@@ -161,6 +161,16 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <returns>The value as a string formatted according to the <see cref="TargetRange"/> configuration.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not targeted by the <see cref="StatusGraphic"/></exception>
         public string GetLabelForValue(double value, string[] additionalData = null) {
+            var label = _label;
+            if (!string.IsNullOrEmpty(label)) {
+                //If there is a label defined
+                if (additionalData == null || !_hasAdditionalData) {
+                    return label;
+                }
+                label = ReplaceAdditionalData(label, additionalData);
+                return label;
+            }
+            //No label is defined
             if (!_isRange) {
                 return additionalData == null || !_hasAdditionalData ? 
                     _label : 
@@ -190,29 +200,36 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if the value is not valid for this <see cref="StatusGraphic"/> or there is no label defined.
         /// </returns>
         public bool TryGetLabelForValue(out string label, double value, string[] additionalData = null) {
-
-            if (!_isRange || _targetRange == null) {
+            
+            if (!string.IsNullOrEmpty(_label)) {
+                //If there is a label defined
                 label = _label;
-                if (string.IsNullOrEmpty(_label)) {
-                    return false;
-                }
                 if (additionalData == null || !_hasAdditionalData) {
                     return true;
                 }
-
                 label = ReplaceAdditionalData(label, additionalData);
                 return true;
             }
+            //No label is defined
+            if (!_isRange || _targetRange == null) {
+                //If the graphic is for one value
+                label = null;
+                //Label is null or empty based on previous condition
+                return false;
+            }
+            //No label is defined and it is a range
             if (!_targetRange.IsValueInRange(value)) {
+                //Value is not in range so the label is null
                 label = null;
                 return false;
             }
-
+            //No label is defined, it is a range, and the current value is in that range
             label = _targetRange.GetStringForValue(value);
             if (additionalData == null || !_hasAdditionalData) {
+                //Additional data is not being used - return as is
                 return true;
             }
-
+            //Additional data is being used
             label = ReplaceAdditionalData(label, additionalData);
             return true;
         }
