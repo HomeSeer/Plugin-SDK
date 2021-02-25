@@ -695,7 +695,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a actiona owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <returns>A list of all of the actions managed by the plugin</returns>
         List<TrigActInfo> GetActionsByInterface(string pluginId);
         
@@ -753,7 +755,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <returns>An array of triggers managed by the plugin</returns>
         TrigActInfo[] GetTriggersByInterface(string pluginId);
         
@@ -846,7 +850,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="plugId">The ID of the plugin</param>
+        /// <param name="plugId">The ID of the plugin that owns the action
+        /// <remarks>If you are targeting an action owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <param name="evRef">The Ref of the event</param>
         /// <param name="actInfo">The data to save to the event action</param>
         /// <returns>A message describing the result. Empty if it was successful</returns>
@@ -855,12 +861,14 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Update an existing plugin trigger in an event
         /// </summary>
-        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="plugId">The ID of the plugin that owns the trigger
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <param name="evRef">Reference # of the event to modify</param>
         /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
         /// in this structure must match the UID in the original trigger</param>
         /// <returns>Returns an empty string on success or an error message</returns>
-        string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo trigInfo);
+        string UpdatePlugTrigger(string plugId, int evRef, TrigActInfo trigInfo);
         
         #endregion
         
@@ -958,7 +966,7 @@ namespace HomeSeer.PluginSdk {
         //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
         /// <summary>
-        /// This function returns an array of strTrigActInfo which matches the given plug-in, trigger number, and
+        /// This function returns an array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
         ///  sub-trigger number provided.  GetTriggers returns all triggers, so use TriggerMatches when you only
         ///  want to know if there are triggers in events for a specific plug-in's trigger.
         /// </summary>
@@ -967,10 +975,13 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <param name="trigId">The ID of the trigger</param>
         /// <param name="subTrigId">The ID of the subtrigger</param>
-        /// <returns></returns>
+        /// <returns>An array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
+        ///  sub-trigger number provided</returns>
         TrigActInfo[] TriggerMatches(string pluginId, int trigId, int subTrigId);
         
         /// <summary>
@@ -981,10 +992,12 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginName">The ID of the plugin that owns the trigger type</param>
+        /// <param name="pluginId">The ID of the plugin that owns the trigger type
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <param name="trigId">The ID of the trigger type</param>
         /// <returns>An array of trigger data</returns>
-        TrigActInfo[] GetTriggersByType(string pluginName, int trigId);
+        TrigActInfo[] GetTriggersByType(string pluginId, int trigId);
         
         /// <summary>
         /// This function is a callback function and is called when a plugin detects that a trigger condition is true.
@@ -994,7 +1007,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <param name="trigInfo">The data of the trigger to fire</param>
         void TriggerFire(string pluginId, TrigActInfo trigInfo);
 
