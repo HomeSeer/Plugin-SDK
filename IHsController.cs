@@ -1768,6 +1768,22 @@ namespace HomeSeer.PluginSdk {
         string DecryptString(string text, string password, string keyModifier = "");
         #endregion
 
+        #region Email
+        /// <summary>
+        /// Send an Email message
+        /// </summary>
+        /// <param name="to">The address you are sending the email to</param>
+        /// <param name="from">The adress you are sending from.  Note that some ISPs will not allow you to put just anything in this field.  
+        /// You may be required to put your real E-mail address here. If you are using MAPI to handle your E-mail, 
+        /// MAPI will enter your E-mail address that is associated with your default E-mail account.  In that case, this field will be ignored.</param>
+        /// <param name="cc">The CC address</param>
+        /// <param name="bcc">The BCC address</param>
+        /// <param name="subject">The subject of the email</param>
+        /// <param name="message">The body of the email</param>
+        /// <param name="attach">The abosulte path to the file to be attached to the email.</param>
+        void SendEmail(string to, string from, string cc, string bcc, string subject, string message, string attach);
+        #endregion
+
         #region Not Implemented
 
         #region COM
