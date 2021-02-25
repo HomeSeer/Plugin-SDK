@@ -695,7 +695,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a actiona owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <returns>A list of all of the actions managed by the plugin</returns>
         List<TrigActInfo> GetActionsByInterface(string pluginId);
         
@@ -753,7 +755,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <returns>An array of triggers managed by the plugin</returns>
         TrigActInfo[] GetTriggersByInterface(string pluginId);
         
