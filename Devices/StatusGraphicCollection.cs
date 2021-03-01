@@ -44,7 +44,7 @@ namespace HomeSeer.PluginSdk.Devices {
                         if (foundStatusGraphic == null) {
                             foundStatusGraphic = (StatusGraphic) _statusGraphics[graphicKey];
                         }
-                        if (value <= graphicKey) {
+                        if (value < graphicKey) {
                             break;
                         }
                         foundStatusGraphic = (StatusGraphic) _statusGraphics[graphicKey];
@@ -84,7 +84,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     if (foundStatusGraphic == null) {
                         foundStatusGraphic = (StatusGraphic) _statusGraphics[statusControlKey];
                     }
-                    if (value <= statusControlKey) {
+                    if (value < statusControlKey) {
                         break;
                     }
                     foundStatusGraphic = (StatusGraphic) _statusGraphics[statusControlKey];

@@ -695,7 +695,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a actiona owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <returns>A list of all of the actions managed by the plugin</returns>
         List<TrigActInfo> GetActionsByInterface(string pluginId);
         
@@ -753,7 +755,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <returns>An array of triggers managed by the plugin</returns>
         TrigActInfo[] GetTriggersByInterface(string pluginId);
         
@@ -846,7 +850,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="plugId">The ID of the plugin</param>
+        /// <param name="plugId">The ID of the plugin that owns the action
+        /// <remarks>If you are targeting an action owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <param name="evRef">The Ref of the event</param>
         /// <param name="actInfo">The data to save to the event action</param>
         /// <returns>A message describing the result. Empty if it was successful</returns>
@@ -855,12 +861,14 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Update an existing plugin trigger in an event
         /// </summary>
-        /// <param name="plugName">Name of the plugin that owns the trigger</param>
+        /// <param name="plugId">The ID of the plugin that owns the trigger
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// </param>
         /// <param name="evRef">Reference # of the event to modify</param>
         /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
         /// in this structure must match the UID in the original trigger</param>
         /// <returns>Returns an empty string on success or an error message</returns>
-        string UpdatePlugTrigger(string plugName, int evRef, TrigActInfo trigInfo);
+        string UpdatePlugTrigger(string plugId, int evRef, TrigActInfo trigInfo);
         
         #endregion
         
@@ -958,7 +966,7 @@ namespace HomeSeer.PluginSdk {
         //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
         /// <summary>
-        /// This function returns an array of strTrigActInfo which matches the given plug-in, trigger number, and
+        /// This function returns an array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
         ///  sub-trigger number provided.  GetTriggers returns all triggers, so use TriggerMatches when you only
         ///  want to know if there are triggers in events for a specific plug-in's trigger.
         /// </summary>
@@ -967,10 +975,13 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <param name="trigId">The ID of the trigger</param>
         /// <param name="subTrigId">The ID of the subtrigger</param>
-        /// <returns></returns>
+        /// <returns>An array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
+        ///  sub-trigger number provided</returns>
         TrigActInfo[] TriggerMatches(string pluginId, int trigId, int subTrigId);
         
         /// <summary>
@@ -981,10 +992,12 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginName">The ID of the plugin that owns the trigger type</param>
+        /// <param name="pluginId">The ID of the plugin that owns the trigger type
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <param name="trigId">The ID of the trigger type</param>
         /// <returns>An array of trigger data</returns>
-        TrigActInfo[] GetTriggersByType(string pluginName, int trigId);
+        TrigActInfo[] GetTriggersByType(string pluginId, int trigId);
         
         /// <summary>
         /// This function is a callback function and is called when a plugin detects that a trigger condition is true.
@@ -994,7 +1007,9 @@ namespace HomeSeer.PluginSdk {
         ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
         ///  Please use with caution.
         /// </remarks>
-        /// <param name="pluginId">The ID of the plugin</param>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// </param>
         /// <param name="trigInfo">The data of the trigger to fire</param>
         void TriggerFire(string pluginId, TrigActInfo trigInfo);
 
@@ -1148,9 +1163,24 @@ namespace HomeSeer.PluginSdk {
         /// Logs off the active user and closes all processes running under the user
         /// </summary>
         void WindowsLogoffSystem();
-        
+
+        /// <summary>
+        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
+        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
+        ///  in HomeSeer's help file.
+        /// </summary>
+        /// <param name="strIn">A string with the replacement variables</param>
+        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
+        string ReplaceVariables(string strIn);
+
+        /// <summary>
+        /// Returns the path to the HS executable. Some plugins need this when running remotely
+        /// </summary>
+        /// <returns>The path to the HomeSeer executable</returns>
+        string GetAppPath();
+
         #region DateTime
-        
+
         /// <summary>
         /// Get the DateTime for Solar Noon from the HomeSeer system
         /// </summary>
@@ -1411,6 +1441,13 @@ namespace HomeSeer.PluginSdk {
         void SetVolume(int level, string Host);
 
         /// <summary>
+        /// Get the volume on a speaker client
+        /// </summary>
+        /// <param name="host">The speaker host to speak to in the format host:instance</param>
+        /// <returns>Volume level in the range of 0-100</returns>
+        int GetVolume(string host);
+
+        /// <summary>
         /// This function can let you know if a specific speaker client (host or host:instance) is currently busy speaking or playing WAV audio.
         /// </summary>
         /// <param name="host">Leaving this a null string will return the busy status for the first instance HomeSeer finds, 
@@ -1418,6 +1455,12 @@ namespace HomeSeer.PluginSdk {
         /// If more than one instance of the Speaker application is running on "host" then you may need to specify the instance as well in the format host:instance.</param>
         /// <returns> TRUE indicates that the speaker application instance is busy</returns>
         bool IsSpeakerBusy(string host);
+
+        /// <summary>
+        /// This function retrieves a comma separated list of host:instance names for Speaker client instances currently connected to HomeSeer.
+        /// </summary>
+        /// <returns>The returned instance list is a comma separated list of host:instance pairs</returns>
+        string GetSpeakerInstanceList();
 
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
@@ -1443,20 +1486,15 @@ namespace HomeSeer.PluginSdk {
 
         #endregion
 
+        #region Media
         /// <summary>
-        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
-        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
-        ///  in HomeSeer's help file.
+        /// This function checks if the media player is currently playing a selection
         /// </summary>
-        /// <param name="strIn">A string with the replacement variables</param>
-        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
-        string ReplaceVariables(string strIn);
-
-        /// <summary>
-        /// Returns the path to the HS executable. Some plugins need this when running remotely
-        /// </summary>
-        /// <returns>The path to the HomeSeer executable</returns>
-        string GetAppPath();
+        /// <param name="host">Leaving this a null string will apply the command to the first instance HomeSeer finds, otherwise use the hostname of the computer for this command.  
+        /// If more than one instance of the Speaker application is running on "host" then you may need to specify the instance as well in the format host:instance.</param>
+        /// <returns>TRUE if a media selection is currently playing and the sound card is most likely busy, FALSE if a media selection is not playing and the sound is most likely free.</returns>
+        bool IsMediaPlaying(string host);
+        #endregion
         
         #region Images
 
@@ -1540,7 +1578,14 @@ namespace HomeSeer.PluginSdk {
         /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
         /// <returns></returns>
         object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
-        
+
+        /// <summary>
+        /// This function indicates if a specified script is currently running.
+        /// </summary>
+        /// <param name="scr">Filename of the script to check.</param>
+        /// <returns>TRUE if the specified script is currently running and FALSE if it doesn't.</returns>
+        bool IsScriptRunning(string scr);
+
         //TODO Script methods
         //int SendMessage(string message, string host, bool showballoon);
         //int Launch(string Name, string @params, string direc, int LaunchPri);
@@ -1548,15 +1593,14 @@ namespace HomeSeer.PluginSdk {
         //void UnRegisterStatusChangeCB(string script);
         //string GetScriptPath();
         //string InstallScript(string scr_name, object param);
-        //bool IsScriptRunning(string scr);
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
-        
+
         #endregion
-        
+
         #region Cross-Plugin
-        
+
         /// <summary>
         /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
         /// </summary>
@@ -1766,6 +1810,22 @@ namespace HomeSeer.PluginSdk {
         /// If EncryptString was used with a key modifier was, you must specify the same key modifier here.</param>
         /// <returns>A string containing a decrypted form of the text parameter, decrypted using password (and keyModifier if provided)</returns>
         string DecryptString(string text, string password, string keyModifier = "");
+        #endregion
+
+        #region Email
+        /// <summary>
+        /// Send an Email message
+        /// </summary>
+        /// <param name="to">The address you are sending the email to</param>
+        /// <param name="from">The adress you are sending from.  Note that some ISPs will not allow you to put just anything in this field.  
+        /// You may be required to put your real E-mail address here. If you are using MAPI to handle your E-mail, 
+        /// MAPI will enter your E-mail address that is associated with your default E-mail account.  In that case, this field will be ignored.</param>
+        /// <param name="cc">The CC address</param>
+        /// <param name="bcc">The BCC address</param>
+        /// <param name="subject">The subject of the email</param>
+        /// <param name="message">The body of the email</param>
+        /// <param name="attach">The abosulte path to the file to be attached to the email.</param>
+        void SendEmail(string to, string from, string cc, string bcc, string subject, string message, string attach);
         #endregion
 
         #region Not Implemented
