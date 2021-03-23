@@ -36,7 +36,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public List<string> AdditionalStatusData {
             get {
                 if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
-                    return ((string[]) Changes[EProperty.AdditionalStatusData]).ToList();
+                    return Changes[EProperty.AdditionalStatusData] as List<string> ?? new List<string>(); ;
                 }
                 
                 return _additionalStatusData ?? new List<string>();
@@ -49,10 +49,10 @@ namespace HomeSeer.PluginSdk.Devices {
                 }
                 
                 if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
-                    Changes[EProperty.AdditionalStatusData] = value?.ToArray();
+                    Changes[EProperty.AdditionalStatusData] = value;
                 }
                 else {
-                    Changes.Add(EProperty.AdditionalStatusData, value?.ToArray());
+                    Changes.Add(EProperty.AdditionalStatusData, value);
                 }
 
                 if (_cacheChanges) {
