@@ -66,14 +66,9 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
         
-        public bool Contains(StatusGraphic statusGraphic) {
-            try {
-                var unused = statusGraphic.IsRange ? this[statusGraphic.RangeMin] : this[statusGraphic.Value];
-                return true;
-            }
-            catch (KeyNotFoundException exception) {
-                return false;
-            }
+        public bool Contains(StatusGraphic statusGraphic) 
+        {
+            return ContainsValue(statusGraphic.IsRange ? statusGraphic.RangeMin : statusGraphic.Value);
         }
         
         public bool ContainsValue(double value) {
