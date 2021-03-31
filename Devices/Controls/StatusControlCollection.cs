@@ -66,14 +66,9 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             }
         }
         
-        public bool Contains(StatusControl statusControl) {
-            try {
-                var unused = statusControl.IsRange ? this[statusControl.TargetRange.Min] : this[statusControl.TargetValue];
-                return true;
-            }
-            catch (KeyNotFoundException exception) {
-                return false;
-            }
+        public bool Contains(StatusControl statusControl) 
+        {    
+            return ContainsValue(statusControl.IsRange ? statusControl.TargetRange.Min : statusControl.TargetValue);
         }
 
         public bool ContainsValue(double value) {
