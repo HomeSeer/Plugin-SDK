@@ -1654,7 +1654,32 @@ namespace HomeSeer.PluginSdk {
         string GetPluginVersionById(string pluginId);
 
         //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
-        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
+
+        /// <summary>
+        /// Set a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertySet"/> on the target plugin
+        /// </summary>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginPropertySet"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the property</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <param name="propValue">The value of the property to set.
+        ///  Its type must exactly match the type defined in the plugin.</param>
+        void LegacyPluginPropertySet(string plugName, string plugInstance, string propName, object propValue);
+        
+        /// <summary>
+        /// Set a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertySet"/> on the target plugin
+        /// </summary>
+        /// <param name="plugId">The <see cref="IPlugin.Id"/> of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <param name="propValue">The value of the property to set.
+        ///  Its type must exactly match the type defined in the plugin.</param>
+        void PluginPropertySet(string plugId, string propName, object propValue);
 
         #endregion
 
