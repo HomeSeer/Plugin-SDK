@@ -111,6 +111,23 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
+        /// Get the code stored in the <see cref="Address"/> string.
+        /// </summary>
+        /// <remarks>
+        /// This field is only used for legacy support and grabs a value from the <see cref="Address"/> field directly.
+        ///  The code is grabbed from the <see cref="Address"/> field by using <see cref="GetCodeFromAddressString"/>
+        /// </remarks>
+        public string Code {
+            get {
+                if (Changes.ContainsKey(EProperty.Address)) {
+                    return (string) Changes[EProperty.Address];
+                }
+
+                return GetCodeFromAddressString(_address) ?? "";
+            }
+        }
+
+        /// <summary>
         /// The address of an image that represents the current status of the device/feature
         /// </summary>
         public string Image {
