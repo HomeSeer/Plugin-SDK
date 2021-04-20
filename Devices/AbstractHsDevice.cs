@@ -49,6 +49,30 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Use this to store a unique identifier for the physical device this device/feature is associated with.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// Since v1.2.5.0, this field is overloaded with the legacy Code field for backwards compatibility.
+        ///  If you are accessing a device/feature that was created using this API then you can safely ignore this remark.
+        ///  If you are accessing a device/feature that was created using the HS3 legacy API you may note that this field
+        ///  now includes the Code value if it exists. You can get the Code directly by using the <see cref="Code"/> field.
+        /// <list type="table">
+        ///  <listheader>
+        ///   <term>Address Value</term>
+        ///   <description>Returns</description>
+        ///  </listheader>
+        ///  <item>
+        ///   <term>Address Only</term>
+        ///   <description>Address</description>
+        ///  </item>
+        ///  <item>
+        ///   <term>Code Only</term>
+        ///   <description>Code</description>
+        ///  </item>
+        ///  <item>
+        ///   <term>Address and Code</term>
+        ///   <description>Address-Code</description>
+        ///  </item>
+        /// </list>
+        /// </remarks>
         public string Address {
             get {
                 if (Changes.ContainsKey(EProperty.Address)) {
