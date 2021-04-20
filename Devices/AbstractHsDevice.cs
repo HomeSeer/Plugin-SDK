@@ -830,6 +830,79 @@ namespace HomeSeer.PluginSdk.Devices {
             return finalMisc;
         }
 
+        
+        /// <summary>
+        /// Get the address from an address-code string.
+        /// </summary>
+        /// <remarks>
+        /// HS3 supported an Address and Code field, but the Code field has been deprecated. The Address and Code fields
+        ///  used to also be combined into a single string with the format of ${ADDRESS}-${CODE}.
+        ///  The pseudocode for this is "${ADDRESS}-${CODE}".Trim('-');
+        ///  To maintain backwards compatibility support, the Address field will be overloaded with the Code for
+        ///  devices created using HS3. Use this method to get the address from the returned address-code string.
+        /// </remarks>
+        /// <param name="addressString">The <see cref="Address"/>-Code value string to parse</param>
+        /// <returns>The Address value from the string</returns>
+        public static string GetAddressFromAddressString(string addressString) {
+            if (string.IsNullOrWhiteSpace(addressString)) {
+                //Return null or empty address strings as empty
+                return "";
+            }
+
+            if (!addressString.Contains("-")) {
+                //Return the whole address string because it is probably just an address when it doesn't contain a -
+                return addressString;
+            }
+
+            var addressParts = addressString.Split('-');
+            if (addressParts.Length < 2) {
+                //Return the address string trimmed of - if splitting it at - does not produce 2 or more strings.
+                // This means that the string likely has the - at the beginning or the end of the string.
+                // We don't know if it was just an address or just a code.
+                return addressString.Trim('-');
+            }
+
+            //Return the first element in the address parts because the address is the string before the -
+            // IE ADDRESS-CODE
+            return addressParts[0];
+        }
+        
+        /// <summary>
+        /// Get the code from an address-code string.
+        /// </summary>
+        /// <remarks>
+        /// HS3 supported an Address and Code field, but the Code field has been deprecated. The Address and Code fields
+        ///  used to also be combined into a single string with the format of ${ADDRESS}-${CODE}.
+        ///  The pseudocode for this is "${ADDRESS}-${CODE}".Trim('-');
+        ///  To maintain backwards compatibility support, the Address field will be overloaded with the Code for
+        ///  devices created using HS3. Use this method to get the address from the returned address-code string.
+        /// </remarks>
+        /// <param name="addressString">The <see cref="Address"/>-Code value string to parse</param>
+        /// <returns>The Code value from the string</returns>
+        public static string GetCodeFromAddressString(string addressString) {
+            if (string.IsNullOrWhiteSpace(addressString)) {
+                //Return null or empty address strings as empty
+                return "";
+            }
+
+            if (!addressString.Contains("-")) {
+                //Return an empty string because it is probably just an address when it doesn't contain a -
+                return "";
+            }
+
+            var addressParts = addressString.Split('-');
+            if (addressParts.Length < 2) {
+                //Return the address string trimmed of - if splitting it at - does not produce 2 or more strings.
+                // This means that the string likely has the - at the beginning or the end of the string.
+                // We don't know if it was just an address or just a code.
+                return addressString.Trim('-');
+            }
+
+            //Return the second element in the address parts because the code is the string after the -
+            // IE ADDRESS-CODE
+            return addressParts[1];
+        }
+
     }
 
 }
