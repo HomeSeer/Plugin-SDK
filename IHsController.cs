@@ -1653,7 +1653,29 @@ namespace HomeSeer.PluginSdk {
         /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
         string GetPluginVersionById(string pluginId);
 
-        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
+        /// <summary>
+        /// Get a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
+        /// </summary>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginPropertyGet"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the property</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <returns>An object representing the value of the target property</returns>
+        object LegacyPluginPropertyGet(string plugName, string plugInstance, string propName);
+        
+        /// <summary>
+        /// Get a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
+        /// </summary>
+        /// <param name="plugId">The <see cref="IPlugin.Id"/> of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <returns>An object representing the value of the target property</returns>
+        object PluginPropertyGet(string plugId, string propName);
 
         /// <summary>
         /// Set a specific property declared within a plugin installed on the HomeSeer system.
