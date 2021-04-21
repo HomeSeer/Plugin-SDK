@@ -174,7 +174,7 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
-			sb.Append($"<div id=\"{Id}.par\" class=\"jui-view\">");
+			sb.Append($"<div id=\"{Id}-par\" class=\"jui-view\">");
 			sb.Append(Environment.NewLine);
 			//Add the select list
 			switch (Style) {
@@ -230,12 +230,12 @@ namespace HomeSeer.Jui.Views {
 					sb.Append(Environment.NewLine);
 					//Add the title
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<div id=\"{Id}.title\" class=\"jui-title\"><small>{Name}</small></div>");
+					sb.Append($"<div id=\"{Id}-title\" class=\"jui-title\"><small>{Name}</small></div>");
 					sb.Append(Environment.NewLine);
 					//Add the option items
 					for (var optionNum = 0; optionNum < Options.Count; optionNum++) {
 						var option = Options[optionNum];
-						var optionId = $"{Id}.{optionNum}";
+						var optionId = $"{Id}-{optionNum}";
 						sb.Append(GetIndentStringFromNumber(indent+2));
 						sb.Append("<div class=\"jui-toggle jui-selectlist-radio-option\">");
 						sb.Append(Environment.NewLine);
@@ -244,7 +244,7 @@ namespace HomeSeer.Jui.Views {
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
 						sb.Append("<span class=\"form-check jui-toggle-control\">");
-						sb.Append($"<input type=\"radio\" id=\"{optionId}\" par-id=\"{Id}.par\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionNum}\">");
+						sb.Append($"<input type=\"radio\" id=\"{optionId}\" par-id=\"{Id}-par\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionNum}\">");
 						sb.Append($"<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"{optionId}\"/></span>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+2));

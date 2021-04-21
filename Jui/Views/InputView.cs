@@ -152,7 +152,7 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the form div
-			sb.Append($"<div id=\"{Id}.par\" class=\"md-form md-outline jui-view\">");
+			sb.Append($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
 			sb.Append(Environment.NewLine);
             //Add the input
             sb.Append(GetIndentStringFromNumber(indent+1));
@@ -183,7 +183,7 @@ namespace HomeSeer.Jui.Views {
             sb.Append(Environment.NewLine);
             //Add the hint label
             sb.Append(GetIndentStringFromNumber(indent+1));
-            sb.Append($"<label for=\"{Id}\" id=\"{Id}.hint\">{Name}</label>");
+            sb.Append($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
             sb.Append(Environment.NewLine);
             //Close the form div
             sb.Append(GetIndentStringFromNumber(indent));
