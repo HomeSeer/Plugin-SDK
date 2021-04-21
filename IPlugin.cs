@@ -21,12 +21,12 @@ namespace HomeSeer.PluginSdk {
         /// <summary>
         /// Unique ID for this plugin, needs to be unique for all plugins.
         /// <para>
-        /// Do NOT use special characters in your plugin name with the exception of "-" and "."
+        /// Do NOT use special characters or spaces in your plugin ID
         /// </para>
         /// </summary>
         /// <remarks>
         /// The ID is used throughout the HomeSeer platform to target this plugin specifically via URL or internal code.
-        ///  HomeSeer recommends using the name your plugin (replacing any spaces with hyphens "-") as the ID to make it
+        ///  It is recommended to use the name of your plugin, removing special characters and spaces, as the ID to make it
         ///  easy to match them with one-another.
         /// </remarks>
         string Id { get; }
