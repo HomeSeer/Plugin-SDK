@@ -653,7 +653,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc cref="IPlugin.PluginPropertyGet" />
-        public object PluginPropertyGet(string propName, object[] @params) {
+        public object PluginPropertyGet(string propName) {
             try {
                 var ty = GetType();
                 var mi = ty.GetProperty(propName);

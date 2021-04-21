@@ -365,9 +365,8 @@ namespace HomeSeer.PluginSdk {
         /// Called by the HomeSeer system to get the value of a property by name using reflection
         /// </summary>
         /// <param name="propName">The name of the property</param>
-        /// <param name="params"></param>
         /// <returns>The value of the property</returns>
-        object PluginPropertyGet(string propName, object[] @params);
+        object PluginPropertyGet(string propName);
         /// <summary>
         /// Called by the HomeSeer system to set the value of a property by name using reflection
         /// </summary>
