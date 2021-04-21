@@ -50,10 +50,14 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </para>
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Since v1.2.5.0, this field is overloaded with the legacy Code field for backwards compatibility.
         ///  If you are accessing a device/feature that was created using this API then you can safely ignore this remark.
         ///  If you are accessing a device/feature that was created using the HS3 legacy API you may note that this field
         ///  now includes the Code value if it exists. You can get the Code directly by using the <see cref="Code"/> field.
+        /// </para>
+        /// <para>
+        /// This table shows the return value of <see cref="Address"/> based on the value stored in the HS database.
         /// <list type="table">
         ///  <listheader>
         ///   <term>Address Value</term>
@@ -72,6 +76,11 @@ namespace HomeSeer.PluginSdk.Devices {
         ///   <description>Address-Code</description>
         ///  </item>
         /// </list>
+        /// </para>
+        /// <para>
+        /// You can use <see cref="GetAddressFromAddressString"/> and <see cref="GetCodeFromAddressString"/> to pull
+        ///  the address and code, respectively, from this value.
+        /// </para>
         /// </remarks>
         public string Address {
             get {
