@@ -49,6 +49,39 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Use this to store a unique identifier for the physical device this device/feature is associated with.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Since v1.2.5.0, this field is overloaded with the legacy Code field for backwards compatibility.
+        ///  If you are accessing a device/feature that was created using this API then you can safely ignore this remark.
+        ///  If you are accessing a device/feature that was created using the HS3 legacy API you may note that this field
+        ///  now includes the Code value if it exists. You can get the Code directly by using the <see cref="Code"/> field.
+        /// </para>
+        /// <para>
+        /// This table shows the return value of <see cref="Address"/> based on the value stored in the HS database.
+        /// <list type="table">
+        ///  <listheader>
+        ///   <term>Address Value</term>
+        ///   <description>Returns</description>
+        ///  </listheader>
+        ///  <item>
+        ///   <term>Address Only</term>
+        ///   <description>Address</description>
+        ///  </item>
+        ///  <item>
+        ///   <term>Code Only</term>
+        ///   <description>Code</description>
+        ///  </item>
+        ///  <item>
+        ///   <term>Address and Code</term>
+        ///   <description>Address-Code</description>
+        ///  </item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// You can use <see cref="GetAddressFromAddressString"/> and <see cref="GetCodeFromAddressString"/> to pull
+        ///  the address and code, respectively, from this value.
+        /// </para>
+        /// </remarks>
         public string Address {
             get {
                 if (Changes.ContainsKey(EProperty.Address)) {
@@ -107,6 +140,24 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _assDevices = value ?? new HashSet<int>();
+            }
+        }
+
+        /// <summary>
+        /// Get the code stored in the <see cref="Address"/> string.
+        /// </summary>
+        /// <remarks>
+        /// This field is only used for legacy support and grabs a value from the <see cref="Address"/> field directly.
+        ///  The code is grabbed from the <see cref="Address"/> field by using <see cref="GetCodeFromAddressString"/>
+        /// </remarks>
+        public string Code {
+            get {
+                if (Changes.ContainsKey(EProperty.Address)) {
+                    var addressCode = (string) Changes[EProperty.Address];
+                    return GetCodeFromAddressString(addressCode);
+                }
+
+                return GetCodeFromAddressString(_address) ?? "";
             }
         }
 
@@ -828,6 +879,79 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             return finalMisc;
+        }
+
+        
+        /// <summary>
+        /// Get the address from an address-code string.
+        /// </summary>
+        /// <remarks>
+        /// HS3 supported an Address and Code field, but the Code field has been deprecated. The Address and Code fields
+        ///  used to also be combined into a single string with the format of ${ADDRESS}-${CODE}.
+        ///  The pseudocode for this is "${ADDRESS}-${CODE}".Trim('-');
+        ///  To maintain backwards compatibility support, the Address field will be overloaded with the Code for
+        ///  devices created using HS3. Use this method to get the address from the returned address-code string.
+        /// </remarks>
+        /// <param name="addressString">The <see cref="Address"/>-Code value string to parse</param>
+        /// <returns>The Address value from the string</returns>
+        public static string GetAddressFromAddressString(string addressString) {
+            if (string.IsNullOrWhiteSpace(addressString)) {
+                //Return null or empty address strings as empty
+                return "";
+            }
+
+            if (!addressString.Contains("-")) {
+                //Return the whole address string because it is probably just an address when it doesn't contain a -
+                return addressString;
+            }
+
+            var addressParts = addressString.Split('-');
+            if (addressParts.Length < 2) {
+                //Return the address string trimmed of - if splitting it at - does not produce 2 or more strings.
+                // This means that the string likely has the - at the beginning or the end of the string.
+                // We don't know if it was just an address or just a code.
+                return addressString.Trim('-');
+            }
+
+            //Return the first element in the address parts because the address is the string before the -
+            // IE ADDRESS-CODE
+            return addressParts[0];
+        }
+        
+        /// <summary>
+        /// Get the code from an address-code string.
+        /// </summary>
+        /// <remarks>
+        /// HS3 supported an Address and Code field, but the Code field has been deprecated. The Address and Code fields
+        ///  used to also be combined into a single string with the format of ${ADDRESS}-${CODE}.
+        ///  The pseudocode for this is "${ADDRESS}-${CODE}".Trim('-');
+        ///  To maintain backwards compatibility support, the Address field will be overloaded with the Code for
+        ///  devices created using HS3. Use this method to get the address from the returned address-code string.
+        /// </remarks>
+        /// <param name="addressString">The <see cref="Address"/>-Code value string to parse</param>
+        /// <returns>The Code value from the string</returns>
+        public static string GetCodeFromAddressString(string addressString) {
+            if (string.IsNullOrWhiteSpace(addressString)) {
+                //Return null or empty address strings as empty
+                return "";
+            }
+
+            if (!addressString.Contains("-")) {
+                //Return an empty string because it is probably just an address when it doesn't contain a -
+                return "";
+            }
+
+            var addressParts = addressString.Split('-');
+            if (addressParts.Length < 2) {
+                //Return the address string trimmed of - if splitting it at - does not produce 2 or more strings.
+                // This means that the string likely has the - at the beginning or the end of the string.
+                // We don't know if it was just an address or just a code.
+                return addressString.Trim('-');
+            }
+
+            //Return the second element in the address parts because the code is the string after the -
+            // IE ADDRESS-CODE
+            return addressParts[1];
         }
 
     }
