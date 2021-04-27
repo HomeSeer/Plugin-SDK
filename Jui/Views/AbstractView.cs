@@ -14,11 +14,12 @@ namespace HomeSeer.Jui.Views {
 		/// A unique identifier for this view.  You will need to use this to identify the view when HomeSeer 
 		/// communicates changes to its values from a client.
 		/// <para>
-		/// For consistency and readability it is advised to use the format of COMPANY.PLUGIN.PAGE.VIEW
+		/// Do NOT use any of the following special characters in your view id: <![CDATA[!"#$%&'()*+,./:;<=>?@[]^`{|}~]]>
+		/// For consistency and readability it is advised to use the format of COMPANY-PLUGIN-PAGE-VIEW
 		/// </para>
 		/// <para>
 		/// For example: a LabelView on the first settings page in the Z-Wave Plugin
-		/// might have an id of HomeSeer.ZWave.Settings1.InterfaceName
+		/// might have an id of HomeSeer-ZWave-Settings1-InterfaceName
 		/// </para>
 		/// </summary>
 		[JsonProperty("id", Required = Required.Always)]
@@ -43,7 +44,12 @@ namespace HomeSeer.Jui.Views {
 		/// Represents a tab/indent for formatting HTML
 		/// </summary>
 		[JsonIgnore] private const string HtmlIndent = "    ";
-		
+
+		/// <summary>
+		/// The list of special characters that are not allowed in a view ID
+		/// </summary>
+		[JsonIgnore] private static readonly char[] NonAllowedCharactersForId = "!\"#$%&'()*+,./:;<=>?@[]^`{|}~".ToCharArray();
+
 		/// <summary>
 		/// Create an instance of an AbstractView with an ID
 		/// </summary>
@@ -134,6 +140,15 @@ namespace HomeSeer.Jui.Views {
 
 			return indentString.ToString();
 		}
+
+		/// <summary>
+		/// Used to check if the view ID contains non-allowed characters
+		/// </summary>
+		/// <returns>True if view ID contains at least one non-allowed characters, False otherwise</returns>
+		public bool IdContainsNonAllowedCharacters()
+        {
+			return Id.IndexOfAny(NonAllowedCharactersForId) >= 0;
+        }
 
 	}
 
