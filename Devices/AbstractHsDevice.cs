@@ -153,7 +153,8 @@ namespace HomeSeer.PluginSdk.Devices {
         public string Code {
             get {
                 if (Changes.ContainsKey(EProperty.Address)) {
-                    return (string) Changes[EProperty.Address];
+                    var addressCode = (string) Changes[EProperty.Address];
+                    return GetCodeFromAddressString(addressCode);
                 }
 
                 return GetCodeFromAddressString(_address) ?? "";
