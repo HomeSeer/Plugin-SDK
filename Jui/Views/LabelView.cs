@@ -72,16 +72,16 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Environment.NewLine);
 			//Add the title
 			sb.Append(GetIndentStringFromNumber(indent+1));
-			sb.Append($"<div id=\"{Id}.title\" class=\"jui-title\"><small>{Name}</small></div>");
+			sb.Append($"<div id=\"{Id}-title\" class=\"jui-title\"><small>{Name}</small></div>");
 			sb.Append(Environment.NewLine);
 			//Add the label text
 			sb.Append(GetIndentStringFromNumber(indent+1));
             switch (LabelType) {
                 case ELabelType.Default:
-                    sb.Append($"<p id=\"{Id}.value\">{Value}</p> ");
+                    sb.Append($"<p id=\"{Id}-value\">{Value}</p> ");
                     break;
                 case ELabelType.Preformatted:
-                    sb.Append($"<pre id=\"{Id}.value\">{Value}</pre> ");
+                    sb.Append($"<pre id=\"{Id}-value\">{Value}</pre> ");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
