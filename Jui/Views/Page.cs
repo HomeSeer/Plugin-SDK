@@ -292,6 +292,11 @@ namespace HomeSeer.Jui.Views {
 							throw new ArgumentException("Value type does not match the view type", exception);
 						}
 					}
+					else if (type == (int)EViewType.TextArea)
+                    {
+						view = new TextAreaView(id, id, valueString);
+						break;
+                    }
 					
 					if (type != (int) EViewType.Input) {
 						if (!bool.TryParse(valueString, out var boolValue)) {

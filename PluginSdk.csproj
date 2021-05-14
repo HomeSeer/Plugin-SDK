@@ -49,7 +49,7 @@
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">.\HSCF.dll</HintPath>
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" >
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
@@ -135,6 +135,7 @@
     <Compile Include="IHsController.cs" />
     <Compile Include="Jui\Types\ELabelType.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
+    <Compile Include="Jui\Views\TextAreaView.cs" />
     <Compile Include="Logging\ELogType.cs" />
     <Compile Include="Speech\EMediaOperation.cs" />
     <Compile Include="Speech\AbstractSpeakerClient.cs" />

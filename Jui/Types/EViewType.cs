@@ -48,6 +48,10 @@ namespace HomeSeer.Jui.Types {
 		//MessageArchive = 9,
 		//Table = 10,
 		//Chart = 11
+		/// <summary>
+		/// A <see cref="HomeSeer.Jui.Views.TextAreaView"/>
+		/// </summary>
+		TextArea = 12
 
 	}
 
