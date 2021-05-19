@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using HomeSeer.Jui.Types;
 
@@ -158,6 +159,13 @@ namespace HomeSeer.Jui.Views {
             var vg = new ViewGroup(id, name);
             vg.AddViews(views);
             Page.AddView(vg);
+            return this;
+        }
+
+        public PageFactory WithTimeSpan(string id, string name, TimeSpan timeSpan = default(TimeSpan))
+        {
+            var tsv = new TimeSpanView(id, name, timeSpan);
+            Page.AddView(tsv);
             return this;
         }
 
