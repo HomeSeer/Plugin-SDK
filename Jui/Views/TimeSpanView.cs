@@ -101,73 +101,74 @@ namespace HomeSeer.Jui.Views {
 			sb.Append(Environment.NewLine);
 			//Add the title
 			sb.Append(GetIndentStringFromNumber(indent + 1));
-			sb.Append("<div id=\"");
-			sb.Append(Id);
-			sb.Append(".title\" class=\"jui-title\">");
-			sb.Append("<small>");
-			sb.Append(Name);
-			sb.Append("</small>");
+			sb.Append($"<div id=\"{Id}.title\" class=\"jui-title\">");
+			sb.Append($"<small>{Name}</small>");
 			sb.Append("</div>");
 			sb.Append(Environment.NewLine);
+			sb.Append(GetIndentStringFromNumber(indent + 1));
+			sb.Append("<div class=\"form-row ml-1\">");
 			if(ShowDays)
             {
 				//Add the input for days
 				sb.Append(GetIndentStringFromNumber(indent + 1));
-				sb.Append("<span class=\"md-form\">");
+				sb.Append("<div class=\"md-form form-group\">");
 				sb.Append(Environment.NewLine);
 				sb.Append(GetIndentStringFromNumber(indent + 2));
-				sb.Append($"<input type=\"number\" step=\"1\" min=\"0\"  id=\"{Id}-days\" class=\"jui-input jui-timespan\" value=\"{Value.Days}\" style=\"width: 56px;\">");
+				sb.Append($"<input type=\"number\" step=\"1\" min=\"0\"  id=\"{Id}-days\" class=\"form-control jui-input jui-timespan\" value=\"{Value.Days}\" style=\"width: 56px;\">");
 				sb.Append(Environment.NewLine);
 				sb.Append(GetIndentStringFromNumber(indent + 2));
-				sb.Append($"<label for=\"{Id}-days\" id=\"{Id}-days-hint\">Days</label>");
+				sb.Append($"<label class=\"pb-4\" for=\"{Id}-days\" id=\"{Id}-days-hint\">Days</label>");
 				sb.Append(Environment.NewLine);
 				sb.Append(GetIndentStringFromNumber(indent + 1));
-				sb.Append($"</span>");
+				sb.Append($"</div>");
 				sb.Append(Environment.NewLine);
 			}
 			//Add the input for hours
 			sb.Append(GetIndentStringFromNumber(indent+1));
-			sb.Append("<span class=\"md-form\">");
+			sb.Append("<div class=\"md-form form-group\">");
 			sb.Append(Environment.NewLine);
 			sb.Append(GetIndentStringFromNumber(indent + 2));
-			sb.Append($"<input type=\"number\" step=\"1\" min=\"0\" max=\"23\"  id=\"{Id}-hours\" class=\"jui-input jui-timespan\" value=\"{Value.Hours}\">");
+			sb.Append($"<input type=\"number\" step=\"1\" min=\"0\" max=\"23\"  id=\"{Id}-hours\" class=\"form-control jui-input jui-timespan\" value=\"{Value.Hours}\">");
             sb.Append(Environment.NewLine);
             sb.Append(GetIndentStringFromNumber(indent+2));
-            sb.Append($"<label for=\"{Id}-hours\" id=\"{Id}-hours-hint\">Hours</label>");
+            sb.Append($"<label class=\"pb-4\" for=\"{Id}-hours\" id=\"{Id}-hours-hint\">Hours</label>");
 			sb.Append(Environment.NewLine);
 			sb.Append(GetIndentStringFromNumber(indent + 1));
-			sb.Append($"</span>");
+			sb.Append($"</div>");
 			sb.Append(Environment.NewLine);
 			//Add the input for minutes
 			sb.Append(GetIndentStringFromNumber(indent + 1));
-			sb.Append("<span class=\"md-form\">");
+			sb.Append("<div class=\"md-form form-group\">");
 			sb.Append(Environment.NewLine);
 			sb.Append(GetIndentStringFromNumber(indent + 2));
-			sb.Append($"<input type=\"number\" step=\"1\" min=\"0\" max=\"59\" id=\"{Id}-minutes\" class=\"jui-input jui-timespan\" value=\"{Value.Minutes}\">");
+			sb.Append($"<input type=\"number\" step=\"1\" min=\"0\" max=\"59\" id=\"{Id}-minutes\" class=\"form-control jui-input jui-timespan\" value=\"{Value.Minutes}\">");
 			sb.Append(Environment.NewLine);
 			sb.Append(GetIndentStringFromNumber(indent + 2));
-			sb.Append($"<label for=\"{Id}-minutes\" id=\"{Id}-minutes-hint\">Mins</label>");
+			sb.Append($"<label class=\"pb-4\" for=\"{Id}-minutes\" id=\"{Id}-minutes-hint\">Mins</label>");
 			sb.Append(Environment.NewLine);
 			sb.Append(GetIndentStringFromNumber(indent + 1));
-			sb.Append($"</span>");
+			sb.Append($"</div>");
 			sb.Append(Environment.NewLine);
 			if (ShowSeconds)
 			{
 				//Add the input for seconds
 				sb.Append(GetIndentStringFromNumber(indent + 1));
-				sb.Append("<span class=\"md-form\">");
+				sb.Append("<div class=\"md-form form-group\">");
 				sb.Append(Environment.NewLine);
 				sb.Append(GetIndentStringFromNumber(indent + 2));
-				sb.Append($"<input type=\"number\" step=\"1\" min=\"0\" max=\"59\" id=\"{Id}-seconds\" class=\"jui-input jui-timespan\" value=\"{Value.Seconds}\">");
+				sb.Append($"<input type=\"number\" step=\"1\" min=\"0\" max=\"59\" id=\"{Id}-seconds\" class=\"form-control jui-input jui-timespan\" value=\"{Value.Seconds}\">");
 				sb.Append(Environment.NewLine);
 				sb.Append(GetIndentStringFromNumber(indent + 2));
-				sb.Append($"<label for=\"{Id}-seconds\" id=\"{Id}-seconds-hint\">Secs</label>");
+				sb.Append($"<label class=\"pb-4\" for=\"{Id}-seconds\" id=\"{Id}-seconds-hint\">Secs</label>");
 				sb.Append(Environment.NewLine);
 				sb.Append(GetIndentStringFromNumber(indent + 1));
-				sb.Append($"</span>");
+				sb.Append($"</div>");
 				sb.Append(Environment.NewLine);
 			}
 			//Close the containing div
+			sb.Append(GetIndentStringFromNumber(indent + 1));
+			sb.Append("</div>");
+			sb.Append(Environment.NewLine);
 			sb.Append(GetIndentStringFromNumber(indent));
             sb.Append("</div>");
             sb.Append(Environment.NewLine);
