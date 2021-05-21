@@ -162,9 +162,11 @@ namespace HomeSeer.Jui.Views {
             return this;
         }
 
-        public PageFactory WithTimeSpan(string id, string name, TimeSpan timeSpan = default(TimeSpan))
+        public PageFactory WithTimeSpan(string id, string name, TimeSpan timeSpan = default(TimeSpan), bool showDays = true, bool showSeconds = true)
         {
             var tsv = new TimeSpanView(id, name, timeSpan);
+            tsv.ShowDays = showDays;
+            tsv.ShowSeconds = showSeconds;
             Page.AddView(tsv);
             return this;
         }
