@@ -9,7 +9,7 @@ namespace HomeSeer.PluginSdk.Devices {
     /// <summary>
     /// A collection of information describing a new device that needs to be created in HomeSeer.
     /// <para>
-    /// Created through <see cref="DeviceFactory.PrepareforHs()"/>
+    /// Created through <see cref="DeviceFactory.PrepareForHs"/>
     /// </para>
     /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]

@@ -145,7 +145,7 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if it is not
         /// </returns>
         public bool IsValueInRange(double value) {
-            return value > (_min - 1E-10) && value < (_max + 1E-10);
+            return value > (_min - 1E-20) && value < (_max + 1E-20);
         }
 
         public override bool Equals(object obj) {

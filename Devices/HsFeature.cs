@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Devices.Identification;
@@ -36,7 +35,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public List<string> AdditionalStatusData {
             get {
                 if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
-                    return Changes[EProperty.AdditionalStatusData] as List<string> ?? new List<string>(); ;
+                    return Changes[EProperty.AdditionalStatusData] as List<string> ?? new List<string>();
                 }
                 
                 return _additionalStatusData ?? new List<string>();
@@ -59,6 +58,57 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _additionalStatusData = value ?? new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
+        /// <para>
+        /// The priority of the feature when being considered for display where 1 is the most important.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is property is read-only.
+        /// Modify <see cref="HsDevice.FeatureDisplayPriority"/> to change this property on HS.
+        /// </remarks>
+        public int DisplayPriority => _displayPriority;
+
+        /// <summary>
+        /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
+        /// The <see cref="EFeatureDisplayType"/> for a feature.
+        /// </summary>
+        /// <remarks>This is used to help HS determine how it should be displayed to the user</remarks>
+        public EFeatureDisplayType DisplayType {
+            get {
+                if (Changes.ContainsKey(EProperty.FeatureDisplayType)) {
+                    try {
+                        return (EFeatureDisplayType) Changes[EProperty.FeatureDisplayType];
+                    }
+                    catch (InvalidCastException) {
+                        return EFeatureDisplayType.Normal;
+                    }
+                    
+                }
+                
+                return _displayType < 0 ? EFeatureDisplayType.Normal : (EFeatureDisplayType) _displayType;
+            }
+            set {
+                if (value == (EFeatureDisplayType) _displayType) {
+                    Changes.Remove(EProperty.FeatureDisplayType);
+                    return;
+                }
+                
+                if (Changes.ContainsKey(EProperty.FeatureDisplayType)) {
+                    Changes[EProperty.FeatureDisplayType] = (int) value;
+                }
+                else {
+                    Changes.Add(EProperty.FeatureDisplayType, (int) value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _displayType = (int) value;
             }
         }
 
@@ -97,7 +147,10 @@ namespace HomeSeer.PluginSdk.Devices {
         #region Private
         
         private List<string> _additionalStatusData = new List<string>();
-        
+
+        private int _displayPriority = 0;
+        private int _displayType;
+
         private StatusGraphicCollection _statusGraphics = new StatusGraphicCollection();
         private StatusControlCollection _statusControls = new StatusControlCollection();
 
@@ -158,6 +211,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return $"$%{tokenIndex}$";
         }
         
+        /// <summary>
+        /// Create a <see cref="ControlEvent"/> for the given value based on this features defined controls
+        /// </summary>
+        /// <param name="value">The value to set the feature to</param>
+        /// <returns>A <see cref="ControlEvent"/> with info from associated <see cref="StatusControl"/> and <see cref="StatusGraphic"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when there is no <see cref="StatusControl"/> associated with the specified value</exception>
         public ControlEvent CreateControlEvent(double value) {
             if (!HasControlForValue(value)) {
                 throw new ArgumentOutOfRangeException(nameof(value));
