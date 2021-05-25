@@ -49,6 +49,16 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region Device Properties
 
+        /// <summary>
+        /// Add an <see cref="AbstractHsDevice.Address"/> to the device
+        /// </summary>
+        /// <param name="address">The string to set the address to</param>
+        /// <returns>The <see cref="DeviceFactory"/> with the updated address value</returns>
+        public DeviceFactory WithAddress(string address) {
+            _device.Address = address;
+            return this;
+        }
+
         public DeviceFactory WithName(string name) {
 
             if (string.IsNullOrWhiteSpace(name)) {
