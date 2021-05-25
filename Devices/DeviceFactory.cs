@@ -41,7 +41,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_features == null) {
                 _features = new List<HsFeature>();
             }
-            
+
             _features.Add(feature.Feature);
 
             return this;
@@ -91,6 +91,27 @@ namespace HomeSeer.PluginSdk.Devices {
                 _device.AddMiscFlag(miscFlag);
             }
             
+            return this;
+        }
+        
+        /// <summary>
+        /// Remove a <see cref="EMiscFlag"/> from the device
+        /// </summary>
+        /// <param name="miscFlags"><see cref="EMiscFlag"/>(s) to remove</param>
+        /// <returns>The DeviceFactory updated by removing the specified <see cref="EMiscFlag"/>(s)</returns>
+        /// <exception cref="ArgumentNullException">Thrown when no <paramref name="miscFlags"/> are specified</exception>
+        public DeviceFactory WithoutMiscFlags(params EMiscFlag[] miscFlags)
+        {
+            if (miscFlags == null || miscFlags.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(miscFlags));
+            }
+
+            foreach (var miscFlag in miscFlags.Distinct())
+            {
+                _device.RemoveMiscFlag(miscFlag);
+            }
+
             return this;
         }
 
