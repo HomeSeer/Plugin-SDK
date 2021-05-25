@@ -84,7 +84,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// Add a view to the group
 		/// </summary>
-        public void AddView(AbstractView view) {
+        public virtual void AddView(AbstractView view) {
 
 			ViewCollectionHelper.AddView(view, ref _views, ref _viewIds, true);
 		}
@@ -93,7 +93,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// Add multiple views to the group
 		/// </summary>
-		public void AddViews(IEnumerable<AbstractView> views) {
+		public virtual void AddViews(IEnumerable<AbstractView> views) {
 			
 			ViewCollectionHelper.AddViews(views, ref _views, ref _viewIds, true);
 		}
@@ -102,7 +102,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// Set the list of views in this group
 		/// </summary>
-		public void SetViews(IEnumerable<AbstractView> views) {
+		public virtual void SetViews(IEnumerable<AbstractView> views) {
 
 			ViewCollectionHelper.SetViews(views, ref _views, ref _viewIds, true);
 		}
@@ -184,7 +184,7 @@ namespace HomeSeer.Jui.Views {
 		#region Delete
 
 		/// <inheritdoc cref="ViewCollectionHelper.RemoveAllViews"/>
-		public void RemoveAllViews() {
+		public virtual void RemoveAllViews() {
 			
 			ViewCollectionHelper.RemoveAllViews(out _views, out _viewIds);
 		}
