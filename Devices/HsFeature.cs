@@ -69,7 +69,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </para>
         /// </summary>
         /// <remarks>
-        /// This is property is read-only. To set it 
+        /// This is property is read-only.
+        /// Modify <see cref="HsDevice.FeatureDisplayPriority"/> to change this property on HS.
         /// </remarks>
         public int DisplayPriority => _displayPriority;
 
@@ -77,6 +78,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
         /// The <see cref="EFeatureDisplayType"/> for a feature.
         /// </summary>
+        /// <remarks>This is used to help HS determine how it should be displayed to the user</remarks>
         public EFeatureDisplayType DisplayType {
             get {
                 if (Changes.ContainsKey(EProperty.FeatureDisplayType)) {
