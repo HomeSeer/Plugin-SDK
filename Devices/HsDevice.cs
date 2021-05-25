@@ -35,6 +35,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// A list of <see cref="AbstractHsDevice.Ref"/>s indicating the order of importance for the features of a
         ///  device where 1 is the most important. This helps HomeSeer determine how to display features in the UI.
         /// </para>
+        /// <para>
+        /// You must call <see cref="IHsController.GetDeviceWithFeaturesByRef"/> to fill this property, otherwise
+        ///  this will be an empty list.
+        /// </para>
         /// </summary>
         /// <remarks>
         /// This should typically be left to the user to configure, but it is recommended that you pre-configure it
