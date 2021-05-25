@@ -62,6 +62,57 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
+        /// <para>
+        /// The priority of the feature when being considered for display where 1 is the most important.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is property is read-only.
+        /// Modify <see cref="HsDevice.FeatureDisplayPriority"/> to change this property on HS.
+        /// </remarks>
+        public int DisplayPriority => _displayPriority;
+
+        /// <summary>
+        /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
+        /// The <see cref="EFeatureDisplayType"/> for a feature.
+        /// </summary>
+        /// <remarks>This is used to help HS determine how it should be displayed to the user</remarks>
+        public EFeatureDisplayType DisplayType {
+            get {
+                if (Changes.ContainsKey(EProperty.FeatureDisplayType)) {
+                    try {
+                        return (EFeatureDisplayType) Changes[EProperty.FeatureDisplayType];
+                    }
+                    catch (InvalidCastException) {
+                        return EFeatureDisplayType.Normal;
+                    }
+                    
+                }
+                
+                return _displayType < 0 ? EFeatureDisplayType.Normal : (EFeatureDisplayType) _displayType;
+            }
+            set {
+                if (value == (EFeatureDisplayType) _displayType) {
+                    Changes.Remove(EProperty.FeatureDisplayType);
+                    return;
+                }
+                
+                if (Changes.ContainsKey(EProperty.FeatureDisplayType)) {
+                    Changes[EProperty.FeatureDisplayType] = (int) value;
+                }
+                else {
+                    Changes.Add(EProperty.FeatureDisplayType, (int) value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _displayType = (int) value;
+            }
+        }
+
         //TODO don't edit directly remarks
         /// <summary>
         /// A <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
@@ -97,7 +148,10 @@ namespace HomeSeer.PluginSdk.Devices {
         #region Private
         
         private List<string> _additionalStatusData = new List<string>();
-        
+
+        private int _displayPriority = 0;
+        private int _displayType;
+
         private StatusGraphicCollection _statusGraphics = new StatusGraphicCollection();
         private StatusControlCollection _statusControls = new StatusControlCollection();
 

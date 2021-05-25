@@ -71,6 +71,7 @@
     <Compile Include="Devices\Controls\StatusControl.cs" />
     <Compile Include="Devices\Controls\StatusControlCollection.cs" />
     <Compile Include="Devices\DeviceFactory.cs" />
+    <Compile Include="Devices\EFeatureDisplayType.cs" />
     <Compile Include="Devices\EMiscFlag.cs" />
     <Compile Include="Devices\EProperty.cs" />
     <Compile Include="Devices\EPollResponse.cs" />

@@ -211,6 +211,16 @@ namespace HomeSeer.PluginSdk.Devices {
 
             return this;
         }
+
+        /// <summary>
+        /// Set the <see cref="HsFeature.DisplayType"/> for the feature
+        /// </summary>
+        /// <param name="displayType">The <see cref="EFeatureDisplayType"/> to set</param>
+        /// <returns>The <see cref="FeatureFactory"/> with the updated display type value</returns>
+        public FeatureFactory WithDisplayType(EFeatureDisplayType displayType) {
+            _feature.DisplayType = displayType;
+            return this;
+        }
         
         #endregion
         
