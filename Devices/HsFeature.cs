@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Devices.Identification;
@@ -36,7 +35,7 @@ namespace HomeSeer.PluginSdk.Devices {
         public List<string> AdditionalStatusData {
             get {
                 if (Changes.ContainsKey(EProperty.AdditionalStatusData)) {
-                    return Changes[EProperty.AdditionalStatusData] as List<string> ?? new List<string>(); ;
+                    return Changes[EProperty.AdditionalStatusData] as List<string> ?? new List<string>();
                 }
                 
                 return _additionalStatusData ?? new List<string>();
@@ -158,6 +157,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return $"$%{tokenIndex}$";
         }
         
+        /// <summary>
+        /// Create a <see cref="ControlEvent"/> for the given value based on this features defined controls
+        /// </summary>
+        /// <param name="value">The value to set the feature to</param>
+        /// <returns>A <see cref="ControlEvent"/> with info from associated <see cref="StatusControl"/> and <see cref="StatusGraphic"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when there is no <see cref="StatusControl"/> associated with the specified value</exception>
         public ControlEvent CreateControlEvent(double value) {
             if (!HasControlForValue(value)) {
                 throw new ArgumentOutOfRangeException(nameof(value));
