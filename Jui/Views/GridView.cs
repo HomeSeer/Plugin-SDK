@@ -72,6 +72,7 @@ namespace HomeSeer.Jui.Views
         /// Add multiple views to the grid
         /// The views will be added as stacked rows
         /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when the specified collection of views is null</exception>
         public override void AddViews(IEnumerable<AbstractView> views)
         {
             if (views == null)
