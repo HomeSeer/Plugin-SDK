@@ -306,7 +306,11 @@ namespace HomeSeer.Jui.Views {
 						view = new TimeSpanView(id, id, timeSpanValue);
 						break;
 					}
-
+					else if (type == (int)EViewType.TextArea)
+                    {
+						view = new TextAreaView(id, id, valueString);
+						break;
+                    }
 					if (type != (int) EViewType.Input) {
 						if (!bool.TryParse(valueString, out var boolValue)) {
 							throw new ArgumentException("The view type does not match the value type");
@@ -320,8 +324,8 @@ namespace HomeSeer.Jui.Views {
 						break;
 					}
 					
-				view = new InputView(id, id, valueString);
-				break;
+					view = new InputView(id, id, valueString);
+					break;
 				
 				case int valueInt:
 					

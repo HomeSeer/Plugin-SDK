@@ -49,9 +49,13 @@ namespace HomeSeer.Jui.Types {
 		//Table = 10,
 		//Chart = 11
 		/// <summary>
+		/// A <see cref="HomeSeer.Jui.Views.TextAreaView"/>
+		/// </summary>
+		TextArea = 12,
+		/// <summary>
 		/// A <see cref="HomeSeer.Jui.Views.TimeSpanView"/>
 		/// </summary>
-		TimeSpan = 13,
+		TimeSpan = 13
 
 	}
 
