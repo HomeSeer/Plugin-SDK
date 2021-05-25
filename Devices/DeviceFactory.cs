@@ -5,6 +5,9 @@ using HomeSeer.PluginSdk.Devices.Identification;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// Factory class for defining new devices for HomeSeer
+    /// </summary>
     public class DeviceFactory {
 
         private HsDevice _device;
@@ -12,7 +15,11 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region Create
         
-        //Create
+        /// <summary>
+        /// Prepare a new device definition
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the new device</param>
+        /// <returns>A <see cref="DeviceFactory"/> containing information about the new device</returns>
         public static DeviceFactory CreateDevice(string pluginId) {
             var df = new DeviceFactory();
             var device = new HsDevice
@@ -31,7 +38,12 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #endregion
                 
-        //Add Features
+        /// <summary>
+        /// Add a <see cref="HsFeature"/> to the new <see cref="HsDevice"/>
+        /// </summary>
+        /// <param name="feature">A <see cref="FeatureFactory"/> describing the new <see cref="HsFeature"/></param>
+        /// <returns>The <see cref="DeviceFactory"/> with the new <see cref="HsFeature"/> definition included</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the <see cref="FeatureFactory"/> provided is invalid</exception>
         public DeviceFactory WithFeature(FeatureFactory feature) {
 
             if (feature?.Feature == null) {
@@ -43,7 +55,6 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _features.Add(feature.Feature);
-
             return this;
         }
         
@@ -59,6 +70,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
 
+        /// <summary>
+        /// Set the <see cref="HsDevice.Name"/> of the device
+        /// </summary>
+        /// <param name="name">The name of the device. It must not be blank or whitespace</param>
+        /// <returns>The <see cref="DeviceFactory"/> with the updated name value</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified name is null or whitespace</exception>
         public DeviceFactory WithName(string name) {
 
             if (string.IsNullOrWhiteSpace(name)) {
@@ -66,10 +83,15 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _device.Name = name;
-
             return this;
         }
         
+        /// <summary>
+        /// Set the <see cref="AbstractHsDevice.PlugExtraData"/> on the device
+        /// </summary>
+        /// <param name="extraData"><see cref="PlugExtraData"/> to add to the device</param>
+        /// <returns>The <see cref="DeviceFactory"/> with the updated PlugExtraData value</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="extraData"/> is null</exception>
         public DeviceFactory WithExtraData(PlugExtraData extraData) {
 
             if (extraData == null) {
@@ -77,10 +99,15 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _device.PlugExtraData = extraData;
-
             return this;
         }
         
+        /// <summary>
+        /// Add <see cref="EMiscFlag"/>s to the device
+        /// </summary>
+        /// <param name="miscFlags">A collection of <see cref="EMiscFlag"/>s to add to the device</param>
+        /// <returns>The <see cref="DeviceFactory"/> with the specified flags added</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="miscFlags"/> is null or an empty list</exception>
         public DeviceFactory WithMiscFlags(params EMiscFlag[] miscFlags) {
 
             if (miscFlags == null || miscFlags.Length == 0) {
@@ -143,6 +170,14 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
+        /// <summary>
+        /// Set the <see cref="AbstractHsDevice.TypeInfo"/>'s <see cref="TypeInfo.Type"/> and <see cref="TypeInfo.SubType"/>
+        /// </summary>
+        /// <param name="deviceType">The <see cref="EDeviceType"/> used to describe the device</param>
+        /// <param name="deviceSubType">The <see cref="TypeInfo.SubType"/> of the device.
+        ///  Use the int value of the appropriate SubType enum in <see cref="Identification"/></param>
+        /// <returns>The <see cref="DeviceFactory"/> with an updated <see cref="AbstractHsDevice.TypeInfo"/></returns>
+        /// <remarks>The <see cref="TypeInfo.ApiType"/> is always set to <see cref="EApiType.Device"/> for devices</remarks>
         public DeviceFactory AsType(EDeviceType deviceType, int deviceSubType) {
 
             _device.TypeInfo = new TypeInfo()
@@ -155,6 +190,10 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
 
+        /// <summary>
+        /// Prepare the data to be sent to HS for processing.
+        /// </summary>
+        /// <returns>A <see cref="NewDeviceData"/> bundle for HS to use to create a device.</returns>
         public NewDeviceData PrepareForHs() {
             return new NewDeviceData(_device, _features);
         }
