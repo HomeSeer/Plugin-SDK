@@ -275,24 +275,38 @@ namespace HomeSeer.Jui.Views {
 
 			switch (value) {
 				case string valueString:
-					if (type == (int) EViewType.SelectList) {
-						try {
+					if (type == (int)EViewType.SelectList)
+					{
+						try
+						{
 							var intValue = int.Parse(valueString);
-							if (intValue < 0) {
+							if (intValue < 0)
+							{
 								throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
 							}
 							var selectListOptions = new List<string>();
-							for (var i = 0; i <= intValue; i++) {
+							for (var i = 0; i <= intValue; i++)
+							{
 								selectListOptions.Add(i.ToString());
 							}
 							view = new SelectListView(id, id, selectListOptions, ESelectListType.DropDown, intValue);
 							break;
 						}
-						catch (Exception exception) {
+						catch (Exception exception)
+						{
 							throw new ArgumentException("Value type does not match the view type", exception);
 						}
 					}
-					
+					else if (type == (int)EViewType.TimeSpan)
+					{
+						if (!TimeSpan.TryParse(valueString, out TimeSpan timeSpanValue))
+						{
+							throw new ArgumentException("The view type does not match the value type");
+						}
+						view = new TimeSpanView(id, id, timeSpanValue);
+						break;
+					}
+
 					if (type != (int) EViewType.Input) {
 						if (!bool.TryParse(valueString, out var boolValue)) {
 							throw new ArgumentException("The view type does not match the value type");
@@ -306,8 +320,8 @@ namespace HomeSeer.Jui.Views {
 						break;
 					}
 					
-					view = new InputView(id, id, valueString);
-					break;
+				view = new InputView(id, id, valueString);
+				break;
 				
 				case int valueInt:
 					

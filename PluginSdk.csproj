@@ -139,6 +139,7 @@
     <Compile Include="Jui\Views\GridRow.cs" />
     <Compile Include="Jui\Views\GridRowItem.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
+    <Compile Include="Jui\Views\TimeSpanView.cs" />
     <Compile Include="Logging\ELogType.cs" />
     <Compile Include="Speech\EMediaOperation.cs" />
     <Compile Include="Speech\AbstractSpeakerClient.cs" />
