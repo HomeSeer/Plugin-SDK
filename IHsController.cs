@@ -570,6 +570,49 @@ namespace HomeSeer.PluginSdk {
         /// </param>
         /// <returns>True if the control event succeeded, False if an error was reported</returns>
         bool SendControlForFeatureByValue(int devOrFeatRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        ///  This is different than <see cref="SendControlForFeatureByValue"/> because the value that describes the
+        ///  desired control outcome is encoded into a string and cannot be described by a double.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// <para>
+        /// Most simple features use a single value within a range of decimal numbers to control their state.
+        /// These situations can easily be hardcoded as <see cref="StatusControl"/>s allowing HomeSeer to automatically
+        ///  handle processing control requests tied to these values. IE A dimmable light uses a value of 0-100
+        ///  to determine what state it is in. This usually requires 3 <see cref="StatusControl"/>s:
+        ///  one for off (0), one for a variable on state (1-99), and one for full brightness (100)
+        /// This does not work well for values that cannot be described by a range of decimal numbers or require more
+        ///  than a handful of <see cref="StatusControl"/>s.
+        /// When a more complex data value is required to describe the desired state to set the feature to,
+        ///  a string is used. IE the color of a light uses a value from 0-16777216.
+        /// That requires 16777216 different <see cref="StatusControl"/>s. It is more efficient to send the raw value
+        ///  to the handling plugin for processing.
+        /// </para> 
+        /// </remarks>
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="controlValue">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> of the <see cref="StatusControl"/> to select
+        ///  and include in the <see cref="ControlEvent"/> being sent to the owning plugin.
+        /// </param>
+        /// <param name="controlString">
+        /// The desired value to send to the control for processing. This is passed to <see cref="ControlEvent.ControlString"/>
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByString(int devOrFeatRef, double controlValue, string controlString);
         
         #endregion
 
