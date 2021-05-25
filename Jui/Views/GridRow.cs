@@ -50,6 +50,7 @@ namespace HomeSeer.Jui.Views
 		/// <summary>
 		/// Add an item to the row
 		/// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when the specified view or its ID is null</exception>
         public void AddItem(AbstractView view,
 							EColSize extraSmallSize = EColSize.Col,
 							EColSize smallSize = EColSize.None,
