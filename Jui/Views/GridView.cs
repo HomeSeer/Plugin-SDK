@@ -97,6 +97,7 @@ namespace HomeSeer.Jui.Views
         /// <summary>
         /// Add a row to the group
         /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when the specified row is null</exception>
         public void AddRow(GridRow row)
         {
             if (row == null)
