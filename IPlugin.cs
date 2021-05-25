@@ -73,6 +73,10 @@ namespace HomeSeer.PluginSdk {
         ///   FALSE means HomeSeer will not call GetJuiDeviceConfigPage() for any features 
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// Setting this to TRUE allows you to display a unique page for each feature instead of using a single page
+        ///  for the device and all of its features.
+        /// </remarks>
         bool SupportsConfigFeature { get; }
 
         /// <summary>
