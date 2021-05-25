@@ -482,6 +482,10 @@ namespace HomeSeer.PluginSdk {
         /// TRUE if the <see cref="HsDevice"/> was deleted, FALSE if there was an error.
         ///  Check the HS logs for more info on the error.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the specified <paramref name="devRef"/> refers to a <see cref="HsFeature"/> and
+        ///  not a <see cref="HsDevice"/>.
+        /// </exception>
         bool DeleteDevice(int devRef);
         
         /// <summary>
