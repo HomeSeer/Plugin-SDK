@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Devices\Tests\StatusGraphicTests.cs" />
     <Compile Include="Devices\Tests\ValueRangeTests.cs" />
+    <Compile Include="Jui\Tests\SerializationTests.cs" />
     <Compile Include="Jui\Tests\ViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
