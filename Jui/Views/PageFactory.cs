@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using HomeSeer.Jui.Types;
 
@@ -115,6 +116,20 @@ namespace HomeSeer.Jui.Views {
             return this;
         }
 
+        public PageFactory WithTextArea(string id, string name, int rows = 5)
+        {
+            var tav = new TextAreaView(id, name, rows);
+            Page.AddView(tav);
+            return this;
+        }
+
+        public PageFactory WithTextArea(string id, string name, string value, int rows = 5)
+        {
+            var tav = new TextAreaView(id, name, value, rows);
+            Page.AddView(tav);
+            return this;
+        }
+
         public PageFactory WithDropDownSelectList(string id, string name, List<string> options, int selection = -1) {
             var slv = new SelectListView(id, name, options, ESelectListType.DropDown, selection);
             Page.AddView(slv);
@@ -158,6 +173,15 @@ namespace HomeSeer.Jui.Views {
             var vg = new ViewGroup(id, name);
             vg.AddViews(views);
             Page.AddView(vg);
+            return this;
+        }
+
+        public PageFactory WithTimeSpan(string id, string name, TimeSpan timeSpan = default(TimeSpan), bool showDays = true, bool showSeconds = true)
+        {
+            var tsv = new TimeSpanView(id, name, timeSpan);
+            tsv.ShowDays = showDays;
+            tsv.ShowSeconds = showSeconds;
+            Page.AddView(tsv);
             return this;
         }
 

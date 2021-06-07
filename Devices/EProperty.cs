@@ -103,9 +103,13 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         InvalidValue              = 40,
         /// <summary>
-        /// <see cref="HsDevice.FeaturePriority"/>
+        /// <see cref="HsDevice.FeatureDisplayPriority"/>
         /// </summary>
-        FeaturePriority           = 41
+        FeatureDisplayPriority    = 41,
+        /// <summary>
+        /// <see cref="HsFeature.DisplayType"/>
+        /// </summary>
+        FeatureDisplayType        = 42
 
     }
 

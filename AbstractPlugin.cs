@@ -54,6 +54,9 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.SupportsConfigDevice" />
         public virtual bool SupportsConfigDevice { get; } = false;
 
+        /// <inheritdoc cref="IPlugin.SupportsConfigFeature" />
+        public virtual bool SupportsConfigFeature { get; } = false;
+
         /// <inheritdoc cref="IPlugin.SupportsConfigDeviceAll" />
         public virtual bool SupportsConfigDeviceAll { get; } = false;
 
@@ -464,26 +467,26 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.HasJuiDeviceConfigPage" />
         /// <remarks>
         /// Default behavior is to show a configuration page for every device when
-        ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to true.
+        ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigFeature"/> or <see cref="SupportsConfigDeviceAll"/> is set to true.
         ///  Adjust this behavior if the plugin only shows a configuration page for some, but not all, devices.
         /// </remarks>
-        public virtual bool HasJuiDeviceConfigPage(int deviceRef) {
+        public virtual bool HasJuiDeviceConfigPage(int devOrFeatRef) {
             return true;
         }
 
         /// <inheritdoc cref="IPlugin.GetJuiDeviceConfigPage" />
-        public virtual string GetJuiDeviceConfigPage(int deviceRef) {
+        public virtual string GetJuiDeviceConfigPage(int devOrFeatRef) {
             return $"No device config page registered by plugin {Id}";
         }
 
         /// <inheritdoc cref="IPlugin.SaveJuiDeviceConfigPage" />
-        public bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef) {
+        public bool SaveJuiDeviceConfigPage(string pageContent, int devOrFeatRef) {
             if (LogDebug) {
                 Console.WriteLine("SaveJuiDeviceConfigPage");
             }
             try {
                 var deserializedPage = Page.FromJsonString(pageContent);
-                return OnDeviceConfigChange(deserializedPage, deviceRef);
+                return OnDeviceConfigChange(deserializedPage, devOrFeatRef);
             }
             catch (KeyNotFoundException exception) {
                 if (LogDebug) {
@@ -493,21 +496,21 @@ namespace HomeSeer.PluginSdk {
                                                exception);
             }
         }
-        
+
         // ReSharper disable UnusedParameter.Global
-        
+
         /// <summary>
-        /// Called when there are changes to the device config page that need to be processed and saved
+        /// Called when there are changes to the device or feature config page that need to be processed and saved
         /// </summary>
         /// <param name="deviceConfigPage">A JUI page containing only the new state of any changed views</param>
-        /// <param name="deviceRef">The reference of the device the config page is for</param>
+        /// <param name="devOrFeatRef">The reference of the device or feature the config page is for</param>
         /// <returns>
         /// TRUE if the save was successful; FALSE if it was not
         /// <para>
         /// You should throw an exception including a detailed message whenever possible over returning FALSE
         /// </para>
         /// </returns>
-        protected virtual bool OnDeviceConfigChange(Page deviceConfigPage, int deviceRef) {
+        protected virtual bool OnDeviceConfigChange(Page deviceConfigPage, int devOrFeatRef) {
             
             return true;
         }
@@ -653,7 +656,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc cref="IPlugin.PluginPropertyGet" />
-        public object PluginPropertyGet(string propName, object[] @params) {
+        public object PluginPropertyGet(string propName) {
             try {
                 var ty = GetType();
                 var mi = ty.GetProperty(propName);

@@ -112,6 +112,20 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
+        /// Create a deep copy of this <see cref="ValueRange"/>
+        /// </summary>
+        /// <returns>The deep copy of this <see cref="ValueRange"/></returns>
+        public ValueRange Clone()
+        {
+            var clone = new ValueRange(Min, Max);
+            clone.DecimalPlaces = DecimalPlaces;
+            clone.Offset = Offset;
+            clone.Prefix = Prefix;
+            clone.Suffix = Suffix;
+            return clone;
+        }
+
+        /// <summary>
         /// Obtain the string representation of the specified value according to the range's configuration
         /// </summary>
         /// <param name="value">The value to use in the string</param>
@@ -131,7 +145,7 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if it is not
         /// </returns>
         public bool IsValueInRange(double value) {
-            return value > (_min - 1E-10) && value < (_max + 1E-10);
+            return value > (_min - 1E-20) && value < (_max + 1E-20);
         }
 
         public override bool Equals(object obj) {

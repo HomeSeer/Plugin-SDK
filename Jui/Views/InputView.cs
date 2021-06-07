@@ -19,12 +19,12 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		[JsonProperty("input_type")]
 		public EInputType InputType { get; set; }
-		
+
 		/// <summary>
 		/// The current value of the field
 		/// </summary>
 		[JsonProperty("value")]
-		public string Value { get; set; }
+		public string Value { get; set; } = "";
 
 		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
@@ -59,7 +59,7 @@ namespace HomeSeer.Jui.Views {
 			if (!IsValueValidForType(value)) {
 				throw new InvalidValueForTypeException("The new value is invalid for the input type");
 			}
-			Value = value;
+			Value = value ?? "";
 		}
 
 		/// <inheritdoc cref="AbstractView.Update"/>
@@ -84,7 +84,7 @@ namespace HomeSeer.Jui.Views {
 				throw new InvalidValueForTypeException("The new value is invalid for the input type");
 			}
 			
-			Value = updatedInputView.Value;
+			Value = updatedInputView.Value ?? "";
 
 		}
 
@@ -95,7 +95,7 @@ namespace HomeSeer.Jui.Views {
 				throw new InvalidValueForTypeException("The new value is invalid for the input type");
 			}
 
-			Value = value;
+			Value = value ?? "";
 		}
 
 		/// <summary>
@@ -138,7 +138,7 @@ namespace HomeSeer.Jui.Views {
 			}
 		}
 
-		/// <inheritdoc cref="AbstractView.Value"/>
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		/// <remarks>
 		/// The same as <see cref="Value"/>
 		/// </remarks>
@@ -152,7 +152,7 @@ namespace HomeSeer.Jui.Views {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the form div
-			sb.Append($"<div id=\"{Id}.par\" class=\"md-form md-outline jui-view\">");
+			sb.Append($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
 			sb.Append(Environment.NewLine);
             //Add the input
             sb.Append(GetIndentStringFromNumber(indent+1));
@@ -183,7 +183,7 @@ namespace HomeSeer.Jui.Views {
             sb.Append(Environment.NewLine);
             //Add the hint label
             sb.Append(GetIndentStringFromNumber(indent+1));
-            sb.Append($"<label for=\"{Id}\" id=\"{Id}.hint\">{Name}</label>");
+            sb.Append($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
             sb.Append(Environment.NewLine);
             //Close the form div
             sb.Append(GetIndentStringFromNumber(indent));

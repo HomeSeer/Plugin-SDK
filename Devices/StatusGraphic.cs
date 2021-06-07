@@ -148,6 +148,32 @@ namespace HomeSeer.PluginSdk.Devices {
             get => _value;
             set => _value = value;
         }
+
+        /// <summary>
+        /// Create a deep copy of this <see cref="StatusGraphic"/>
+        /// </summary>
+        /// <returns>The deep copy of this <see cref="StatusGraphic"/></returns>
+        public StatusGraphic Clone()
+        {
+            var clone = new StatusGraphic(Graphic, Value);
+            clone.TargetRange = TargetRange.Clone();
+            clone.IsRange = IsRange;
+            clone.Label = Label;
+            clone.ControlUse = ControlUse;
+            clone.HasAdditionalData = HasAdditionalData;
+            return clone;
+        }
+
+        /// <summary>
+        /// Get the target value of the <see cref="StatusGraphic"/> based on whether it is a range or not
+        /// </summary>
+        /// <returns>
+        /// Returns <see cref="StatusGraphic.RangeMin"/> if it is a range and returns <see cref="StatusGraphic.Value"/> if it isn't
+        /// </returns>
+        public double GetTargetValue()
+        {
+            return IsRange ? RangeMin : Value;
+        }
         
         /// <summary>
         /// Get the label for the specified value correctly formatted according to the <see cref="StatusGraphic"/>'s
@@ -247,7 +273,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_value - value) < 1E-10;
+            return Math.Abs(_value - value) < 1E-20;
         }
 
         private string ReplaceAdditionalData(string label, string[] additionalData) {

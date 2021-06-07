@@ -253,6 +253,20 @@ namespace HomeSeer.PluginSdk {
         /// <param name="devAddress">The <see cref="AbstractHsDevice.Address"/> of the <see cref="AbstractHsDevice"/> to read</param>
         /// <returns>A <see cref="HsDevice"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsDevice GetDeviceByAddress(string devAddress);
+        
+        /// <summary>
+        /// Get the first <see cref="AbstractHsDevice"/> found as a <see cref="HsDevice"/> with the specified Code.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Address"/> of a <see cref="HsFeature"/> may have adverse effects.
+        /// </remarks>
+        /// <remarks>
+        /// The Code field was used in HS3 and has been deprecated since. This method is for backwards compatibility support.
+        /// </remarks>
+        /// <param name="devCode">The Code of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsDevice"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
+        /// <seealso cref="AbstractHsDevice.GetCodeFromAddressString"/>
+        HsDevice GetDeviceByCode(string devCode);
 
         /// <summary>
         /// Get a list of all of the device refs present in the HomeSeer system
@@ -335,6 +349,20 @@ namespace HomeSeer.PluginSdk {
         /// <param name="featAddress">The <see cref="AbstractHsDevice.Address"/> of the <see cref="AbstractHsDevice"/> to read</param>
         /// <returns>A <see cref="HsFeature"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsFeature GetFeatureByAddress(string featAddress);
+
+        /// <summary>
+        /// Get the first <see cref="AbstractHsDevice"/> found as a <see cref="HsFeature"/> with the specified Code.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Address"/> of a <see cref="HsDevice"/> may have adverse effects.
+        /// </remarks>
+        /// <remarks>
+        /// The Code field was used in HS3 and has been deprecated since. This method is for backwards compatibility support.
+        /// </remarks>
+        /// <param name="featCode">The Code of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsFeature"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
+        /// <seealso cref="AbstractHsDevice.GetCodeFromAddressString"/>
+        HsFeature GetFeatureByCode(string featCode);
         
         /// <summary>
         /// Determine if the current status value of a <see cref="HsFeature"/> is considered valid.
@@ -454,6 +482,10 @@ namespace HomeSeer.PluginSdk {
         /// TRUE if the <see cref="HsDevice"/> was deleted, FALSE if there was an error.
         ///  Check the HS logs for more info on the error.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the specified <paramref name="devRef"/> refers to a <see cref="HsFeature"/> and
+        ///  not a <see cref="HsDevice"/>.
+        /// </exception>
         bool DeleteDevice(int devRef);
         
         /// <summary>
@@ -542,6 +574,49 @@ namespace HomeSeer.PluginSdk {
         /// </param>
         /// <returns>True if the control event succeeded, False if an error was reported</returns>
         bool SendControlForFeatureByValue(int devOrFeatRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        ///  This is different than <see cref="SendControlForFeatureByValue"/> because the value that describes the
+        ///  desired control outcome is encoded into a string and cannot be described by a double.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// <para>
+        /// Most simple features use a single value within a range of decimal numbers to control their state.
+        /// These situations can easily be hardcoded as <see cref="StatusControl"/>s allowing HomeSeer to automatically
+        ///  handle processing control requests tied to these values. IE A dimmable light uses a value of 0-100
+        ///  to determine what state it is in. This usually requires 3 <see cref="StatusControl"/>s:
+        ///  one for off (0), one for a variable on state (1-99), and one for full brightness (100)
+        /// This does not work well for values that cannot be described by a range of decimal numbers or require more
+        ///  than a handful of <see cref="StatusControl"/>s.
+        /// When a more complex data value is required to describe the desired state to set the feature to,
+        ///  a string is used. IE the color of a light uses a value from 0-16777216.
+        /// That requires 16777216 different <see cref="StatusControl"/>s. It is more efficient to send the raw value
+        ///  to the handling plugin for processing.
+        /// </para> 
+        /// </remarks>
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="controlValue">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> of the <see cref="StatusControl"/> to select
+        ///  and include in the <see cref="ControlEvent"/> being sent to the owning plugin.
+        /// </param>
+        /// <param name="controlString">
+        /// The desired value to send to the control for processing. This is passed to <see cref="ControlEvent.ControlString"/>
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByString(int devOrFeatRef, double controlValue, string controlString);
         
         #endregion
 
@@ -1653,8 +1728,55 @@ namespace HomeSeer.PluginSdk {
         /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
         string GetPluginVersionById(string pluginId);
 
-        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
-        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
+        /// <summary>
+        /// Get a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
+        /// </summary>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginPropertyGet"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the property</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <returns>An object representing the value of the target property</returns>
+        object LegacyPluginPropertyGet(string plugName, string plugInstance, string propName);
+        
+        /// <summary>
+        /// Get a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
+        /// </summary>
+        /// <param name="plugId">The <see cref="IPlugin.Id"/> of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <returns>An object representing the value of the target property</returns>
+        object PluginPropertyGet(string plugId, string propName);
+
+        /// <summary>
+        /// Set a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertySet"/> on the target plugin
+        /// </summary>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginPropertySet"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the property</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <param name="propValue">The value of the property to set.
+        ///  Its type must exactly match the type defined in the plugin.</param>
+        void LegacyPluginPropertySet(string plugName, string plugInstance, string propName, object propValue);
+        
+        /// <summary>
+        /// Set a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertySet"/> on the target plugin
+        /// </summary>
+        /// <param name="plugId">The <see cref="IPlugin.Id"/> of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <param name="propValue">The value of the property to set.
+        ///  Its type must exactly match the type defined in the plugin.</param>
+        void PluginPropertySet(string plugId, string propName, object propValue);
 
         #endregion
 
