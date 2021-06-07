@@ -12,14 +12,17 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
 
         private static Page MakeTestSettingsPage() {
 
-			var pageId = new StringBuilder("com.homeseer.juisampleplugin.settings");
-			var sampleSettingsPage = Page.Factory.CreateSettingPage(pageId.ToString(), "Settings");
-			sampleSettingsPage.AddView(new ToggleView(new StringBuilder(pageId.ToString()).Append("logtoggle").ToString(), "Enable Logging"));
-			var logGroup = new ViewGroup(new StringBuilder(pageId.ToString()).Append("loggroup").ToString());
+			var pageId = new StringBuilder("com-homeseer-juisampleplugin-settings");
+			var sampleSettingsPage = PageFactory.CreateSettingsPage(pageId.ToString(), "Settings");
+			sampleSettingsPage.WithToggle(new StringBuilder(pageId.ToString()).Append("logtoggle").ToString(), "Enable Logging");
+
 			var logLevelOptions = new List<string> {"Minimal", "Normal", "Detailed"};
-			logGroup.AddView(new SelectListView(new StringBuilder(pageId.ToString()).Append("loglevel").ToString(), "Log Level", logLevelOptions));
-			sampleSettingsPage.AddView(logGroup);
-			return sampleSettingsPage;
+            var groupViews = new List<AbstractView>();
+            groupViews.Add(new SelectListView(new StringBuilder(pageId.ToString()).Append("loglevel").ToString(), "Log Level", logLevelOptions));
+
+            sampleSettingsPage.WithGroup(new StringBuilder(pageId.ToString()).Append("loggroup").ToString(), "", groupViews);
+
+            return sampleSettingsPage.Page;
 		}
 
 		[Test]
@@ -68,7 +71,7 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
 			
 			Console.WriteLine("Starting test");
 			var pageId = "sample-page1";
-            var samplePage = Page.Factory.CreateSettingPage(pageId, "Page 1");
+            var samplePage = PageFactory.CreateSettingsPage(pageId, "Page 1");
             var sampleToggle1 = new ToggleView(new StringBuilder(pageId).Append(".sampletoggle1").ToString(),
                                               "Sample Toggle 1");
             var sampleLabel1 = new LabelView(new StringBuilder(pageId).Append(".samplelabel1").ToString(),
@@ -81,10 +84,10 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                                    sampleSelectListOptions);
             //var sampleButton1 = new ButtonView(new StringBuilder(pageId).Append(".samplebutton1").ToString(), "Sample Button 1", "samplebutton1");
             
-            samplePage.AddView(sampleLabel1);
-            samplePage.AddView(sampleToggle1);
-            samplePage.AddView(sampleSelectList1);
-            //samplePage.AddView(sampleButton1);
+            samplePage.WithView(sampleLabel1);
+            samplePage.WithView(sampleToggle1);
+            samplePage.WithView(sampleSelectList1);
+            //samplePage.WithView(sampleButton1);
             var sampleToggle2 = new ToggleView(new StringBuilder(pageId).Append(".sampletoggle2").ToString(),
                                                "Sample Toggle 2");
             var sampleToggle3 = new ToggleView(new StringBuilder(pageId).Append(".sampletoggle3").ToString(),
@@ -104,9 +107,9 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                                    "Sample Select List 2",
                                    sampleSelectListOptions, ESelectListType.RadioList, 0);
             
-            samplePage.AddView(sampleViewGroup1);
-            samplePage.AddView(sampleLabel2);
-            samplePage.AddView(sampleSelectList2);
+            samplePage.WithView(sampleViewGroup1);
+            samplePage.WithView(sampleLabel2);
+            samplePage.WithView(sampleSelectList2);
             var sampleInput1 = new InputView(new StringBuilder(pageId).Append(".sampleinput1").ToString(),
                                              "Sample Input 1");
             var sampleInput2 = new InputView(new StringBuilder(pageId).Append(".sampleinput2").ToString(),
@@ -120,13 +123,13 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
             var sampleInput6 = new InputView(new StringBuilder(pageId).Append(".sampleinput6").ToString(),
                                              "Sample Input 6", EInputType.Decimal);
             
-            samplePage.AddView(sampleInput1);
-            samplePage.AddView(sampleInput2);
-            samplePage.AddView(sampleInput3);
-            samplePage.AddView(sampleInput4);
-            samplePage.AddView(sampleInput5);
-            samplePage.AddView(sampleInput6);
-			var html = samplePage.ToHtml();
+            samplePage.WithView(sampleInput1);
+            samplePage.WithView(sampleInput2);
+            samplePage.WithView(sampleInput3);
+            samplePage.WithView(sampleInput4);
+            samplePage.WithView(sampleInput5);
+            samplePage.WithView(sampleInput6);
+			var html = samplePage.Page.ToHtml();
 			Console.WriteLine(html);
 		}
 		
@@ -137,7 +140,7 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
 			var settings = new SettingsCollection();
 			//Build Settings Page 1
             var pageId = "settings-page1";
-            var settingsPage1 = Page.Factory.CreateSettingPage(pageId, "Page 1");
+            var settingsPage1 = PageFactory.CreateSettingsPage(pageId, "Page 1");
             var sampleToggle1 = new ToggleView(new StringBuilder(pageId).Append(".sampletoggle1").ToString(),
                                               "Sample Toggle 1");
             var sampleLabel1 = new LabelView(new StringBuilder(pageId).Append(".samplelabel1").ToString(),
@@ -150,14 +153,14 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                                    sampleSelectListOptions);
             //var sampleButton1 = new ButtonView(new StringBuilder(pageId).Append(".samplebutton1").ToString(), "Sample Button 1", "samplebutton1");
 
-            settingsPage1.AddView(sampleLabel1);
-            settingsPage1.AddView(sampleToggle1);
-            settingsPage1.AddView(sampleSelectList1);
-            //settingsPage1.AddView(sampleButton1);
-            settings.Add(settingsPage1);
+            settingsPage1.WithView(sampleLabel1);
+            settingsPage1.WithView(sampleToggle1);
+            settingsPage1.WithView(sampleSelectList1);
+            //settingsPage1.WithView(sampleButton1);
+            settings.Add(settingsPage1.Page);
             //Build Settings Page 2
             pageId = "settings-page2";
-            var settingsPage2 = Page.Factory.CreateSettingPage(pageId, "Page 2");
+            var settingsPage2 = PageFactory.CreateSettingsPage(pageId, "Page 2");
             var sampleLabel2 = new LabelView(new StringBuilder(pageId).Append(".colorlabel").ToString(),
                                              null,
                                              "These control the list of colors presented for selection in the Sample Guided Process feature page.");
@@ -177,6 +180,7 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                                               "Violet", true);
             var sampleViewGroup1 = new ViewGroup(new StringBuilder(pageId).Append(".colorgroup").ToString(),
                                                  "Available colors");
+            sampleViewGroup1.AddView(sampleLabel2);
             sampleViewGroup1.AddView(redToggle);
             sampleViewGroup1.AddView(orangeToggle);
             sampleViewGroup1.AddView(yellowToggle);
@@ -192,13 +196,13 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                                    "Sample Select List 2",
                                    sampleSelectListOptions, ESelectListType.RadioList);
 
-            settingsPage2.AddView(sampleViewGroup1);
-            settingsPage2.AddView(sampleLabel3);
-            settingsPage2.AddView(sampleSelectList2);
-            settings.Add(settingsPage2);
+            settingsPage2.WithView(sampleViewGroup1);
+            settingsPage2.WithView(sampleLabel3);
+            settingsPage2.WithView(sampleSelectList2);
+            settings.Add(settingsPage2.Page);
             //Build Settings Page 3
             pageId = "settings-page3";
-            var settingsPage3 = Page.Factory.CreateSettingPage(pageId, "Page 3");
+            var settingsPage3 = PageFactory.CreateSettingsPage(pageId, "Page 3");
             var sampleInput1 = new InputView(new StringBuilder(pageId).Append(".sampleinput1").ToString(),
                                              "Sample Text Input");
             var sampleInput2 = new InputView(new StringBuilder(pageId).Append(".sampleinput2").ToString(),
@@ -212,13 +216,13 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
             var sampleInput6 = new InputView(new StringBuilder(pageId).Append(".sampleinput6").ToString(),
                                              "Sample Decimal Input", EInputType.Decimal);
 
-            settingsPage3.AddView(sampleInput1);
-            settingsPage3.AddView(sampleInput2);
-            settingsPage3.AddView(sampleInput3);
-            settingsPage3.AddView(sampleInput4);
-            settingsPage3.AddView(sampleInput5);
-            settingsPage3.AddView(sampleInput6);
-            settings.Add(settingsPage3);
+            settingsPage3.WithView(sampleInput1);
+            settingsPage3.WithView(sampleInput2);
+            settingsPage3.WithView(sampleInput3);
+            settingsPage3.WithView(sampleInput4);
+            settingsPage3.WithView(sampleInput5);
+            settingsPage3.WithView(sampleInput6);
+            settings.Add(settingsPage3.Page);
 			var html = settings.ToHtml();
 			Console.WriteLine(html);
 		}
