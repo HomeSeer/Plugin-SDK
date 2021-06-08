@@ -6,12 +6,25 @@ using HomeSeer.PluginSdk.Devices.Identification;
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// Factory class for defining new <see cref="HsFeature"/>s for HomeSeer
+    /// </summary>
     public class FeatureFactory {
         
         internal HsFeature Feature => _feature;
 
         private HsFeature _feature;
 
+        /// <summary>
+        /// Prepare a new feature definition
+        /// </summary>
+        /// <remarks>
+        /// Make sure to associate this feature with a device before creating it. You can do this with
+        ///  <see cref="OnDevice"/> or <see cref="PrepareForHsDevice"/> if you are creating this feature on its own,
+        ///  or you can add this to a <see cref="DeviceFactory"/> with <see cref="DeviceFactory.WithFeature"/>.
+        /// </remarks>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the new feature</param>
+        /// <returns>A <see cref="FeatureFactory"/> containing information about the new feature</returns>
         public static FeatureFactory CreateFeature(string pluginId) {
             var ff = new FeatureFactory();
             var feature = new HsFeature
@@ -32,6 +45,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return ff;
         }
 
+        /// <summary>
+        /// Prepare a new feature definition for a specific <see cref="HsDevice"/>
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the new feature</param>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the device that should own the new feature</param>
+        /// <returns>A <see cref="FeatureFactory"/> containing information about the new feature</returns>
         public static FeatureFactory CreateFeature(string pluginId, int devRef) {
             if (devRef <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(devRef));
@@ -99,6 +118,12 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region Feature Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="devRef"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public FeatureFactory OnDevice(int devRef) {
 
             if (devRef <= 0) {
