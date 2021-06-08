@@ -427,18 +427,36 @@ namespace HomeSeer.PluginSdk {
         /// <param name="label">The <see cref="StatusControl.Label"/> used by the <see cref="StatusControl"/></param>
         /// <returns>A <see cref="StatusControl"/> with the specified <see cref="StatusControl.Label"/> for the <see cref="HsFeature"/></returns>
         StatusControl GetStatusControlForLabel(int featRef, string label);
-        
+
         /// <summary>
         /// Get a list of <see cref="StatusControl"/>s for a range of values on an <see cref="HsFeature"/>
         /// </summary>
         /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
-        /// <param name="min">The minimum </param>
-        /// <param name="max"></param>
-        /// <returns></returns>
+        /// <param name="min">The minimum value of the range</param>
+        /// <param name="max">The maximum value of the range</param>
+        /// <returns>A list  of <see cref="StatusControl"/>s for a range of values on the <see cref="HsFeature"/></returns>
         List<StatusControl> GetStatusControlsForRange(int featRef, double min, double max);
+
+        /// <summary>
+        /// Get the number of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The number of <see cref="StatusControl"/>s for the <see cref="HsFeature"/></returns>
         int GetStatusControlCountByRef(int featRef);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The list of <see cref="StatusControl"/>s for the <see cref="HsFeature"/></returns>
         List<StatusControl> GetStatusControlsByRef(int featRef);
 
+        /// <summary>
+        /// Get the <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
+        ///  an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The <see cref="StatusControlCollection"/> for the <see cref="HsFeature"/></returns>
         StatusControlCollection GetStatusControlCollectionByRef(int featRef);
         
         /// <summary>
@@ -448,25 +466,124 @@ namespace HomeSeer.PluginSdk {
         /// <param name="value">The <see cref="AbstractHsDevice.Value"/> managed by the <see cref="StatusGraphic"/></param>
         /// <returns>A <see cref="StatusGraphic"/> that manages the value specified for the <see cref="HsFeature"/></returns>
         StatusGraphic GetStatusGraphicForValue(int featRef, double value);
-        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
-        int GetStatusGraphicCountByRef(int featRef);
-        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
-                
-        #endregion
-        
-        #region Update
-        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
-        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
-        //HsFeature UpdateFeatureValueByRef(int featRef, double value);
 
+        /// <summary>
+        /// Get a list of <see cref="StatusGraphic"/>s for a range of values on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="min">The minimum value of the range</param>
+        /// <param name="max">The maximum value of the range</param>
+        /// <returns></returns>
+        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
+
+        /// <summary>
+        /// Get the number of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The number of <see cref="StatusGraphic"/>s for the <see cref="HsFeature"/></returns>
+        int GetStatusGraphicCountByRef(int featRef);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The list of <see cref="StatusGraphic"/>s for the <see cref="HsFeature"/></returns>
+        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
+
+        #endregion
+
+        #region Update
+        /// <summary>
+        /// <para>
+        /// Update some properties on a device
+        /// </para>
+        /// <para>
+        /// The collection of changes passed as parameter is usually <see cref="AbstractHsDevice.Changes"/>
+        /// </para>
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> to update</param>
+        /// <param name="changes">A collection of <see cref="EProperty"/> with their new values</param>
+        /// <returns>The updated <see cref="HsDevice"/></returns>
+        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
+
+        /// <summary>
+        /// <para>
+        /// Update some properties on a feature
+        /// </para>
+        /// <para>
+        /// The collection of changes passed as parameter is usually <see cref="AbstractHsDevice.Changes"/>
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Do not use this method to update <see cref="EProperty.StatusControls"/> or <see cref="EProperty.StatusGraphics"/>.
+        /// Instead, use <see cref="AddStatusControlToFeature"/>, <see cref="DeleteStatusControlByValue"/>, <see cref="ClearStatusControlsByRef"/>,
+        /// <see cref="AddStatusGraphicToFeature"/>, <see cref="DeleteStatusGraphicByValue"/>, <see cref="ClearStatusGraphicsByRef"/>
+        /// </remarks>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="changes">A collection of <see cref="EProperty"/> with their new values</param>
+        /// <returns>The updated <see cref="HsFeature"/></returns>
+        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
+
+        /// <summary>
+        /// <para>
+        /// Update one property on a device or a feature
+        /// </para>
+        /// <para>
+        /// When used with <see cref="EProperty.Value"/>, this is the same as the legacy method SetDeviceValueByRef(Integer, Double, False).
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Do not use this method to update <see cref="EProperty.StatusControls"/> or <see cref="EProperty.StatusGraphics"/>.
+        /// Instead, use <see cref="AddStatusControlToFeature"/>, <see cref="DeleteStatusControlByValue"/>, <see cref="ClearStatusControlsByRef"/>,
+        /// <see cref="AddStatusGraphicToFeature"/>, <see cref="DeleteStatusGraphicByValue"/>, <see cref="ClearStatusGraphicsByRef"/>
+        /// </remarks>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to update</param>
+        /// <param name="property">The <see cref="EProperty"/> to update</param>
+        /// <param name="value">The new value for this property</param>
         void UpdatePropertyByRef(int devOrFeatRef, EProperty property, object value);
-        
+
+        /// <summary>
+        /// Add a <see cref="StatusControl"/> to the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="statusControl">The <see cref="StatusControl"/> to add</param>
         void AddStatusControlToFeature(int featRef, StatusControl statusControl);
+
+        /// <summary>
+        /// Delete a <see cref="StatusControl"/> in the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="value">The value of the <see cref="StatusControl"/> to delete</param>
+        /// <returns>true if the deletion succeeded, otherwise false</returns>
         bool DeleteStatusControlByValue(int featRef, double value);
+
+        /// <summary>
+        /// Delete all <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
         void ClearStatusControlsByRef(int featRef);
-        
+
+        /// <summary>
+        /// Add a <see cref="StatusGraphic"/> to the collection of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="statusGraphic">The <see cref="StatusGraphic"/> to add</param>
         void AddStatusGraphicToFeature(int featRef, StatusGraphic statusGraphic);
+
+        /// <summary>
+        /// Delete a <see cref="StatusGraphic"/> in the collection of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="value">The value of the <see cref="StatusGraphic"/> to delete</param>
+        /// <returns>true if the deletion succeeded, otherwise false</returns>
         bool DeleteStatusGraphicByValue(int featRef, double value);
+
+        /// <summary>
+        /// Delete all <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
         void ClearStatusGraphicsByRef(int featRef);
 
         #endregion
