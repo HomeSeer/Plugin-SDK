@@ -115,19 +115,23 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Create a deep copy of this <see cref="ValueRange"/>
         /// </summary>
         /// <returns>The deep copy of this <see cref="ValueRange"/></returns>
-        public ValueRange Clone()
-        {
-            var clone = new ValueRange(Min, Max);
-            clone.DecimalPlaces = DecimalPlaces;
-            clone.Offset = Offset;
-            clone.Prefix = Prefix;
-            clone.Suffix = Suffix;
+        public ValueRange Clone()  {
+            var clone = new ValueRange(Min, Max) 
+                        {
+                            DecimalPlaces = DecimalPlaces, 
+                            Offset = Offset, 
+                            Prefix = Prefix, 
+                            Suffix = Suffix
+                        };
             return clone;
         }
 
         /// <summary>
         /// Obtain the string representation of the specified value according to the range's configuration
         /// </summary>
+        /// <remarks>
+        /// This returns <c>$"{_prefix}{(value - _offset).ToString($"F{_decimalPlaces}")}{_suffix}"</c>
+        /// </remarks>
         /// <param name="value">The value to use in the string</param>
         /// <returns>The value correctly formatted according to the range</returns>
         public string GetStringForValue(double value) {
@@ -162,10 +166,10 @@ namespace HomeSeer.PluginSdk.Devices {
                 return false;
             }
 
-            if (_min != otherValueRange._min) {
+            if (Math.Abs(_min - otherValueRange._min) > 1E-20) {
                 return false;
             }
-            if (_max != otherValueRange._max) {
+            if (Math.Abs(_max - otherValueRange._max) > 1E-20) {
                 return false;
             }
             if (_prefix != otherValueRange._prefix) {
