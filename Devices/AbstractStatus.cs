@@ -5,11 +5,14 @@ using HomeSeer.PluginSdk.Devices.Controls;
 namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>
+    /// <para>THIS IS TEST CODE NOT FULLY IMPLEMENTED</para>
+    /// 
     /// The base implementation of a status defined for a <see cref="HsFeature"/> either as a
     /// <see cref="StatusControl"/> or <see cref="StatusGraphic"/>
     /// </summary>
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
+    [Obsolete("This is test code and use may produce undesired behavior.", false)]
     public abstract class AbstractStatus {
 
         private string     _label = "";
