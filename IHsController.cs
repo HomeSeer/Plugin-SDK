@@ -545,6 +545,45 @@ namespace HomeSeer.PluginSdk {
         void UpdatePropertyByRef(int devOrFeatRef, EProperty property, object value);
 
         /// <summary>
+        /// <para>
+        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// </para>
+        /// <para>
+        /// To update the value without triggering HomeSeer to process the update, call
+        ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueByRef(int featRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
+        ///  accordingly
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueStringByRef(int featRef, string value);
+
+        /// <summary>
         /// Add a <see cref="StatusControl"/> to the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
         /// </summary>
         /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
@@ -628,45 +667,6 @@ namespace HomeSeer.PluginSdk {
         #endregion
         
         #region Control
-
-        /// <summary>
-        /// <para>
-        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
-        /// </para>
-        /// <para>
-        /// To update the value without triggering HomeSeer to process the update, call
-        ///  <see cref="UpdatePropertyByRef"/>
-        /// </para>
-        /// <para>
-        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
-        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
-        /// </remarks>
-        /// <param name="featRef">The unique reference of the feature to control</param>
-        /// <param name="value">The new value to set on the feature</param>
-        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool UpdateFeatureValueByRef(int featRef, double value);
-        
-        /// <summary>
-        /// <para>
-        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
-        ///  accordingly
-        /// </para>
-        /// <para>
-        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
-        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
-        /// </remarks>
-        /// <param name="featRef">The unique reference of the feature to control</param>
-        /// <param name="value">The new value to set on the feature</param>
-        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool UpdateFeatureValueStringByRef(int featRef, string value);
 
         /// <summary>
         /// <para>
