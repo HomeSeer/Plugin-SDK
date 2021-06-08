@@ -119,11 +119,11 @@ namespace HomeSeer.PluginSdk.Devices {
         #region Feature Properties
 
         /// <summary>
-        /// 
+        /// Associate the feature with a specific <see cref="HsDevice"/>
         /// </summary>
-        /// <param name="devRef"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> that owns the feature</param>
+        /// <returns>The calling FeatureFactory with its <see cref="AbstractHsDevice.AssociatedDevices"/> set to link to the desired device</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if a <paramref name="devRef"/> is supplied that is less than or equal to 0</exception>
         public FeatureFactory OnDevice(int devRef) {
 
             if (devRef <= 0) {
@@ -135,6 +135,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Set the name of the <see cref="HsFeature"/>. This sets <see cref="AbstractHsDevice.Name"/>
+        /// </summary>
+        /// <param name="name">The name of the feature</param>
+        /// <returns>The calling FeatureFactory updated with the desired name</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="name"/> is empty or whitespace</exception>
         public FeatureFactory WithName(string name) {
 
             if (string.IsNullOrWhiteSpace(name)) {
@@ -146,6 +152,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Set the <see cref="AbstractHsDevice.PlugExtraData"/> for the <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="extraData"><see cref="PlugExtraData"/> to set on the <see cref="HsFeature"/></param>
+        /// <returns>The calling FeatureFactory with the specified <see cref="PlugExtraData"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="extraData"/> is null</exception>
         public FeatureFactory WithExtraData(PlugExtraData extraData) {
 
             if (extraData == null) {
@@ -157,6 +169,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a <see cref="EMiscFlag"/> to the feature
+        /// </summary>
+        /// <param name="miscFlags"><see cref="EMiscFlag"/>(s) to add</param>
+        /// <returns>The FeatureFactory updated by adding the specified <see cref="EMiscFlag"/>(s)</returns>
+        /// <exception cref="ArgumentNullException">Thrown when no <paramref name="miscFlags"/> are specified</exception>
         public FeatureFactory WithMiscFlags(params EMiscFlag[] miscFlags) {
 
             if (miscFlags == null || miscFlags.Length == 0) {
