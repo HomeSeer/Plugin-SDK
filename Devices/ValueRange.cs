@@ -148,6 +148,11 @@ namespace HomeSeer.PluginSdk.Devices {
             return value > (_min - 1E-20) && value < (_max + 1E-20);
         }
 
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns>True if they are equal, False if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -182,6 +187,10 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="Min"/> and <see cref="Max"/> value</returns>
         public override int GetHashCode() {
             return _min.GetHashCode() * _max.GetHashCode();
         }
