@@ -642,8 +642,6 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
-        //TODO Button Script?
-        
         #endregion
         
         #region Status Graphics
@@ -651,6 +649,30 @@ namespace HomeSeer.PluginSdk.Devices {
         //Add Status Graphics
         
         /// <summary>
+        /// Add a <see cref="StatusGraphic"/> to the <see cref="HsFeature"/> being built
+        /// </summary>
+        /// <param name="statusGraphic">The <see cref="StatusGraphic"/> to add.</param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with an added <see cref="StatusGraphic"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="statusGraphic"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when a <see cref="StatusGraphic"/> for the values targeted by <paramref name="statusGraphic"/> already exists.</exception>
+        public FeatureFactory AddGraphic(StatusGraphic statusGraphic) {
+
+            if (statusGraphic == null) {
+                throw new ArgumentNullException(nameof(statusGraphic));
+            }
+            if (statusGraphic.IsRange && _feature.HasGraphicForRange(statusGraphic.TargetRange)) {
+                throw new ArgumentException("A value targeted by the specified statusGraphic already has a graphic bound to it.", nameof(statusGraphic));
+            }
+            if (_feature.HasGraphicForValue(statusGraphic.Value)) {
+                throw new ArgumentException("The value targeted by the specified statusGraphic already has a graphic bound to it.", nameof(statusGraphic));
+            }
+            
+            _feature.AddStatusGraphic(statusGraphic);
+            
+            return this;
+        }
+
+		/// <summary>
         /// Add a <see cref="StatusGraphic"/> that targets a single value to the <see cref="HsFeature"/> being built
         /// </summary>
         /// <param name="imagePath">A path to an image file relative to the HomeSeer root directory</param>
@@ -659,7 +681,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <returns>The calling <see cref="FeatureFactory"/> with an added <see cref="StatusGraphic"/></returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="imagePath"/> is empty or whitespace.</exception>
         /// <exception cref="ArgumentException">Thrown when a <see cref="StatusGraphic"/> for the <paramref name="targetValue"/> already exists.</exception>
-        public FeatureFactory AddGraphicForValue(string imagePath, double targetValue, string statusText = "") {
+		public FeatureFactory AddGraphicForValue(string imagePath, double targetValue, string statusText = "") {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {
                 throw new ArgumentNullException(nameof(imagePath));
@@ -731,6 +753,12 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <exception cref="InvalidOperationException">Thrown when the <see cref="HsFeature"/> isn't correctly associated with a device.</exception>
         /// <seealso cref="IHsController.CreateFeatureForDevice"/>
         public NewFeatureData PrepareForHs() {
+            if (_feature.AssociatedDevices.Count == 0) {
+                throw new InvalidOperationException("This feature is not associated with any devices. Associate this with a device by calling OnDevice() first or use PrepareForHsDevice() instead.");
+            }
+            if (_feature.AssociatedDevices.Count > 1) {
+                throw new InvalidOperationException("This feature has too many associations. Features can only have 1 association. Associate this with a device by calling OnDevice() first or use PrepareForHsDevice() instead.");
+            }
             return new NewFeatureData(_feature);
         }
         
