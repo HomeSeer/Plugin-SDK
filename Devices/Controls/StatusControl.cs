@@ -343,7 +343,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="controlFlag">The <see cref="EControlFlag"/> to add</param>
         private void AddFlag(EControlFlag controlFlag) {
             
-            var currentFlags = _flags | (uint) controlFlag;;
+            var currentFlags = _flags | (uint) controlFlag;
             _flags = currentFlags;
         }
 
@@ -366,7 +366,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="controlFlag">The <see cref="EControlFlag"/> to remove</param>
         private void RemoveFlag(EControlFlag controlFlag) {
             
-            var currentFlags = _flags ^ (uint) controlFlag;;
+            var currentFlags = _flags ^ (uint) controlFlag;
             _flags = currentFlags;
         }
 
@@ -404,7 +404,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             if (_controlType != otherStatusControl._controlType) {
                 return false;
             }
-            if (_targetValue != otherStatusControl._targetValue) {
+            if (Math.Abs(_targetValue - otherStatusControl._targetValue) > 1E-20) {
                 return false;
             }
             if (_location != otherStatusControl._location) {
