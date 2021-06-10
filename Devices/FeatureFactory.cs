@@ -487,15 +487,37 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
-        //TODO Button Script?
-        
         #endregion
         
         #region Status Graphics
         
         //Add Status Graphics
+        
+        /// <summary>
+        /// Add a <see cref="StatusGraphic"/> to the <see cref="HsFeature"/> being built
+        /// </summary>
+        /// <param name="statusGraphic">The <see cref="StatusGraphic"/> to add.</param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with an added <see cref="StatusGraphic"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="statusGraphic"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when a <see cref="StatusGraphic"/> for the values targeted by <paramref name="statusGraphic"/> already exists.</exception>
+        public FeatureFactory AddGraphic(StatusGraphic statusGraphic) {
 
-        public FeatureFactory AddGraphicForValue(string imagePath, double targetValue, string statusText = "") {
+            if (statusGraphic == null) {
+                throw new ArgumentNullException(nameof(statusGraphic));
+            }
+            if (statusGraphic.IsRange && _feature.HasGraphicForRange(statusGraphic.TargetRange)) {
+                throw new ArgumentException("A value targeted by the specified statusGraphic already has a graphic bound to it.", nameof(statusGraphic));
+            }
+            if (_feature.HasGraphicForValue(statusGraphic.Value)) {
+                throw new ArgumentException("The value targeted by the specified statusGraphic already has a graphic bound to it.", nameof(statusGraphic));
+            }
+            
+            _feature.AddStatusGraphic(statusGraphic);
+            
+            return this;
+        }
+
+		public FeatureFactory AddGraphicForValue(string imagePath, double targetValue, string statusText = "") {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {
                 throw new ArgumentNullException(nameof(imagePath));
