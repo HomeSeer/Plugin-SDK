@@ -26,9 +26,13 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         ThermFanOn      = 21,
         ColorControl    = 22,
         DimFan          = 23,
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         MotionActive    = 24,
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         MotionInActive  = 25,
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         ContactActive   = 26,
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         ContactInActive = 27,
         Mute            = 28,
         UnMute          = 29,
