@@ -86,7 +86,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// Compare this object with another to see if they are equal
         /// </summary>
         /// <param name="obj">The object to compare</param>
-        /// <returns>True if they are equal, False if they are not</returns>
+        /// <returns><see langword="True"/> if they are equal, <see langword="False"/> if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
