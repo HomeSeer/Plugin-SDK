@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using HomeSeer.PluginSdk.Devices.Controls;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices {
 
