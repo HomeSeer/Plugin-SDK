@@ -561,6 +561,12 @@ namespace HomeSeer.PluginSdk.Devices {
         }
         
         public NewFeatureData PrepareForHs() {
+            if (_feature.AssociatedDevices.Count == 0) {
+                throw new InvalidOperationException("This feature is not associated with any devices. Associate this with a device by calling OnDevice() first or use PrepareForHsDevice() instead.");
+            }
+            if (_feature.AssociatedDevices.Count > 1) {
+                throw new InvalidOperationException("This feature has too many associations. Features can only have 1 association. Associate this with a device by calling OnDevice() first or use PrepareForHsDevice() instead.");
+            }
             return new NewFeatureData(_feature);
         }
         
