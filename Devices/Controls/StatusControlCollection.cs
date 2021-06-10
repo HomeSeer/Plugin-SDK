@@ -65,12 +65,12 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                     StatusControl foundStatusControl = null;
                     foreach (double statusControlKey in _statusControls.Keys) {
                         if (foundStatusControl == null) {
-                            foundStatusControl = (StatusControl) _statusControls[statusControlKey];
+                            foundStatusControl = _statusControls[statusControlKey];
                         }
                         if (value < statusControlKey) {
                             break;
                         }
-                        foundStatusControl = (StatusControl) _statusControls[statusControlKey];
+                        foundStatusControl = _statusControls[statusControlKey];
                     }
 
                     if (foundStatusControl == null) {
@@ -113,12 +113,12 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                 StatusControl foundStatusControl = null;
                 foreach (var statusControlKey in _statusControls.Keys) {
                     if (foundStatusControl == null) {
-                        foundStatusControl = (StatusControl) _statusControls[statusControlKey];
+                        foundStatusControl = _statusControls[statusControlKey];
                     }
                     if (value < statusControlKey) {
                         break;
                     }
-                    foundStatusControl = (StatusControl) _statusControls[statusControlKey];
+                    foundStatusControl = _statusControls[statusControlKey];
                 }
 
                 return foundStatusControl != null && foundStatusControl.IsValueInRange(value);
