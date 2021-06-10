@@ -2,7 +2,8 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
 
     public enum EControlType {
 
-        StatusOnly         = 1, //Not rendered
+        [Obsolete("This is a legacy type. It is read only and for legacy support only.", false)]
+        StatusOnly         = 1,
         Values             = 2,
         TextSelectList     = 3,
         Button             = 5,
@@ -11,8 +12,9 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         TextBoxNumber      = 9,
         TextBoxString      = 10,
         RadioOption        = 11,
-        ButtonScript       = 12, // Rendered as a button, executes a script when activated.
-        ColorPicker        = 13  
+        [Obsolete("This is a legacy type. It is read only and for legacy support only.", false)]
+        ButtonScript       = 12,
+        ColorPicker        = 13  //TODO more docs on color picker behavior
 
     }
 
