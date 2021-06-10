@@ -17,6 +17,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <remarks>
         /// This is a legacy type. It is read only and for legacy support only. You should not use this for new <see cref="StatusControl"/>s
         /// </remarks>
+        [Obsolete("This is a legacy type. It is read only and for legacy support only.", false)]
         StatusOnly         = 1,
         /// <summary>
         /// Rendered as a select list option.
@@ -32,6 +33,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// </para>
         /// </remarks>
         /// <seealso href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select">Mozilla Docs - Select Input</seealso>
+		[Obsolete("This type is being worked on. Its display behavior may change.", false)]
         Values             = 2,
         /// <summary>
         /// Rendered as a select list.
@@ -65,6 +67,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// </para>
         /// </summary>
         /// <seealso href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select">Mozilla Docs - Select Input</seealso>
+        [Obsolete("Due to a lack of ValueRange.Divisor property this type cannot be properly used at this time.", false)]
         ValueRangeDropDown = 6,
         /// <summary>
         /// Rendered as a slider.
@@ -97,6 +100,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// This is a legacy type. It is read only and for legacy support only at this time. You should not use this for new <see cref="StatusControl"/>s
         /// </remarks>
         /// <seealso href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/button">Mozilla Docs - Button Input</seealso>
+        [Obsolete("This is a legacy type. It is read only and for legacy support only.", false)]
         ButtonScript       = 12,
         /// <summary>
         /// Rendered as a color picker.
