@@ -158,6 +158,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// This is a carry over from the legacy API. It is out of place; as <see cref="EControlUse"/> defines the
         ///  use of a control and not the use of a status.
         /// </remarks>
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         MotionActive    = 24,
         /// <summary>
         /// Used for integrations to represent a status indicating a motion sensor resetting to idle.
@@ -166,6 +167,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// This is a carry over from the legacy API. It is out of place; as <see cref="EControlUse"/> defines the
         ///  use of a control and not the use of a status.
         /// </remarks>
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         MotionInActive  = 25,
         /// <summary>
         /// Used for integrations to represent a status indicating a contact sensor triggering.
@@ -174,6 +176,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// This is a carry over from the legacy API. It is out of place; as <see cref="EControlUse"/> defines the
         ///  use of a control and not the use of a status.
         /// </remarks>
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         ContactActive   = 26,
         /// <summary>
         /// Used for integrations to represent a status indicating a contact sensor being reset.
@@ -182,6 +185,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// This is a carry over from the legacy API. It is out of place; as <see cref="EControlUse"/> defines the
         ///  use of a control and not the use of a status.
         /// </remarks>
+        [Obsolete("This will be moved to a new enum type. Please prepare to change to an EStatusUse type.", false)]
         ContactInActive = 27,
         /// <summary>
         /// This control is used to mute media playback.
