@@ -112,11 +112,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        //TODO don't edit directly remarks
         /// <summary>
         /// A <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
         ///  this feature.
         /// </summary>
+        /// <remarks>
+        /// This is read only because HomeSeer needs to index <see cref="StatusControls"/> for events and other automated behaviors.
+        ///  To edit these use methods in <see cref="IHsController"/>
+        /// </remarks>
         public StatusControlCollection StatusControls {
             get {
                 if (Changes.ContainsKey(EProperty.StatusControls)) {
@@ -127,11 +130,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        //TODO don't edit directly remarks
         /// <summary>
         /// A <see cref="StatusGraphicCollection"/> describing all of the <see cref="StatusGraphic"/>s associated with
         ///  this feature.
         /// </summary>
+        /// <remarks>
+        /// This is read only because HomeSeer needs to index <see cref="StatusGraphics"/> for events and other automated behaviors.
+        ///  To edit these use methods in <see cref="IHsController"/>
+        /// </remarks>
         public StatusGraphicCollection StatusGraphics {
             get {
                 if (Changes.ContainsKey(EProperty.StatusGraphics)) {

@@ -3,15 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Devices.Identification;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace HomeSeer.PluginSdk.Devices {
 
+    /// <summary>
+    /// Factory class for defining new <see cref="HsFeature"/>s for HomeSeer
+    /// </summary>
     public class FeatureFactory {
         
         internal HsFeature Feature => _feature;
 
         private HsFeature _feature;
 
+        /// <summary>
+        /// Prepare a new feature definition
+        /// </summary>
+        /// <remarks>
+        /// Make sure to associate this feature with a device before creating it. You can do this with
+        ///  <see cref="OnDevice"/> or <see cref="PrepareForHsDevice"/> if you are creating this feature on its own,
+        ///  or you can add this to a <see cref="DeviceFactory"/> with <see cref="DeviceFactory.WithFeature"/>.
+        /// </remarks>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the new feature</param>
+        /// <returns>A <see cref="FeatureFactory"/> containing information about the new feature</returns>
         public static FeatureFactory CreateFeature(string pluginId) {
             var ff = new FeatureFactory();
             var feature = new HsFeature
@@ -32,6 +46,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return ff;
         }
 
+        /// <summary>
+        /// Prepare a new feature definition for a specific <see cref="HsDevice"/>
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the new feature</param>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the device that should own the new feature</param>
+        /// <returns>A <see cref="FeatureFactory"/> containing information about the new feature</returns>
         public static FeatureFactory CreateFeature(string pluginId, int devRef) {
             if (devRef <= 0) {
                 throw new ArgumentOutOfRangeException(nameof(devRef));
@@ -62,11 +82,11 @@ namespace HomeSeer.PluginSdk.Devices {
             ff.AsType(EFeatureType.Generic, (int) EGenericFeatureSubType.BinaryControl);
             ff.AddButton(offValue,
                          offText,
-                         new ControlLocation(1,1,1),
+                         new ControlLocation(1,1),
                          EControlUse.Off);
             ff.AddButton(onValue,
                          onText,
-                         new ControlLocation(1,2,1),
+                         new ControlLocation(1,2),
                          EControlUse.On);
             ff.AddGraphicForValue("/images/HomeSeer/status/off.gif", offValue, offText);
             ff.AddGraphicForValue("/images/HomeSeer/status/on.gif", onValue, onText);
@@ -99,6 +119,12 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region Feature Properties
 
+        /// <summary>
+        /// Associate the feature with a specific <see cref="HsDevice"/>
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> that owns the feature</param>
+        /// <returns>The calling FeatureFactory with its <see cref="AbstractHsDevice.AssociatedDevices"/> set to link to the desired device</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if a <paramref name="devRef"/> is supplied that is less than or equal to 0</exception>
         public FeatureFactory OnDevice(int devRef) {
 
             if (devRef <= 0) {
@@ -110,6 +136,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Set the name of the <see cref="HsFeature"/>. This sets <see cref="AbstractHsDevice.Name"/>
+        /// </summary>
+        /// <param name="name">The name of the feature</param>
+        /// <returns>The calling FeatureFactory updated with the desired name</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="name"/> is empty or whitespace</exception>
         public FeatureFactory WithName(string name) {
 
             if (string.IsNullOrWhiteSpace(name)) {
@@ -121,6 +153,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Set the <see cref="AbstractHsDevice.PlugExtraData"/> for the <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="extraData"><see cref="PlugExtraData"/> to set on the <see cref="HsFeature"/></param>
+        /// <returns>The calling FeatureFactory with the specified <see cref="PlugExtraData"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="extraData"/> is null</exception>
         public FeatureFactory WithExtraData(PlugExtraData extraData) {
 
             if (extraData == null) {
@@ -132,6 +170,12 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a <see cref="EMiscFlag"/> to the feature
+        /// </summary>
+        /// <param name="miscFlags"><see cref="EMiscFlag"/>(s) to add</param>
+        /// <returns>The FeatureFactory updated by adding the specified <see cref="EMiscFlag"/>(s)</returns>
+        /// <exception cref="ArgumentNullException">Thrown when no <paramref name="miscFlags"/> are specified</exception>
         public FeatureFactory WithMiscFlags(params EMiscFlag[] miscFlags) {
 
             if (miscFlags == null || miscFlags.Length == 0) {
@@ -224,6 +268,19 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #endregion
         
+        /// <summary>
+        /// Set the <see cref="AbstractHsDevice.TypeInfo"/> of the <see cref="HsFeature"/>.
+        /// </summary>
+        /// <param name="featureType">The <see cref="EFeatureType"/> of the <see cref="HsFeature"/></param>
+        /// <param name="featureSubType">An int value representing a <see cref="HsFeature"/> sub type.
+        /// See <see cref="Identification"/> for enums listed as "FeatureSubType" for current lists.</param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with an updated <see cref="AbstractHsDevice.TypeInfo"/></returns>
+        /// <seealso cref="EFeatureType"/>
+        /// <seealso cref="EGenericFeatureSubType"/>
+        /// <seealso cref="EEnergyFeatureSubType"/>
+        /// <seealso cref="EMediaFeatureSubType"/>
+        /// <seealso cref="EThermostatControlFeatureSubType"/>
+        /// <seealso cref="EThermostatStatusFeatureSubType"/>
         public FeatureFactory AsType(EFeatureType featureType, int featureSubType) {
 
             _feature.TypeInfo = new TypeInfo()
@@ -238,8 +295,17 @@ namespace HomeSeer.PluginSdk.Devices {
         
         #region Controls
         
-        //Add Controls
-
+        /// <summary>
+        /// Add a button to the <see cref="HsFeature"/>.
+        /// </summary>
+        /// <param name="targetValue">The unique value associated with this control.</param>
+        /// <param name="targetStatus">The text displayed on the button.</param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/></param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with a new <see cref="StatusControl"/> added</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="targetStatus"/> is empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified <paramref name="targetValue"/>, already exists.</exception>
+        /// <seealso cref="EControlType.Button"/>
         public FeatureFactory AddButton(double targetValue, string targetStatus, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (string.IsNullOrWhiteSpace(targetStatus)) {
@@ -263,6 +329,17 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a text input field to the <see cref="HsFeature"/>.
+        /// </summary>
+        /// <param name="targetValue">The unique value associated with this control.</param>
+        /// <param name="hintText">The text displayed to the user to help them know what kind of value to input.</param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/></param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with a new <see cref="StatusControl"/> added</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="hintText"/> is empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified <paramref name="targetValue"/>, already exists.</exception>
+        /// <seealso cref="EControlType.TextBoxString"/>
         public FeatureFactory AddTextInputField(double targetValue, string hintText, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (string.IsNullOrWhiteSpace(hintText)) {
@@ -286,6 +363,17 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a number input field to the <see cref="HsFeature"/>.
+        /// </summary>
+        /// <param name="targetValue">The unique value associated with this control.</param>
+        /// <param name="hintText">The text displayed to the user to help them know what kind of value to input.</param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/></param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with a new <see cref="StatusControl"/> added</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="hintText"/> is empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified <paramref name="targetValue"/>, already exists.</exception>
+        /// <seealso cref="EControlType.TextBoxNumber"/>
         public FeatureFactory AddNumberInputField(double targetValue, string hintText, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (string.IsNullOrWhiteSpace(hintText)) {
@@ -309,6 +397,16 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a slider control to the <see cref="HsFeature"/>.
+        /// </summary>
+        /// <param name="targetRange">A <see cref="ValueRange"/></param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/></param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with a new <see cref="StatusControl"/> added</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="targetRange"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting any of the specified values, already exists.</exception>
+        /// <seealso cref="EControlType.ValueRangeSlider"/>
         public FeatureFactory AddSlider(ValueRange targetRange, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (targetRange == null) {
@@ -331,6 +429,19 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a select list control to the <see cref="HsFeature"/> for a range of numbers.
+        /// </summary>
+        /// <param name="targetRange">A <see cref="ValueRange"/></param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/></param>
+        /// <returns>
+        /// The calling <see cref="FeatureFactory"/> with a new <see cref="StatusControl"/> added
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="targetRange"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting any of the specified values, already exists.</exception>
+        /// <seealso cref="EControlType.ValueRangeDropDown"/>
+        [Obsolete("Due to a lack of ValueRange.Divisor property this control type cannot be properly created at this time.", false)]
         public FeatureFactory AddValueDropDown(ValueRange targetRange, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (targetRange == null) {
@@ -353,6 +464,22 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a select list control to the <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="textOptions">
+        /// A <see cref="SortedDictionary{TKey,TValue}"/> of options where the key is the
+        ///  <see cref="StatusControl.Label"/> and the value is the <see cref="StatusControl.TargetValue"/>
+        /// </param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/>. This is applied to all options.</param>
+        /// <returns>
+        /// The calling <see cref="FeatureFactory"/> with <see cref="StatusControl"/>s with a
+        ///  <see cref="StatusControl.ControlType"/> of <see cref="EControlType.TextSelectList"/> added
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when no <paramref name="textOptions"/> are specified.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting any of the specified values, already exists.</exception>
+        /// <seealso cref="EControlType.TextSelectList"/>
         public FeatureFactory AddTextDropDown(SortedDictionary<string, double> textOptions, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (textOptions == null) {
@@ -365,7 +492,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new ArgumentException($"The value {textOption.Value} already has a control bound to it.", nameof(textOptions));
                 }
 
-                //TODO drop down location
+                //TODO drop down default location
                 var dropDownOption = new StatusControl(EControlType.TextSelectList)
                                      {
                                          TargetValue = textOption.Value,
@@ -379,6 +506,24 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        //TODO drop down builder
+        
+        /// <summary>
+        /// Add a set of radio input controls to the <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="textOptions">
+        /// A <see cref="SortedDictionary{TKey,TValue}"/> of options where the key is the
+        ///  <see cref="StatusControl.Label"/> and the value is the <see cref="StatusControl.TargetValue"/>
+        /// </param>
+        /// <param name="location">The location of the control in the grid. See <see cref="ControlLocation"/></param>
+        /// <param name="controlUse">The specific use for this control. See <see cref="EControlUse"/></param>
+        /// <returns>
+        /// The calling <see cref="FeatureFactory"/> with <see cref="StatusControl"/>s with a
+        ///  <see cref="StatusControl.ControlType"/> of <see cref="EControlType.RadioOption"/> added
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when no <paramref name="textOptions"/> are specified.</exception>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified value, already exists.</exception>
+        /// <seealso cref="EControlType.RadioOption"/>
         public FeatureFactory AddRadioSelectList(SortedDictionary<string, double> textOptions, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
             
             if (textOptions == null) {
@@ -391,7 +536,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new ArgumentException($"The value {textOption.Value} already has a control bound to it.", nameof(textOptions));
                 }
 
-                //TODO radio select list location
+                //TODO radio select list default location
                 var dropDownOption = new StatusControl(EControlType.RadioOption)
                                      {
                                          TargetValue = textOption.Value,
@@ -405,7 +550,14 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
-        [Obsolete("This signature has been deprecated. Use one of the new signatures.", false)]
+        /// <summary>
+        /// Deprecated
+        /// </summary>
+        /// <param name="location">The location of the control in the grid</param>
+        /// <param name="controlUse">The specific use for this control</param>
+        /// <returns>A FeatureFactory with the new color control added</returns>
+        /// <exception cref="ArgumentException">Thrown when a control, targeting the specified value, already exists</exception>
+        [Obsolete("This signature has been deprecated. Use one of the new signatures.", true)]
         public FeatureFactory AddColorPicker(ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
             
             var targetRange = new ValueRange(0,16777215);
@@ -431,13 +583,15 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         /// <remarks>
         /// Color pickers do not use the value of the feature to operate. They use a control string;
-        ///  so the <see cref="targetValue"/> is superficial and does not correspond to the actual selected color.
+        ///  so the <paramref name="targetValue"/> is superficial and does not correspond to the actual selected color.
+        ///  A unique <paramref name="targetValue"/> must still be specified.
         /// </remarks>
         /// <param name="targetValue">The value this control occupies on the feature.</param>
         /// <param name="location">The location of the control in the grid</param>
         /// <param name="controlUse">The specific use for this control</param>
         /// <returns>A FeatureFactory with the new color control added</returns>
         /// <exception cref="ArgumentException">Thrown when a control, targeting the specified value, already exists</exception>
+        /// <seealso cref="EControlType.ColorPicker"/>
         public FeatureFactory AddColorPicker(double targetValue, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
             
             if (_feature.HasControlForValue(targetValue)) {
@@ -468,6 +622,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <param name="controlUse">The specific use for this control</param>
         /// <returns>A FeatureFactory with the new color control added</returns>
         /// <exception cref="ArgumentException">Thrown when a control, targeting the specified value, already exists</exception>
+        /// <seealso cref="EControlType.ColorPicker"/>
         public FeatureFactory AddColorPicker(ValueRange targetRange, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
             
             if (_feature.HasControlForRange(targetRange)) {
@@ -494,7 +649,16 @@ namespace HomeSeer.PluginSdk.Devices {
         #region Status Graphics
         
         //Add Status Graphics
-
+        
+        /// <summary>
+        /// Add a <see cref="StatusGraphic"/> that targets a single value to the <see cref="HsFeature"/> being built
+        /// </summary>
+        /// <param name="imagePath">A path to an image file relative to the HomeSeer root directory</param>
+        /// <param name="targetValue">The <see cref="StatusGraphic.Value"/> targeted by the <see cref="StatusGraphic"/></param>
+        /// <param name="statusText">The text displayed for the <paramref name="targetValue"/>. Default is a blank string.</param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with an added <see cref="StatusGraphic"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="imagePath"/> is empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown when a <see cref="StatusGraphic"/> for the <paramref name="targetValue"/> already exists.</exception>
         public FeatureFactory AddGraphicForValue(string imagePath, double targetValue, string statusText = "") {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {
@@ -511,6 +675,16 @@ namespace HomeSeer.PluginSdk.Devices {
             return this;
         }
         
+        /// <summary>
+        /// Add a <see cref="StatusGraphic"/> that targets a range of values to the <see cref="HsFeature"/> being built
+        /// </summary>
+        /// <param name="imagePath">A path to an image file relative to the HomeSeer root directory</param>
+        /// <param name="minValue">The minimum value handled by the <see cref="StatusGraphic"/>.</param>
+        /// <param name="maxValue">The maximum value handled by the <see cref="StatusGraphic"/></param>
+        /// <param name="statusText">The text displayed by the <see cref="StatusGraphic"/>. Default is a blank string.</param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with an added <see cref="StatusGraphic"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="imagePath"/> is empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown when a <see cref="StatusGraphic"/> for a value between <paramref name="minValue"/> and <paramref name="maxValue"/> already exists.</exception>
         public FeatureFactory AddGraphicForRange(string imagePath, double minValue, double maxValue, string statusText = "") {
 
             if (string.IsNullOrWhiteSpace(imagePath)) {
@@ -518,26 +692,44 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             
             var tempRange = new ValueRange(minValue, maxValue);
-
             if (_feature.HasGraphicForRange(tempRange)) {
                 throw new ArgumentException($"Some or all of the values in the range {tempRange.Min}-{tempRange.Max} already has a control bound to it.");
             }
-            
-            var statusGraphic = new StatusGraphic(imagePath, minValue, maxValue);
-            statusGraphic.Label = statusText;
+
+            var statusGraphic = new StatusGraphic(imagePath, minValue, maxValue) {Label = statusText};
             _feature.AddStatusGraphic(statusGraphic);
             
             return this;
         }
-        
-        //Remove status graphics?
-        
+
         #endregion
         
+        /// <summary>
+        /// Prepare the <see cref="FeatureFactory"/> to be sent to HomeSeer and added to a specific device.
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> the
+        ///  <see cref="HsFeature"/> is being added to</param>
+        /// <returns><see cref="NewFeatureData"/> ready to be sent to HomeSeer via <see cref="IHsController.CreateFeatureForDevice"/></returns>
+        /// <remarks>
+        /// You can either use this to assign the feature to a device as the last step before creation, or you can call
+        ///  <see cref="OnDevice"/> to set the owning device and then <see cref="PrepareForHs"/> when you are
+        ///  ready to send it to HomeSeer.
+        /// </remarks>
+        /// <seealso cref="IHsController.CreateFeatureForDevice"/>
         public NewFeatureData PrepareForHsDevice(int devRef) {
             return new NewFeatureData(devRef, _feature);
         }
         
+        /// <summary>
+        /// Prepare the <see cref="FeatureFactory"/> to be sent to HomeSeer for creation.
+        /// </summary>
+        /// <returns><see cref="NewFeatureData"/> ready to be sent to HomeSeer via <see cref="IHsController.CreateFeatureForDevice"/></returns>
+        /// <remarks>
+        /// Make sure the <see cref="HsFeature"/> is associated with a device by calling <see cref="OnDevice"/> to
+        ///  set the owning device prior to calling this method.
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Thrown when the <see cref="HsFeature"/> isn't correctly associated with a device.</exception>
+        /// <seealso cref="IHsController.CreateFeatureForDevice"/>
         public NewFeatureData PrepareForHs() {
             return new NewFeatureData(_feature);
         }
