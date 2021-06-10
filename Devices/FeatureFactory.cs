@@ -82,11 +82,11 @@ namespace HomeSeer.PluginSdk.Devices {
             ff.AsType(EFeatureType.Generic, (int) EGenericFeatureSubType.BinaryControl);
             ff.AddButton(offValue,
                          offText,
-                         new ControlLocation(1,1,1),
+                         new ControlLocation(1,1),
                          EControlUse.Off);
             ff.AddButton(onValue,
                          onText,
-                         new ControlLocation(1,2,1),
+                         new ControlLocation(1,2),
                          EControlUse.On);
             ff.AddGraphicForValue("/images/HomeSeer/status/off.gif", offValue, offText);
             ff.AddGraphicForValue("/images/HomeSeer/status/on.gif", onValue, onText);
@@ -692,20 +692,16 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             
             var tempRange = new ValueRange(minValue, maxValue);
-
             if (_feature.HasGraphicForRange(tempRange)) {
                 throw new ArgumentException($"Some or all of the values in the range {tempRange.Min}-{tempRange.Max} already has a control bound to it.");
             }
 
-            var statusGraphic = new StatusGraphic(imagePath, minValue, maxValue);
-            statusGraphic.Label = statusText;
+            var statusGraphic = new StatusGraphic(imagePath, minValue, maxValue) {Label = statusText};
             _feature.AddStatusGraphic(statusGraphic);
             
             return this;
         }
 
-        //Remove status graphics?
-        
         #endregion
         
         /// <summary>
