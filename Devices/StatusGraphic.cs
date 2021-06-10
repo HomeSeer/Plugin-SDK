@@ -1,5 +1,6 @@
 using System;
 using HomeSeer.PluginSdk.Devices.Controls;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -322,7 +323,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// Get the hash code
         /// </summary>
-        /// <returns>A hash code based on the <see cref="TargetRange.Min"/> if <see cref="IsRange"/> is true or <see cref="Value"/> if it is false.</returns>
+        /// <returns>A hash code based on the <see cref="ValueRange.Min"/> of <see cref="TargetRange"/> if <see cref="IsRange"/> is true or <see cref="Value"/> if it is false.</returns>
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _value.GetHashCode();
         }

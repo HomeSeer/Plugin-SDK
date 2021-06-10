@@ -94,9 +94,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// This check is based on <see cref="StatusGraphic.Value"/> or <see cref="StatusGraphic.RangeMin"/>
         /// </remarks>
         /// <param name="statusGraphic">The <see cref="StatusGraphic"/> to search for</param>
-        /// <returns>True if the <paramref name="statusGraphic"/> is in the collection, False if it is not</returns>
-        public bool Contains(StatusGraphic statusGraphic) 
-        {
+        /// <returns><see langword="True"/> if the <paramref name="statusGraphic"/> is in the collection, <see langword="False"/> if it is not</returns>
+        public bool Contains(StatusGraphic statusGraphic) {
             return ContainsValue(statusGraphic.IsRange ? statusGraphic.RangeMin : statusGraphic.Value);
         }
         
@@ -104,7 +103,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Determine if a value is handled by the collection
         /// </summary>
         /// <param name="value">The value to check for</param>
-        /// <returns>True if the value is handled, False if it is not</returns>
+        /// <returns><see langword="True"/> if the value is handled, <see langword="False"/> if it is not</returns>
         public bool ContainsValue(double value) {
             try {
 
