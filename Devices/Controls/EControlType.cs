@@ -4,10 +4,12 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
 
         [Obsolete("This is a legacy type. It is read only and for legacy support only.", false)]
         StatusOnly         = 1,
+        [Obsolete("This type is being worked on. Its display behavior may change.", false)]
         Values             = 2,
         TextSelectList     = 3,
         Button             = 5,
-        ValueRangeDropDown = 6, // Rendered as a drop-list by default.
+        [Obsolete("Due to a lack of ValueRange.Divisor property this type cannot be properly used at this time.", false)]
+        ValueRangeDropDown = 6,
         ValueRangeSlider   = 7,
         TextBoxNumber      = 9,
         TextBoxString      = 10,
