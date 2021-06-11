@@ -1,3 +1,4 @@
+using System;
 using HomeSeer.PluginSdk.Devices.Controls;
 
 namespace HomeSeer.PluginSdk.Devices.Identification {
@@ -20,7 +21,6 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
     /// </para>
     /// </remarks>
     public enum EThermostatControlFeatureSubType {
-        //JLW TODO Finish documenting EThermostatControlFeatureSubType members
         
         /// <summary>
         /// This <see cref="HsFeature"/> is used to control the desired temperature when the thermostat is heating.
@@ -68,9 +68,28 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         /// </para>
         /// </remarks>
         FanModeSet = 4,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the temperature of the furnace connected to a thermostat.
+        /// </summary>
+        /// <remarks>
+        /// This is a legacy type that is no longer used. It will be deprecated.
+        /// </remarks>
+        [Obsolete("This type is no longer being supported.", false)]
         FurnaceSetPoint = 7,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the temperature at which the A/C will switch off to stop
+        ///  drying the air.
+        /// </summary>
         DryAirSetPoint = 8,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the temperature at which the A/C will switch on to start
+        ///  drying the air.
+        /// </summary>
         MoistAirSetPoint = 5,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the temperature at which the system will switch between
+        ///  heating and cooling.
+        /// </summary>
         AutoChangeoverSetPoint = 10,
         /// <summary>
         /// This <see cref="HsFeature"/> is used to report the current operating mode of the thermostat.
@@ -90,11 +109,33 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         ///  configured to display the different modes that the thermostat can be in.</para>
         /// </remarks>
         OperatingMode = 9, //JLW TODO OperatingMode should be a EThermostatStatusFeatureSubType
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the desired temperature when the thermostat is heating and
+        ///  in energy save mode.
+        /// </summary>
         EnergySaveHeat = 11,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the desired temperature when the thermostat is cooling and
+        ///  in energy save mode.
+        /// </summary>
         EnergySaveCool = 12,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control the temperature to maintain the system at when in away mode.
+        /// </summary>
         HeatingAwaySetPoint = 13,
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control whether the thermostat is in hold mode or not.
+        /// </summary>
+        /// <remarks>
+        /// Hold mode means that the setpoints will stay at their current settings regardless of any schedules or
+        ///  programs.
+        /// </remarks>
         HoldMode = 15,
-        Setback = 14
+        /// <summary>
+        /// This <see cref="HsFeature"/> is used to control hold the setpoints at a specific temperature until
+        ///  reset by the thermostat.
+        /// </summary>
+        Setback = 14 //JLW TODO Look into the behavior of this more
 
     }
 
