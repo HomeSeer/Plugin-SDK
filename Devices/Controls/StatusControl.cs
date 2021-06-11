@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices.Controls {
 
@@ -270,6 +271,12 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return true;
         }
 
+        /// <summary>
+        /// Create a <see cref="ControlEvent"/> from this <see cref="StatusControl"/> for a given <paramref name="devRef"/>.
+        ///  This uses the <see cref="TargetValue"/> for the <see cref="ControlEvent.ControlValue"/>
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> being controlled.</param>
+        /// <returns>A <see cref="ControlEvent"/></returns>
         public ControlEvent CreateControlEvent(int devRef) {
             var dce = new ControlEvent(devRef)
                       {
@@ -282,6 +289,15 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return dce;
         }
 
+        /// <summary>
+        /// Create a <see cref="ControlEvent"/> from this <see cref="StatusControl"/> for a given
+        ///  <paramref name="value"/> and <paramref name="devRef"/>.
+        /// </summary>
+        /// <remarks>Use this when the <see cref="StatusControl"/> is a range and a specific value must by chosen within that range.</remarks>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> being controlled.</param>
+        /// <param name="value">The target <see cref="AbstractHsDevice.Value"/> for the <see cref="HsFeature"/></param>
+        /// <returns>A <see cref="ControlEvent"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="value"/> is not targeted by the <see cref="StatusControl"/></exception>
         public ControlEvent CreateControlEvent(int devRef, double value) {
             var dce = new ControlEvent(devRef)
                       {
@@ -307,7 +323,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_targetValue - value) < 1E-20;
+            return Math.Abs(_targetValue - value) < 1E-15;
         }
         
         private string ReplaceAdditionalData(string label, string[] additionalData) {
@@ -327,7 +343,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="controlFlag">The <see cref="EControlFlag"/> to add</param>
         private void AddFlag(EControlFlag controlFlag) {
             
-            var currentFlags = _flags | (uint) controlFlag;;
+            var currentFlags = _flags | (uint) controlFlag;
             _flags = currentFlags;
         }
 
@@ -350,7 +366,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="controlFlag">The <see cref="EControlFlag"/> to remove</param>
         private void RemoveFlag(EControlFlag controlFlag) {
             
-            var currentFlags = _flags ^ (uint) controlFlag;;
+            var currentFlags = _flags ^ (uint) controlFlag;
             _flags = currentFlags;
         }
 
@@ -362,6 +378,11 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             _flags = 0;
         }
 
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns><see langword="true"/> if they are equal, <see langword="false"/> if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -383,7 +404,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             if (_controlType != otherStatusControl._controlType) {
                 return false;
             }
-            if (_targetValue != otherStatusControl._targetValue) {
+            if (Math.Abs(_targetValue - otherStatusControl._targetValue) > 1E-15) {
                 return false;
             }
             if (_location != otherStatusControl._location) {
@@ -402,6 +423,10 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return true;
         }
 
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="ValueRange.Min"/> of <see cref="TargetRange"/> if <see cref="IsRange"/> is <see langword="true"/> or <see cref="TargetValue"/> if it is <see langword="false"/>.</returns>
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _targetValue.GetHashCode();
         }
