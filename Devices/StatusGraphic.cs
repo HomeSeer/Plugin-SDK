@@ -276,7 +276,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_value - value) < 1E-20;
+            return Math.Abs(_value - value) < 1E-15;
         }
 
         private string ReplaceAdditionalData(string label, string[] additionalData) {
@@ -310,7 +310,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_graphicPath != otherSg._graphicPath) {
                 return false;
             }
-            if (Math.Abs(_value - otherSg._value) > 1E-20) {
+            if (Math.Abs(_value - otherSg._value) > 1E-15) {
                 return false;
             }
             if (_targetRange != otherSg._targetRange) {
