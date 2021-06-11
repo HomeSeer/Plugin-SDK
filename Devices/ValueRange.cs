@@ -28,7 +28,11 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         /// <param name="min">The smallest value permitted</param>
         /// <param name="max">The largest value permitted</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="min"/> is less than <paramref name="max"/></exception>
         public ValueRange(double min, double max) {
+            if (min > max) {
+                throw new ArgumentException($"Min {min} must be less than Max {max}");
+            }
             _min = min;
             _max = max;
 
