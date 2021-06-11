@@ -2,7 +2,7 @@ using System;
 using HomeSeer.PluginSdk.Devices;
 using NUnit.Framework;
 
-namespace HomeSeer.PSDKTests.Devices.Tests
+namespace HomeSeer.PluginSdkTests.Devices.Tests
 {
     [TestFixture()]
     public class ValueRangeTests

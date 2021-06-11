@@ -5,7 +5,7 @@ using HomeSeer.Jui.Types;
 using HomeSeer.Jui.Views;
 using NUnit.Framework;
 
-namespace HomeSeer.PSDKTests.Jui.Tests {
+namespace HomeSeer.PluginSdkTests.Jui.Tests {
 
     [TestFixture]
     public class SerializationTests {
@@ -39,32 +39,6 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
 			
 			Assert.IsTrue(deserializedPage.Equals(testPage));
 		}
-		
-		/*[Test]
-		public void PageDeltaTest() {
-
-			Console.WriteLine("Starting test");
-			var testPage = Page.Factory.CreateSettingPage("testPage", "page1");
-			testPage.AddViewDelta("id1",5, true);
-			testPage.AddViewDelta("id2",3, 2);
-			testPage.AddViewDelta("id3",5, false);
-			
-			var testPage2 = Page.Factory.CreateSettingPage("testPage2", "page2");
-			testPage.AddViewDelta("id4",5, true);
-			testPage.AddViewDelta("id5",3, 2);
-			testPage.AddViewDelta("id6",5, false);
-
-			var pageList = new List<Page>();
-			pageList.Add(testPage);
-			pageList.Add(testPage2);
-			Console.WriteLine("Serializing");
-			var serializedPageList = Page.JsonFromList(pageList);
-			Console.WriteLine(serializedPageList);
-			
-			Console.WriteLine("Deserializing");
-			var deserializedPageList = Page.ListFromJson(serializedPageList);
-			Assert.IsTrue(deserializedPageList.Equals(pageList));
-		}*/
 
 		[Test]
 		public void HtmlTest() {
@@ -82,12 +56,10 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                 new SelectListView(new StringBuilder(pageId).Append(".sampleselectlist1").ToString(),
                                    "Sample Select List 1",
                                    sampleSelectListOptions);
-            //var sampleButton1 = new ButtonView(new StringBuilder(pageId).Append(".samplebutton1").ToString(), "Sample Button 1", "samplebutton1");
             
             samplePage.WithView(sampleLabel1);
             samplePage.WithView(sampleToggle1);
             samplePage.WithView(sampleSelectList1);
-            //samplePage.WithView(sampleButton1);
             var sampleToggle2 = new ToggleView(new StringBuilder(pageId).Append(".sampletoggle2").ToString(),
                                                "Sample Toggle 2");
             var sampleToggle3 = new ToggleView(new StringBuilder(pageId).Append(".sampletoggle3").ToString(),
@@ -151,12 +123,10 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
                 new SelectListView(new StringBuilder(pageId).Append(".sampleselectlist1").ToString(),
                                    "Sample Select List 1",
                                    sampleSelectListOptions);
-            //var sampleButton1 = new ButtonView(new StringBuilder(pageId).Append(".samplebutton1").ToString(), "Sample Button 1", "samplebutton1");
 
             settingsPage1.WithView(sampleLabel1);
             settingsPage1.WithView(sampleToggle1);
             settingsPage1.WithView(sampleSelectList1);
-            //settingsPage1.WithView(sampleButton1);
             settings.Add(settingsPage1.Page);
             //Build Settings Page 2
             pageId = "settings-page2";
@@ -226,23 +196,6 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
 			var html = settings.ToHtml();
 			Console.WriteLine(html);
 		}
-		
-		/*public static string Encrypt(string input, string key) {  
-			var inputArray = UTF8Encoding.UTF8.GetBytes(input);  
-			var tripleDES  = new TripleDESCryptoServiceProvider();
-			var keyBytes = UTF8Encoding.UTF8.GetBytes(key);
-			var trimmedKey = new byte[16];
-			for (var i = 0; i < 16; i++) {
-				trimmedKey[i] = keyBytes[i];
-			}
-			tripleDES.Key = trimmedKey;
-			tripleDES.Mode = CipherMode.ECB;  
-			tripleDES.Padding = PaddingMode.PKCS7;  
-			var cTransform  = tripleDES.CreateEncryptor();  
-			var resultArray = cTransform.TransformFinalBlock(inputArray, 0, inputArray.Length);  
-			tripleDES.Clear();  
-			return Convert.ToBase64String(resultArray, 0, resultArray.Length);  
-		}  */
 
     }
 

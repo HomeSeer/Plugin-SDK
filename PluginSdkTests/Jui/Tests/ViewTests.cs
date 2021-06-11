@@ -5,14 +5,13 @@ using HomeSeer.Jui.Types;
 using HomeSeer.Jui.Views;
 using NUnit.Framework;
 
-namespace HomeSeer.PSDKTests.Jui.Tests {
+namespace HomeSeer.PluginSdkTests.Jui.Tests {
 
     [TestFixture]
     public class ViewTests {
         
         private const string ViewName = "TestViewName";
 		private const string TestText = "TestStringText123";
-		private const string ButtonActionId = "com.homeseer.plugintest.pagetest.buttonactiontest";
 
 		#region View Checks
 		
@@ -33,90 +32,6 @@ namespace HomeSeer.PSDKTests.Jui.Tests {
 		
 		#endregion
 
-		/*#region Button Tests
-		
-		[Test]
-		public void ButtonViewValidTest() {
-			
-			Console.WriteLine("Starting test");
-			Console.WriteLine("Creating test ButtonView");
-			var id = Guid.NewGuid().ToString();
-			var name = ViewName;
-			var actionId = ButtonActionId;
-			var testButton = new ButtonView(id, name, actionId);
-			
-			CheckId(testButton, id);
-			CheckName(testButton, name);
-			Console.WriteLine("Checking ActionId");
-			Assert.AreEqual(actionId, testButton.ActionId);
-			CheckType(testButton);
-		}
-		
-		[TestCase("")]
-		[TestCase(" ")]
-		[TestCase(null)]
-		public void ButtonViewInvalidIdTest(string id) {
-			
-			Console.WriteLine("Starting test");
-			Console.WriteLine("Creating test ButtonView");
-			var name = ViewName;
-			var actionId = ButtonActionId;
-			try {
-				var testButton = new ButtonView(id, name, actionId);
-				var failMessage = new StringBuilder("The button was created with an invalid ID: ")
-					.Append(id ?? "NULL").ToString();
-				Assert.Fail(failMessage);
-			}
-			catch (ArgumentNullException e) {
-				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
-			}
-		}
-		
-		[TestCase("")]
-		[TestCase(" ")]
-		[TestCase(null)]
-		public void ButtonViewInvalidNameTest(string name) {
-			
-			Console.WriteLine("Starting test");
-			Console.WriteLine("Creating test ButtonView");
-			var id = Guid.NewGuid().ToString();
-			var actionId = ButtonActionId;
-			try {
-				var testButton = new ButtonView(id, name, actionId);
-				var failMessage = new StringBuilder("The button was created with an invalid Name: ")
-					.Append(name ?? "NULL").ToString();
-				Assert.Fail(failMessage);
-			}
-			catch (ArgumentNullException e) {
-				Assert.AreEqual("name", e.ParamName);
-				Assert.Pass();
-			}
-		}
-		
-		[TestCase("")]
-		[TestCase(" ")]
-		[TestCase(null)]
-		public void ButtonViewInvalidActionIdTest(string actionId) {
-			
-			Console.WriteLine("Starting test");
-			Console.WriteLine("Creating test ButtonView");
-			var id = Guid.NewGuid().ToString();
-			var name = ViewName;
-			try {
-				var testButton = new ButtonView(id, name, actionId);
-				var failMessage = new StringBuilder("The button was created with an invalid ActionId: ")
-					.Append(actionId ?? "NULL").ToString();
-				Assert.Fail(failMessage);
-			}
-			catch (ArgumentNullException e) {
-				Assert.AreEqual("actionId", e.ParamName);
-				Assert.Pass();
-			}
-		}
-		
-		#endregion*/
-		
 		#region Label Tests
 		
 		[Test]

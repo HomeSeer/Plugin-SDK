@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeSeer.PSDKTests.Devices.Tests
-{
+namespace HomeSeer.PluginSdkTests.Devices.Tests {
+    
     [TestFixture]
-    public class StatusGraphicTests
-    {
+    public class StatusGraphicTests {
 
         //Create tests
 
