@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractPlugin.cs" />
-    <Compile Include="Devices\AbstractStatus.cs" />
     <Compile Include="Devices\Controls\ControlLocation.cs" />
     <Compile Include="Devices\Controls\ControlEvent.cs" />
     <Compile Include="Devices\Controls\EControlFlag.cs" />
