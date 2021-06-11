@@ -154,7 +154,7 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if it is not
         /// </returns>
         public bool IsValueInRange(double value) {
-            return value > (_min - 1E-20) && value < (_max + 1E-20);
+            return value > (_min - 1E-15) && value < (_max + 1E-15);
         }
 
         /// <summary>
@@ -171,10 +171,10 @@ namespace HomeSeer.PluginSdk.Devices {
                 return false;
             }
 
-            if (Math.Abs(_min - otherValueRange._min) > 1E-20) {
+            if (Math.Abs(_min - otherValueRange._min) > 1E-15) {
                 return false;
             }
-            if (Math.Abs(_max - otherValueRange._max) > 1E-20) {
+            if (Math.Abs(_max - otherValueRange._max) > 1E-15) {
                 return false;
             }
             if (_prefix != otherValueRange._prefix) {

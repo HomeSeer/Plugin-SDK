@@ -323,7 +323,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_targetValue - value) < 1E-20;
+            return Math.Abs(_targetValue - value) < 1E-15;
         }
         
         private string ReplaceAdditionalData(string label, string[] additionalData) {
@@ -404,7 +404,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             if (_controlType != otherStatusControl._controlType) {
                 return false;
             }
-            if (Math.Abs(_targetValue - otherStatusControl._targetValue) > 1E-20) {
+            if (Math.Abs(_targetValue - otherStatusControl._targetValue) > 1E-15) {
                 return false;
             }
             if (_location != otherStatusControl._location) {
