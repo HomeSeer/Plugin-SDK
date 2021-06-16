@@ -11,7 +11,7 @@
 A software development kit used to create plugins for the [HomeSeer][homeseer-url] platform.
 
 # Using the SDK
-This SDK can be downloaded and built from source, but, for the purpose of plugin development, we recommend you add the [NuGet package][nuget-package-url] to your project to make sure you are using the latest, stable version. that maps to the HS4 version listed above.  The code associated with this version is available in the [master branch][master-branch].
+This SDK can be downloaded and built from source, but, for the purpose of plugin development, we recommend you add the [NuGet package][nuget-package-url] to your project to make sure you are using the latest, stable version that maps to the HS4 version listed above.  The code associated with this version is available in the [master branch][master-branch].
 
 ## Documentation
 You can find some helpful resources and a getting started guide in the [Plugin SDK documentation][plugin-sdk-docs].
@@ -34,7 +34,7 @@ This SDK is available for your use according to the [GNU Affero General Public L
 <!-- Images & Badges -->
 
 [release-badge]: https://img.shields.io/nuget/v/HomeSeer-PluginSDK
-[hs-version-badge]: https://img.shields.io/badge/Works%20With-HS4.1.16.0%2B-blue
+[hs-version-badge]: https://img.shields.io/badge/Works%20With-HS4.1.17.0%2B-blue
 [maintained-badge]: https://img.shields.io/github/last-commit/HomeSeer/Plugin-SDK
 [hs-logo]: http://homeseer.com/images/HS4/hs4-64.png
 [nuget-downloads]: https://img.shields.io/nuget/dt/HomeSeer-PluginSDK

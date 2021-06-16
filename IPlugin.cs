@@ -65,6 +65,20 @@ namespace HomeSeer.PluginSdk {
         /// </para>
         /// </summary>
         bool SupportsConfigDevice    { get; }
+
+        /// <summary>
+        /// Whether this plugin supports a feature configuration page for features created/managed by it
+        /// <para>
+        /// TRUE will cause HomeSeer to call GetJuiDeviceConfigPage() for features this plugin manages.
+        ///   FALSE means HomeSeer will not call GetJuiDeviceConfigPage() for any features 
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Setting this to TRUE allows you to display a unique page for each feature instead of using a single page
+        ///  for the device and all of its features.
+        /// </remarks>
+        bool SupportsConfigFeature { get; }
+
         /// <summary>
         /// Whether this plugin supports a device configuration page for all devices
         /// <para>
@@ -132,35 +146,35 @@ namespace HomeSeer.PluginSdk {
         void SetIOMulti(List<ControlEvent> controlEvents);
 
         /// <summary>
-        /// Called by HomeSeer Core to determine if a device configuration page is available for a particular device.
-        ///  Only called if <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigDeviceAll"/> is set to TRUE.
+        /// Called by HomeSeer Core to determine if a device or feature configuration page is available for a particular device or feature.
+        ///  Only called if <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigFeature"/> or <see cref="SupportsConfigDeviceAll"/> is set to TRUE.
         /// </summary>
-        /// <param name="deviceRef">The <see cref="AbstractHsDevice.Ref"/> of the device</param>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the device</param>
         /// <returns>
         /// True if there is a page available, false if not.
-        ///  Returning True will cause HomeSeer Core to call <see cref="GetJuiDeviceConfigPage"/> for the device
+        ///  Returning True will cause HomeSeer Core to call <see cref="GetJuiDeviceConfigPage"/> for the device or feature
         /// </returns>
-        bool HasJuiDeviceConfigPage(int deviceRef);
-        
+        bool HasJuiDeviceConfigPage(int devOrFeatRef);
+
         /// <summary>
-        /// Called by the HomeSeer software to obtain a HS-JUI device configuration page for a specific device
+        /// Called by the HomeSeer software to obtain a HS-JUI device or feature configuration page for a specific device or feature
         /// </summary>
-        /// <param name="deviceRef">The device reference to get the page for</param>
+        /// <param name="devOrFeatRef">The device or feature reference to get the page for</param>
         /// <returns>A JSON serialized Jui.Page</returns>
-        string GetJuiDeviceConfigPage(int deviceRef);
-    
+        string GetJuiDeviceConfigPage(int devOrFeatRef);
+
         /// <summary>
-        /// Save updated values for a HS-JUI formatted device config page
+        /// Save updated values for a HS-JUI formatted device or feature config page
         /// </summary>
         /// <param name="pageContent">A JSON serialized Jui.Page describing what has changed about the page</param>
-        /// <param name="deviceRef">The reference of the device the config page is for</param>
+        /// <param name="devOrFeatRef">The reference of the device or feature the config page is for</param>
         /// <returns>
         /// TRUE if the save was successful; FALSE if it was unsuccessful. 
         /// <para>
         /// An exception should be thrown with details about the error if it was unsuccessful
         /// </para>
         /// </returns>
-        bool SaveJuiDeviceConfigPage(string pageContent, int deviceRef);
+        bool SaveJuiDeviceConfigPage(string pageContent, int devOrFeatRef);
         
         /// <summary>
         /// Called by the HomeSeer system when it needs the current status for a device/feature owned by the plugin.
