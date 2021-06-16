@@ -584,6 +584,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// A string representation of the HomeSeer user access rights for this device/feature
         /// </summary>
+        /// <remarks>This is typically configured by users and can be safely ignored when creating a <see cref="HsDevice"/> or <see cref="HsFeature"/></remarks>
         public string UserAccess {
             get {
                 if (Changes.ContainsKey(EProperty.UserAccess)) {
@@ -614,6 +615,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// Notes attached to this device/feature by users
         /// </summary>
+        /// <remarks>This is typically configured by users and can be safely ignored when creating a <see cref="HsDevice"/> or <see cref="HsFeature"/></remarks>
         public string UserNote {
             get {
                 if (Changes.ContainsKey(EProperty.UserNote)) {
@@ -720,7 +722,14 @@ namespace HomeSeer.PluginSdk.Devices {
         protected string         _address           = "";
         /// <inheritdoc cref="AssociatedDevices"/>
         protected HashSet<int>   _assDevices        = new HashSet<int>();
-        protected bool           _cacheChanges      = false;
+        /// <summary>
+        /// Flag used to indicate whether to cache changes in <see cref="Changes"/> when setting properties and not adjust
+        ///  the underlying value or to cache changes in <see cref="Changes"/> and adjust the underlying value.
+        /// </summary>
+        /// <remarks>
+        /// Setting this to TRUE allows you to quickly revert changes made by discarding <see cref="Changes"/>
+        /// </remarks>
+        protected bool                       _cacheChanges           = false;
         /// <inheritdoc cref="Image"/>
         protected string         _image             = "";
         /// <inheritdoc cref="Interface"/>
@@ -758,10 +767,17 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
+        /// <summary>
+        /// Create a new AbstractHsDevice with default properties
+        /// </summary>
         protected AbstractHsDevice() {}
 
-        protected AbstractHsDevice(int featureRef) {
-            Ref = featureRef;
+        /// <summary>
+        /// Create a new AbstractHsDevice with a specific uniqueRef
+        /// </summary>
+        /// <param name="uniqueRef">The unique ID as an integer</param>
+        protected AbstractHsDevice(int uniqueRef) {
+            Ref = uniqueRef;
         }
 
         /// <summary>

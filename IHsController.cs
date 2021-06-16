@@ -427,18 +427,36 @@ namespace HomeSeer.PluginSdk {
         /// <param name="label">The <see cref="StatusControl.Label"/> used by the <see cref="StatusControl"/></param>
         /// <returns>A <see cref="StatusControl"/> with the specified <see cref="StatusControl.Label"/> for the <see cref="HsFeature"/></returns>
         StatusControl GetStatusControlForLabel(int featRef, string label);
-        
+
         /// <summary>
         /// Get a list of <see cref="StatusControl"/>s for a range of values on an <see cref="HsFeature"/>
         /// </summary>
         /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
-        /// <param name="min">The minimum </param>
-        /// <param name="max"></param>
-        /// <returns></returns>
+        /// <param name="min">The minimum value of the range</param>
+        /// <param name="max">The maximum value of the range</param>
+        /// <returns>A list  of <see cref="StatusControl"/>s for a range of values on the <see cref="HsFeature"/></returns>
         List<StatusControl> GetStatusControlsForRange(int featRef, double min, double max);
+
+        /// <summary>
+        /// Get the number of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The number of <see cref="StatusControl"/>s for the <see cref="HsFeature"/></returns>
         int GetStatusControlCountByRef(int featRef);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The list of <see cref="StatusControl"/>s for the <see cref="HsFeature"/></returns>
         List<StatusControl> GetStatusControlsByRef(int featRef);
 
+        /// <summary>
+        /// Get the <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
+        ///  an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The <see cref="StatusControlCollection"/> for the <see cref="HsFeature"/></returns>
         StatusControlCollection GetStatusControlCollectionByRef(int featRef);
         
         /// <summary>
@@ -448,25 +466,163 @@ namespace HomeSeer.PluginSdk {
         /// <param name="value">The <see cref="AbstractHsDevice.Value"/> managed by the <see cref="StatusGraphic"/></param>
         /// <returns>A <see cref="StatusGraphic"/> that manages the value specified for the <see cref="HsFeature"/></returns>
         StatusGraphic GetStatusGraphicForValue(int featRef, double value);
-        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
-        int GetStatusGraphicCountByRef(int featRef);
-        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
-                
-        #endregion
-        
-        #region Update
-        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
-        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
-        //HsFeature UpdateFeatureValueByRef(int featRef, double value);
 
+        /// <summary>
+        /// Get a list of <see cref="StatusGraphic"/>s for a range of values on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="min">The minimum value of the range</param>
+        /// <param name="max">The maximum value of the range</param>
+        /// <returns></returns>
+        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
+
+        /// <summary>
+        /// Get the number of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The number of <see cref="StatusGraphic"/>s for the <see cref="HsFeature"/></returns>
+        int GetStatusGraphicCountByRef(int featRef);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The list of <see cref="StatusGraphic"/>s for the <see cref="HsFeature"/></returns>
+        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
+
+        #endregion
+
+        #region Update
+        /// <summary>
+        /// <para>
+        /// Update some properties on a device
+        /// </para>
+        /// <para>
+        /// The collection of changes passed as parameter is usually <see cref="AbstractHsDevice.Changes"/>
+        /// </para>
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> to update</param>
+        /// <param name="changes">A collection of <see cref="EProperty"/> with their new values</param>
+        /// <returns>The updated <see cref="HsDevice"/></returns>
+        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
+
+        /// <summary>
+        /// <para>
+        /// Update some properties on a feature
+        /// </para>
+        /// <para>
+        /// The collection of changes passed as parameter is usually <see cref="AbstractHsDevice.Changes"/>
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Do not use this method to update <see cref="EProperty.StatusControls"/> or <see cref="EProperty.StatusGraphics"/>.
+        /// Instead, use <see cref="AddStatusControlToFeature"/>, <see cref="DeleteStatusControlByValue"/>, <see cref="ClearStatusControlsByRef"/>,
+        /// <see cref="AddStatusGraphicToFeature"/>, <see cref="DeleteStatusGraphicByValue"/>, <see cref="ClearStatusGraphicsByRef"/>
+        /// </remarks>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="changes">A collection of <see cref="EProperty"/> with their new values</param>
+        /// <returns>The updated <see cref="HsFeature"/></returns>
+        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
+
+        /// <summary>
+        /// <para>
+        /// Update one property on a device or a feature
+        /// </para>
+        /// <para>
+        /// When used with <see cref="EProperty.Value"/>, this is the same as the legacy method SetDeviceValueByRef(Integer, Double, False).
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Do not use this method to update <see cref="EProperty.StatusControls"/> or <see cref="EProperty.StatusGraphics"/>.
+        /// Instead, use <see cref="AddStatusControlToFeature"/>, <see cref="DeleteStatusControlByValue"/>, <see cref="ClearStatusControlsByRef"/>,
+        /// <see cref="AddStatusGraphicToFeature"/>, <see cref="DeleteStatusGraphicByValue"/>, <see cref="ClearStatusGraphicsByRef"/>
+        /// </remarks>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to update</param>
+        /// <param name="property">The <see cref="EProperty"/> to update</param>
+        /// <param name="value">The new value for this property</param>
         void UpdatePropertyByRef(int devOrFeatRef, EProperty property, object value);
-        
+
+        /// <summary>
+        /// <para>
+        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// </para>
+        /// <para>
+        /// To update the value without triggering HomeSeer to process the update, call
+        ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueByRef(int featRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
+        ///  accordingly
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueStringByRef(int featRef, string value);
+
+        /// <summary>
+        /// Add a <see cref="StatusControl"/> to the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="statusControl">The <see cref="StatusControl"/> to add</param>
         void AddStatusControlToFeature(int featRef, StatusControl statusControl);
+
+        /// <summary>
+        /// Delete a <see cref="StatusControl"/> in the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="value">The value of the <see cref="StatusControl"/> to delete</param>
+        /// <returns>true if the deletion succeeded, otherwise false</returns>
         bool DeleteStatusControlByValue(int featRef, double value);
+
+        /// <summary>
+        /// Delete all <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
         void ClearStatusControlsByRef(int featRef);
-        
+
+        /// <summary>
+        /// Add a <see cref="StatusGraphic"/> to the collection of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="statusGraphic">The <see cref="StatusGraphic"/> to add</param>
         void AddStatusGraphicToFeature(int featRef, StatusGraphic statusGraphic);
+
+        /// <summary>
+        /// Delete a <see cref="StatusGraphic"/> in the collection of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="value">The value of the <see cref="StatusGraphic"/> to delete</param>
+        /// <returns>true if the deletion succeeded, otherwise false</returns>
         bool DeleteStatusGraphicByValue(int featRef, double value);
+
+        /// <summary>
+        /// Delete all <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
         void ClearStatusGraphicsByRef(int featRef);
 
         #endregion
@@ -482,6 +638,10 @@ namespace HomeSeer.PluginSdk {
         /// TRUE if the <see cref="HsDevice"/> was deleted, FALSE if there was an error.
         ///  Check the HS logs for more info on the error.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the specified <paramref name="devRef"/> refers to a <see cref="HsFeature"/> and
+        ///  not a <see cref="HsDevice"/>.
+        /// </exception>
         bool DeleteDevice(int devRef);
         
         /// <summary>
@@ -510,45 +670,6 @@ namespace HomeSeer.PluginSdk {
 
         /// <summary>
         /// <para>
-        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
-        /// </para>
-        /// <para>
-        /// To update the value without triggering HomeSeer to process the update, call
-        ///  <see cref="UpdatePropertyByRef"/>
-        /// </para>
-        /// <para>
-        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
-        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
-        /// </remarks>
-        /// <param name="featRef">The unique reference of the feature to control</param>
-        /// <param name="value">The new value to set on the feature</param>
-        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool UpdateFeatureValueByRef(int featRef, double value);
-        
-        /// <summary>
-        /// <para>
-        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
-        ///  accordingly
-        /// </para>
-        /// <para>
-        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
-        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
-        /// </remarks>
-        /// <param name="featRef">The unique reference of the feature to control</param>
-        /// <param name="value">The new value to set on the feature</param>
-        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool UpdateFeatureValueStringByRef(int featRef, string value);
-
-        /// <summary>
-        /// <para>
         /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
         ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
         /// </para>
@@ -570,6 +691,49 @@ namespace HomeSeer.PluginSdk {
         /// </param>
         /// <returns>True if the control event succeeded, False if an error was reported</returns>
         bool SendControlForFeatureByValue(int devOrFeatRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        ///  This is different than <see cref="SendControlForFeatureByValue"/> because the value that describes the
+        ///  desired control outcome is encoded into a string and cannot be described by a double.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// <para>
+        /// Most simple features use a single value within a range of decimal numbers to control their state.
+        /// These situations can easily be hardcoded as <see cref="StatusControl"/>s allowing HomeSeer to automatically
+        ///  handle processing control requests tied to these values. IE A dimmable light uses a value of 0-100
+        ///  to determine what state it is in. This usually requires 3 <see cref="StatusControl"/>s:
+        ///  one for off (0), one for a variable on state (1-99), and one for full brightness (100)
+        /// This does not work well for values that cannot be described by a range of decimal numbers or require more
+        ///  than a handful of <see cref="StatusControl"/>s.
+        /// When a more complex data value is required to describe the desired state to set the feature to,
+        ///  a string is used. IE the color of a light uses a value from 0-16777216.
+        /// That requires 16777216 different <see cref="StatusControl"/>s. It is more efficient to send the raw value
+        ///  to the handling plugin for processing.
+        /// </para> 
+        /// </remarks>
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="controlValue">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> of the <see cref="StatusControl"/> to select
+        ///  and include in the <see cref="ControlEvent"/> being sent to the owning plugin.
+        /// </param>
+        /// <param name="controlString">
+        /// The desired value to send to the control for processing. This is passed to <see cref="ControlEvent.ControlString"/>
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByString(int devOrFeatRef, double controlValue, string controlString);
         
         #endregion
 
@@ -724,7 +888,7 @@ namespace HomeSeer.PluginSdk {
         ///  Please use with caution.
         /// </remarks>
         /// <param name="pluginId">The ID of the plugin
-        /// <remarks>If you are targeting a actiona owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// <remarks>If you are targeting a actiona owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
         /// </param>
         /// <returns>A list of all of the actions managed by the plugin</returns>
         List<TrigActInfo> GetActionsByInterface(string pluginId);
@@ -784,7 +948,7 @@ namespace HomeSeer.PluginSdk {
         ///  Please use with caution.
         /// </remarks>
         /// <param name="pluginId">The ID of the plugin
-        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
         /// </param>
         /// <returns>An array of triggers managed by the plugin</returns>
         TrigActInfo[] GetTriggersByInterface(string pluginId);
@@ -879,18 +1043,18 @@ namespace HomeSeer.PluginSdk {
         ///  Please use with caution.
         /// </remarks>
         /// <param name="plugId">The ID of the plugin that owns the action
-        /// <remarks>If you are targeting an action owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// <remarks>If you are targeting an action owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="plugId"/></remarks>
         /// </param>
         /// <param name="evRef">The Ref of the event</param>
         /// <param name="actInfo">The data to save to the event action</param>
         /// <returns>A message describing the result. Empty if it was successful</returns>
         string UpdatePlugAction(string plugId, int evRef, TrigActInfo actInfo);
-        
+
         /// <summary>
         /// Update an existing plugin trigger in an event
         /// </summary>
         /// <param name="plugId">The ID of the plugin that owns the trigger
-        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="plugId"/></remarks>
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="plugId"/></remarks>
         /// </param>
         /// <param name="evRef">Reference # of the event to modify</param>
         /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
@@ -989,7 +1153,7 @@ namespace HomeSeer.PluginSdk {
         /// <param name="evType">The type of event to register a callback for</param>
         /// <param name="pluginId">The ID of the plugin that should be called</param>
         void RegisterEventCB(Constants.HSEvent evType, string pluginId);
-        
+
         //This doesn't exist in the legacy API?
         //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
@@ -1004,14 +1168,14 @@ namespace HomeSeer.PluginSdk {
         ///  Please use with caution.
         /// </remarks>
         /// <param name="pluginId">The ID of the plugin
-        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
         /// </param>
         /// <param name="trigId">The ID of the trigger</param>
         /// <param name="subTrigId">The ID of the subtrigger</param>
         /// <returns>An array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
         ///  sub-trigger number provided</returns>
         TrigActInfo[] TriggerMatches(string pluginId, int trigId, int subTrigId);
-        
+
         /// <summary>
         /// Get all of the triggers of a particular type
         /// </summary>
@@ -1021,7 +1185,7 @@ namespace HomeSeer.PluginSdk {
         ///  Please use with caution.
         /// </remarks>
         /// <param name="pluginId">The ID of the plugin that owns the trigger type
-        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
         /// </param>
         /// <param name="trigId">The ID of the trigger type</param>
         /// <returns>An array of trigger data</returns>
@@ -1036,7 +1200,7 @@ namespace HomeSeer.PluginSdk {
         ///  Please use with caution.
         /// </remarks>
         /// <param name="pluginId">The ID of the plugin
-        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <see cref="pluginId"/></remarks>
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
         /// </param>
         /// <param name="trigInfo">The data of the trigger to fire</param>
         void TriggerFire(string pluginId, TrigActInfo trigInfo);

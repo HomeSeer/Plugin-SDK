@@ -1,5 +1,6 @@
 using System;
 using HomeSeer.PluginSdk.Devices.Controls;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -155,12 +156,14 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <returns>The deep copy of this <see cref="StatusGraphic"/></returns>
         public StatusGraphic Clone()
         {
-            var clone = new StatusGraphic(Graphic, Value);
-            clone.TargetRange = TargetRange.Clone();
-            clone.IsRange = IsRange;
-            clone.Label = Label;
-            clone.ControlUse = ControlUse;
-            clone.HasAdditionalData = HasAdditionalData;
+            var clone = new StatusGraphic(Graphic, Value)
+                        {
+                            TargetRange = TargetRange.Clone(),
+                            IsRange = IsRange,
+                            Label = Label,
+                            ControlUse = ControlUse,
+                            HasAdditionalData = HasAdditionalData
+                        };
             return clone;
         }
 
@@ -273,7 +276,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_value - value) < 1E-10;
+            return Math.Abs(_value - value) < 1E-15;
         }
 
         private string ReplaceAdditionalData(string label, string[] additionalData) {
@@ -287,6 +290,11 @@ namespace HomeSeer.PluginSdk.Devices {
             return finalLabel;
         }
 
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns>True if they are equal, False if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -302,7 +310,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_graphicPath != otherSg._graphicPath) {
                 return false;
             }
-            if (_value != otherSg._value) {
+            if (Math.Abs(_value - otherSg._value) > 1E-15) {
                 return false;
             }
             if (_targetRange != otherSg._targetRange) {
@@ -312,6 +320,10 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="ValueRange.Min"/> of <see cref="TargetRange"/> if <see cref="IsRange"/> is true or <see cref="Value"/> if it is false.</returns>
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _value.GetHashCode();
         }

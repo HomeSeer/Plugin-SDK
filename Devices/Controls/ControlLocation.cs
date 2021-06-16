@@ -1,10 +1,11 @@
 using System;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices.Controls {
 
     //TODO preset locations
     /// <summary>
-    /// The location and size of a control available on an <see cref="HsFeature"/>.
+    /// The location and size of a control available on a <see cref="HsFeature"/>.
     /// <para>
     /// It describes the row and column a control occupies in the grid as well as how many columns wide it is.
     /// </para>
@@ -81,6 +82,11 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             }
         }
 
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns><see langword="True"/> if they are equal, <see langword="False"/> if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -103,6 +109,10 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return true;
         }
 
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="Row"/>, <see cref="Column"/> and <see cref="Width"/> values</returns>
         public override int GetHashCode() {
             return _row.GetHashCode() * _column.GetHashCode() * _width.GetHashCode();
         }
