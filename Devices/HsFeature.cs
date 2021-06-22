@@ -543,6 +543,24 @@ namespace HomeSeer.PluginSdk.Devices {
             _statusGraphics = currentStatusGraphics;
         }
 
+        /// <summary>
+        /// Set the <see cref="DisplayPriority"/>.
+        /// </summary>
+        /// <remarks>
+        /// This is used by the HS platform to load the value of <see cref="DisplayPriority"/> saved to the database
+        ///  into the <see cref="HsFeature"/>. It cannot be used to change the value of <see cref="DisplayPriority"/>
+        ///  saved to the HS platform database.
+        /// </remarks>
+        /// <param name="index">The index of the <see cref="HsFeature"/></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when an <paramref name="index"/> less than 0 is specified</exception>
+        internal void SetDisplayPriority(int index) {
+            if (index < 0) {
+                throw new ArgumentOutOfRangeException(nameof(index), "Index must be greater than or equal to zero");
+            }
+
+            _displayPriority = index;
+        }
+
     }
 
 }
