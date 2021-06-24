@@ -349,33 +349,40 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         //IsValueInRange tests
 
         [Description("Test IsValueInRange with a value that is in range and should return true.")]
-        [TestCase(0)]
-        [TestCase(0.001)]
-        [TestCase(0.01)]
-        [TestCase(0.1)]
-        [TestCase(0.5)]
-        [TestCase(0.9)]
-        [TestCase(0.99)]
-        [TestCase(0.999)]
-        [TestCase(1)]
-        public void IsValueInRange_Min0Max1_AssertTrue(double value) 
+        [TestCase(0, 1, 0)]
+        [TestCase(0, 1, 0.001)]
+        [TestCase(0, 1, 0.01)]
+        [TestCase(0, 1, 0.1)]
+        [TestCase(0, 1, 0.5)]
+        [TestCase(0, 1, 0.9)]
+        [TestCase(0, 1, 0.99)]
+        [TestCase(0, 1, 0.999)]
+        [TestCase(0, 1, 1)]
+        [TestCase(0, 100, 0)]
+        [TestCase(0, 100, 100)]
+        [TestCase(0, 100, 99.9999)]
+        [TestCase(0, 100000, 100000)]
+        public void IsValueInRange_Min0Max1_AssertTrue(double min, double max, double value) 
         {
-            var testValueRange = new ValueRange(0, 1);
+            var testValueRange = new ValueRange(min, max);
             Assert.IsTrue(testValueRange.IsValueInRange(value));
         }
 
         [Description("Test IsValueInRange with a value that is not in range and should return false.")]
-        [TestCase(-10)]
-        [TestCase(-0.1)]
-        [TestCase(-0.01)]
-        [TestCase(-0.001)]
-        [TestCase(1.001)]
-        [TestCase(1.01)]
-        [TestCase(1.1)]
-        [TestCase(10)]
-        public void IsValueInRange_Min0Max1_AssertFalse(double value)
+        [TestCase(0, 1, -10)]
+        [TestCase(0, 1, -0.1)]
+        [TestCase(0, 1, -0.01)]
+        [TestCase(0, 1, -0.001)]
+        [TestCase(0, 1, 1.001)]
+        [TestCase(0, 1, 1.01)]
+        [TestCase(0, 1, 1.1)]
+        [TestCase(0, 1, 10)]
+        [TestCase(0, 100, 100.00001)]
+        [TestCase(0, 100, -0.00001)]
+        [TestCase(0, 100000, 100000.00001)]
+        public void IsValueInRange_Min0Max1_AssertFalse(double min, double max, double value)
         {
-            var testValueRange = new ValueRange(0, 1);
+            var testValueRange = new ValueRange(min, max);
             Assert.IsFalse(testValueRange.IsValueInRange(value));
         }
 
