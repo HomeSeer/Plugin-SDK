@@ -6,17 +6,20 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         
         public static List<string> SampleDeviceTypeList => new List<string> {
                                                                     "Line-powered switch",
-                                                                    "Line-powered sensor"
+                                                                    "Line-powered sensor",
+                                                                    "Battery-powered sensor"
                                                                 };
         
         public static List<string[]> SampleDeviceTypeFeatures => new List<string[]>
                                                                      {
                                                                          LinePoweredSwitchFeatures,
-                                                                         LinePoweredSensorFeatures
+                                                                         LinePoweredSensorFeatures,
+                                                                         BatteryPoweredSensorFeatures,
                                                                      };
         
         public static string[] LinePoweredSwitchFeatures => new []{ "On-Off control feature" };
         public static string[] LinePoweredSensorFeatures => new []{ "Open-Close status feature" };
+        public static string[] BatteryPoweredSensorFeatures => new[] { "Open-Close status feature", "Battery status feature" };
 
         public const string DeviceConfigPageId = "device-config-page";
         public const string DeviceConfigPageName = "Sample Device Config";

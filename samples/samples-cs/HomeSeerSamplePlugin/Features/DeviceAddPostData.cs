@@ -1,5 +1,6 @@
 using System;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Identification;
 using HSPI_HomeSeerSamplePlugin.Constants;
 using Newtonsoft.Json;
 
@@ -63,6 +64,9 @@ namespace HSPI_HomeSeerSamplePlugin {
                     case 1:
                         df = BuildLpSensor(pluginId, df);
                         break;
+                    case 2:
+                        df = BuildBpSensor(pluginId, df);
+                        break;
                     default:
                         throw new Exception("Cannot create device with this configuration.");
                 }
@@ -72,15 +76,32 @@ namespace HSPI_HomeSeerSamplePlugin {
 
             private DeviceFactory BuildLpSwitch(string pluginId, DeviceFactory df) {
                 var ff = FeatureFactory.CreateGenericBinaryControl(pluginId, $"Controls", "On", "Off", 1, 0)
-                    .WithLocation(Location1).WithLocation2(Location2);
+                    .WithLocation(Location1).WithLocation2(Location2).WithDisplayType(EFeatureDisplayType.Important);
                 df.WithFeature(ff);
                 return df;
             }
             
             private DeviceFactory BuildLpSensor(string pluginId, DeviceFactory df) {
                 var ff = FeatureFactory.CreateGenericBinarySensor(pluginId, $"Sensor State", "Sensor tripped", "No event", 1, 0)
-                    .WithLocation(Location1).WithLocation2(Location2);
+                    .WithLocation(Location1).WithLocation2(Location2).WithDisplayType(EFeatureDisplayType.Important);
                 df.WithFeature(ff);
+                
+                return df;
+            }
+
+            private DeviceFactory BuildBpSensor(string pluginId, DeviceFactory df)
+            {
+                var ff = FeatureFactory.CreateGenericBinarySensor(pluginId, $"Sensor State", "Sensor tripped", "No event", 1, 0)
+                    .WithLocation(Location1).WithLocation2(Location2).WithDisplayType(EFeatureDisplayType.Important);
+                var ffbat = FeatureFactory.CreateFeature(pluginId).WithName("Battery").
+                    AsType(EFeatureType.Generic, (int)EGenericFeatureSubType.Battery)
+                    .WithLocation(Location1).WithLocation2(Location2).WithDefaultValue(95).WithDisplayType(EFeatureDisplayType.Normal);
+                var range = new ValueRange(0, 100);
+                range.Suffix = "%";
+                var sg = new StatusGraphic("images/HomeSeer/status/battery_100.png", range);
+                ffbat.AddGraphic(sg);
+                df.WithFeature(ff).WithFeature(ffbat);
+
                 return df;
             }
 
