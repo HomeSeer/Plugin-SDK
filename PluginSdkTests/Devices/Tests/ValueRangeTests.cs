@@ -362,7 +362,7 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         [TestCase(0, 100, 100)]
         [TestCase(0, 100, 99.9999)]
         [TestCase(0, 100000, 100000)]
-        public void IsValueInRange_Min0Max1_AssertTrue(double min, double max, double value) 
+        public void IsValueInRange_AssertTrue(double min, double max, double value) 
         {
             var testValueRange = new ValueRange(min, max);
             Assert.IsTrue(testValueRange.IsValueInRange(value));
@@ -380,7 +380,7 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         [TestCase(0, 100, 100.00001)]
         [TestCase(0, 100, -0.00001)]
         [TestCase(0, 100000, 100000.00001)]
-        public void IsValueInRange_Min0Max1_AssertFalse(double min, double max, double value)
+        public void IsValueInRange_AssertFalse(double min, double max, double value)
         {
             var testValueRange = new ValueRange(min, max);
             Assert.IsFalse(testValueRange.IsValueInRange(value));
