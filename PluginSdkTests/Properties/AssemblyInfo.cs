@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HomeSeer PluginSDK")]
-[assembly: AssemblyDescription("HomeSeer HS4 Plugin SDK")]
+[assembly: AssemblyTitle("HomeSeerJuiTests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HomeSeer Technologies")]
-[assembly: AssemblyProduct("HomeSeer PluginSDK")]
-[assembly: AssemblyCopyright("Copyright© 2021 HomeSeer Technologies, LLC")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("HomeSeerJuiTests")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8D2165FA-0DBE-4F59-815C-72157B2401CF")]
+[assembly: Guid("66DBFC3F-C292-4917-A424-C80CCF42F158")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.0.0")]
-[assembly: AssemblyFileVersion("1.3.1.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

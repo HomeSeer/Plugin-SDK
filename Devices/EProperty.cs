@@ -1,5 +1,3 @@
-using System;
-
 namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>

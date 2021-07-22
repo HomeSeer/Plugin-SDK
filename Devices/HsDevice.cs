@@ -64,6 +64,10 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new ArgumentException($"Number of elements in list does not match the number of associated features for this device - Expected {_assDevices?.Count} : Found {value?.Count}");
                 }
 
+                if (! _assDevices.SetEquals(value)) {
+                    throw new ArgumentException("Elements in the list do not match the associated features for this device.");
+                }
+
                 if (_cacheChanges && value == _featureDisplayPriority) {
                     Changes.Remove(EProperty.FeatureDisplayPriority);
                     return;

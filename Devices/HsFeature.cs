@@ -112,11 +112,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        //TODO don't edit directly remarks
         /// <summary>
         /// A <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
         ///  this feature.
         /// </summary>
+        /// <remarks>
+        /// This is read only because HomeSeer needs to index <see cref="StatusControls"/> for events and other automated behaviors.
+        ///  To edit these use methods in <see cref="IHsController"/>
+        /// </remarks>
         public StatusControlCollection StatusControls {
             get {
                 if (Changes.ContainsKey(EProperty.StatusControls)) {
@@ -127,11 +130,14 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
-        //TODO don't edit directly remarks
         /// <summary>
         /// A <see cref="StatusGraphicCollection"/> describing all of the <see cref="StatusGraphic"/>s associated with
         ///  this feature.
         /// </summary>
+        /// <remarks>
+        /// This is read only because HomeSeer needs to index <see cref="StatusGraphics"/> for events and other automated behaviors.
+        ///  To edit these use methods in <see cref="IHsController"/>
+        /// </remarks>
         public StatusGraphicCollection StatusGraphics {
             get {
                 if (Changes.ContainsKey(EProperty.StatusGraphics)) {
@@ -535,6 +541,24 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _statusGraphics = currentStatusGraphics;
+        }
+
+        /// <summary>
+        /// Set the <see cref="DisplayPriority"/>.
+        /// </summary>
+        /// <remarks>
+        /// This is used by the HS platform to load the value of <see cref="DisplayPriority"/> saved to the database
+        ///  into the <see cref="HsFeature"/>. It cannot be used to change the value of <see cref="DisplayPriority"/>
+        ///  saved to the HS platform database.
+        /// </remarks>
+        /// <param name="index">The index of the <see cref="HsFeature"/></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when an <paramref name="index"/> less than 0 is specified</exception>
+        internal void SetDisplayPriority(int index) {
+            if (index < 0) {
+                throw new ArgumentOutOfRangeException(nameof(index), "Index must be greater than or equal to zero");
+            }
+
+            _displayPriority = index;
         }
 
     }

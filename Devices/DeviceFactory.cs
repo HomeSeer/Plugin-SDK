@@ -6,7 +6,7 @@ using HomeSeer.PluginSdk.Devices.Identification;
 namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>
-    /// Factory class for defining new devices for HomeSeer
+    /// Factory class for defining new <see cref="HsDevice"/>s for HomeSeer
     /// </summary>
     public class DeviceFactory {
 
