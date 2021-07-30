@@ -92,7 +92,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
 
-                if (value == _address) {
+                if (_cacheChanges && value == _address) {
                     Changes.Remove(EProperty.Address);
                     return;
                 }
@@ -124,7 +124,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
 
-                if (value == _assDevices) {
+                if (_cacheChanges && value == _assDevices) {
                     Changes.Remove(EProperty.AssociatedDevices);
                     return;
                 }
@@ -173,7 +173,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _image;
             }
             set {
-                if (value == _image) {
+                if (_cacheChanges && value == _image) {
                     Changes.Remove(EProperty.Image);
                     return;
                 }
@@ -204,7 +204,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _interface;
             }
             set {
-                if (value == _interface) {
+                if (_cacheChanges && value == _interface) {
                     Changes.Remove(EProperty.Interface);
                     return;
                 }
@@ -239,7 +239,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _invalidValue || !IsValueValid();
             }
             set {
-                if (value == _invalidValue) {
+                if (_cacheChanges && value == _invalidValue) {
                     Changes.Remove(EProperty.InvalidValue);
                     return;
                 }
@@ -269,7 +269,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _lastChange;
             }
             set {
-                if (value == _lastChange) {
+                if (_cacheChanges && value == _lastChange) {
                     Changes.Remove(EProperty.LastChange);
                     return;
                 }
@@ -307,7 +307,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _location;
             }
             set {
-                if (value == _location) {
+                if (_cacheChanges && value == _location) {
                     Changes.Remove(EProperty.Location);
                     return;
                 }
@@ -345,7 +345,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _location2;
             }
             set {
-                if (value == _location2) {
+                if (_cacheChanges && value == _location2) {
                     Changes.Remove(EProperty.Location2);
                     return;
                 }
@@ -380,7 +380,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _misc;
             }
             set {
-                if (value == _misc) {
+                if (_cacheChanges && value == _misc) {
                     Changes.Remove(EProperty.Misc);
                     return;
                 }
@@ -417,7 +417,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _name;
             }
             set {
-                if (value == _name) {
+                if (_cacheChanges && value == _name) {
                     Changes.Remove(EProperty.Name);
                     return;
                 }
@@ -492,7 +492,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new DeviceRelationshipException("Please clear this devices association with other devices before changing its relationship type.");
                 }
                 
-                if (value == _relationship) {
+                if (_cacheChanges && value == _relationship) {
                     Changes.Remove(EProperty.Relationship);
                     return;
                 }
@@ -525,7 +525,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _status;
             }
             set {
-                if (value == _status) {
+                if (_cacheChanges && value == _status) {
                     Changes.Remove(EProperty.Status);
                     return;
                 }
@@ -561,7 +561,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _typeInfo;
             }
             set {
-                if (value == _typeInfo) {
+                if (_cacheChanges && value == _typeInfo) {
                     Changes.Remove(EProperty.DeviceType);
                     return;
                 }
@@ -594,7 +594,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _userAccess;
             }
             set {
-                if (value == _userAccess) {
+                if (_cacheChanges && value == _userAccess) {
                     Changes.Remove(EProperty.UserAccess);
                     return;
                 }
@@ -625,7 +625,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _userNote;
             }
             set {
-                if (value == _userNote) {
+                if (_cacheChanges && value == _userNote) {
                     Changes.Remove(EProperty.UserNote);
                     return;
                 }
@@ -664,7 +664,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _value;
             }
             set {
-                if (Math.Abs(value - _value) < 0.001) {
+                if (_cacheChanges && Math.Abs(value - _value) < 0.001) {
                     Changes.Remove(EProperty.Value);
                     return;
                 }
@@ -696,7 +696,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _voiceCommand ?? "";
             }
             set {
-                if (value == _voiceCommand) {
+                if (_cacheChanges && value == _voiceCommand) {
                     Changes.Remove(EProperty.VoiceCommand);
                     return;
                 }

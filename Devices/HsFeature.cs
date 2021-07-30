@@ -42,7 +42,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
 
-                if (value == _additionalStatusData) {
+                if (_cacheChanges && value == _additionalStatusData) {
                     Changes.Remove(EProperty.AdditionalStatusData);
                     return;
                 }
@@ -93,7 +93,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _displayType < 0 ? EFeatureDisplayType.Normal : (EFeatureDisplayType) _displayType;
             }
             set {
-                if (value == (EFeatureDisplayType) _displayType) {
+                if (_cacheChanges && value == (EFeatureDisplayType) _displayType) {
                     Changes.Remove(EProperty.FeatureDisplayType);
                     return;
                 }
