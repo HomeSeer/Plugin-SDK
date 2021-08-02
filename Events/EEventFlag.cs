@@ -13,7 +13,15 @@ namespace HomeSeer.PluginSdk.Events {
         Delayed = 0x80,
         IncludeInPowerfail = 0x160,
         Security = 0x320,
-        Priority = 0x640
+        Priority = 0x640,
+        /// <summary>
+        /// Expose this event to Google cloud services
+        /// </summary>
+        GoogleDiscoveryEnabled = 0x800,
+        /// <summary>
+        /// Expose this event to Amazon cloud services.
+        /// </summary>
+        AmazonDiscoveryEnabled = 0x1000
 
     }
 

@@ -89,13 +89,13 @@ namespace HomeSeer.PluginSdk.Devices {
             // SECURITY_API = &H800000
             
             /// <summary>
-            /// Place holder for future misc flags.
+            /// Expose this device to Google cloud services
             /// </summary>
-            MiscUnused09 = 0x400000,
+            GoogleDiscoveryEnabled = 0x400000,
             /// <summary>
-            /// Place holder for future misc flags.
+            /// Expose this device to Amazon cloud services.
             /// </summary>
-            MiscUnused10 = 0x800000,
+            AmazonDiscoveryEnabled = 0x800000,
             /// <summary>
             /// Place holder for future misc flags.
             /// </summary>
@@ -124,6 +124,6 @@ namespace HomeSeer.PluginSdk.Devices {
             /// Place holder for future misc flags.
             /// </summary>
             MiscUnused17 = 0x40000000
-        }
+    }
 
 }
