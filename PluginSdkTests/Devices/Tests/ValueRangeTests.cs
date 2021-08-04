@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using HomeSeer.PluginSdk.Devices;
 using NUnit.Framework;
 
@@ -7,6 +8,8 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
     [TestFixture()]
     public class ValueRangeTests
     {
+        private static readonly string ds = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+
         //Create tests
 
         [Description("Test the creation of a new value range using good min and max values.")]
@@ -266,14 +269,19 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
             Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
         }
 
+        private static readonly object[] _GetStringForValue_Min0Max100_ValOnly1Dec_TestCases =
+        {
+            new object[] { -2, $"-2{ds}0" },
+            new object[] { 0, $"0{ds}0" },
+            new object[] { 1, $"1{ds}0" },
+            new object[] { 1.1, $"1{ds}1" },
+            new object[] { 1.111, $"1{ds}1" },
+            new object[] { 10, $"10{ds}0" },
+            new object[] { 50, $"50{ds}0" },
+        };
+
         [Description("Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 1.")]
-        [TestCase(-2, "-2.0")]
-        [TestCase(0, "0.0")]
-        [TestCase(1, "1.0")]
-        [TestCase(1.1, "1.1")]
-        [TestCase(1.111, "1.1")]
-        [TestCase(10, "10.0")]
-        [TestCase(50, "50.0")]
+        [TestCaseSource("_GetStringForValue_Min0Max100_ValOnly1Dec_TestCases")]
         public void GetStringForValue_Min0Max100_ValOnly1Dec(double value, string expected)
         {
             var testValueRange = new ValueRange(0, 100);
@@ -281,14 +289,19 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
             Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
         }
 
+        private static readonly object[] _GetStringForValue_Min0Max100_ValOnly2Dec_TestCases =
+        {
+            new object[] { -2, $"-2{ds}00" },
+            new object[] { 0, $"0{ds}00" },
+            new object[] { 1, $"1{ds}00" },
+            new object[] { 1.1, $"1{ds}10" },
+            new object[] { 1.111, $"1{ds}11" },
+            new object[] { 10, $"10{ds}00" },
+            new object[] { 50, $"50{ds}00" },
+        };
+
         [Description("Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 2.")]
-        [TestCase(-2, "-2.00")]
-        [TestCase(0, "0.00")]
-        [TestCase(1, "1.00")]
-        [TestCase(1.1, "1.10")]
-        [TestCase(1.111, "1.11")]
-        [TestCase(10, "10.00")]
-        [TestCase(50, "50.00")]
+        [TestCaseSource("_GetStringForValue_Min0Max100_ValOnly2Dec_TestCases")]
         public void GetStringForValue_Min0Max100_ValOnly2Dec(double value, string expected)
         {
             var testValueRange = new ValueRange(0, 100);
@@ -312,14 +325,19 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
             Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
         }
 
+        private static readonly object[] _GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec_TestCases =
+        {
+            new object[] { -2, $"-102{ds}0" },
+            new object[] { 0, $"-100{ds}0" },
+            new object[] { 1, $"-99{ds}0" },
+            new object[] { 1.1, $"-98{ds}9" },
+            new object[] { 1.111, $"-98{ds}9" },
+            new object[] { 10, $"-90{ds}0" },
+            new object[] { 50, $"-50{ds}0" },
+        };
+
         [Description("Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 100, and decimal places is 1.")]
-        [TestCase(-2, "-102.0")]
-        [TestCase(0, "-100.0")]
-        [TestCase(1, "-99.0")]
-        [TestCase(1.1, "-98.9")]
-        [TestCase(1.111, "-98.9")]
-        [TestCase(10, "-90.0")]
-        [TestCase(50, "-50.0")]
+        [TestCaseSource("_GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec_TestCases")]
         public void GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec(double value, string expected)
         {
             var testValueRange = new ValueRange(0, 100);
@@ -328,14 +346,19 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
             Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
         }
 
+        private static readonly object[] _GetStringForValue_Min0Max100_ReturnExpected_TestCases =
+        {
+            new object[] { -2, $"test-102{ds}0test" },
+            new object[] { 0, $"test-100{ds}0test" },
+            new object[] { 1, $"test-99{ds}0test" },
+            new object[] { 1.1, $"test-98{ds}9test" },
+            new object[] { 1.111, $"test-98{ds}9test" },
+            new object[] { 10, $"test-90{ds}0test" },
+            new object[] { 50, $"test-50{ds}0test" },
+        };
+
         [Description("Test GetStringForValue when Min is 0, Max is 100, offset is 100, decimal places is 1, and prefix and suffix are both set to test.")]
-        [TestCase(-2, "test-102.0test")]
-        [TestCase(0, "test-100.0test")]
-        [TestCase(1, "test-99.0test")]
-        [TestCase(1.1, "test-98.9test")]
-        [TestCase(1.111, "test-98.9test")]
-        [TestCase(10, "test-90.0test")]
-        [TestCase(50, "test-50.0test")]
+        [TestCaseSource("_GetStringForValue_Min0Max100_ReturnExpected_TestCases")]
         public void GetStringForValue_Min0Max100_ReturnExpected(double value, string expected)
         {
             var testValueRange = new ValueRange(0, 100);
@@ -349,33 +372,40 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         //IsValueInRange tests
 
         [Description("Test IsValueInRange with a value that is in range and should return true.")]
-        [TestCase(0)]
-        [TestCase(0.001)]
-        [TestCase(0.01)]
-        [TestCase(0.1)]
-        [TestCase(0.5)]
-        [TestCase(0.9)]
-        [TestCase(0.99)]
-        [TestCase(0.999)]
-        [TestCase(1)]
-        public void IsValueInRange_Min0Max1_AssertTrue(double value) 
+        [TestCase(0, 1, 0)]
+        [TestCase(0, 1, 0.001)]
+        [TestCase(0, 1, 0.01)]
+        [TestCase(0, 1, 0.1)]
+        [TestCase(0, 1, 0.5)]
+        [TestCase(0, 1, 0.9)]
+        [TestCase(0, 1, 0.99)]
+        [TestCase(0, 1, 0.999)]
+        [TestCase(0, 1, 1)]
+        [TestCase(0, 100, 0)]
+        [TestCase(0, 100, 100)]
+        [TestCase(0, 100, 99.9999)]
+        [TestCase(0, 100000, 100000)]
+        public void IsValueInRange_AssertTrue(double min, double max, double value) 
         {
-            var testValueRange = new ValueRange(0, 1);
+            var testValueRange = new ValueRange(min, max);
             Assert.IsTrue(testValueRange.IsValueInRange(value));
         }
 
         [Description("Test IsValueInRange with a value that is not in range and should return false.")]
-        [TestCase(-10)]
-        [TestCase(-0.1)]
-        [TestCase(-0.01)]
-        [TestCase(-0.001)]
-        [TestCase(1.001)]
-        [TestCase(1.01)]
-        [TestCase(1.1)]
-        [TestCase(10)]
-        public void IsValueInRange_Min0Max1_AssertFalse(double value)
+        [TestCase(0, 1, -10)]
+        [TestCase(0, 1, -0.1)]
+        [TestCase(0, 1, -0.01)]
+        [TestCase(0, 1, -0.001)]
+        [TestCase(0, 1, 1.001)]
+        [TestCase(0, 1, 1.01)]
+        [TestCase(0, 1, 1.1)]
+        [TestCase(0, 1, 10)]
+        [TestCase(0, 100, 100.00001)]
+        [TestCase(0, 100, -0.00001)]
+        [TestCase(0, 100000, 100000.00001)]
+        public void IsValueInRange_AssertFalse(double min, double max, double value)
         {
-            var testValueRange = new ValueRange(0, 1);
+            var testValueRange = new ValueRange(min, max);
             Assert.IsFalse(testValueRange.IsValueInRange(value));
         }
 

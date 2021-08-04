@@ -68,7 +68,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new ArgumentException("Elements in the list do not match the associated features for this device.");
                 }
 
-                if (value == _featureDisplayPriority) {
+                if (_cacheChanges && value == _featureDisplayPriority) {
                     Changes.Remove(EProperty.FeatureDisplayPriority);
                     return;
                 }
