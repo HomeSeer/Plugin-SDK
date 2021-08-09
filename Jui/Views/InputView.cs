@@ -179,7 +179,7 @@ namespace HomeSeer.Jui.Views {
 	            default:
 		            throw new ArgumentOutOfRangeException();
             }
-            sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value}\">");
+            sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value.Replace("\"", "&quot;")}\">");
             sb.Append(Environment.NewLine);
             //Add the hint label
             sb.Append(GetIndentStringFromNumber(indent+1));
