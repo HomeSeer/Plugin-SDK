@@ -176,6 +176,9 @@ namespace HomeSeer.Jui.Views {
 	            case EInputType.Decimal:
 		            typeString = "number\" step=\"0.001\" ";
 		            break;
+	            case EInputType.Time:
+		            typeString = "time\" ";
+		            break;
 	            default:
 		            throw new ArgumentOutOfRangeException();
             }
