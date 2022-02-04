@@ -118,7 +118,6 @@
     <Compile Include="Devices\PlugExtraData.cs" />
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
-    <Compile Include="EHsSystemEvent.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
