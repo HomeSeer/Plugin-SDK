@@ -87,45 +87,12 @@ namespace HomeSeer.PluginSdk.Devices {
                 _featureDisplayPriority = value;
             }
         }
-        
-        /// <summary>
-        /// The file system address of an image that represents the physical device hardware
-        /// </summary>
-        public string ProductImage {
-            get {
-                if (Changes.ContainsKey(EProperty.ProductImage)) {
-                    return (string) Changes[EProperty.ProductImage];
-                }
-
-                return _productImage;
-            }
-            set {
-                if (_cacheChanges && value == _productImage) {
-                    Changes.Remove(EProperty.ProductImage);
-                    return;
-                }
-                
-                if (Changes.ContainsKey(EProperty.ProductImage)) {
-                    Changes[EProperty.ProductImage] = value;
-                }
-                else {
-                    Changes.Add(EProperty.ProductImage, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _productImage = value ?? "";
-            }
-        }
 
         #endregion
 
         #region Private
 
         private List<int> _featureDisplayPriority = new List<int>();
-        /// <inheritdoc cref="ProductImage"/>
-        private string _productImage = "";
         
         #endregion
 
