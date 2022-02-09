@@ -17,7 +17,7 @@ This SDK can be downloaded and built from source, but, for the purpose of plugin
 You can find some helpful resources and a getting started guide in the [Plugin SDK documentation][plugin-sdk-docs].
 
 ## Samples
-There are a few open-source plugin samples available to help you that are listed on the [Sample Plugins page][samples-url] in the Plugin SDK documentation.
+There are a few open-source plugin samples available to help you that you can find in the [samples](./samples) directory.
 
 ## API Reference
 A full API Reference is built from source using DocFX and is available for you through GitHub Pages in the [API Reference Section][api-reference-url]

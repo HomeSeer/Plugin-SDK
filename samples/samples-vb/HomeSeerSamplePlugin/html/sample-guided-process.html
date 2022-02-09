@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+        <!--This maintains the scale of the page based on the scale of the screen-->
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <meta name="author" content="HomeSeer Technologies"> 
+        <!--This liquid tag loads all of the necessary css files for HomeSeer-->
+        {{includefile '/bootstrap/css/page_common.css'}}
+        <link href="../bootstrap/css/addons-pro/steppers.min.css" rel="stylesheet">
+        <title>Sample Guided Process Feature</title>         
+    </head>     
+    <body class="body homeseer-skin">
+    <!--These liquid tags add the HomeSeer header and navbar to the top of the page when appropriate-->
+        {{includefile 'header.html'}}
+        {{includefile 'navbar.html'}}
+    <!--Primary container for the page content
+        The .container class ensures the page content is fit and centered to the screen-->
+        <div class="container">
+            <!-- MDB Steppers -->
+            <ul id="process-stepper" class="stepper linear">
+                <li class="step active">
+                    <div data-step-label="About this page" class="step-title waves-effect waves-dark">Step 1</div>
+                    <div class="step-new-content" style="display: block;">
+                        This is a sample feature page that demonstrates how a guided process should be included with a plugin.  This is very useful when there is a clear set of steps that a user must follow in order to accomplish a given task.  For example: if a user needs to connect a new device to their HomeSeer system, they must follow a certain process, which they should be walked through using a feature page such as this.
+                        <div class="step-actions">
+                            <button id="btnStep1" class="waves-effect waves-dark btn btn-sm btn-primary next-step">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Collect information" class="step-title waves-effect waves-dark">Step 2</div>
+                    <div id="step2" class="step-new-content">
+                        You can collect information that you can then validate using javascript to determine if the user can proceed with the process or not.
+                        <div class="row">
+                            <div class="md-form col-12 ml-auto" style="margin-top: 16px;">
+                                <input id="information-input" type="text" class="form-control">
+                                <label id="information-input-label" for="information-input">Badger badger badger badger</label>
+                            </div>
+                        </div>
+                        <div class="step-actions" style="margin-top: 32px;">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step2ValidationFunction">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Select an item" class="step-title waves-effect waves-dark">Step 3</div>
+                    <div class="step-new-content">
+                        Sometimes, you may need the user to select an option from a list that is dynamically driven by the state of the plugin.  This can be done using Liquid tags.  A Liquid tag calls a method in your plugin to inflate a section of HTML.  This select list was provided by the plugin method GetSampleSelectList()
+                        {{plugin_function 'HomeSeerSamplePluginVB' 'GetSampleSelectList' []}}
+                        <!-- EXAMPLE
+                        
+                        <select class="mdb-select md-form" id="step3SampleSelectList"> 
+                            <option value="" disabled selected>Color</option>                             
+                            <option value="0">Red</option>                             
+                            <option value="1">Orange</option>                             
+                            <option value="2">Yellow</option>
+                            <option value="3">Green</option>
+                            <option value="4">Blue</option>
+                            <option value="5">Indigo</option>
+                            <option value="6">Violet</option>
+                        </select>
+                        -->
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Configure the interface" class="step-title waves-effect waves-dark">Step 4</div>
+                    <div class="step-new-content">
+                        You can also call into your plugin to initiate a more complex process that requires the user to interact with a peripheral device so that they can continue.  A great example of this is starting the process to add a new device to a Z-Wave network and then having to put the device into inclusion mode so that the process can continue.
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="step4FeedbackFunction">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step-title waves-effect waves-dark">Step 5</div>
+                    <div id="lastStep" class="step-new-content">
+                        <p id="lastStepText">
+                            Finished! </p>
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary m-0 mt-4" onclick="finish()" type="button">Finish</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>         
+        <!-- Bootstrap core JavaScript
+    ================================================== -->         
+        <!-- Placed at the end of the document so the pages load faster -->
+        {{includefile 'bootstrap/js/page_common.js'}}
+        <script type="text/javascript" src="../bootstrap/js/addons-pro/steppers.min.js"></script>
+        <script type="text/JavaScript">
+          $(document).ready(function () {
+            $('.stepper').mdbStepper();
+           })
+            
+            function step2ValidationFunction() {
+                var informationLabel = $('#information-input-label');
+                var informationErrorLabel = $('#information-input-error');
+                var informationInput = $('#information-input');
+                
+                if (informationInput[0].value == null || informationInput[0].value.trim() == "") {
+                    var step2 = informationLabel.parent();
+                    if (informationErrorLabel.length == 0) {
+                        step2.append('<label id="information-input-error" for="information-input" class="invalid">This field is required</label>');
+                    }
+                    $('#process-stepper').destroyFeedback();
+                    return;
+                }
+                
+                informationErrorLabel.remove();
+                $('#process-stepper').nextStep();
+                return;
+            }
+            
+            function step4FeedbackFunction() {
+                var informationInput = $('#information-input')[0];
+                var selection = $('#step3SampleSelectList')[0];
+                var internalData = {textValue: informationInput.value, colorIndex: selection.value};
+                var jsonData = JSON.stringify(internalData);
+                
+            	$.ajax({
+                    type: "POST",
+                    async: "true",
+                    url: '/HomeSeerSamplePluginVB/sample-guided-process.html',
+                    cache: false,
+                    data: jsonData,
+                    success: function(response){
+                        
+                        if (response == "error") {
+                            $('#process-stepper').destroyFeedback();
+                        	alert("Error");
+                            return;
+                        }
+                        else if (response.startsWith('<')) {
+                            $('#process-stepper').destroyFeedback();
+                            alert("Error");
+                            return;
+                        }
+                        else if (response.startsWith('{')) {
+                            var responseObj = JSON.parse(response);
+                            var mystEle = '<img src=\"' + responseObj.data + '\"/>';
+                            $('#lastStep').prepend(mystEle);
+                            $('#lastStepText').text("");
+                            $('#process-stepper').nextStep();
+                            return;
+                        }
+                        
+                        $('#lastStepText').text(response);
+                        $('#process-stepper').nextStep();
+                    },
+                    error: function(){
+                        $('#process-stepper').destroyFeedback();
+                        alert("Error");
+                    }
+                });
+            }
+            
+            function finish() {
+              var devicesPage = window.location.origin + "/devices.html";
+              window.location.assign(devicesPage);
+            }
+        </script>
+    </body>     
+</html>
