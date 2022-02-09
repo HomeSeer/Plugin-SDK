@@ -1,3 +1,5 @@
+using System;
+
 namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>
@@ -83,6 +85,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// <see cref="AbstractHsDevice.Status"/>
         /// </summary>
+        [Obsolete("This is being replaced by DisplayedStatus and StatusString", false)]
         Status                    = 36,
         /// <summary>
         /// <see cref="HsFeature.StatusControls"/>
