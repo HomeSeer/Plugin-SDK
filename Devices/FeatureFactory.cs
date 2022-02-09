@@ -615,7 +615,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         /// <remarks>
         /// Color pickers do not use the value of the feature to operate. They use a control string;
-        ///  so the <see cref="targetRange"/> is superficial and does not correspond to the actual selected color.
+        ///  so the <paramref name="targetRange"/> is superficial and does not correspond to the actual selected color.
         /// </remarks>
         /// <param name="targetRange">The values this control occupies on the feature.</param>
         /// <param name="location">The location of the control in the grid</param>

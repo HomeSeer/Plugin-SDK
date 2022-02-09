@@ -170,7 +170,7 @@ namespace HomeSeer.PluginSdk.Events {
         }
         
         /// <summary>
-        /// A <see cref="List"/> of names for the available sub-trigger types users can select from for this trigger type.
+        /// A <see cref="List{T}"/> of names for the available sub-trigger types users can select from for this trigger type.
         ///  Leave this list empty if the trigger type does not support any subtypes.
         /// </summary>
         protected virtual List<string> SubTriggerTypeNames { get; set; } = new List<string>();

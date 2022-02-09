@@ -71,7 +71,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// Set the <see cref="HsDevice.Name"/> of the device
+        /// Set the <see cref="AbstractHsDevice.Name"/> of the device
         /// </summary>
         /// <param name="name">The name of the device. It must not be blank or whitespace</param>
         /// <returns>The <see cref="DeviceFactory"/> with the updated name value</returns>
