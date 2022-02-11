@@ -135,7 +135,17 @@ namespace HomeSeer.PluginSdk.Devices {
 
             return this;
         }
-        
+
+        /// <summary>
+        /// Add an <see cref="AbstractHsDevice.Address"/> to the feature
+        /// </summary>
+        /// <param name="address">The string to set the address to</param>
+        /// <returns>The <see cref="FeatureFactory"/> with the updated address value</returns>
+        public FeatureFactory WithAddress(string address) {
+            _feature.Address = address;
+            return this;
+        }
+
         /// <summary>
         /// Set the name of the <see cref="HsFeature"/>. This sets <see cref="AbstractHsDevice.Name"/>
         /// </summary>
