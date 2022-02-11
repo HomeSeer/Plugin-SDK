@@ -11,7 +11,7 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
                     TestOf = typeof(PlugExtraData))]
     public class PlugExtraDataTests {
 
-        private const string _validKeyCharacters   = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_-.";
+        private const string _validKeyCharacters   = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_-.!@#$%^&*()+=";
         private const string _invalidKeyCharacters = "\\\n\r\"'";
 
         private PlugExtraData _ped;
@@ -29,16 +29,23 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
         /// <seealso cref="_validKeyCharacters"/>
         private static IEnumerable<string> ValidTestKeys() {
             var randomizer = Randomizer.CreateRandomizer();
+            yield return randomizer.GetString(1, _validKeyCharacters);
             yield return randomizer.GetString(2, _validKeyCharacters);
-            yield return randomizer.GetString(2, _validKeyCharacters);
+            yield return randomizer.GetString(3, _validKeyCharacters);
             yield return randomizer.GetString(4, _validKeyCharacters);
-            yield return randomizer.GetString(4, _validKeyCharacters);
+            yield return randomizer.GetString(5, _validKeyCharacters);
             yield return randomizer.GetString(6, _validKeyCharacters);
-            yield return randomizer.GetString(6, _validKeyCharacters);
+            yield return randomizer.GetString(7, _validKeyCharacters);
             yield return randomizer.GetString(8, _validKeyCharacters);
-            yield return randomizer.GetString(8, _validKeyCharacters);
-            yield return randomizer.GetString(10, _validKeyCharacters);
-            yield return randomizer.GetString(10, _validKeyCharacters);
+            yield return randomizer.GetString(16, _validKeyCharacters);
+            yield return randomizer.GetString(24, _validKeyCharacters);
+            yield return randomizer.GetString(32, _validKeyCharacters);
+            yield return randomizer.GetString(40, _validKeyCharacters);
+            yield return randomizer.GetString(48, _validKeyCharacters);
+            yield return randomizer.GetString(56, _validKeyCharacters);
+            yield return randomizer.GetString(64, _validKeyCharacters);
+            yield return randomizer.GetString(72, _validKeyCharacters);
+            yield return randomizer.GetString(80, _validKeyCharacters);
         }
 
         [TestCaseSource(nameof(ValidTestKeys))]
@@ -194,27 +201,7 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
         }
         
         //TODO GetNamed<TData> tests
-        /*private static IEnumerable<object[]> NamedTestObjects() {
-            var randomizer = Randomizer.CreateRandomizer();
-            yield return new object[] {
-                "TestExtraData_1",
-                new TestExtraData(randomizer.GetString(), 
-                    randomizer.NextShort(), 
-                    randomizer.NextBool())
-            };
-        }
-        
-        [TestCaseSource(nameof(NamedTestObjects))]
-        [Description("Get a named entry as a type and expect the correct object to be returned.")]
-        [Author("JLW")]
-        [Order(220)]
-        public void GetNamedAsType_ValidKey_ReturnsSameObject(string key, object value) {
-            Assert.IsNotNull(key);
-            Assert.IsNotNull(value);
-            var serializedValue = value is string s ? s : JsonConvert.SerializeObject(value);
-            Assume.That(_ped.AddNamed(key, serializedValue));
-        }*/
-        
+
         [TestCaseSource(nameof(NamedTestEntries))]
         [Description("Check to see if a specific key is present and expect TRUE to be returned.")]
         [Author("JLW")]
