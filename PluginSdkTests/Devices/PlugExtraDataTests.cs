@@ -162,6 +162,7 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
             Assert.IsNotNull(value);
             var serializedValue = value is string s ? s : JsonConvert.SerializeObject(value);
             Assume.That(_ped.AddNamed(key, serializedValue));
+            Assert.AreEqual(serializedValue, _ped.GetNamed(key));
             Assert.AreEqual(serializedValue, _ped[key]);
         }
         
@@ -172,6 +173,9 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
         public void GetNamed_KeyDoesNotExist_Throws(string key, object value) {
             Assert.IsNotNull(key);
             Assert.Throws<KeyNotFoundException>(() => {
+                _ = _ped.GetNamed(key);
+            });
+            Assert.Throws<KeyNotFoundException>(() => {
                 _ = _ped[key];
             });
         }
@@ -181,6 +185,9 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
         [Author("JLW")]
         [Order(220)]
         public void GetNamed_InvalidKey_Throws(string key) {
+            Assert.Throws<ArgumentNullException>(() => {
+                _ = _ped.GetNamed(key);
+            });
             Assert.Throws<ArgumentNullException>(() => {
                 _ = _ped[key];
             });
@@ -326,6 +333,7 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
             Assert.IsNotNull(value);
             var serializedValue = value is string s ? s : JsonConvert.SerializeObject(value);
             var index = _ped.AddUnNamed(serializedValue);
+            Assert.AreEqual(serializedValue, _ped.GetUnNamed(index));
             Assert.AreEqual(serializedValue, _ped[index]);
         }
         
@@ -337,6 +345,9 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
             Assert.IsNotNull(value);
             var serializedValue = value is string s ? s : JsonConvert.SerializeObject(value);
             var index = _ped.AddUnNamed(serializedValue);
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                _ = _ped.GetUnNamed(index + 1);
+            });
             Assert.Throws<ArgumentOutOfRangeException>(() => {
                 _ = _ped[index + 1];
             });
