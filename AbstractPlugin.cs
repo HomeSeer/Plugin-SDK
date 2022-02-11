@@ -640,7 +640,7 @@ namespace HomeSeer.PluginSdk {
         #region Dynamic Method/Property Calls
 
         /// <inheritdoc cref="IPlugin.PluginFunction" />
-        public object PluginFunction(string procName, object[] @params) {
+        public virtual object PluginFunction(string procName, object[] @params) {
             try {
                 var ty = GetType();
                 var mi = ty.GetMethod(procName);
@@ -656,7 +656,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc cref="IPlugin.PluginPropertyGet" />
-        public object PluginPropertyGet(string propName) {
+        public virtual object PluginPropertyGet(string propName) {
             try {
                 var ty = GetType();
                 var mi = ty.GetProperty(propName);
@@ -672,7 +672,7 @@ namespace HomeSeer.PluginSdk {
         }
 
         /// <inheritdoc cref="IPlugin.PluginPropertySet" />
-        public void PluginPropertySet(string propName, object value) {
+        public virtual void PluginPropertySet(string propName, object value) {
             try {
                 var ty = GetType();
                 var mi = ty.GetProperty(propName);
