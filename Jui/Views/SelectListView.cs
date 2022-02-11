@@ -37,10 +37,16 @@ namespace HomeSeer.Jui.Views {
         /// The index of the currently selected option in the list. This is the value for this view.
         /// </summary>
         /// <remarks>
-        /// Set this to -1 to display a default "Choose an Option" text
+        /// Set this to -1 to display a default "Select an option" text
         /// </remarks>
         [JsonProperty("selection")]
         public int Selection { get; set; } = -1;
+
+		/// <summary>
+		/// The text displayed when <see cref="Selection"/> equals -1. If this property is null or empty, "Select an option" is displayed. 
+		/// </summary>
+		[JsonProperty("default_selection_text")]
+		public string DefaultSelectionText { get; set; }
 
 		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
@@ -187,7 +193,9 @@ namespace HomeSeer.Jui.Views {
 					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\">");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
-					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>Select an option</option>");
+					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>");
+					sb.Append($"{(string.IsNullOrEmpty(DefaultSelectionText) ? "Select an option" : DefaultSelectionText)}");
+					sb.Append("</option>");
 					sb.Append(Environment.NewLine);
 					for (var i = 0; i < Options.Count; i++) {
 						var option = Options[i];
