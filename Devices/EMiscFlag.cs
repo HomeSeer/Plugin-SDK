@@ -35,6 +35,7 @@ namespace HomeSeer.PluginSdk.Devices {
             IncludePowerfail = 0x80,
             /// <summary>
             /// Indicates that the device/feature should show its available controls in the UI
+            /// This is set by default when creating a <see cref="HsDevice"/> or <see cref="HsFeature"/>
             /// </summary>
             ShowValues = 0x100,
             /// <summary>
@@ -50,8 +51,8 @@ namespace HomeSeer.PluginSdk.Devices {
             /// </summary>
             MyhsDeviceChangeNotify = 0x800,
             /// <summary>
-            /// if set, any set to a device value will not reset last change.
-            ///  This is not set by default for backward compatibility
+            /// If set, any set to a device value will not reset last change.
+            /// This is set by default when creating a <see cref="HsFeature"/> using <see cref="FeatureFactory"/>
             /// </summary>
             SetDoesNotChangeLastChange = 0x1000,
             /// <summary>
