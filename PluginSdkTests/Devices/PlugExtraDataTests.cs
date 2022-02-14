@@ -12,7 +12,6 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
     public class PlugExtraDataTests {
 
         private const string _validKeyCharacters   = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_-.!@#$%^&*()+=";
-        private const string _invalidKeyCharacters = "\\\n\r\"'";
 
         private PlugExtraData _ped;
 
@@ -64,14 +63,9 @@ namespace HomeSeer.PluginSdk.Devices.Tests {
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="string"/></returns>
         /// <seealso cref="Key_Invalid_ReturnsFalse"/>
-        /// <seealso cref="_invalidKeyCharacters"/>
         private static IEnumerable<string> InvalidTestKeys() {
-            var invalidChars = _invalidKeyCharacters.ToCharArray();
             yield return null;
             yield return string.Empty;
-            foreach (var invalidChar in invalidChars) {
-                yield return invalidChar.ToString();
-            }
         }
         
         [TestCaseSource(nameof(InvalidTestKeys))]
