@@ -7,8 +7,8 @@ using NUnit.Framework.Internal;
 namespace HomeSeer.PluginSdk.Devices.Tests {
     
     [TestFixture(Description = "Tests of the PlugExtraData class to ensure it behaves as expected under normal conditions.",
-                    Author = "JLW",
-                    TestOf = typeof(PlugExtraData))]
+        Author = "JLW",
+        TestOf = typeof(PlugExtraData))]
     public class PlugExtraDataTests {
 
         private const string _validKeyCharacters   = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_-.!@#$%^&*()+=";
