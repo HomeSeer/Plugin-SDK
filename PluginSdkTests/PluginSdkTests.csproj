@@ -51,6 +51,7 @@
     <Compile Include="Devices\Tests\ValueRangeTests.cs" />
     <Compile Include="Jui\Tests\SerializationTests.cs" />
     <Compile Include="Jui\Tests\ViewTests.cs" />
+    <Compile Include="Jui\Views\AbstractViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
