@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using NUnit.Framework.Internal;
 
-namespace HomeSeer.PluginSdk.Devices.Tests {
+namespace HomeSeer.PluginSdk.Devices {
     
     [TestFixture(Description = "Tests of the PlugExtraData class to ensure it behaves as expected under normal conditions.",
         Author = "JLW",
