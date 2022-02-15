@@ -1,6 +1,5 @@
 using HomeSeer.Jui.Types;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 
@@ -10,15 +9,32 @@ namespace HomeSeer.Jui.Views {
         TestOf = typeof(LabelView),
         Description = "Tests of the LabelView class to ensure it behaves as expected under normal conditions.",
         Author = "JLW")]
-    public class LabelViewTests {
-        
-        private static readonly Randomizer _randomizer = Randomizer.CreateRandomizer();
-
-        private const string _defaultId = "id";
-        private const string _defaultName = "name";
+    public class LabelViewTests : AbstractJuiViewTestFixture {
 
         private static LabelView GetDefaultLabelView() {
-            return new LabelView(_defaultId, _defaultName);
+            return new LabelView(DEFAULT_ID, DEFAULT_NAME);
+        }
+        
+        private static IEnumerable<object[]> ValidIdNameValueCaseSource() {
+            yield return new object[] {
+                DEFAULT_ID,
+                DEFAULT_NAME,
+                string.Empty
+            };
+            yield return new object[] {
+                DEFAULT_ID,
+                DEFAULT_NAME,
+                RANDOMIZER.GetString()
+            };
+        }
+        
+        private static IEnumerable<ELabelType> LabelTypesTestCaseSource() {
+            yield return ELabelType.Default;
+            yield return ELabelType.Preformatted;
+        }
+        
+        private static IEnumerable<string> ValueTestCaseSource() {
+            yield return RANDOMIZER.GetString();
         }
 
         [Test]
@@ -26,21 +42,8 @@ namespace HomeSeer.Jui.Views {
         [Author("JLW")]
         public void Constructor_IdName_DoesNotThrow() {
             Assert.DoesNotThrow(() => {
-                _ = new LabelView(_defaultId, _defaultName);
+                _ = new LabelView(DEFAULT_ID, DEFAULT_NAME);
             });
-        }
-
-        private static IEnumerable<object[]> ValidIdNameValueCaseSource() {
-            yield return new object[] {
-                _defaultId,
-                _defaultName,
-                string.Empty
-            };
-            yield return new object[] {
-                _defaultId,
-                _defaultName,
-                _randomizer.GetString()
-            };
         }
 
         [TestCaseSource(nameof(ValidIdNameValueCaseSource))]
@@ -57,7 +60,7 @@ namespace HomeSeer.Jui.Views {
         [Author("JLW")]
         public void Constructor_IdNameValue_NameValueNull_Throws() {
             Assert.Throws<ArgumentNullException>(() => {
-                _ = new LabelView(_defaultId, string.Empty, string.Empty);
+                _ = new LabelView(DEFAULT_ID, string.Empty, string.Empty);
             });
         }
 
@@ -75,11 +78,6 @@ namespace HomeSeer.Jui.Views {
         public void LabelType_Get_Default() {
             LabelView labelView = GetDefaultLabelView();
             Assert.AreEqual(ELabelType.Default, labelView.LabelType);
-        }
-        
-        private static IEnumerable<ELabelType> LabelTypesTestCaseSource() {
-            yield return ELabelType.Default;
-            yield return ELabelType.Preformatted;
         }
 
         [TestCaseSource(nameof(LabelTypesTestCaseSource))]
@@ -108,11 +106,7 @@ namespace HomeSeer.Jui.Views {
             LabelView labelView = GetDefaultLabelView();
             Assert.AreEqual(null, labelView.Value);
         }
-        
-        private static IEnumerable<string> ValueTestCaseSource() {
-            yield return _randomizer.GetString();
-        }
-        
+
         [TestCaseSource(nameof(ValueTestCaseSource))]
         [Description("Set the value and expect no exceptions to be thrown.")]
         [Author("JLW")]
@@ -124,7 +118,7 @@ namespace HomeSeer.Jui.Views {
         }
         
         [TestCaseSource(nameof(ValueTestCaseSource))]
-        [Description("Set the value and expect no exceptions to be thrown.")]
+        [Description("Get the value after setting it and expect no exceptions to be thrown.")]
         [Author("JLW")]
         public void Value_Get_ReturnsSame(string value) {
             LabelView labelView = GetDefaultLabelView();
