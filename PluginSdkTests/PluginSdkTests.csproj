@@ -55,6 +55,7 @@
     <Compile Include="Jui\Views\AbstractViewTests.cs" />
     <Compile Include="Jui\Views\InputViewTests.cs" />
     <Compile Include="Jui\Views\LabelViewTests.cs" />
+    <Compile Include="Jui\Views\SelectListViewTests.cs" />
     <Compile Include="Jui\Views\ToggleViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
