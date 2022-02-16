@@ -178,9 +178,9 @@ namespace HomeSeer.Jui.Views {
         }
         
         [TestCaseSource(nameof(ValueTestCaseSource))]
-        [Description("Get the value after setting it and expect no exceptions to be thrown.")]
+        [Description("Get the value after setting it and expect the correct value to be returned.")]
         [Author("JLW")]
-        public void Value_Get_ReturnsSame(string value) {
+        public void Value_Set_SetsValue(string value) {
             InputView view = GetDefaultInputView();
             view.Value = value;
             Assert.AreEqual(value, view.Value);
