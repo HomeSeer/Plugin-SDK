@@ -53,6 +53,7 @@
     <Compile Include="Jui\Tests\ViewTests.cs" />
     <Compile Include="Jui\Views\AbstractJuiViewTestFixture.cs" />
     <Compile Include="Jui\Views\AbstractViewTests.cs" />
+    <Compile Include="Jui\Views\NavigateButtonViewTests.cs" />
     <Compile Include="Jui\Views\InputViewTests.cs" />
     <Compile Include="Jui\Views\LabelViewTests.cs" />
     <Compile Include="Jui\Views\SelectListViewTests.cs" />
