@@ -35,6 +35,8 @@ namespace HomeSeer.Jui.Views {
         }
 
         private static IEnumerable<string> InvalidUrlTestCaseSource() {
+            yield return null;
+            yield return string.Empty;
             yield return RANDOMIZER.GetString();
             yield return "www.homeseer.com";
             yield return "https://www.homeseer.com";
