@@ -78,7 +78,7 @@ namespace HomeSeer.Jui.Views {
 		public override string ToHtml(int indent = 0) {
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
-			sb.Append($"<button class=\"btn btn-primary mt-2\" type=\"button\" onclick=\"jui_navigate({HomeSeerUrl});\" id=\"{Id}\">");
+			sb.Append($"<button class=\"btn btn-primary jui-btn-nav mt-2\" type=\"button\" data-url=\"{HomeSeerUrl}\" id=\"{Id}\">");
             sb.Append(Name);
 			sb.Append("</button>");
 			sb.Append(Environment.NewLine);
