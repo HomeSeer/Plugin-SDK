@@ -49,6 +49,10 @@
     <Compile Include="Devices\PlugExtraDataTests.cs" />
     <Compile Include="Devices\Tests\StatusGraphicTests.cs" />
     <Compile Include="Devices\Tests\ValueRangeTests.cs" />
+    <Compile Include="Events\AbstractActionTypeTests.cs" />
+    <Compile Include="Events\ActionTypeCollectionTests.cs" />
+    <Compile Include="Events\TestActionType.cs" />
+    <Compile Include="Events\TrigActInfoTests.cs" />
     <Compile Include="Jui\Tests\SerializationTests.cs" />
     <Compile Include="Jui\Tests\ViewTests.cs" />
     <Compile Include="Jui\Views\AbstractJuiViewTestFixture.cs" />
