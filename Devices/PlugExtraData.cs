@@ -352,7 +352,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Remove the specified non-keyed item from the collection using the default Equals implementation of the strings.
         /// </summary>
         /// <param name="data">The non-keyed item to remove from the collection.</param>
-        /// <returns></returns>
+        /// <returns>TRUE if the item was removed, FALSE if it wasn't.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the specified data is null or an empty string.</exception>
         public bool RemoveUnNamed(string data) {
             
