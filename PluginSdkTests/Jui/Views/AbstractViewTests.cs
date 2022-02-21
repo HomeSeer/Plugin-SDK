@@ -5,7 +5,10 @@ using System.Collections.Generic;
 
 namespace HomeSeer.Jui.Views {
     
-    [TestFixture(TestOf = typeof(AbstractView), Author = "JLW")]
+    [TestFixture(
+        TestOf = typeof(AbstractView), 
+        Description = "Tests of the AbstractView class to ensure it behaves as expected under normal conditions.",
+        Author = "JLW")]
     public class AbstractViewTests : AbstractJuiViewTestFixture {
 
         private static IEnumerable<string> ValidIdCaseSource() {
