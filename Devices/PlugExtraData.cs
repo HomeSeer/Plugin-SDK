@@ -237,7 +237,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <exception cref="ArgumentNullException">Thrown when the data to be stored is null or whitespace.</exception>
         /// <remarks>
         /// <para>
-        /// If you are trying to store an object, serialize it as a string using Newtonsoft before saving it.
+        /// If you are trying to store an object, serialize it as a string using Newtonsoft before saving it or use <see cref="AddUnNamed{TData}"/>.
         ///  Do not serialize primitives. Serializing primitives may produce unintended results.
         /// </para>
         /// </remarks>
@@ -249,6 +249,36 @@ namespace HomeSeer.PluginSdk.Devices {
             
             _unNamedData.Add(data);
             return _unNamedData.Count - 1;
+        }
+        
+        /// <summary>
+        /// Add a new item to the collection without a key. Serialize the <paramref name="data"/> to a string before saving.
+        /// </summary>
+        /// <param name="data">The data to save in the collection of type <typeparamref name="TData"/></param>
+        /// <typeparam name="TData">The type of the <paramref name="data"/> being saved.</typeparam>
+        /// <returns>The index of the item in the collection.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the data is null</exception>
+        /// <exception cref="JsonDataException">Thrown when there is an error while serializing the data</exception>
+        /// <remarks>
+        /// <para>
+        /// Do not serialize primitives. Serializing primitives may produce unintended results.
+        ///  Use <see cref="AddUnNamed"/> to save primitive values.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="AddUnNamed"/>
+        /// <seealso cref="GetUnNamed{TData}"/>
+        /// JLW - TData must be specified because the signature AddUnNamed(object) overlaps AddUnNamed(string)
+        public int AddUnNamed<TData>(TData data) {
+            if (data == null) {
+                throw new ArgumentNullException(nameof(data), "data cannot be null");
+            }
+            try {
+                var serializedData = JsonConvert.SerializeObject(data);
+                return AddUnNamed(serializedData);
+            }
+            catch (JsonSerializationException e) {
+                throw new JsonDataException($"Error serializing data : {e.Message}");
+            }
         }
 
         /// <summary>
