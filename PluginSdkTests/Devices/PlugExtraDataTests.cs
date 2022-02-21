@@ -11,7 +11,8 @@ namespace HomeSeer.PluginSdk.Devices {
         TestOf = typeof(PlugExtraData))]
     public class PlugExtraDataTests {
 
-        private const string _validKeyCharacters   = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_-.!@#$%^&*()+=";
+        private const string VALID_KEY_CHARACTERS   = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_-.!@#$%^&*()+=";
+        private static readonly Randomizer RANDOMIZER = Randomizer.CreateRandomizer();
 
         private PlugExtraData _ped;
 
@@ -25,37 +26,25 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="string"/></returns>
         /// <seealso cref="Key_Valid_ReturnsTrue"/>
-        /// <seealso cref="_validKeyCharacters"/>
+        /// <seealso cref="VALID_KEY_CHARACTERS"/>
         private static IEnumerable<string> ValidTestKeys() {
-            var randomizer = Randomizer.CreateRandomizer();
-            yield return randomizer.GetString(1, _validKeyCharacters);
-            yield return randomizer.GetString(2, _validKeyCharacters);
-            yield return randomizer.GetString(3, _validKeyCharacters);
-            yield return randomizer.GetString(4, _validKeyCharacters);
-            yield return randomizer.GetString(5, _validKeyCharacters);
-            yield return randomizer.GetString(6, _validKeyCharacters);
-            yield return randomizer.GetString(7, _validKeyCharacters);
-            yield return randomizer.GetString(8, _validKeyCharacters);
-            yield return randomizer.GetString(16, _validKeyCharacters);
-            yield return randomizer.GetString(24, _validKeyCharacters);
-            yield return randomizer.GetString(32, _validKeyCharacters);
-            yield return randomizer.GetString(40, _validKeyCharacters);
-            yield return randomizer.GetString(48, _validKeyCharacters);
-            yield return randomizer.GetString(56, _validKeyCharacters);
-            yield return randomizer.GetString(64, _validKeyCharacters);
-            yield return randomizer.GetString(72, _validKeyCharacters);
-            yield return randomizer.GetString(80, _validKeyCharacters);
-        }
-
-        [TestCaseSource(nameof(ValidTestKeys))]
-        [Description("Add a named entry with AddNamed using a valid key and expect TRUE to be returned.")]
-        [Author("JLW")]
-        [Order(10)]
-        public void Key_Valid_ReturnsTrue(string key) {
-            Assume.That(key != null);
-            Assume.That(!string.IsNullOrWhiteSpace(key));
-            const string value = "test";
-            Assert.IsTrue(_ped.AddNamed(key, value));
+            yield return RANDOMIZER.GetString(1, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(2, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(3, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(4, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(5, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(6, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(7, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(8, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(16, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(24, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(32, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(40, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(48, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(56, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(64, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(72, VALID_KEY_CHARACTERS);
+            yield return RANDOMIZER.GetString(80, VALID_KEY_CHARACTERS);
         }
         
         /// <summary>
@@ -68,6 +57,81 @@ namespace HomeSeer.PluginSdk.Devices {
             yield return string.Empty;
         }
         
+        private static IEnumerable<object[]> NamedTestEntries() {
+            //Numbers
+            yield return new object[] {
+                "num-short", 
+                RANDOMIZER.NextShort()
+            };
+            yield return new object[] {
+                "num-long", 
+                RANDOMIZER.NextLong()
+            };
+            yield return new object[] {
+                "num-decimal", 
+                RANDOMIZER.NextDecimal()
+            };
+            yield return new object[] {
+                "num-double", 
+                RANDOMIZER.NextDouble()
+            };
+            yield return new object[] {
+                "num-float", 
+                RANDOMIZER.NextFloat()
+            };
+            //Strings
+            yield return new object[] {
+                "string", 
+                RANDOMIZER.GetString()
+            };
+            //Booleans
+            yield return new object[] {
+                "bool", 
+                RANDOMIZER.NextBool()
+            };
+            //Objects
+            yield return new object[] {
+                "TestExtraData_1",
+                new TestExtraData(RANDOMIZER.GetString(), 
+                    RANDOMIZER.NextShort(), 
+                    RANDOMIZER.NextBool())
+            };
+        }
+        
+        private static IEnumerable<object> UnNamedTestEntries() {
+            //Numbers
+            yield return RANDOMIZER.NextShort();
+            yield return RANDOMIZER.NextLong();
+            yield return RANDOMIZER.NextDecimal();
+            yield return RANDOMIZER.NextDouble();
+            yield return RANDOMIZER.NextFloat();
+            //Strings
+            yield return RANDOMIZER.GetString();
+            //Booleans
+            yield return RANDOMIZER.NextBool();
+            //Objects
+            yield return new TestExtraData(RANDOMIZER.GetString(),
+                RANDOMIZER.NextShort(),
+                RANDOMIZER.NextBool());
+        }
+
+        private static IEnumerable<TestExtraData> TestDataTestCaseSource() {
+            yield return new TestExtraData(RANDOMIZER.GetString(), 0, false);
+            yield return new TestExtraData("", RANDOMIZER.NextShort(), false);
+            yield return new TestExtraData(RANDOMIZER.GetString(), RANDOMIZER.NextShort(), RANDOMIZER.NextBool());
+        }
+
+        [TestCaseSource(nameof(ValidTestKeys))]
+        [Description("Add a named entry with AddNamed using a valid key and expect TRUE to be returned.")]
+        [Author("JLW")]
+        [Order(10)]
+        public void Key_Valid_ReturnsTrue(string key) {
+            Assume.That(key != null);
+            Assume.That(!string.IsNullOrWhiteSpace(key));
+            const string value = "test";
+            Assert.IsTrue(_ped.AddNamed(key, value));
+        }
+
         [TestCaseSource(nameof(InvalidTestKeys))]
         [Description("Add a named entry with AddNamed using an invalid key and expect FALSE to be returned.")]
         [Author("JLW")]
@@ -78,49 +142,7 @@ namespace HomeSeer.PluginSdk.Devices {
                  _ = _ped.AddNamed(key, value); 
              });
         }
-        
-        private static IEnumerable<object[]> NamedTestEntries() {
-            var randomizer = Randomizer.CreateRandomizer();
-            //Numbers
-            yield return new object[] {
-                "num-short", 
-                randomizer.NextShort()
-            };
-            yield return new object[] {
-                "num-long", 
-                randomizer.NextLong()
-            };
-            yield return new object[] {
-                "num-decimal", 
-                randomizer.NextDecimal()
-            };
-            yield return new object[] {
-                "num-double", 
-                randomizer.NextDouble()
-            };
-            yield return new object[] {
-                "num-float", 
-                randomizer.NextFloat()
-            };
-            //Strings
-            yield return new object[] {
-                "string", 
-                randomizer.GetString()
-            };
-            //Booleans
-            yield return new object[] {
-                "bool", 
-                randomizer.NextBool()
-            };
-            //Objects
-            yield return new object[] {
-                "TestExtraData_1",
-                new TestExtraData(randomizer.GetString(), 
-                    randomizer.NextShort(), 
-                    randomizer.NextBool())
-            };
-        }
-        
+
         [TestCaseSource(nameof(NamedTestEntries))]
         [Description("Add a named entry with AddNamed using a new key and expect TRUE to be returned.")]
         [Author("JLW")]
@@ -152,6 +174,24 @@ namespace HomeSeer.PluginSdk.Devices {
             Assert.Throws<ArgumentNullException>(() => {
                 _ped.AddNamed(key, "test");
             });
+        }
+
+        [Test]
+        [Description("Add a named entry with AddNamed<TData> using invalid data and expect an exception to be thrown.")]
+        [Author("JLW")]
+        [Order(130)]
+        public void AddNamed_InvalidTestData_Throws() {
+            Assert.Throws<ArgumentNullException>(() => {
+                _ped.AddNamed<TestExtraData>("key", null);
+            });
+        }
+
+        [TestCaseSource(nameof(TestDataTestCaseSource))]
+        [Description("Add a named entry with AddNamed<TData> using valid TestExtraData and expect true to be returned.")]
+        [Author("JLW")]
+        [Order(140)]
+        public void AddNamed_ValidTestData_ReturnsTrue(TestExtraData data) {
+            Assert.IsTrue(_ped.AddNamed("key", data));
         }
         
         [TestCaseSource(nameof(NamedTestEntries))]
@@ -194,7 +234,18 @@ namespace HomeSeer.PluginSdk.Devices {
             });
         }
         
-        //TODO GetNamed<TData> tests
+        [TestCaseSource(nameof(TestDataTestCaseSource))]
+        [Description("Get a named entry and expect the correct object to be returned.")]
+        [Author("JLW")]
+        [Order(230)]
+        public void GetNamed_TestData_ReturnsExpected(TestExtraData data) {
+            Assert.IsNotNull(data);
+            const string key = "key";
+            Assert.DoesNotThrow(() => {
+                Assume.That(_ped.AddNamed(key, data));
+            });
+            Assert.AreEqual(data, _ped.GetNamed<TestExtraData>(key));
+        }
 
         [TestCaseSource(nameof(NamedTestEntries))]
         [Description("Check to see if a specific key is present and expect TRUE to be returned.")]
@@ -274,24 +325,6 @@ namespace HomeSeer.PluginSdk.Devices {
             });
             Assert.AreEqual(0, _ped.NamedCount);
         }
-        
-        private static IEnumerable<object> UnNamedTestEntries() {
-            var randomizer = Randomizer.CreateRandomizer();
-            //Numbers
-            yield return randomizer.NextShort();
-            yield return randomizer.NextLong();
-            yield return randomizer.NextDecimal();
-            yield return randomizer.NextDouble();
-            yield return randomizer.NextFloat();
-            //Strings
-            yield return randomizer.GetString();
-            //Booleans
-            yield return randomizer.NextBool();
-            //Objects
-            yield return new TestExtraData(randomizer.GetString(),
-                randomizer.NextShort(),
-                randomizer.NextBool());
-        }
 
         [TestCaseSource(nameof(UnNamedTestEntries))]
         [Description("Add an un-named entry and expect its index to be returned.")]
@@ -304,6 +337,24 @@ namespace HomeSeer.PluginSdk.Devices {
             for (var i = 0; i < numLoops; i++) {
                 Assert.AreEqual(i, _ped.AddUnNamed(serializedValue));
             }
+        }
+        
+        [Test]
+        [Description("Add an un-named entry with AddUnNamed<TData> using invalid data and expect an exception to be thrown.")]
+        [Author("JLW")]
+        [Order(610)]
+        public void AddUnNamed_InvalidTestData_Throws() {
+            Assert.Throws<ArgumentNullException>(() => {
+                _ped.AddUnNamed<TestExtraData>(null);
+            });
+        }
+
+        [TestCaseSource(nameof(TestDataTestCaseSource))]
+        [Description("Add an un-named entry with AddUnNamed<TData> using valid TestExtraData and expect the next index to be returned.")]
+        [Author("JLW")]
+        [Order(620)]
+        public void AddUnNamed_ValidTestData_ReturnsNextIndex(TestExtraData data) {
+            Assert.AreEqual(0, _ped.AddUnNamed(data));
         }
 
         [TestCaseSource(nameof(UnNamedTestEntries))]
@@ -334,7 +385,17 @@ namespace HomeSeer.PluginSdk.Devices {
             });
         }
         
-        //TODO GetUnNamed<TData> tests
+        [TestCaseSource(nameof(TestDataTestCaseSource))]
+        [Description("Get an un-named entry and expect the correct object to be returned.")]
+        [Author("JLW")]
+        [Order(720)]
+        public void GetUnNamed_TestData_ReturnsExpected(TestExtraData data) {
+            Assert.IsNotNull(data);
+            Assert.DoesNotThrow(() => {
+                var index = _ped.AddUnNamed(data);
+                Assert.AreEqual(data, _ped.GetUnNamed<TestExtraData>(index));
+            });
+        }
 
         [TestCaseSource(nameof(UnNamedTestEntries))]
         [Description("Remove an un-named entry at a specific index and expect no exceptions to be thrown.")]
@@ -401,11 +462,12 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// Extra data used to test how <see cref="PlugExtraData"/> handles objects
         /// </summary>
-        private sealed class TestExtraData {
+        [Serializable]
+        public sealed class TestExtraData {
 
-            private string Text { get; }
-            private int Number { get; }
-            private bool Condition { get; }
+            public string Text { get; }
+            public int Number { get; }
+            public bool Condition { get; }
 
             public TestExtraData(string text, int number, bool condition) {
                 Text = text;
@@ -413,7 +475,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 Condition = condition;
             }
             
-            private bool Equals(TestExtraData other) {
+            public bool Equals(TestExtraData other) {
                 return Text == other.Text && Number == other.Number && Condition == other.Condition;
             }
 
