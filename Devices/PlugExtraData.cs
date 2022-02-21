@@ -45,7 +45,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </exception>
         /// <remarks>
         /// <para>
-        /// If you are trying to store an object, serialize it as a string using Newtonsoft before saving it.
+        /// If you are trying to store an object, serialize it as a string using Newtonsoft before saving it or use <see cref="AddNamed{TData}"/>.
         ///  Do not serialize primitives. Serializing primitives may produce unintended results.
         /// </para>
         /// <para>Please note that all keys will be converted to lower case when stored in the HS database</para>
@@ -61,6 +61,40 @@ namespace HomeSeer.PluginSdk.Devices {
                 
             _namedData.Add(key, data);
             return true;
+        }
+
+        /// <summary>
+        /// Add a new keyed data item to the collection. Serialize the <paramref name="data"/> to a string before saving.
+        /// </summary>
+        /// <param name="key">The key for the data</param>
+        /// <param name="data">The data to save in the collection of type <typeparamref name="TData"/></param>
+        /// <typeparam name="TData">The type of the <paramref name="data"/> being saved.</typeparam>
+        /// <returns>
+        /// TRUE if the item was saved,
+        ///  FALSE if it already exists
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when the key or data is null</exception>
+        /// <exception cref="JsonDataException">Thrown when there is an error while serializing the data</exception>
+        /// <remarks>
+        /// <para>Please note that all keys will be converted to lower case when stored in the HS database</para>
+        /// <para>
+        /// Do not serialize primitives. Serializing primitives may produce unintended results.
+        ///  Use <see cref="AddNamed"/> to save primitive values.
+        /// </para>
+        /// </remarks>
+        /// JLW - TData must be specified because the signature AddNamed(string, object) overlaps AddNamed(string, string)
+        public bool AddNamed<TData>(string key, TData data) {
+            if (data == null) {
+                throw new ArgumentNullException(nameof(data),
+                    "data cannot be null. If you really want to save null, use AddNamed(string,string)");
+            }
+            try {
+                var serializedData = JsonConvert.SerializeObject(data);
+                return AddNamed(key, serializedData);
+            }
+            catch (JsonSerializationException e) {
+                throw new JsonDataException($"Error serializing data : {e.Message}");
+            }
         }
 
         /// <summary>
