@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--This maintains the scale of the page based on the scale of the screen-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="HomeSeer Technologies">
+    <!--This liquid tag loads all of the necessary css files for HomeSeer-->
+    {{includefile '/bootstrap/css/page_common.css'}}
+    <title>Sample Blank Feature Page</title>
+</head>
+<body class="body homeseer-skin">
+<!--These liquid tags add the HomeSeer header and navbar to the top of the page when appropriate-->
+{{includefile 'header.html'}}
+{{includefile 'navbar.html'}}
+<!--Primary container for the page content
+    The .container class ensures the page content is fit and centered to the screen-->
+<div class="container">
+    <!--This is an intentionally blank page that you can use as a blueprint to create feature pages from-->
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+{{includefile 'bootstrap/js/page_common.js'}}
+</body>
+</html>

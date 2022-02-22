@@ -16,14 +16,14 @@ This SDK can be downloaded and built from source, but, for the purpose of plugin
 ## Documentation
 You can find some helpful resources and a getting started guide in the [Plugin SDK documentation][plugin-sdk-docs].
 
+### Samples
+There are a few open-source plugin samples available to help you that you can find in the [samples](./samples) directory.
+
 ### Release Notes
 Version release notes are also published along side the API Reference in the [Release Notes Section][release-notes-url]
 
 ### API Reference
 A full API Reference is built from source using DocFX and is available for you through GitHub Pages in the [API Reference Section][api-reference-url]
-
-### Samples
-There are a few open-source plugin samples available to help you that are listed on the [Sample Plugins page][samples-url] in the Plugin SDK documentation.
 
 # Questions and Contributions
 Please submit any questions, bugs, and requests as [issues][issues-url] in this repository.  Contributions to this SDK are encouraged and welcome.  Please see the [contribution guidelines](./CONTRIBUTION_GUIDELINES.md) for more info.
@@ -55,4 +55,3 @@ This SDK is available for your use according to the [GNU Affero General Public L
 [dev-branch]: https://github.com/HomeSeer/Plugin-SDK/tree/dev
 [api-reference-url]: https://homeseer.github.io/Plugin-SDK-Docs/api/index.html
 [release-notes-url]: https://homeseer.github.io/Plugin-SDK-Docs/release_notes/index.html
-[samples-url]: https://docs.homeseer.com/display/HSPI/Sample+Plugins

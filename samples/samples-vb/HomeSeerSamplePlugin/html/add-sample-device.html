@@ -1,0 +1,495 @@
+﻿<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+        <!--This maintains the scale of the page based on the scale of the screen-->
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <meta name="author" content="HomeSeer Technologies"> 
+        <!--This liquid tag loads all of the necessary css files for HomeSeer-->
+        {{includefile '/bootstrap/css/page_common.css'}}
+        <link href="../bootstrap/css/addons-pro/steppers.min.css" rel="stylesheet">
+        <title>Add Sample Device</title>         
+    </head>     
+    <body class="body homeseer-skin">
+    <!--These liquid tags add the HomeSeer header and navbar to the top of the page when appropriate-->
+        {{includefile 'header.html'}}
+        {{includefile 'navbar.html'}}
+    <!--Primary container for the page content
+        The .container class ensures the page content is fit and centered to the screen-->
+        <div class="container">
+            <!-- MDB Steppers -->
+            <ul id="process-stepper" class="stepper linear">
+                <li class="step active">
+                    <div data-step-label="About this process" class="step-title waves-effect waves-dark">Intro</div>
+                    <div class="step-new-content" style="display: block;">
+                        This will guide you through the process to add a new sample device to your system.  These devices take the shape of different generic types that represent common smart home hardware.
+                        <div class="step-actions">
+                            <button id="btnStep1" class="waves-effect waves-dark btn btn-sm btn-primary next-step">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Choose the type of device to add" class="step-title waves-effect waves-dark">Device Type</div>
+                    <div class="step-new-content">
+                        <select class="mdb-select md-form" id="devicetype-sl" required>
+                            <option value="-1" disabled selected>Select a device type</option>
+                            <optgroup label="Single feature devices">
+                                <option value="0">Line-powered switch</option>
+                                <option value="1">Line-powered sensor</option>
+                            </optgroup>
+                        </select>
+                        <!--<label class="mdb-main-label" for="devicetype-sl">Device Type</label>-->
+                        <div class="step-actions" style="margin-top: 32px;">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Name the device" class="step-title waves-effect waves-dark">Device Name</div>
+                    <div id="namedevice-step" class="step-new-content">
+                        What is this device called?
+                        <div class="row">
+                            <div class="md-form col-12 ml-auto" style="margin-top: 16px;">
+                                <input id="devicename-input" type="text" class="form-control" required>
+                                <label id="devicename-input-label" for="devicename-input">Device name</label>
+                            </div>
+                        </div>
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Set the device's location" class="step-title waves-effect waves-dark">Device Location</div>
+                    <div id="location-step" class="step-new-content">
+                        Where is this device located?
+                        <br/>
+                        
+                        <div class="row align-items-center">
+                            {{if location1_display_first}}
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="picklocation1-radio" name="location1selectgroup" checked>
+                                <label class="form-check-label" for="picklocation1-radio"></label>                                
+                            </div>
+                            <div class="col-3">
+                                <select class="mdb-select md-form locationselect" id="deviceLocation1-sl">
+                                    <option value="-1" disabled selected>Choose a {{location_name}}</option>
+                                    {{for loc in locations}}
+                                    <option value="{{loc}}">{{loc}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                Or
+                            </div>
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="newlocation1-radio" name="location1selectgroup">
+                                <label class="form-check-label" for="newlocation1-radio"></label>
+                            </div>
+                            <div class="md-form col-3" style="margin-top: 16px;">
+                                <input id="location1-input" type="text" class="form-control locationinput" placeholder="Create new {{location_name}}">
+                                <label id="location1-input-label" for="location1-input">{{location_name}}</label>
+                            </div>
+                            {{else}}
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="picklocation2-radio" name="location2selectgroup" checked>
+                                <label class="form-check-label" for="picklocation2-radio"></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="mdb-select md-form locationselect" id="deviceLocation2-sl">
+                                    <option value="-1" disabled selected>Choose a {{location2_name}}</option>
+                                    {{for loc2 in locations2}}
+                                    <option value="{{loc2}}">{{loc2}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                Or
+                            </div>
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="newlocation2-radio" name="location2selectgroup" >
+                                <label class="form-check-label" for="newlocation2-radio"></label>
+                            </div>
+                            <div class="md-form col-3" style="margin-top: 16px;">
+                                <input id="location2-input" type="text" class="form-control locationinput" placeholder="Create new {{location2_name}}">
+                                <label id="location2-input-label" for="location2-input">{{location2_name}}</label>
+                            </div>
+                            {{end}}
+                        </div>
+                        <div class="row align-items-center">
+                            {{if location1_display_first}}
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="picklocation2-radio" name="location2selectgroup" checked>
+                                <label class="form-check-label" for="picklocation2-radio"></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="mdb-select md-form locationselect" id="deviceLocation2-sl">
+                                    <option value="-1" disabled selected>Choose a {{location2_name}}</option>
+                                    {{for loc2 in locations2}}
+                                    <option value="{{loc2}}">{{loc2}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                Or
+                            </div>
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="newlocation2-radio" name="location2selectgroup" >
+                                <label class="form-check-label" for="newlocation2-radio"></label>
+                            </div>
+                            <div class="md-form col-3" style="margin-top: 16px;">
+                                <input id="location2-input" type="text" class="form-control locationinput" placeholder="Create new {{location2_name}}">
+                                <label id="location2-input-label" for="location2-input">{{location2_name}}</label>
+                            </div>
+                            {{else}}
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="picklocation1-radio" name="location1selectgroup" checked>
+                                <label class="form-check-label" for="picklocation1-radio"></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="mdb-select md-form locationselect" id="deviceLocation1-sl">
+                                    <option value="-1" disabled selected>Choose a {{location_name}}</option>
+                                    {{for loc in locations}}
+                                    <option value="{{loc}}">{{loc}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                Or
+                            </div>
+                            <div class="col-1 form-check">
+                                <input type="radio" class="form-check-input" id="newlocation1-radio" name="location1selectgroup" >
+                                <label class="form-check-label" for="newlocation1-radio"></label>
+                            </div>
+                            <div class="md-form col-3" style="margin-top: 16px;">
+                                <input id="location1-input" type="text" class="form-control locationinput" placeholder="Create new {{location_name}}">
+                                <label id="location1-input-label" for="location1-input">{{location_name}}</label>
+                            </div>
+                            {{end}}
+                        </div>
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="verifyDeviceInfo">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div data-step-label="Double check your selections" class="step-title waves-effect waves-dark">Verify Input</div>
+                    <div id="verifydevice-step" class="step-new-content">
+                        <div>
+                            Before we continue, let's double check that everything looks right.
+                            <br/>
+                        </div>
+                        <div id="ver-type">
+                            <div class="jui-title">
+                                <small>Type</small>
+                            </div>
+                            <p id="ver-type-value"></p>
+                        </div>
+                        <div id="ver-name">
+                            <div class="jui-title">
+                                <small>Name</small>
+                            </div>
+                            <p id="ver-name-value"></p>
+                        </div>
+                        {{if location1_display_first}}
+                        <div id="ver-location">
+                            <div class="jui-title">
+                                <small>{{location_name}}</small>
+                            </div>
+                            <p id="ver-location-value"></p>
+                        </div>
+                        <div id="ver-location2">
+                            <div class="jui-title">
+                                <small>{{location2_name}}</small>
+                            </div>
+                            <p id="ver-location2-value"></p>
+                        </div>
+                        {{else}}
+                        <div id="ver-location2">
+                            <div class="jui-title">
+                                <small>{{location2_name}}</small>
+                            </div>
+                            <p id="ver-location2-value"></p>
+                        </div>
+                        <div id="ver-location">
+                            <div class="jui-title">
+                                <small>{{location_name}}</small>
+                            </div>
+                            <p id="ver-location-value"></p>
+                        </div>
+                        {{end}}
+                        <div id="ver-makeup">
+                            <div class="jui-title">
+                                <small>This device is made up of the following features:</small>
+                            </div>
+                            <p id="ver-makeup-value">
+
+                            </p>
+                        </div>
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-secondary previous-step">BACK</button>
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary next-step" data-feedback="createDevice">CONTINUE</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step-title waves-effect waves-dark">Finish</div>
+                    <div class="step-new-content">
+                        Device was successfully added to your HomeSeer system.
+                        <div class="step-actions">
+                            <button class="waves-effect waves-dark btn btn-sm btn-primary m-0 mt-4" onclick="finish()" type="button">Finish</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        {{includefile 'bootstrap/js/page_common.js'}}
+        <script type="text/javascript" src="../bootstrap/js/addons-pro/steppers.min.js"></script>
+        <script type="text/JavaScript">
+            $(document).ready(function () { $('.stepper').mdbStepper(); })
+            
+            $('select.locationselect').on('focus', function() {
+                var caller = $(this)[0];
+                if (caller.id === "deviceLocation2-sl") {
+                    var loc2selectradio = $('#picklocation2-radio');
+                    loc2selectradio.checked = true;
+                    loc2selectradio[0].setAttribute("checked", null);
+                    var loc2newradio = $('#newlocation2-radio');
+                    loc2newradio.checked = false;
+                    loc2newradio[0].removeAttribute("checked");
+                } else if (caller.id === "deviceLocation1-sl") {
+                    var loc1selectradio = $('#picklocation1-radio');
+                    loc1selectradio.checked = true;
+                    loc1selectradio[0].setAttribute("checked", null);
+                    var loc1newradio = $('#newlocation1-radio');
+                    loc1newradio.checked = false;
+                    loc1newradio[0].removeAttribute("checked");
+                }
+            })
+            
+            $('input.locationinput').on('focus', function() {
+                var caller = $(this)[0];
+                if (caller.id === "location2-input") {
+                    var loc2selectradio = $('#picklocation2-radio');
+                    loc2selectradio.checked = false;
+                    loc2selectradio[0].removeAttribute("checked");
+                    var loc2newradio = $('#newlocation2-radio');
+                    loc2newradio.checked = true;
+                    loc2newradio[0].setAttribute("checked", null);                 
+                } else if (caller.id === "location1-input") {
+                    var loc1selectradio = $('#picklocation1-radio');
+                    loc1selectradio.checked = false;
+                    loc1selectradio[0].removeAttribute("checked");
+                    var loc1newradio = $('#newlocation1-radio');
+                    loc1newradio.checked = true;
+                    loc1newradio[0].setAttribute("checked", null);
+                }
+            })
+            
+            var gDeviceName = "";
+            var gDeviceType = "-1";
+            var gDeviceLocation = "";
+            var gDeviceLocation2 = "";
+            var gDeviceRef = -1;
+            
+            function recordSelectedType() {
+              
+              var stepper = $('#process-stepper');
+            
+              var deviceTypeSelect = $('#devicetype-sl')[0];
+              var deviceTypeErrorLabel = $('#devicetype-error');
+              deviceTypeErrorLabel.remove();
+              
+              gDeviceType = deviceTypeSelect.value;
+              if (gDeviceType === "-1") {
+                  deviceTypeSelect.parent.append('<label id="devicetype-error" class="invalid">You must pick a device type</label>');
+                  stepper.destroyFeedback();
+                  return;
+              }
+              
+              stepper.nextStep();
+            }
+            
+            function validateDeviceName() {
+              
+              var stepper = $('#process-stepper');
+              
+              var deviceNameInput = $('#devicename-input')[0];
+              gDeviceName = deviceNameInput.value;
+              var deviceNameErrorLabel = $('#devicename-input-error');
+              if (gDeviceName == null || gDeviceName.trim() === "") {
+            
+                  var deviceNameInputBlock = deviceNameInput.parent();
+                  if (deviceNameErrorLabel.length === 0) {
+                      deviceNameInputBlock.append('<label id="devicename-input-error" for="devicename-input" class="invalid">You must specify a name</label>')
+                  }
+                  stepper.destroyFeedback();
+                  return;
+              }
+            
+              deviceNameErrorLabel.remove();
+              stepper.nextStep();
+            }
+            
+            function verifyDeviceInfo() {
+            
+                var stepper = $('#process-stepper');
+                
+                var location1Select = $('#deviceLocation1-sl')[0];
+                var location2Select = $('#deviceLocation2-sl')[0];
+                var location1input = $('#location1-input')[0];
+                var location2input = $('#location2-input')[0];
+                var loc1radio = $('#picklocation1-radio')[0];
+                var loc2radio = $('#picklocation2-radio')[0];
+                
+                var locationErrorLabel = $('#deviceLocation-error');
+                locationErrorLabel.remove();
+
+                var deviceTypeSelect = $('#devicetype-sl')[0];
+                gDeviceType = deviceTypeSelect.value;
+                var deviceNameInput = $('#devicename-input')[0];
+                gDeviceName = deviceNameInput.value;
+                
+              try {
+                  
+                  if (loc1radio.checked) {
+                      if (location1Select.value === "-1") {
+                          $('#location-step').append('<label id="deviceLocation-error" class="invalid">You must specify a {{location_name}}</label>');
+                          stepper.destroyFeedback();
+                          return;
+                      }
+
+                      gDeviceLocation = location1Select.value;
+                  } else {
+                      if (location1input.value.trim() === "") {
+                          $('#location-step').append('<label id="deviceLocation-error" class="invalid">You must specify a {{location_name}}</label>');
+                          stepper.destroyFeedback();
+                          return;
+                      }
+
+                      gDeviceLocation = location1input.value;
+                  }
+
+                  if (loc2radio.checked) {
+                      if (location2Select.value === "-1") {
+                          $('#location-step').append('<label id="deviceLocation-error" class="invalid">You must specify a {{location2_name}}</label>');
+                          stepper.destroyFeedback();
+                          return;
+                      }
+
+                      gDeviceLocation2 = location2Select.value;
+                  } else {
+                      if (location2input.value.trim() === "") {
+                          $('#location-step').append('<label id="deviceLocation-error" class="invalid">You must specify a {{location_name}}</label>');
+                          stepper.destroyFeedback();
+                          return;
+                      }
+                      
+                      gDeviceLocation2 = location2input.value;
+                  }
+            
+                  $('#ver-name-value').text(gDeviceName);
+                  $('#ver-location-value').text(gDeviceLocation);
+                  $('#ver-location2-value').text(gDeviceLocation2);
+                  
+                  var devObject = {type: gDeviceType, name: gDeviceName, location: gDeviceLocation, location2: gDeviceLocation2};
+                  var postObject = {action: "verify", device: devObject};
+            
+                  $.ajax({
+                      type: "POST",
+                      async: "true",
+                      url: '/HomeSeerSamplePluginVB/add-sample-device.html',
+                      cache: false,
+                      data: JSON.stringify(postObject),
+                      success: function(response){
+                          if (response === "error") {
+                              onPostError("Error");
+                          }
+                          else if (response.startsWith('<')) {
+                              onPostError("Error");
+                          }
+                          else if (response.startsWith('{')) {
+                              onVerifyPostSuccess(response);
+                          }
+                          else {
+                              onPostError("Error");
+                          }
+                      },
+                      error: function(){ onPostError("Error"); }
+                  });
+              }
+              catch (exception) {
+                  
+                  location1Select.parent.append('<label id="deviceLocation-error" class="invalid">An error occured trying to identify your selection.  Please try again.</label>');
+                  stepper.destroyFeedback();
+              }
+              
+            }
+            
+            function onVerifyPostSuccess(response) {
+              
+              var devObject = JSON.parse(response);
+              $('#ver-type-value').text(devObject.typeDesc);
+              var featureListHtml = "<ul>";
+              for (let devFeat of devObject.features) {
+                  featureListHtml += "<li>" + devFeat + "</li>";
+              }
+              featureListHtml += "</ul>";
+              $('#ver-makeup-value').html(featureListHtml);
+              $('#process-stepper').nextStep();
+            }
+            
+            function onPostError(message) {
+            
+              $('#process-stepper').destroyFeedback();
+              alert(message);
+            }
+            
+            function createDevice() {
+            
+              var devObject = {type: gDeviceType, name: gDeviceName, location: gDeviceLocation, location2: gDeviceLocation2};
+              var postObject = {action: "create", device: devObject};
+              
+              $.ajax({
+                  type: "POST",
+                  async: "true",
+                  url: '/HomeSeerSamplePluginVB/add-sample-device.html',
+                  cache: false,
+                  data: JSON.stringify(postObject),
+                  success: function(response){
+                      if (response === "error") {
+                          onPostError("Error");
+                      }
+                      else if (response.startsWith('<')) {
+                          onPostError("Error");
+                      }
+                      else if (response.startsWith('{')) {
+                          onCreatePostSuccess(response);
+                      }
+                      else {
+                          onPostError("Error");
+                      }
+                  },
+                  error: function(){ onPostError("Error"); }
+              });
+            }
+            
+            function onCreatePostSuccess(response) {
+            
+              var devObject = JSON.parse(response);
+              gDeviceRef = devObject.ref;
+              $('#process-stepper').nextStep();              
+            }
+          
+            
+            function finish() {
+              var devicePropPage = window.location.origin + "/devices.html?ref=" + gDeviceRef + "&subpage=devprop";
+              window.location.assign(devicePropPage);
+            }
+        </script>
+    </body>     
+</html>
