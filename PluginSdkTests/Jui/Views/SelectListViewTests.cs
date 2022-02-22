@@ -30,6 +30,7 @@ namespace HomeSeer.Jui.Views {
         private static IEnumerable<ESelectListType> StyleTestCaseSource() {
             yield return ESelectListType.DropDown;
             yield return ESelectListType.RadioList;
+            yield return ESelectListType.SearchableDropDown;
         }
 
         private static IEnumerable<int> ValidSelectionTestCaseSource() {

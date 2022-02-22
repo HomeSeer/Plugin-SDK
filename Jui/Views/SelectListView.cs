@@ -186,12 +186,13 @@ namespace HomeSeer.Jui.Views {
 			//Add the select list
 			switch (Style) {
 				case ESelectListType.DropDown:
-					//Add the title
-					sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
+                case ESelectListType.SearchableDropDown:
+                    //Add the title
+                    sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
 					sb.Append(Environment.NewLine);
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\">");
+					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\" {(Style== ESelectListType.SearchableDropDown ? "searchable=\"Search...\"" : "")}>");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
 					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>");
