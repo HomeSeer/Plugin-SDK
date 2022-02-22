@@ -160,6 +160,40 @@ namespace HomeSeer.PluginSdk.Devices {
                 return GetCodeFromAddressString(_address) ?? "";
             }
         }
+        
+        /// <summary>
+        /// The current status of the device/feature
+        /// <para>
+        /// This is the exact string that users see in the UI
+        /// </para>
+        /// </summary>
+        /// <seealso cref="StatusString"/>
+        public string DisplayedStatus {
+            get {
+                if (Changes.ContainsKey(EProperty.DisplayedStatus)) {
+                    return (string) Changes[EProperty.DisplayedStatus];
+                }
+                
+                return _displayedStatus;
+            }
+            set {
+                if (_cacheChanges && value == _displayedStatus) {
+                    Changes.Remove(EProperty.DisplayedStatus);
+                    return;
+                }
+                if (Changes.ContainsKey(EProperty.DisplayedStatus)) {
+                    Changes[EProperty.DisplayedStatus] = value;
+                }
+                else {
+                    Changes.Add(EProperty.DisplayedStatus, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _displayedStatus = value ?? "";
+            }
+        }
 
         /// <summary>
         /// The address of an image that represents the current status of the device/feature
@@ -511,11 +545,10 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// The current status of the device/feature.
-        /// <para>
-        /// This is the primary piece of information that users will look at.
-        /// </para>
+        /// The current status of the device/feature. (incorrect - the raw, unformatted status string)
+        /// <para>WARNING - This property is being replaced by <see cref="StatusString"/> and <see cref="DisplayedStatus"/></para>
         /// </summary>
+        [Obsolete("This property is being replaced by StatusString and DisplayedStatus", false)]
         public string Status {
             get {
                 if (Changes.ContainsKey(EProperty.Status)) {
@@ -540,6 +573,40 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _status = value ?? "";
+            }
+        }
+        
+        /// <summary>
+        /// The raw, unformatted status of the device/feature.
+        /// <para>
+        /// This is combined with a string returned from a <see cref="StatusGraphic"/> or <see cref="StatusControl"/>
+        ///  that matches the current <see cref="Value"/> to produce the <see cref="DisplayedStatus"/>
+        /// </para>
+        /// </summary>
+        public string StatusString {
+            get {
+                if (Changes.ContainsKey(EProperty.StatusString)) {
+                    return (string) Changes[EProperty.StatusString];
+                }
+                
+                return _statusString;
+            }
+            set {
+                if (_cacheChanges && value == _statusString) {
+                    Changes.Remove(EProperty.StatusString);
+                    return;
+                }
+                if (Changes.ContainsKey(EProperty.StatusString)) {
+                    Changes[EProperty.StatusString] = value;
+                }
+                else {
+                    Changes.Add(EProperty.StatusString, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _statusString = value ?? "";
             }
         }
         
@@ -730,6 +797,8 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Setting this to TRUE allows you to quickly revert changes made by discarding <see cref="Changes"/>
         /// </remarks>
         protected bool                       _cacheChanges           = false;
+        /// <inheritdoc cref="DisplayedStatus"/>
+        protected string _displayedStatus = "";
         /// <inheritdoc cref="Image"/>
         protected string         _image             = "";
         /// <inheritdoc cref="Interface"/>
@@ -752,6 +821,8 @@ namespace HomeSeer.PluginSdk.Devices {
         protected ERelationship  _relationship      = ERelationship.NotSet;
         /// <inheritdoc cref="Status"/>
         protected string         _status            = "";
+        /// <inheritdoc cref="StatusString"/>
+        protected string _statusString = "";
         /// <inheritdoc cref="TypeInfo"/>
         protected TypeInfo       _typeInfo          = new TypeInfo();
         /// <inheritdoc cref="UserAccess"/>

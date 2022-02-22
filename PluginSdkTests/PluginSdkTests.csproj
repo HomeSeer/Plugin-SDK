@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -42,10 +46,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Devices\PlugExtraDataTests.cs" />
     <Compile Include="Devices\Tests\StatusGraphicTests.cs" />
     <Compile Include="Devices\Tests\ValueRangeTests.cs" />
     <Compile Include="Jui\Tests\SerializationTests.cs" />
     <Compile Include="Jui\Tests\ViewTests.cs" />
+    <Compile Include="Jui\Views\AbstractJuiViewTestFixture.cs" />
+    <Compile Include="Jui\Views\AbstractViewTests.cs" />
+    <Compile Include="Jui\Views\NavigateButtonViewTests.cs" />
+    <Compile Include="Jui\Views\InputViewTests.cs" />
+    <Compile Include="Jui\Views\LabelViewTests.cs" />
+    <Compile Include="Jui\Views\SelectListViewTests.cs" />
+    <Compile Include="Jui\Views\TextAreaViewTests.cs" />
+    <Compile Include="Jui\Views\ToggleViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -56,6 +56,20 @@ namespace HomeSeer.PluginSdk.Devices {
             _namedData.Add(key, data);
             return true;
         }
+
+        /// <summary>
+        /// Get the item with the specified key
+        /// </summary>
+        /// <param name="key">The key of the item to get</param>
+        /// <returns>The string represented by the specified <paramref name="key"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified key is null or whitespace.</exception>
+        public string GetNamed(string key) {
+            if (string.IsNullOrWhiteSpace(key)) {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return _namedData[key];
+        }
         
         /// <summary>
         /// Get the item with the specified key deserialized as the specified type
@@ -83,18 +97,12 @@ namespace HomeSeer.PluginSdk.Devices {
         }
         
         /// <summary>
-        /// Get the item with the specified key
+        /// Access the item with the specified key
         /// </summary>
-        /// <param name="key">The key of the item to get</param>
+        /// <param name="key">The key of the item</param>
         /// <exception cref="ArgumentNullException">Thrown when the specified key is null or whitespace.</exception>
         public string this[string key] {
-            get {
-                if (string.IsNullOrWhiteSpace(key)) {
-                    throw new ArgumentNullException(nameof(key));
-                }
-
-                return _namedData[key];
-            }
+            get => GetNamed(key);
             set {
                 if (string.IsNullOrWhiteSpace(key)) {
                     throw new ArgumentNullException(nameof(key));
@@ -177,6 +185,15 @@ namespace HomeSeer.PluginSdk.Devices {
             _unNamedData.Add(data);
             return _unNamedData.Count - 1;
         }
+
+        /// <summary>
+        /// Get the non-keyed item located at the specified index in the collection.
+        /// </summary>
+        /// <param name="index">The index of the non-keyed item to get.</param>
+        /// <exception cref="IndexOutOfRangeException">Thrown if the <paramref name="index"/> is out of bounds</exception>
+        public string GetUnNamed(int index) {
+            return _unNamedData[index];
+        }
         
         /// <summary>
         /// Get the non-keyed item located at the specified index in the collection deserialized to the specified type.
@@ -205,9 +222,9 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// Get the non-keyed item located at the specified index in the collection.
+        /// Access the non-keyed item located at the specified index in the collection.
         /// </summary>
-        /// <param name="index">The index of the non-keyed item to get.</param>
+        /// <param name="index">The index of the non-keyed item.</param>
         public string this[int index] {
             get => _unNamedData[index];
             set => _unNamedData[index] = value;

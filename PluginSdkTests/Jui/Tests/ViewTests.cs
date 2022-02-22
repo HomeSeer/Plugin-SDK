@@ -68,7 +68,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			}
 			catch (ArgumentNullException e) {
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		
@@ -88,7 +87,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			}
 			catch (ArgumentNullException e) {
 				Assert.AreEqual("value", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		
@@ -131,7 +129,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			}
 			catch (ArgumentNullException e) {
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		
@@ -151,7 +148,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			}
 			catch (ArgumentNullException e) {
 				Assert.AreEqual("name", e.ParamName);
-				Assert.Pass();
 			}
 		}
 
@@ -204,7 +200,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 
@@ -241,7 +236,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("options", e.ParamName);
-				Assert.Pass();
 			}
 		}
 
@@ -270,11 +264,9 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("optionKeys", e.ParamName);
-				Assert.Pass();
 			}
 			catch (ArgumentException)
 			{
-				Assert.Pass();
 			}
 		}
 
@@ -309,7 +301,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentOutOfRangeException e)
 			{
 				Assert.AreEqual("selection", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		#endregion
@@ -349,7 +340,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		#endregion
@@ -390,7 +380,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		#endregion
@@ -431,7 +420,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		#endregion
@@ -480,7 +468,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		#endregion
@@ -531,7 +518,6 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			catch (ArgumentNullException e)
 			{
 				Assert.AreEqual("id", e.ParamName);
-				Assert.Pass();
 			}
 		}
 		#endregion
