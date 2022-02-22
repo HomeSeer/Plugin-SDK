@@ -1,4 +1,5 @@
 using System;
+using HomeSeer.PluginSdk.Systems;
 
 namespace HomeSeer.PluginSdk {
 
@@ -42,8 +43,13 @@ namespace HomeSeer.PluginSdk {
             Telephone = 2,
             Both = 3
         }
-    
-        // For HSEvent callbacks
+        
+        /// <summary>
+        /// For HSEvent callbacks
+        ///
+        /// <para>WARNING - This is being deprecated. Please use the values provided by <see cref="EHsSystemEvent"/>.</para>
+        /// </summary>
+        [Obsolete("This is being deprecated. Please use the values provided by Types.EHsSystemEvent.", false)]
         public enum HSEvent {
             // X10 = 1
             LOG = 2,
