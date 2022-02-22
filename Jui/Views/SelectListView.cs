@@ -45,6 +45,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// The text displayed when <see cref="Selection"/> equals -1. If this property is null or empty, "Select an option" is displayed. 
 		/// </summary>
+        /// <remarks>This property is not used when <see cref="Style"/> is <see cref="ESelectListType.RadioList"/></remarks>
 		[JsonProperty("default_selection_text")]
 		public string DefaultSelectionText { get; set; }
 
