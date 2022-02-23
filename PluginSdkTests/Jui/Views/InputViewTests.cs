@@ -23,8 +23,8 @@ namespace HomeSeer.Jui.Views {
             yield return EInputType.Url;
             yield return EInputType.Password;
             yield return EInputType.Decimal;
-            //TODO Date
-            //TODO Time
+            yield return EInputType.Date;
+            yield return EInputType.Time;
             //TODO DateTime
         }
         
@@ -53,6 +53,19 @@ namespace HomeSeer.Jui.Views {
                 EInputType.Decimal, 
                 RANDOMIZER.NextFloat().ToString(CultureInfo.CurrentCulture)
             };
+            yield return new object[] {
+                EInputType.Date,
+                "2/22/2022"
+            };
+            yield return new object[] {
+                EInputType.Time,
+                "12:30PM"
+            };
+            yield return new object[] {
+                EInputType.Time,
+                "22:15"
+            };
+            //TODO DateTime
         }
         
         private static IEnumerable<string> ValueTestCaseSource() {
@@ -68,6 +81,15 @@ namespace HomeSeer.Jui.Views {
                 EInputType.Url, 
                 RANDOMIZER.GetString()
             };
+            yield return new object[] {
+                EInputType.Date, 
+                RANDOMIZER.GetString()
+            };
+            yield return new object[] {
+                EInputType.Time, 
+                RANDOMIZER.GetString()
+            };
+            //TODO DateTime
         }
 
         private static IEnumerable<string> InvalidNameTestCaseSource() {
@@ -130,7 +152,7 @@ namespace HomeSeer.Jui.Views {
             var view = new InputView(DEFAULT_ID, DEFAULT_NAME, value, type);
             Assert.AreEqual(value, view.Value);
         }
-
+        
         [Test]
         [Description("Get the input type and expect the default input type to be returned.")]
         [Author("JLW")]
@@ -148,6 +170,8 @@ namespace HomeSeer.Jui.Views {
                 view.InputType = inputType;
             });
         }
+        
+        //TODO InputType set clears value
 
         [TestCaseSource(nameof(InputTypesTestCaseSource))]
         [Description("Get the input type after settings it and expect the same input type to be returned.")]
@@ -203,7 +227,7 @@ namespace HomeSeer.Jui.Views {
         public void Value_SetInvalidForType_Throws(EInputType inputType, string value) {
             InputView view = GetDefaultInputView();
             view.InputType = inputType;
-            Assert.DoesNotThrow(() => {
+            Assert.Throws<InvalidValueForTypeException>(() => {
                 view.Value = value;
             });
         }
