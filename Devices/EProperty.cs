@@ -112,11 +112,11 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         FeatureDisplayType        = 42,
         /// <summary>
-        /// <see cref="HsDevice.DisplayedStatus"/>
+        /// <see cref="AbstractHsDevice.DisplayedStatus"/>
         /// </summary>
         DisplayedStatus = 44,
         /// <summary>
-        /// <see cref="HsDevice.StatusString"/>
+        /// <see cref="AbstractHsDevice.StatusString"/>
         /// </summary>
         StatusString = 45,
 
