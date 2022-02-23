@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using HomeSeer.Jui.Types;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace HomeSeer.Jui.Views {
 
@@ -111,10 +112,7 @@ namespace HomeSeer.Jui.Views {
 
 			switch (InputType) {
 				case EInputType.Text:
-				//TODO validate date and time input
-				case EInputType.Date:
-				case EInputType.Time:
-				case EInputType.DateTime:
+                case EInputType.DateTime:
 					//Anything is valid for text
 					return true;
 				case EInputType.Number:
@@ -133,6 +131,22 @@ namespace HomeSeer.Jui.Views {
 				case EInputType.Password:
 					//Password types merely restrict the visibility of characters not the input
 					return true;
+                case EInputType.Date:
+                    try {
+                        _ = DateTime.Parse(value, CultureInfo.CurrentCulture);
+                        return true;
+                    }
+                    catch (Exception) {
+                        return false;
+                    }
+                case EInputType.Time:
+                    try {
+                        _ = DateTime.Parse(value);
+                        return true;
+                    }
+                    catch (Exception) {
+                        return false;
+                    }
 				default:
 					return false;
 			}
@@ -148,45 +162,59 @@ namespace HomeSeer.Jui.Views {
 
 		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
-
-			var sb = new StringBuilder();
+            var value = $"{Value.Replace("\"", "&quot;")}";
+            var id = $"{Id}-par";
+            var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
-			//Open the form div
-			sb.Append($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
-			sb.Append(Environment.NewLine);
-            //Add the input
-            sb.Append(GetIndentStringFromNumber(indent+1));
-            string typeString = null;
             switch (InputType) {
-	            case EInputType.Text:
-		            typeString = "text\" ";
-		            break;
-	            case EInputType.Number:
-		            typeString = "number\" step=\"1\" pattern=\"[0-9]*\" ";
-		            break;
-	            case EInputType.Email:
-		            typeString = "email\" ";
-		            break;
-	            case EInputType.Url:
-		            typeString = "url\" ";
-		            break;
-	            case EInputType.Password:
-		            typeString = "password\" ";
-		            break;
-	            case EInputType.Decimal:
-		            typeString = "number\" step=\"0.001\" ";
-		            break;
-	            default:
-		            throw new ArgumentOutOfRangeException();
+                case EInputType.Date:
+                case EInputType.Time:
+                    sb.Append("<div class=\"md-form\">");
+                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
+                    sb.Append($"<input type=\"text\" id=\"{id}\" class=\"form-control");
+                    sb.Append(InputType == EInputType.Date ? "datepicker jui-date" : "timepicker jui-time");
+                    sb.Append($"\" value=\"{value}\">");
+                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
+                    sb.Append($"<label for=\"{id}\">{Name}</label>");
+                    break;
+                default:
+                    //Open the form div
+                    sb.Append($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
+                    //Add the input
+                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
+                    string typeString = null;
+                    switch (InputType) {
+                        case EInputType.Text:
+                            typeString = "text\" ";
+                            break;
+                        case EInputType.Number:
+                            typeString = "number\" step=\"1\" pattern=\"[0-9]*\" ";
+                            break;
+                        case EInputType.Email:
+                            typeString = "email\" ";
+                            break;
+                        case EInputType.Url:
+                            typeString = "url\" ";
+                            break;
+                        case EInputType.Password:
+                            typeString = "password\" ";
+                            break;
+                        case EInputType.Decimal:
+                            typeString = "number\" step=\"0.001\" ";
+                            break;
+                        case EInputType.DateTime:
+                            //not supported yet
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value.Replace("\"", "&quot;")}\">");
+                    //Add the hint label
+                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
+                    sb.Append($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
+                    break;
             }
-            sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value.Replace("\"", "&quot;")}\">");
-            sb.Append(Environment.NewLine);
-            //Add the hint label
-            sb.Append(GetIndentStringFromNumber(indent+1));
-            sb.Append($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
-            sb.Append(Environment.NewLine);
             //Close the form div
-            sb.Append(GetIndentStringFromNumber(indent));
+            sb.AppendLine(GetIndentStringFromNumber(indent));
             sb.Append("</div>");
             sb.Append(Environment.NewLine);
 			
