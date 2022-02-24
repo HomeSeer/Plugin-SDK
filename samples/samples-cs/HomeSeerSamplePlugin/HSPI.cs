@@ -199,6 +199,17 @@ namespace HSPI_HomeSeerSamplePlugin {
             settingsPage3.WithInput(Constants.Settings.Sp3SampleInput6Id,
                                     Constants.Settings.Sp3SampleInput6Name,
                                     EInputType.Decimal);
+
+            //Add a date InputView to the page
+            settingsPage3.WithInput(Constants.Settings.Sp3SampleInput7Id,
+                                    Constants.Settings.Sp3SampleInput7Name,
+                                    EInputType.Date);
+
+            //Add a time InputView to the page
+            settingsPage3.WithInput(Constants.Settings.Sp3SampleInput8Id,
+                                    Constants.Settings.Sp3SampleInput8Name,
+                                    EInputType.Time);
+
             //Add the third page to the list of plugin settings pages
             Settings.Add(settingsPage3.Page);
         }
@@ -308,6 +319,18 @@ namespace HSPI_HomeSeerSamplePlugin {
             {
                 inputValue = inputSavedValue;
             }
+            string dateInputSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigDateInputId);
+            string dateInputValue = Constants.Devices.DeviceConfigDateInputValue;
+            if (!string.IsNullOrEmpty(dateInputSavedValue))
+            {
+                dateInputValue = dateInputSavedValue;
+            }
+            string timeInputSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigTimeInputId);
+            string timeInputValue = Constants.Devices.DeviceConfigTimeInputValue;
+            if (!string.IsNullOrEmpty(timeInputSavedValue))
+            {
+                timeInputValue = timeInputSavedValue;
+            }
             string textAreaSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigTextAreaId);
             string textAreaValue = "";
             if (!string.IsNullOrEmpty(textAreaSavedValue))
@@ -351,6 +374,16 @@ namespace HSPI_HomeSeerSamplePlugin {
             deviceConfigPage.WithInput(Constants.Devices.DeviceConfigInputId,
                                        Constants.Devices.DeviceConfigInputName,
                                        inputValue);
+
+            //Add a date InputView to the page
+            deviceConfigPage.WithInput(Constants.Devices.DeviceConfigDateInputId,
+                                       Constants.Devices.DeviceConfigDateInputName,
+                                       dateInputValue, EInputType.Date);
+
+            //Add a time InputView to the page
+            deviceConfigPage.WithInput(Constants.Devices.DeviceConfigTimeInputId,
+                                       Constants.Devices.DeviceConfigTimeInputName,
+                                       timeInputValue, EInputType.Time);
 
             //Add a text area to the page
             deviceConfigPage.WithTextArea(Constants.Devices.DeviceConfigTextAreaId,
@@ -410,6 +443,22 @@ namespace HSPI_HomeSeerSamplePlugin {
                     if (v != null)
                     {
                         SetExtraData(deviceRef, Constants.Devices.DeviceConfigInputId, v.Value);
+                    }
+                }
+                else if (view.Id == Constants.Devices.DeviceConfigDateInputId)
+                {
+                    InputView v = view as InputView;
+                    if (v != null)
+                    {
+                        SetExtraData(deviceRef, Constants.Devices.DeviceConfigDateInputId, v.Value);
+                    }
+                }
+                else if (view.Id == Constants.Devices.DeviceConfigTimeInputId)
+                {
+                    InputView v = view as InputView;
+                    if (v != null)
+                    {
+                        SetExtraData(deviceRef, Constants.Devices.DeviceConfigTimeInputId, v.Value);
                     }
                 }
                 else if (view.Id == Constants.Devices.DeviceConfigTextAreaId)
