@@ -167,6 +167,12 @@ namespace HSPI_HomeSeerSamplePlugin {
                                          
             //Add a time span to the page
             settingsPage2.WithTimeSpan(Constants.Settings.Sp2SampleTimeSpanId, Constants.Settings.Sp2SampleTimeSpanName);
+
+            //Add a navigate button to the page
+            settingsPage2.WithView(new NavigateButtonView(Constants.Settings.Sp2SampleNavigateButtonId, 
+                                                          Constants.Settings.Sp2SampleNavigateButtonName, 
+                                                          "/HomeSeerSamplePlugin/add-sample-device.html"));
+
             
             //Add the second page to the list of plugin settings pages
             Settings.Add(settingsPage2.Page);
@@ -396,6 +402,11 @@ namespace HSPI_HomeSeerSamplePlugin {
                                        timeSpanValue,
                                        true,
                                        false);
+
+            //Add a navigate button to the page
+            deviceConfigPage.WithView(new NavigateButtonView(Constants.Devices.DeviceConfigNavigateButtonId,
+                                                            Constants.Devices.DeviceConfigNavigateButtonName,
+                                                            "/HomeSeerSamplePlugin/add-sample-device.html"));
                                        
             return deviceConfigPage.Page.ToJsonString();
         }

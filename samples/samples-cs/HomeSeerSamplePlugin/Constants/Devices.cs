@@ -55,6 +55,9 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         public static string DeviceConfigTimeSpanId => $"{DeviceConfigPageId}-sampletimespan";
         public const string DeviceConfigTimeSpanName = "Sample Time Span";
 
+        public static string DeviceConfigNavigateButtonId => $"{DeviceConfigPageId}-samplenavigatebutton";
+        public const string DeviceConfigNavigateButtonName = "Navigate to Add Sample Device page";
+
     }
 
 }
