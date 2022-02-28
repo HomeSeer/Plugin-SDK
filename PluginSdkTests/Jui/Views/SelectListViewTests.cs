@@ -79,28 +79,6 @@ namespace HomeSeer.Jui.Views {
             yield return RANDOMIZER.NextBool().ToString();
         }
 
-        private static IEnumerable<object[]> InvalidUpdateTestCaseSource() {
-            yield return new object[] {
-                new List<string> {
-                    "option1", 
-                    "option2",
-                    "option3",
-                    "option4"
-                },
-                3
-            };
-            yield return new object[] {
-                new List<string> {
-                    "option1", 
-                    "option2",
-                    "option3",
-                    "option4",
-                    "option5"
-                }, 
-                4
-            };
-        }
-
         private static IEnumerable<List<string>> InvalidOptionsTestCaseSource() {
             yield return null;
             yield return new List<string>();
@@ -254,8 +232,6 @@ namespace HomeSeer.Jui.Views {
             Assert.AreEqual(selection, view.Selection);
         }
         
-        //TODO Update with invalid object type
-        
         [TestCaseSource(nameof(ValidSelectionTestCaseSource))]
         [Description("Call Update with a valid view and expect Selection to be set correctly.")]
         [Author("JLW")]
@@ -268,17 +244,6 @@ namespace HomeSeer.Jui.Views {
             Assert.AreEqual(selection, view.Selection);
         }
 
-        [TestCaseSource(nameof(InvalidUpdateTestCaseSource))]
-        [Description("Call Update with an invalid view and expect an exception to be thrown.")]
-        [Author("JLW")]
-        public void Update_InvalidSelection_ThrowsException(List<string> options, int selection) {
-            SelectListView view = GetDefaultView();
-            var updateView = new SelectListView(DEFAULT_ID, DEFAULT_NAME, options) {
-                Selection = selection
-            };
-            view.Update(updateView);
-        }
-        
         [TestCaseSource(nameof(ValidSelectionTestCaseSource))]
         [Description("Call UpdateValue with a valid value and expect Selection to be set.")]
         [Author("JLW")]
@@ -315,16 +280,7 @@ namespace HomeSeer.Jui.Views {
             view.Selection = selection;
             Assert.AreEqual(option, view.GetSelectedOption());
         }
-        
-        [TestCaseSource(nameof(InvalidSelectionTestCaseSource))]
-        [Description("Call GetSelectedOption when the selection is invalid and expect an empty string to be returned.")]
-        [Author("JLW")]
-        public void GetSelectedOption_InvalidSelection_ReturnsEmptyString(int selection) {
-            SelectListView view = GetDefaultView();
-            view.Selection = selection;
-            Assert.AreEqual(string.Empty, view.GetSelectedOption());
-        }
-        
+
         [TestCaseSource(nameof(ValidSelectionOptionKeyTestCaseSource))]
         [Description("Call GetSelectedOptionKey when the selection is valid and expect the correct option key to be returned.")]
         [Author("JLW")]
@@ -333,16 +289,7 @@ namespace HomeSeer.Jui.Views {
             view.Selection = selection;
             Assert.AreEqual(optionKey, view.GetSelectedOptionKey());
         }
-        
-        [TestCaseSource(nameof(InvalidSelectionTestCaseSource))]
-        [Description("Call GetSelectedOptionKey when the selection is invalid and expect an empty string to be returned.")]
-        [Author("JLW")]
-        public void GetSelectedOptionKey_InvalidSelection_ReturnsEmptyString(int selection) {
-            SelectListView view = GetDefaultView();
-            view.Selection = selection;
-            Assert.AreEqual(string.Empty, view.GetSelectedOptionKey());
-        }
-        
+
         [TestCaseSource(nameof(StyleTestCaseSource))]
         [Description("Call ToHtml and expect no exceptions to be thrown.")]
         [Author("JLW")]
