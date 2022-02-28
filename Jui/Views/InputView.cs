@@ -171,7 +171,7 @@ namespace HomeSeer.Jui.Views {
                 case EInputType.Time:
                     sb.Append("<div class=\"md-form\">");
                     sb.AppendLine(GetIndentStringFromNumber(indent+1));
-                    sb.Append($"<input type=\"text\" id=\"{id}\" class=\"form-control");
+                    sb.Append($"<input type=\"text\" id=\"{id}\" class=\"form-control ");
                     sb.Append(InputType == EInputType.Date ? "datepicker jui-date" : "timepicker jui-time");
                     sb.Append($"\" value=\"{value}\">");
                     sb.AppendLine(GetIndentStringFromNumber(indent+1));
