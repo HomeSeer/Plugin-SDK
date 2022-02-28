@@ -26,7 +26,8 @@ namespace HomeSeer.Jui.Views {
 		/// </summary>
 		/// <exception cref="InvalidValueForTypeException">Thrown when the value is invalid for the input type</exception>
 		[JsonProperty("value")]
-		public string Value { get => _value;
+		public string Value { 
+            get => _value;
             set {
                 if (!IsValueValidForType(value)) {
                     throw new InvalidValueForTypeException("The new value is invalid for the input type");
