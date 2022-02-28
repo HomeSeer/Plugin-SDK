@@ -24,9 +24,19 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// The current value of the field
 		/// </summary>
+		/// <exception cref="InvalidValueForTypeException">Thrown when the value is invalid for the input type</exception>
 		[JsonProperty("value")]
-		public string Value { get; set; } = "";
+		public string Value { get => _value;
+            set {
+                if (!IsValueValidForType(value)) {
+                    throw new InvalidValueForTypeException("The new value is invalid for the input type");
+                }
+                _value = value;
+            }
+        }
 
+        private string _value = string.Empty;
+        
 		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of an InputView with an ID, a Name, and the specified style.
@@ -36,12 +46,10 @@ namespace HomeSeer.Jui.Views {
 		/// <param name="type">The style of the input. DEFAULT: <see cref="EInputType.Text"/></param>
 		[JsonConstructor]
 		public InputView(string id, string name, EInputType type = EInputType.Text) : base(id, name) {
-			
-			if (string.IsNullOrWhiteSpace(name)) {
+            if (string.IsNullOrWhiteSpace(name)) {
 				throw new ArgumentNullException(nameof(name));
 			}
-			
-			Type = EViewType.Input;
+            Type = EViewType.Input;
 			InputType = type;
 		}
 
@@ -60,10 +68,7 @@ namespace HomeSeer.Jui.Views {
             }
 			Type      = EViewType.Input;
 			InputType = type;
-			if (!IsValueValidForType(value)) {
-				throw new InvalidValueForTypeException("The new value is invalid for the input type");
-			}
-			Value = value ?? "";
+            Value = value ?? string.Empty;
 		}
 
 		/// <inheritdoc cref="AbstractView.Update"/>
@@ -84,22 +89,13 @@ namespace HomeSeer.Jui.Views {
 				throw new InvalidOperationException("The original view type does not match the type in the update");
 			}*/
 
-			if (!IsValueValidForType(updatedInputView.Value)) {
-				throw new InvalidValueForTypeException("The new value is invalid for the input type");
-			}
-			
-			Value = updatedInputView.Value ?? "";
+            Value = updatedInputView.Value ?? string.Empty;
 
 		}
 
 		/// <inheritdoc cref="AbstractView.UpdateValue"/>
 		public override void UpdateValue(string value) {
-			
-			if (!IsValueValidForType(value)) {
-				throw new InvalidValueForTypeException("The new value is invalid for the input type");
-			}
-
-			Value = value ?? "";
+            Value = value ?? string.Empty;
 		}
 
 		/// <summary>
