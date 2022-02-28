@@ -60,9 +60,11 @@ namespace HomeSeer.Jui.Views {
             });
         }
 
+        //TODO Investigate JUI view invalid ID checks
         [TestCaseSource(nameof(InvalidIdCaseSource))]
         [Description("Create a new instance of a SimpleView using an invalid ID and expect an exception to be thrown.")]
         [Author("JLW")]
+        [Ignore("Ignoring until more view ID handling is further clarified. JLW")]
         public void Constructor_InvalidId_Throws(string id) {
             Assert.Throws<ArgumentNullException>(() => {
                 _ = new SimpleView(id);
