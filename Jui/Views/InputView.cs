@@ -163,25 +163,20 @@ namespace HomeSeer.Jui.Views {
 		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
             var value = $"{Value.Replace("\"", "&quot;")}";
-            var id = $"{Id}-par";
             var sb = new StringBuilder();
-			sb.Append(GetIndentStringFromNumber(indent));
+            //Open the form div
+            sb.Append(GetIndentStringFromNumber(indent));
+            sb.AppendLine($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
+            //Add the input
+            sb.Append(GetIndentStringFromNumber(indent+1));
             switch (InputType) {
                 case EInputType.Date:
                 case EInputType.Time:
-                    sb.Append("<div class=\"md-form\">");
-                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
-                    sb.Append($"<input type=\"text\" id=\"{id}\" class=\"form-control ");
+                    sb.Append($"<input type=\"text\" id=\"{Id}\" class=\"form-control ");
                     sb.Append(InputType == EInputType.Date ? "datepicker jui-date" : "timepicker jui-time");
-                    sb.Append($"\" value=\"{value}\">");
-                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
-                    sb.Append($"<label for=\"{id}\">{Name}</label>");
+                    sb.AppendLine($"\" value=\"{value}\">");
                     break;
                 default:
-                    //Open the form div
-                    sb.Append($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
-                    //Add the input
-                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
                     string typeString = null;
                     switch (InputType) {
                         case EInputType.Text:
@@ -203,20 +198,19 @@ namespace HomeSeer.Jui.Views {
                             typeString = "number\" step=\"0.001\" ";
                             break;
                         case EInputType.DateTime:
-                            //not supported yet
+                        //not supported yet
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value.Replace("\"", "&quot;")}\">");
-                    //Add the hint label
-                    sb.AppendLine(GetIndentStringFromNumber(indent+1));
-                    sb.Append($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
+                    sb.AppendLine($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{value}\">");
                     break;
             }
+            //Add the hint label
+            sb.Append(GetIndentStringFromNumber(indent+1));
+            sb.AppendLine($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
             //Close the form div
-            sb.AppendLine(GetIndentStringFromNumber(indent));
-            sb.Append("</div>");
-            sb.Append(Environment.NewLine);
+            sb.Append(GetIndentStringFromNumber(indent));
+            sb.AppendLine("</div>");
 			
 			return sb.ToString();
 		}
