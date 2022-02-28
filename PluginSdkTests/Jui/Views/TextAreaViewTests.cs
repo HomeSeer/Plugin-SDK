@@ -88,7 +88,7 @@ namespace HomeSeer.Jui.Views {
         [Author("JLW")]
         public void Rows_Set_Invalid_Throws(int rows) {
             TextAreaView view = GetDefaultView();
-            Assert.Throws<ArgumentException>(() => {
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
                 view.Rows = rows;
             });
         }
