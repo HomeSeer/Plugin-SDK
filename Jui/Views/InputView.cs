@@ -55,6 +55,9 @@ namespace HomeSeer.Jui.Views {
 		/// <param name="type">The style of the input. DEFAULT: <see cref="EInputType.Text"/></param>
 		/// <exception cref="InvalidValueForTypeException">Thrown when the value is invalid for the input type</exception>
 		public InputView(string id, string name, string value, EInputType type = EInputType.Text) : base(id, name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentNullException(nameof(name));
+            }
 			Type      = EViewType.Input;
 			InputType = type;
 			if (!IsValueValidForType(value)) {
