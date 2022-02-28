@@ -39,8 +39,19 @@ namespace HomeSeer.Jui.Views {
         /// <remarks>
         /// Set this to -1 to display a default "Select an option" text
         /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the selection is set to an index that does not work for the current <see cref="Options"/></exception>
         [JsonProperty("selection")]
-        public int Selection { get; set; } = -1;
+        public int Selection { 
+            get => _selection;
+            set {
+                if (value < -1 || value >= Options?.Count ){
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                _selection = value;
+            }
+        }
+
+        private int _selection = -1;
 
 		/// <summary>
 		/// The text displayed when <see cref="Selection"/> equals -1. If this property is null or empty, "Select an option" is displayed. 
@@ -153,7 +164,7 @@ namespace HomeSeer.Jui.Views {
 		/// <returns>The text of the option at the index specified by <see cref="Selection"/>.</returns>
 		public string GetSelectedOption() {
 			if (Options == null || Selection >= Options.Count || Selection == -1) {
-				return "";
+				return string.Empty;
 			}
 			
 			return Options[Selection];
@@ -165,11 +176,11 @@ namespace HomeSeer.Jui.Views {
 		/// <returns>The key of the option at the index specified by <see cref="Selection"/>.</returns>
 		public string GetSelectedOptionKey() {
 			if (Options == null || Selection >= Options.Count || Selection == -1) {
-				return "";
+				return string.Empty;
 			}
 			
 			if (OptionKeys == null || Selection >= OptionKeys.Count || Selection == -1) {
-				return "";
+				return string.Empty;
 			}
 
 			return OptionKeys[Selection];
