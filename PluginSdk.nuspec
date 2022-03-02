@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>HomeSeer-PluginSDK</id>
-        <version>1.4.0.0-rc</version>
+        <version>1.4.0.0</version>
         <title>HomeSeer PluginSDK</title>
         <authors>HomeSeer</authors>
         <owners>HomeSeer</owners>
