@@ -139,6 +139,8 @@ Public Class HSPI
         }
         'Add a ViewGroup containing all of the ToggleViews to the page
         settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId, Constants.Settings.Sp1PageToggleGroupName, pageToggles)
+        settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go To Devices", "/devices.html"))
+        settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add New Device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
         'Add the first page to the list of plugin settings pages
         Settings.Add(settingsPage1.Page)
 

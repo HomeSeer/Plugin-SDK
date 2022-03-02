@@ -17,6 +17,8 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         public static string Sp1ColorToggleBlueId   => $"{SettingsPage1Id}-blue";
         public static string Sp1ColorToggleIndigoId => $"{SettingsPage1Id}-indigo";
         public static string Sp1ColorToggleVioletId => $"{SettingsPage1Id}-violet";
+        public static string Sp1NavButton1Id => $"{SettingsPage1Id}-but-devices";
+        public static string Sp1NavButton2Id => $"{SettingsPage1Id}-but-add-device";
         public const string ColorRedName = "Red";
         public const string ColorOrangeName = "Orange";
         public const string ColorYellowName = "Yellow";

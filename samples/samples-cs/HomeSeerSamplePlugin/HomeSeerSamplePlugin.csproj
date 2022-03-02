@@ -58,15 +58,15 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HSCF, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HomeSeer-PluginSDK.1.3.0\lib\net462\HSCF.dll</HintPath>
+    <Reference Include="HSCF, Version=1.0.0.2, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\bin\Debug\HSCF.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PluginSdk, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HomeSeer-PluginSDK.1.3.0\lib\net462\PluginSdk.dll</HintPath>
+    <Reference Include="PluginSdk, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\bin\Debug\PluginSdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

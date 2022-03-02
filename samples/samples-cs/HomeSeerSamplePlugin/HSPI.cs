@@ -125,6 +125,10 @@ namespace HSPI_HomeSeerSamplePlugin {
             settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId,
                                     Constants.Settings.Sp1PageToggleGroupName,
                                     pageToggles);
+            settingsPage1.WithView(new NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go to Devices",
+                "/devices.html"));
+            settingsPage1.WithView(new NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add a new sample device",
+                "/HomeSeerSamplePlugin/add-sample-device.html"));
             //Add the first page to the list of plugin settings pages
             Settings.Add(settingsPage1.Page);
             

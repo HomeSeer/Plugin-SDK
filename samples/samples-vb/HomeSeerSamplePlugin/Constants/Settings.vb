@@ -61,6 +61,18 @@
                 Return $"{SettingsPage1Id}-violet"
             End Get
         End Property
+        
+        Public ReadOnly Property Sp1NavButton1Id As String
+            Get
+                Return $"{SettingsPage1Id}-but-devices"
+            End Get
+        End Property
+        
+        Public ReadOnly Property Sp1NavButton2Id As String
+            Get
+                Return $"{SettingsPage1Id}-but-add-device"
+            End Get
+        End Property
 
         Public Const ColorRedName As String = "Red"
         Public Const ColorOrangeName As String = "Orange"
