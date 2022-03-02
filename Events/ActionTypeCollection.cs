@@ -130,7 +130,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called by HomeSeer when a user updates the configuration of an action and those changes
         ///  are in need of processing.
         /// </summary>
-        /// <param name="postData">A <see cref="Dictionary"/> of changes to the action configuration</param>
+        /// <param name="postData">A <see cref="Dictionary{TKey,TValue}"/> of changes to the action configuration</param>
         /// <param name="actInfo">The action being configured</param>
         /// <returns>
         /// An <see cref="EventUpdateReturnData"/> describing the new state of the action that will be saved by HomeSeer.

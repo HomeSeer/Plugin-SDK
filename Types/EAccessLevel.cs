@@ -12,18 +12,18 @@ namespace HomeSeer.PluginSdk.Types {
         /// </summary>
         LicenseNotRequired = 1,
         /// <summary>
-        /// Plug-in is licensed and a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days.
+        /// Plug-in is licensed and a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days. Legacy (HS3) plugin licenses are also accepted.
         /// </summary>
-        RequiresLicense    = 2,
+        AcceptsLegacyLicense = 2,
         /// <summary>
         /// Reserved for internal compatibility management. Do not use.
         /// </summary>
         [Obsolete("Reserved for internal compatibility management. Do not use.", true)]
         DoNotUse = 3,
         /// <summary>
-        /// Plug-in is licensed and a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days. Legacy (HS3) plugin licenses are also accepted.
+        /// Plug-in is licensed and a user must purchase a license in order to use this plug-in. When the plug-in Is first enabled, it will will run as a trial for 30 days.
         /// </summary>
-        AcceptsLegacyLicense = 4
+        RequiresLicense    = 4,
 
     }
 

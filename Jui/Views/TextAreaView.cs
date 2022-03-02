@@ -3,20 +3,29 @@ using Newtonsoft.Json;
 using System;
 using System.Text;
 
-namespace HomeSeer.Jui.Views
-{
+namespace HomeSeer.Jui.Views {
 
     /// <inheritdoc cref="AbstractView"/>
     /// <summary>
     /// A text area view is an editable text box for the user to enter a large volume of text
     /// </summary>
-    public sealed class TextAreaView : AbstractView 
-	{	
+    public sealed class TextAreaView : AbstractView {	
 		/// <summary>
-		/// The number of text raws displayed
+		/// The number of text rows displayed. Must be >= 1
 		/// </summary>
-		[JsonProperty("rows")]
-		public int Rows { get; set; }
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the number of rows is set to an invalid value</exception>
+        [JsonProperty("rows")]
+		public int Rows { 
+            get => _rows;
+            set {
+                if (value < 1) {
+                    throw new ArgumentOutOfRangeException(nameof(value), "Rows must be 1 or more.");
+                }
+                _rows = value;
+            }
+        }
+
+        private int _rows = 5;
 
 		/// <summary>
 		/// The current value of the field
@@ -31,9 +40,9 @@ namespace HomeSeer.Jui.Views
 		/// <param name="id">The unique ID for the View</param>
 		/// <param name="name">The name of the View</param>
 		/// <param name="rows">The number of text rows in the text area. DEFAULT: 5</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the number of rows is set to an invalid value</exception>
 		[JsonConstructor]
-		public TextAreaView(string id, string name, int rows = 5) : base(id, name) 
-		{	
+		public TextAreaView(string id, string name, int rows = 5) : base(id, name) {	
 			Type = EViewType.TextArea;
 			Rows = rows;
 		}
@@ -46,11 +55,11 @@ namespace HomeSeer.Jui.Views
 		/// <param name="name">The name of the View</param>
 		/// <param name="value">The value inputted into the field</param>
 		/// <param name="rows">The number of text rows in the text area. DEFAULT: 5</param>
-		public TextAreaView(string id, string name, string value, int rows = 5) : base(id, name) 
-		{
+		/// <exception cref="ArgumentOutOfRangeException">Thrown when the number of rows is set to an invalid value</exception>
+		public TextAreaView(string id, string name, string value, int rows = 5) : base(id, name) {
 			Type = EViewType.TextArea;
 			Rows = rows;
-			Value = value ?? "";
+			Value = value ?? string.Empty;
 		}
 
 		/// <inheritdoc cref="AbstractView.Update"/>
@@ -58,29 +67,26 @@ namespace HomeSeer.Jui.Views
 		/// Update the view to the new state.  This will change the inputted value 
 		/// </summary>
 		/// <exception cref="ViewTypeMismatchException">Thrown when the new view's class doesn't match the calling view</exception>
-		public override void Update(AbstractView newViewState) 
-		{
+		public override void Update(AbstractView newViewState) {
 			base.Update(newViewState);
 
-			if (!(newViewState is TextAreaView updatedTextAreaView)) 
-			{
+			if (!(newViewState is TextAreaView updatedTextAreaView)) {
 				throw new ViewTypeMismatchException("The original view type does not match the type in the update");
 			}			
-			Value = updatedTextAreaView.Value ?? "";
+			Value = updatedTextAreaView.Value ?? string.Empty;
 		}
 
 		/// <inheritdoc cref="AbstractView.UpdateValue"/>
-		public override void UpdateValue(string value) 
-		{	
-			Value = value ?? "";
-		}
+		public override void UpdateValue(string value) {
+            
+            Value = value ?? string.Empty;
+        }
 
 		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		/// <remarks>
 		/// The same as <see cref="Value"/>
 		/// </remarks>
-		public override string GetStringValue() 
-		{
+		public override string GetStringValue() {
 			return Value;
 		}
 

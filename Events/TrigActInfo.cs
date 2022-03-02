@@ -68,13 +68,13 @@ namespace HomeSeer.PluginSdk.Events {
     public string Instance;
     
     /// <summary>
-    /// Deserialize the specified byte array to an object of type <see cref="TOutObject"/> using the legacy
+    /// Deserialize the specified byte array to an object of type <typeparamref name="TOutObject"/> using the legacy
     ///  HomeSeer method for deserializing trigger/action data.
     /// </summary>
     /// <param name="inData">The byte array to deserialize.</param>
     /// <param name="willLog">Whether the method should write log messages to the console.</param>
     /// <typeparam name="TOutObject">The type of object to deserialize the data to. Must be a class.</typeparam>
-    /// <returns>An object of type <see cref="TOutObject"/> or null if it was unsuccessful.</returns>
+    /// <returns>An object of type <typeparamref name="TOutObject"/> or null if it was unsuccessful.</returns>
     public static TOutObject DeserializeLegacyData<TOutObject>(byte[] inData, bool willLog = false) where TOutObject : class {
         if (inData == null || inData.Length == 0) {
             return null;

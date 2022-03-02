@@ -118,7 +118,6 @@
     <Compile Include="Devices\PlugExtraData.cs" />
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
-    <Compile Include="EHsSystemEvent.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
@@ -167,8 +166,10 @@
     <Compile Include="Speech\AbstractSpeakerClient.cs" />
     <Compile Include="Speech\ESpeakErrorValue.cs" />
     <Compile Include="Speech\ESpeakTypeValue.cs" />
+    <Compile Include="Systems\EConfigChangeTarget.cs" />
+    <Compile Include="Systems\EConfigChangeAction.cs" />
+    <Compile Include="Systems\EHsSystemEvent.cs" />
     <Compile Include="Types\EAccessLevel.cs" />
-    <Compile Include="Types\EHsSystemEvent.cs" />
     <Compile Include="Types\EOsType.cs" />
     <Compile Include="Types\ERegistrationMode.cs" />
     <None Include="Logging\LogEntry.cs" />
@@ -180,7 +181,7 @@
     <Compile Include="Jui\Types\EToggleType.cs" />
     <Compile Include="Jui\Types\EViewType.cs" />
     <Compile Include="Jui\Views\AbstractView.cs" />
-    <None Include="Jui\Views\ButtonView.cs" />
+    <Compile Include="Jui\Views\NavigateButtonView.cs" />
     <Compile Include="Jui\Views\InputView.cs" />
     <Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
     <Compile Include="Jui\Views\JsonDataException.cs" />

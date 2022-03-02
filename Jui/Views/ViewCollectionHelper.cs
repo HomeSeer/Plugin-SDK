@@ -403,7 +403,7 @@ namespace HomeSeer.Jui.Views {
 		/// Thrown when any of the supplied parameters is null of empty
 		/// </exception>
 		/// <exception cref="ArgumentException">
-		/// Thrown when the number of items in the <see cref="viewList"/> and <see cref="viewIds"/> do not match
+		/// Thrown when the number of items in the <paramref name="viewList"/> and <paramref name="viewIds"/> do not match
 		/// </exception>
 		/// <exception cref="KeyNotFoundException">Thrown when a view with the specified ID was not found</exception>
 		internal static void RemoveViewById(string viewId, ref List<AbstractView> viewList,
@@ -463,7 +463,7 @@ namespace HomeSeer.Jui.Views {
         /// Thrown when any of the supplied parameters is null of empty
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown when the number of items in the <see cref="viewList"/> and <see cref="viewIds"/> do not match
+        /// Thrown when the number of items in the <paramref name="viewList"/> and <paramref name="viewIds"/> do not match
         /// </exception>
         internal static void RemoveViewsAfterId(string viewId, ref List<AbstractView> viewList,
 		                                        ref Dictionary<string, int> viewIds) {

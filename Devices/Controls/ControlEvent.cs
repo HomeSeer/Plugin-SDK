@@ -73,7 +73,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// A string containing control data for the event. This is used for <see cref="EControlType.ColorPicker"/>s
         /// </summary>
         /// <remarks>
-        /// This is NOT the <see cref="Label"/> to display in the <see cref="AbstractHsDevice.Status"/> of the <see cref="HsFeature"/>. This is not displayed anywhere.
+        /// This is NOT the <see cref="Label"/> to display in the <see cref="AbstractHsDevice.DisplayedStatus"/> of the <see cref="HsFeature"/>. This is not displayed anywhere.
         /// </remarks>
         public string ControlString {
             get => _controlString;

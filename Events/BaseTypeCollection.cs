@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 
 namespace HomeSeer.PluginSdk.Events {
 
+    /// <summary>
+    /// A collection for holding types of classes that adhere to certain structural rules.
+    /// </summary>
+    /// <typeparam name="TBaseItemType">The type of item to manage</typeparam>
+    /// <seealso cref="ActionTypeCollection"/>
+    /// <seealso cref="TriggerTypeCollection"/>
     public class BaseTypeCollection<TBaseItemType> {
 
         /// <summary>
@@ -13,11 +18,17 @@ namespace HomeSeer.PluginSdk.Events {
         /// </summary>
         public int Count => _itemTypes?.Count ?? 0;
         
-        //Permitted constructor signatures
+        /// <summary>
+        /// A <see cref="List{T}"/> of constructor signatures
+        /// </summary>
         protected List<Type[]> ConstructorSignatures { get; set; } = new List<Type[]>();
         
         //Mode - All / One
-        public bool MatchAllSignatures { get; set; }
+        /// <summary>
+        /// Whether the items in the collection must match all of the listed <see cref="ConstructorSignatures"/> or just one.
+        ///  <see langword="true"/> if the items must match all constructor signatures.
+        /// </summary>
+        protected bool MatchAllSignatures { get; set; }
         
         //Collection of Types
         private List<Type>      _itemTypes     = new List<Type>();
@@ -25,10 +36,10 @@ namespace HomeSeer.PluginSdk.Events {
         private HashSet<string> _itemTypeNames = new HashSet<string>();
 
         /// <summary>
-        /// Add the specified class type that derives from <see cref="TBaseItemType"/> to the list of item types
+        /// Add the specified class type that derives from <typeparamref name="TBaseItemType"/> to the list of item types
         /// </summary>
         /// <param name="itemType">
-        /// The <see cref="Type"/> of the class that derives from <see cref="TBaseItemType"/>
+        /// The <see cref="Type"/> of the class that derives from <typeparamref name="TBaseItemType"/>
         /// </param>
         /// <exception cref="ArgumentException">Thrown when the specified class type will not work as the desired type</exception>
         protected void AddItemType(Type itemType) {
@@ -48,6 +59,13 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
         
+        /// <summary>
+        /// Get an instance of an object of the type defined at a specific index in the collection
+        /// </summary>
+        /// <param name="itemIndex">The index of the type to use</param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException">Thrown when no item is found at the specified index</exception>
+        /// <exception cref="TypeLoadException">Thrown when there was an error while creating an instance of the specified type</exception>
         protected TBaseItemType GetObjectFromInfo(int itemIndex) {
             if (_itemTypes == null || _itemTypes.Count < itemIndex) {
                 throw new KeyNotFoundException("No type exists with that number");
@@ -58,20 +76,25 @@ namespace HomeSeer.PluginSdk.Events {
             var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
                                                             null,
                                                             CallingConventions.Standard,
-                                                            new Type[0],
+                                                            Type.EmptyTypes,
                                                             null);
             
             if (typeConstructor == null) {
                 throw new TypeLoadException("Cannot find the correct constructor for this type");
             }
             
-            if (!(typeConstructor.Invoke(new object[0]) is TBaseItemType createdItem)) {
+            if (!(typeConstructor.Invoke(Array.Empty<object>()) is TBaseItemType createdItem)) {
                 throw new TypeLoadException($"This constructor did not produce a class derived from {typeof(TBaseItemType).FullName}");
             }
 
             return createdItem;
         }
 
+        /// <inheritdoc cref="GetObjectFromInfo(int)"/>
+        /// <param name="itemIndex">The index of the type to use</param>
+        /// <param name="signatureIndex">The index of the constructor signature to use</param>
+        /// <param name="inParams">The parameters to pass to the constructor</param>
+        /// <exception cref="ArgumentException">Thrown when there was an issue with the provided parameters</exception>
         protected TBaseItemType GetObjectFromInfo(int itemIndex, int signatureIndex, params object[] inParams) {
             if (_itemTypes == null || _itemTypes.Count < itemIndex) {
                 throw new KeyNotFoundException("No type exists with that number");
@@ -110,6 +133,13 @@ namespace HomeSeer.PluginSdk.Events {
             return createdItem;
         }
 
+        /// <summary>
+        /// Determine if a specific type has a particular constructor signature defined
+        /// </summary>
+        /// <param name="itemIndex">The index of the type to use</param>
+        /// <param name="signatureIndex">The index of the constructor signature to use</param>
+        /// <returns><see langword="true"/> if the type has the specific constructor defined</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a type or signature was not found at the specified index</exception>
         protected bool TypeHasConstructor(int itemIndex, int signatureIndex) {
             if (_itemTypes == null || _itemTypes.Count < itemIndex) {
                 throw new KeyNotFoundException("No type exists with that number");
@@ -157,7 +187,7 @@ namespace HomeSeer.PluginSdk.Events {
                     #if DEBUG
                         Console.WriteLine($"Exception while checking for constructor with {constructorSignature.Length} params on {targetType.FullName} : {exception.Message} at {exception.StackTrace}");
                     #endif
-                    throw exception;
+                    throw;
                 }
             }
 
@@ -169,7 +199,7 @@ namespace HomeSeer.PluginSdk.Events {
         private void AssertTypeHasEmptyConstructor(Type targetType) {
 
             try {
-                AssertTypeHasConstructor(targetType, new Type[0]);
+                AssertTypeHasConstructor(targetType, Type.EmptyTypes);
                 //Constructor match found
             }
             catch (TypeLoadException) {
@@ -180,7 +210,7 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
 
-        private void AssertTypeHasConstructor(Type targetType, Type[] constructorParams) {
+        private static void AssertTypeHasConstructor(Type targetType, Type[] constructorParams) {
             var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
                                                             null,
                                                             CallingConventions.Standard,

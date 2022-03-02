@@ -36,6 +36,9 @@ namespace HomeSeer.PluginSdk.Devices {
             /// <summary>
             /// Indicates that the device/feature should show its available controls in the UI
             /// </summary>
+            /// <remarks>
+            /// This is set by default when creating a <see cref="HsDevice"/> or <see cref="HsFeature"/>
+            /// </remarks>
             ShowValues = 0x100,
             /// <summary>
             /// set=create a voice command for this device
@@ -50,9 +53,11 @@ namespace HomeSeer.PluginSdk.Devices {
             /// </summary>
             MyhsDeviceChangeNotify = 0x800,
             /// <summary>
-            /// if set, any set to a device value will not reset last change.
-            ///  This is not set by default for backward compatibility
+            /// If set, any set to a device value will not reset last change.
             /// </summary>
+            /// <remarks>
+            /// This is set by default when creating a <see cref="HsFeature"/> using <see cref="FeatureFactory"/>
+            /// </remarks>
             SetDoesNotChangeLastChange = 0x1000,
             /// <summary>
             /// Device controls a lighting device (used by Alexa)
