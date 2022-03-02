@@ -88,15 +88,15 @@ namespace HomeSeer.PluginSdk {
         [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceType_Security {
             /// <summary>
-            /// Alarm status & control (shows alarms that have occurred and can also invoke an alarm - e.g. Duress)
+            /// Alarm status control (shows alarms that have occurred and can also invoke an alarm - e.g. Duress)
             /// </summary>
             Alarm = 1,
             /// <summary>
-            /// Arming status & control (shows the state of the security arming and can set arming state)
+            /// Arming status control (shows the state of the security arming and can set arming state)
             /// </summary>
             Arming = 10,
             /// <summary>
-            /// Keypad status & control
+            /// Keypad status control
             /// </summary>
             Keypad = 20,
             /// <summary>
