@@ -196,6 +196,8 @@ namespace HomeSeer.PluginSdk.Devices {
                           _plugExtraData  = PlugExtraData,
                           _relationship   = Relationship,
                           _status         = Status,
+                          _statusString   = StatusString,
+                          _displayedStatus = DisplayedStatus,
                           _userAccess     = UserAccess,
                           _userNote       = UserNote,
                           _value          = Value,

@@ -39,10 +39,10 @@ namespace HomeSeer.Jui.Types {
 		/// A <see cref="HomeSeer.Jui.Views.ToggleView"/>
 		/// </summary>
 		Toggle = 5,
-		// <summary>
-		// A <see cref="HomeSeer.Jui.Views.ButtonView"/>
-		// </summary>
-		//Button = 6,
+		/// <summary>
+		/// A <see cref="HomeSeer.Jui.Views.NavigateButtonView"/>
+		/// </summary>
+		Button = 6,
 		//Image = 7,
 		//TODO DateTime = 8,
 		//MessageArchive = 9,

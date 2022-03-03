@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using HomeSeer.Jui.Types;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace HomeSeer.Jui.Views {
 
@@ -23,9 +24,20 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// The current value of the field
 		/// </summary>
+		/// <exception cref="InvalidValueForTypeException">Thrown when the value is invalid for the input type</exception>
 		[JsonProperty("value")]
-		public string Value { get; set; } = "";
+		public string Value { 
+            get => _value;
+            set {
+                if (!IsValueValidForType(value)) {
+                    throw new InvalidValueForTypeException("The new value is invalid for the input type");
+                }
+                _value = value;
+            }
+        }
 
+        private string _value = string.Empty;
+        
 		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of an InputView with an ID, a Name, and the specified style.
@@ -35,12 +47,10 @@ namespace HomeSeer.Jui.Views {
 		/// <param name="type">The style of the input. DEFAULT: <see cref="EInputType.Text"/></param>
 		[JsonConstructor]
 		public InputView(string id, string name, EInputType type = EInputType.Text) : base(id, name) {
-			
-			if (string.IsNullOrWhiteSpace(name)) {
+            if (string.IsNullOrWhiteSpace(name)) {
 				throw new ArgumentNullException(nameof(name));
 			}
-			
-			Type = EViewType.Input;
+            Type = EViewType.Input;
 			InputType = type;
 		}
 
@@ -54,12 +64,12 @@ namespace HomeSeer.Jui.Views {
 		/// <param name="type">The style of the input. DEFAULT: <see cref="EInputType.Text"/></param>
 		/// <exception cref="InvalidValueForTypeException">Thrown when the value is invalid for the input type</exception>
 		public InputView(string id, string name, string value, EInputType type = EInputType.Text) : base(id, name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentNullException(nameof(name));
+            }
 			Type      = EViewType.Input;
 			InputType = type;
-			if (!IsValueValidForType(value)) {
-				throw new InvalidValueForTypeException("The new value is invalid for the input type");
-			}
-			Value = value ?? "";
+            Value = value ?? string.Empty;
 		}
 
 		/// <inheritdoc cref="AbstractView.Update"/>
@@ -80,22 +90,13 @@ namespace HomeSeer.Jui.Views {
 				throw new InvalidOperationException("The original view type does not match the type in the update");
 			}*/
 
-			if (!IsValueValidForType(updatedInputView.Value)) {
-				throw new InvalidValueForTypeException("The new value is invalid for the input type");
-			}
-			
-			Value = updatedInputView.Value ?? "";
+            Value = updatedInputView.Value ?? string.Empty;
 
 		}
 
 		/// <inheritdoc cref="AbstractView.UpdateValue"/>
 		public override void UpdateValue(string value) {
-			
-			if (!IsValueValidForType(value)) {
-				throw new InvalidValueForTypeException("The new value is invalid for the input type");
-			}
-
-			Value = value ?? "";
+            Value = value ?? string.Empty;
 		}
 
 		/// <summary>
@@ -111,10 +112,7 @@ namespace HomeSeer.Jui.Views {
 
 			switch (InputType) {
 				case EInputType.Text:
-				//TODO validate date and time input
-				case EInputType.Date:
-				case EInputType.Time:
-				case EInputType.DateTime:
+                case EInputType.DateTime:
 					//Anything is valid for text
 					return true;
 				case EInputType.Number:
@@ -133,6 +131,22 @@ namespace HomeSeer.Jui.Views {
 				case EInputType.Password:
 					//Password types merely restrict the visibility of characters not the input
 					return true;
+                case EInputType.Date:
+                    try {
+                        _ = DateTime.Parse(value, CultureInfo.CurrentCulture);
+                        return true;
+                    }
+                    catch (Exception) {
+                        return false;
+                    }
+                case EInputType.Time:
+                    try {
+                        _ = DateTime.Parse(value);
+                        return true;
+                    }
+                    catch (Exception) {
+                        return false;
+                    }
 				default:
 					return false;
 			}
@@ -148,47 +162,55 @@ namespace HomeSeer.Jui.Views {
 
 		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
-
-			var sb = new StringBuilder();
-			sb.Append(GetIndentStringFromNumber(indent));
-			//Open the form div
-			sb.Append($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
-			sb.Append(Environment.NewLine);
+            var value = $"{Value.Replace("\"", "&quot;")}";
+            var sb = new StringBuilder();
+            //Open the form div
+            sb.Append(GetIndentStringFromNumber(indent));
+            sb.AppendLine($"<div id=\"{Id}-par\" class=\"md-form md-outline jui-view\">");
             //Add the input
             sb.Append(GetIndentStringFromNumber(indent+1));
-            string typeString = null;
             switch (InputType) {
-	            case EInputType.Text:
-		            typeString = "text\" ";
-		            break;
-	            case EInputType.Number:
-		            typeString = "number\" step=\"1\" pattern=\"[0-9]*\" ";
-		            break;
-	            case EInputType.Email:
-		            typeString = "email\" ";
-		            break;
-	            case EInputType.Url:
-		            typeString = "url\" ";
-		            break;
-	            case EInputType.Password:
-		            typeString = "password\" ";
-		            break;
-	            case EInputType.Decimal:
-		            typeString = "number\" step=\"0.001\" ";
-		            break;
-	            default:
-		            throw new ArgumentOutOfRangeException();
+                case EInputType.Date:
+                case EInputType.Time:
+                    sb.Append($"<input type=\"text\" id=\"{Id}\" class=\"form-control ");
+                    sb.Append(InputType == EInputType.Date ? "datepicker jui-date" : "timepicker jui-time");
+                    sb.AppendLine($"\" value=\"{value}\">");
+                    break;
+                default:
+                    string typeString = null;
+                    switch (InputType) {
+                        case EInputType.Text:
+                            typeString = "text\" ";
+                            break;
+                        case EInputType.Number:
+                            typeString = "number\" step=\"1\" pattern=\"[0-9]*\" ";
+                            break;
+                        case EInputType.Email:
+                            typeString = "email\" ";
+                            break;
+                        case EInputType.Url:
+                            typeString = "url\" ";
+                            break;
+                        case EInputType.Password:
+                            typeString = "password\" ";
+                            break;
+                        case EInputType.Decimal:
+                            typeString = "number\" step=\"0.001\" ";
+                            break;
+                        case EInputType.DateTime:
+                        //not supported yet
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    sb.AppendLine($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{value}\">");
+                    break;
             }
-            sb.Append($"<input type=\"{typeString}id=\"{Id}\" class=\"form-control jui-input\" value=\"{Value}\">");
-            sb.Append(Environment.NewLine);
             //Add the hint label
             sb.Append(GetIndentStringFromNumber(indent+1));
-            sb.Append($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
-            sb.Append(Environment.NewLine);
+            sb.AppendLine($"<label for=\"{Id}\" id=\"{Id}-hint\">{Name}</label>");
             //Close the form div
             sb.Append(GetIndentStringFromNumber(indent));
-            sb.Append("</div>");
-            sb.Append(Environment.NewLine);
+            sb.AppendLine("</div>");
 			
 			return sb.ToString();
 		}
