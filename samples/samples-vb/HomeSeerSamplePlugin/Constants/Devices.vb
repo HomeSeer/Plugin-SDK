@@ -4,7 +4,8 @@ Public Module Devices
         Get
             Return New List(Of String) From {
                 "Line-powered switch",
-                "Line-powered sensor"
+                "Line-powered sensor",
+                "Battery-powered sensor"
                 }
         End Get
     End Property
@@ -13,7 +14,8 @@ Public Module Devices
         Get
             Return New List(Of String()) From {
                 LinePoweredSwitchFeatures,
-                LinePoweredSensorFeatures
+                LinePoweredSensorFeatures,
+                BatteryPoweredSensorFeatures
                 }
         End Get
     End Property
@@ -27,6 +29,12 @@ Public Module Devices
     Public ReadOnly Property LinePoweredSensorFeatures As String()
         Get
             Return {"Open-Close status feature"}
+        End Get
+    End Property
+
+    Public ReadOnly Property BatteryPoweredSensorFeatures As String()
+        Get
+            Return {"Open-Close status feature", "Battery status feature"}
         End Get
     End Property
 
