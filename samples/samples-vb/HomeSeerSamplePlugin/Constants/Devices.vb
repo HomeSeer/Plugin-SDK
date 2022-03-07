@@ -134,4 +134,15 @@ Public Module Devices
     End Property
 
     Public Const DeviceConfigTimeSpanName As String = "Sample Time Span"
+
+    Public ReadOnly Property DeviceConfigNavButton1Id As String
+        Get
+            Return $"{DeviceConfigPageId}-samplenavbutton1"
+        End Get
+    End Property
+    Public ReadOnly Property DeviceConfigNavButton2Id As String
+        Get
+            Return $"{DeviceConfigPageId}-samplenavbutton2"
+        End Get
+    End Property
 End Module

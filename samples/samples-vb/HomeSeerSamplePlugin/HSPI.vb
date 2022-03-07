@@ -140,7 +140,7 @@ Public Class HSPI
         'Add a ViewGroup containing all of the ToggleViews to the page
         settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId, Constants.Settings.Sp1PageToggleGroupName, pageToggles)
         settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go To Devices", "/devices.html"))
-        settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add New Device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
+        settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add a new sample device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
 
         'Add the first page to the list of plugin settings pages
         Settings.Add(settingsPage1.Page)
@@ -337,6 +337,8 @@ Public Class HSPI
         deviceConfigPage.WithInput(DeviceConfigTimeInputId, DeviceConfigTimeInputName, timeInputValue, EInputType.Time)
         deviceConfigPage.WithTextArea(DeviceConfigTextAreaId, DeviceConfigTextAreaName, textAreaValue)
         deviceConfigPage.WithTimeSpan(DeviceConfigTimeSpanId, DeviceConfigTimeSpanName, timeSpanValue, True, False)
+        deviceConfigPage.WithView(New NavigateButtonView(DeviceConfigNavButton1Id, "Go to Devices", "/devices.html"))
+        deviceConfigPage.WithView(New NavigateButtonView(DeviceConfigNavButton2Id, "Add a new sample device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
         Return deviceConfigPage.Page.ToJsonString()
     End Function
 
