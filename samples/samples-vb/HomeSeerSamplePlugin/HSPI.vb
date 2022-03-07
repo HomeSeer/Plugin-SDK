@@ -141,6 +141,7 @@ Public Class HSPI
         settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId, Constants.Settings.Sp1PageToggleGroupName, pageToggles)
         settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go To Devices", "/devices.html"))
         settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add New Device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
+
         'Add the first page to the list of plugin settings pages
         Settings.Add(settingsPage1.Page)
 
@@ -186,6 +187,10 @@ Public Class HSPI
         settingsPage3.WithInput(Constants.Settings.Sp3SampleInput5Id, Constants.Settings.Sp3SampleInput5Name, EInputType.Password)
         'Add a decimal InputView to the page
         settingsPage3.WithInput(Constants.Settings.Sp3SampleInput6Id, Constants.Settings.Sp3SampleInput6Name, EInputType.Decimal)
+        'Add a date InputView to the page
+        settingsPage3.WithInput(Constants.Settings.Sp3SampleInput7Id, Constants.Settings.Sp3SampleInput7Name, EInputType.Date)
+        'Add a time InputView to the page
+        settingsPage3.WithInput(Constants.Settings.Sp3SampleInput8Id, Constants.Settings.Sp3SampleInput8Name, EInputType.Time)
         'Add the third page to the list of plugin settings pages
         Settings.Add(settingsPage3.Page)
     End Sub
@@ -294,6 +299,20 @@ Public Class HSPI
             inputValue = inputSavedValue
         End If
 
+        Dim dateInputSavedValue As String = GetExtraData(deviceRef, DeviceConfigDateInputId)
+        Dim dateInputValue As String = DeviceConfigDateInputValue
+
+        If Not String.IsNullOrEmpty(dateInputSavedValue) Then
+            dateInputValue = dateInputSavedValue
+        End If
+
+        Dim timeInputSavedValue As String = GetExtraData(deviceRef, DeviceConfigTimeInputId)
+        Dim timeInputValue As String = DeviceConfigTimeInputValue
+
+        If Not String.IsNullOrEmpty(timeInputSavedValue) Then
+            timeInputValue = timeInputSavedValue
+        End If
+
         Dim textAreaSavedValue As String = GetExtraData(deviceRef, DeviceConfigTextAreaId)
         Dim textAreaValue As String = ""
 
@@ -314,6 +333,8 @@ Public Class HSPI
         deviceConfigPage.WithDropDownSelectList(DeviceConfigSelectListId, DeviceConfigSelectListName, DeviceConfigSelectListOptions, dropdownValue)
         deviceConfigPage.WithRadioSelectList(DeviceConfigRadioSlId, DeviceConfigRadioSlName, DeviceConfigSelectListOptions, radioSelectValue)
         deviceConfigPage.WithInput(DeviceConfigInputId, DeviceConfigInputName, inputValue)
+        deviceConfigPage.WithInput(DeviceConfigDateInputId, DeviceConfigDateInputName, dateInputValue, EInputType.Date)
+        deviceConfigPage.WithInput(DeviceConfigTimeInputId, DeviceConfigTimeInputName, timeInputValue, EInputType.Time)
         deviceConfigPage.WithTextArea(DeviceConfigTextAreaId, DeviceConfigTextAreaName, textAreaValue)
         deviceConfigPage.WithTimeSpan(DeviceConfigTimeSpanId, DeviceConfigTimeSpanName, timeSpanValue, True, False)
         Return deviceConfigPage.Page.ToJsonString()
@@ -351,6 +372,18 @@ Public Class HSPI
 
                 If v IsNot Nothing Then
                     SetExtraData(deviceRef, DeviceConfigInputId, v.Value)
+                End If
+            ElseIf view.Id = DeviceConfigDateInputId Then
+                Dim v As InputView = TryCast(view, InputView)
+
+                If v IsNot Nothing Then
+                    SetExtraData(deviceRef, DeviceConfigDateInputId, v.Value)
+                End If
+            ElseIf view.Id = DeviceConfigTimeInputId Then
+                Dim v As InputView = TryCast(view, InputView)
+
+                If v IsNot Nothing Then
+                    SetExtraData(deviceRef, DeviceConfigTimeInputId, v.Value)
                 End If
             ElseIf view.Id = DeviceConfigTextAreaId Then
                 Dim v As TextAreaView = TryCast(view, TextAreaView)
