@@ -125,10 +125,13 @@ namespace HSPI_HomeSeerSamplePlugin {
             settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId,
                                     Constants.Settings.Sp1PageToggleGroupName,
                                     pageToggles);
+
+            //Add navigate buttons to the page
             settingsPage1.WithView(new NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go to Devices",
                 "/devices.html"));
             settingsPage1.WithView(new NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add a new sample device",
                 "/HomeSeerSamplePlugin/add-sample-device.html"));
+
             //Add the first page to the list of plugin settings pages
             Settings.Add(settingsPage1.Page);
             
@@ -168,10 +171,7 @@ namespace HSPI_HomeSeerSamplePlugin {
             //Add a time span to the page
             settingsPage2.WithTimeSpan(Constants.Settings.Sp2SampleTimeSpanId, Constants.Settings.Sp2SampleTimeSpanName);
 
-            //Add a navigate button to the page
-            settingsPage2.WithView(new NavigateButtonView(Constants.Settings.Sp2SampleNavigateButtonId, 
-                                                          Constants.Settings.Sp2SampleNavigateButtonName, 
-                                                          "/HomeSeerSamplePlugin/add-sample-device.html"));
+            
 
             
             //Add the second page to the list of plugin settings pages
@@ -403,9 +403,14 @@ namespace HSPI_HomeSeerSamplePlugin {
                                        true,
                                        false);
 
-            //Add a navigate button to the page
-            deviceConfigPage.WithView(new NavigateButtonView(Constants.Devices.DeviceConfigNavigateButtonId,
-                                                            Constants.Devices.DeviceConfigNavigateButtonName,
+            //Add navigate buttons to the page
+            deviceConfigPage.WithView(new NavigateButtonView(Constants.Devices.DeviceConfigNavButton1Id,
+                                                            "Go to Devices",
+                                                            "/devices.html"));
+
+            //Add navigate buttons to the page
+            deviceConfigPage.WithView(new NavigateButtonView(Constants.Devices.DeviceConfigNavButton2Id,
+                                                            "Add a new sample device",
                                                             "/HomeSeerSamplePlugin/add-sample-device.html"));
                                        
             return deviceConfigPage.Page.ToJsonString();
