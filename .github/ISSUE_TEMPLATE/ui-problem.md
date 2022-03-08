@@ -9,15 +9,20 @@ assignees: ''
 ---
 
 ## Environment
-### OS
-[Windows, Linux, Mac, etc]
-### HomeSeer Version
+### HomeSeer
+#### OS
+[Windows, Linux, etc]
+#### HS Version
 [v4.2.9.0]
-### PSDK Version
-[v1.0.6.0]
 ### Development
-- Language: [VB or C#]
-- IDE: [VS2017, VS2019, JetBrains Rider, etc]
+#### PSDK Version
+[v1.4.0.0]
+#### Language
+[VB or C#]
+#### IDE
+[VS2017, VS2019, JetBrains Rider, etc]
+#### Dev OS
+[Windows, Linux, Mac]
 ### Page
 What page did you encounter this on?
 
