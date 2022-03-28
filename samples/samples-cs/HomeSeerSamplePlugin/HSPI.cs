@@ -577,7 +577,7 @@ namespace HSPI_HomeSeerSamplePlugin {
                         }
                         else {
                             var deviceData = postData.Device;
-                            var device = deviceData.BuildDevice(Id);
+                            var device = deviceData.BuildDevice(Id, HomeSeerSystem);
                             var devRef = HomeSeerSystem.CreateDevice(device);
                             deviceData.Ref = devRef;
                             response = JsonConvert.SerializeObject(deviceData);
