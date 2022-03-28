@@ -141,8 +141,8 @@ namespace HSPI_HomeSeerSamplePlugin {
                     Suffix = useCelsius ? " °C" : " °F"
                 };
                 ff.AddValueDropDown(range, new ControlLocation(1, 1), isCoolSetpoint ? EControlUse.CoolSetPoint : EControlUse.HeatSetPoint)
-                  .AddButton(1000, "-", new ControlLocation(1, 2))
-                  .AddButton(1001, "+", new ControlLocation(1, 3));
+                  .AddButton(Devices.ThermostatSetpointDecrement, "-", new ControlLocation(1, 2))
+                  .AddButton(Devices.ThermostatSetpointIncrement, "+", new ControlLocation(1, 3));
 
                 AddTemperatureRangeGraphics(ff, useCelsius);
                 return ff;
@@ -230,17 +230,17 @@ namespace HSPI_HomeSeerSamplePlugin {
                     .WithLocation(Location1)
                     .WithLocation2(Location2)
                     .AsType(EFeatureType.ThermostatControl, (int)EThermostatControlFeatureSubType.ModeSet)
-                    .AddButton(1, "Heat", new ControlLocation(1, 1), EControlUse.ThermModeHeat)
-                    .AddButton(2, "Cool", new ControlLocation(1, 2), EControlUse.ThermModeCool)
-                    .AddButton(3, "Auto", new ControlLocation(1, 3), EControlUse.ThermModeAuto)
-                    .AddButton(4, "Aux Heat", new ControlLocation(2, 1), EControlUse.ThermModeAuto)
-                    .AddButton(5, "Off", new ControlLocation(2, 2), EControlUse.ThermModeOff)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "heating.png", 1)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "cooling.png", 2)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "auto-mode.png", 3)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "AuxHeat.png", 4)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "off.gif", 5)
-                    .WithDefaultValue(5);
+                    .AddButton(Devices.ThermostatHvacModeHeat, "Heat", new ControlLocation(1, 1), EControlUse.ThermModeHeat)
+                    .AddButton(Devices.ThermostatHvacModeCool, "Cool", new ControlLocation(1, 2), EControlUse.ThermModeCool)
+                    .AddButton(Devices.ThermostatHvacModeAuto, "Auto", new ControlLocation(1, 3), EControlUse.ThermModeAuto)
+                    .AddButton(Devices.ThermostatHvacModeAuxHeat, "Aux Heat", new ControlLocation(2, 1), EControlUse.ThermModeAuto)
+                    .AddButton(Devices.ThermostatHvacModeOff, "Off", new ControlLocation(2, 2), EControlUse.ThermModeOff)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "heating.png", Devices.ThermostatHvacModeHeat)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "cooling.png", Devices.ThermostatHvacModeCool)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "auto-mode.png", Devices.ThermostatHvacModeAuto)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "AuxHeat.png", Devices.ThermostatHvacModeAuxHeat)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "off.gif", Devices.ThermostatHvacModeOff)
+                    .WithDefaultValue(Devices.ThermostatHvacModeOff);
 
                 return ff;
             }
@@ -252,10 +252,10 @@ namespace HSPI_HomeSeerSamplePlugin {
                     .WithLocation(Location1)
                     .WithLocation2(Location2)
                     .AsType(EFeatureType.ThermostatStatus, (int)EThermostatStatusFeatureSubType.OperatingState)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "idle.png", 0, "Idle")
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "heating.png", 2, "Heating")
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "cooling.png", 3, "Cooling")
-                    .WithDefaultValue(0);
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "idle.png", Devices.ThermostatHvacStatusIdle, "Idle")
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "heating.png", Devices.ThermostatHvacStatusHeating, "Heating")
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "cooling.png", Devices.ThermostatHvacStatusCooling, "Cooling")
+                    .WithDefaultValue(Devices.ThermostatHvacStatusIdle);
 
                 return ff;
             }
@@ -267,11 +267,11 @@ namespace HSPI_HomeSeerSamplePlugin {
                     .WithLocation(Location1)
                     .WithLocation2(Location2)
                     .AsType(EFeatureType.ThermostatControl, (int)EThermostatControlFeatureSubType.FanModeSet)
-                    .AddButton(1, "Auto", new ControlLocation(1, 1), EControlUse.ThermFanAuto)
-                    .AddButton(2, "On", new ControlLocation(1, 2), EControlUse.ThermFanOn)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-auto.png", 1)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-on.png", 2)
-                    .WithDefaultValue(1);
+                    .AddButton(Devices.ThermostatFanModeAuto, "Auto", new ControlLocation(1, 1), EControlUse.ThermFanAuto)
+                    .AddButton(Devices.ThermostatFanModeOn, "On", new ControlLocation(1, 2), EControlUse.ThermFanOn)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-auto.png", Devices.ThermostatFanModeAuto)
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-on.png", Devices.ThermostatFanModeOn)
+                    .WithDefaultValue(Devices.ThermostatFanModeAuto);
 
                 return ff;
             }
@@ -283,9 +283,9 @@ namespace HSPI_HomeSeerSamplePlugin {
                     .WithLocation(Location1)
                     .WithLocation2(Location2)
                     .AsType(EFeatureType.ThermostatStatus, (int)EThermostatStatusFeatureSubType.FanStatus)
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-state-off.png", 0, "Off")
-                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-state-on.png", 1, "On")
-                    .WithDefaultValue(0);
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-state-off.png", Devices.ThermostatFanStatusOff, "Off")
+                    .AddGraphicForValue(IMAGES_STATUS_DIR + "fan-state-on.png", Devices.ThermostatFanStatusOn, "On")
+                    .WithDefaultValue(Devices.ThermostatFanStatusOff);
                     
                 return ff;
             }

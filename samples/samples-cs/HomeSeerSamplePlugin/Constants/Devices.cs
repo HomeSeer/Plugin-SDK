@@ -32,6 +32,25 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
                                                              "Humidity feature"
                                                             };
 
+        public const int ThermostatHvacModeHeat = 1;
+        public const int ThermostatHvacModeCool = 2;
+        public const int ThermostatHvacModeAuto = 3;
+        public const int ThermostatHvacModeAuxHeat = 4;
+        public const int ThermostatHvacModeOff = 5;
+
+        public const int ThermostatHvacStatusIdle = 0;
+        public const int ThermostatHvacStatusHeating = 1;
+        public const int ThermostatHvacStatusCooling = 2;
+
+        public const int ThermostatFanModeAuto = 1;
+        public const int ThermostatFanModeOn = 2;
+
+        public const int ThermostatFanStatusOff = 0;
+        public const int ThermostatFanStatusOn = 1;
+
+        public const int ThermostatSetpointDecrement = 1000;
+        public const int ThermostatSetpointIncrement = 1001;
+
         public const string DeviceConfigPageId = "device-config-page";
         public const string DeviceConfigPageName = "Sample Device Config";
 

@@ -6,7 +6,10 @@ using HomeSeer.Jui.Types;
 using HomeSeer.Jui.Views;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
+using HomeSeer.PluginSdk.Devices.Identification;
 using HomeSeer.PluginSdk.Logging;
+using HSPI_HomeSeerSamplePlugin.Constants;
 using HSPI_HomeSeerSamplePlugin.Features;
 using Newtonsoft.Json;
 
@@ -721,6 +724,135 @@ namespace HSPI_HomeSeerSamplePlugin {
             }
             extraData[key] = value;
             HomeSeerSystem.UpdatePropertyByRef(deviceRef, EProperty.PlugExtraData, extraData);
+        }
+
+        public override void SetIOMulti(List<ControlEvent> controlEvents) {
+            foreach (var controlEvent in controlEvents) {
+                if (HomeSeerSystem.IsRefDevice(controlEvent.TargetRef))
+                    continue;
+
+                HsFeature feat = HomeSeerSystem.GetFeatureByRef(controlEvent.TargetRef);
+                int devRef = -1;
+                if (feat.AssociatedDevices != null && feat.AssociatedDevices.Count == 1) {
+                    devRef = feat.AssociatedDevices.Single();
+                }
+                else {
+                    if (LogDebug) {
+                        Console.WriteLine($"Cannot get parent device for feature {controlEvent.TargetRef}");
+                    }
+                    continue;
+                }
+                HsDevice dev = HomeSeerSystem.GetDeviceByRef(devRef);
+
+                if (dev.TypeInfo.Type == (int)EDeviceType.Thermostat) {
+                    if (feat.TypeInfo.Type == (int)EFeatureType.ThermostatControl) {
+                        bool useCelsius = !Convert.ToBoolean(HomeSeerSystem.GetINISetting("Settings", "gGlobalTempScaleF", "True", "settings.ini"));
+
+                        switch (feat.TypeInfo.SubType) {
+                            case (int)EThermostatControlFeatureSubType.HeatingSetPoint:
+                            case (int)EThermostatControlFeatureSubType.CoolingSetPoint:
+                                if (controlEvent.ControlValue == Devices.ThermostatSetpointDecrement) {
+                                    double newValue = feat.Value - (useCelsius ? 0.5 : 1);
+                                    HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue);
+                                } else if (controlEvent.ControlValue == Devices.ThermostatSetpointIncrement) {
+                                    double newValue = feat.Value + (useCelsius ? 0.5 : 1);
+                                    HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue);
+                                } else {
+                                    HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                                }
+                                break;
+                            case (int)EThermostatControlFeatureSubType.ModeSet:
+                                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                                break;
+                            case (int)EThermostatControlFeatureSubType.FanModeSet:
+                                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                                break;
+
+                        }
+                        SimulateThermostatUpdate(dev.Ref);
+                    }
+                }
+                else {
+                    HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                }
+
+            }
+        }
+
+        private void SimulateThermostatUpdate(int devRef) {
+            HsDevice dev = HomeSeerSystem.GetDeviceWithFeaturesByRef(devRef);
+
+            HsFeature ambientTempFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatStatus,
+                SubType = (int)EThermostatStatusFeatureSubType.Temperature
+            });
+            HsFeature heatingSetpointFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.HeatingSetPoint,
+            });
+            HsFeature coolingSetpointFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.CoolingSetPoint,
+            });
+            HsFeature hvacModeFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.ModeSet,
+            });
+            HsFeature hvacStatusFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatStatus,
+                SubType = (int)EThermostatStatusFeatureSubType.OperatingState,
+            });
+            HsFeature fanModeFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.FanModeSet,
+            });
+            HsFeature fanStatusFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatStatus,
+                SubType = (int)EThermostatStatusFeatureSubType.FanStatus,
+            });
+            double ambientTemp = ambientTempFeat?.Value ?? 0;
+            double heatingSetpoint = heatingSetpointFeat?.Value ?? 0;
+            double coolingSetpoint = coolingSetpointFeat?.Value ?? 0;
+            int hvacMode = (int)(hvacModeFeat?.Value ?? 0);
+            int fanMode = (int)(fanModeFeat?.Value ?? 0);
+
+            //Update HVAC status based on HVAC mode, setpoints and ambient temperature
+            if (hvacMode == Devices.ThermostatHvacModeOff) {
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+            else if (hvacMode == Devices.ThermostatHvacModeHeat || hvacMode == Devices.ThermostatHvacModeAuxHeat) {
+                if (ambientTemp < heatingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusHeating);
+                else
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+            else if (hvacMode == Devices.ThermostatHvacModeCool) {
+                if (ambientTemp > coolingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusCooling);
+                else
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+            else if (hvacMode == Devices.ThermostatHvacModeAuto) {
+                if (ambientTemp > coolingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusCooling);
+                else if (ambientTemp < heatingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusHeating);
+                else
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+
+            //Update Fan status based on Fan mode
+            if (fanMode == Devices.ThermostatFanModeOn)
+                HomeSeerSystem.UpdateFeatureValueByRef(fanStatusFeat.Ref, Devices.ThermostatFanStatusOn);
+            else if (fanMode == Devices.ThermostatFanModeAuto)
+                HomeSeerSystem.UpdateFeatureValueByRef(fanStatusFeat.Ref, Devices.ThermostatFanStatusOff);
         }
 
     }
