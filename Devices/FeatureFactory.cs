@@ -673,7 +673,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (statusGraphic.IsRange && _feature.HasGraphicForRange(statusGraphic.TargetRange)) {
                 throw new ArgumentException("A value targeted by the specified statusGraphic already has a graphic bound to it.", nameof(statusGraphic));
             }
-            if (_feature.HasGraphicForValue(statusGraphic.Value)) {
+            if (!statusGraphic.IsRange && _feature.HasGraphicForValue(statusGraphic.Value)) {
                 throw new ArgumentException("The value targeted by the specified statusGraphic already has a graphic bound to it.", nameof(statusGraphic));
             }
             
