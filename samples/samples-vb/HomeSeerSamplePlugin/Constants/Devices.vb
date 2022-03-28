@@ -5,7 +5,8 @@ Public Module Devices
             Return New List(Of String) From {
                 "Line-powered switch",
                 "Line-powered sensor",
-                "Battery-powered sensor"
+                "Battery-powered sensor",
+                "Thermostat"
                 }
         End Get
     End Property
@@ -15,7 +16,8 @@ Public Module Devices
             Return New List(Of String()) From {
                 LinePoweredSwitchFeatures,
                 LinePoweredSensorFeatures,
-                BatteryPoweredSensorFeatures
+                BatteryPoweredSensorFeatures,
+                ThermostatFeatures
                 }
         End Get
     End Property
@@ -37,6 +39,27 @@ Public Module Devices
             Return {"Open-Close status feature", "Battery status feature"}
         End Get
     End Property
+
+    Public ReadOnly Property ThermostatFeatures As String()
+        Get
+            Return {"Ambient Temperature feature", "Heating Setpoint feature", "Cooling Setpoint feature", "HVAC Mode feature", "HVAC Status feature", "Fan Mode feature", "Fan Status feature", "Humidity feature"}
+        End Get
+    End Property
+
+    Public Const ThermostatHvacModeHeat As Integer = 1
+    Public Const ThermostatHvacModeCool As Integer = 2
+    Public Const ThermostatHvacModeAuto As Integer = 3
+    Public Const ThermostatHvacModeAuxHeat As Integer = 4
+    Public Const ThermostatHvacModeOff As Integer = 5
+    Public Const ThermostatHvacStatusIdle As Integer = 0
+    Public Const ThermostatHvacStatusHeating As Integer = 1
+    Public Const ThermostatHvacStatusCooling As Integer = 2
+    Public Const ThermostatFanModeAuto As Integer = 1
+    Public Const ThermostatFanModeOn As Integer = 2
+    Public Const ThermostatFanStatusOff As Integer = 0
+    Public Const ThermostatFanStatusOn As Integer = 1
+    Public Const ThermostatSetpointDecrement As Integer = 1000
+    Public Const ThermostatSetpointIncrement As Integer = 1001
 
     Public Const DeviceConfigPageId As String = "device-config-page"
     Public Const DeviceConfigPageName As String = "Sample Device Config"
