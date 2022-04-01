@@ -1,7 +1,6 @@
 namespace HomeSeer.PluginSdk.Devices {
 
     /// <summary>
-    /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
     /// <para>
     /// The display type for a <see cref="HsFeature"/>.
     /// This controls the way a feature and its controls are displayed in the HomeSeer UI.
