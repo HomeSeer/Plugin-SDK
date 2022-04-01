@@ -72,7 +72,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </remarks>
         public int DisplayPriority => _displayPriority;
 
-        /// <summary>>
+        /// <summary>
         /// The <see cref="EFeatureDisplayType"/> for a feature.
         /// </summary>
         /// <remarks>This is used to help HS determine how it should be displayed to the user</remarks>
