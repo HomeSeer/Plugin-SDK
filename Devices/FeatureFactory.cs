@@ -302,8 +302,32 @@ namespace HomeSeer.PluginSdk.Devices {
 
             return this;
         }
-        
+
         #region Controls
+
+        /// <summary>
+        /// Add a <see cref="StatusControl"/> to the <see cref="HsFeature"/> being built
+        /// </summary>
+        /// <param name="statusControl">The <see cref="StatusControl"/> to add.</param>
+        /// <returns>The calling <see cref="FeatureFactory"/> with an added <see cref="StatusControl"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="statusControl"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when a <see cref="StatusControl"/> for the values targeted by <paramref name="statusControl"/> already exists.</exception>
+        public FeatureFactory AddControl(StatusControl statusControl) {
+
+            if (statusControl == null) {
+                throw new ArgumentNullException(nameof(statusControl));
+            }
+            if (statusControl.IsRange && _feature.HasControlForRange(statusControl.TargetRange)) {
+                throw new ArgumentException("A value targeted by the specified statusControl already has a control bound to it.", nameof(statusControl));
+            }
+            if (!statusControl.IsRange && _feature.HasControlForValue(statusControl.TargetValue)) {
+                throw new ArgumentException("The value targeted by the specified statusControl already has a control bound to it.", nameof(statusControl));
+            }
+
+            _feature.AddStatusControl(statusControl);
+
+            return this;
+        }
         
         /// <summary>
         /// Add a button to the <see cref="HsFeature"/>.
