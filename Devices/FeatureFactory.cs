@@ -317,13 +317,19 @@ namespace HomeSeer.PluginSdk.Devices {
             if (statusControl == null) {
                 throw new ArgumentNullException(nameof(statusControl));
             }
-            if (statusControl.IsRange && _feature.HasControlForRange(statusControl.TargetRange)) {
-                throw new ArgumentException("A value targeted by the specified statusControl already has a control bound to it.", nameof(statusControl));
+            if (statusControl.IsRange ) {
+                //If the control is a range
+                if (_feature.HasControlForRange(statusControl.TargetRange)) {
+                    //If the feature already has a control for the range
+                    throw new ArgumentException("A value targeted by the specified statusControl already has a control bound to it.", nameof(statusControl));
+                }
             }
-            if (!statusControl.IsRange && _feature.HasControlForValue(statusControl.TargetValue)) {
+            else if (_feature.HasControlForValue(statusControl.TargetValue)) {
+                //The control is not a range
+                //If the feature already has a control for the value
                 throw new ArgumentException("The value targeted by the specified statusControl already has a control bound to it.", nameof(statusControl));
             }
-
+            
             _feature.AddStatusControl(statusControl);
 
             return this;
