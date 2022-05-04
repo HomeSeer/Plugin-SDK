@@ -56,7 +56,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// The text displayed when the associated <see cref="HsFeature"/>'s <see cref="HsFeature.Value"/> field matches
+        /// The text displayed when the associated <see cref="HsFeature"/>'s <see cref="AbstractHsDevice.Value"/> field matches
         ///  the <see cref="Value"/> or <see cref="TargetRange"/>.
         /// <para>
         /// Leaving this blank will cause the StatusControl's Label field to be used instead
@@ -82,7 +82,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
         /// <summary>
         /// The path to an image displayed by the associated <see cref="HsFeature"/> when its
-        ///  <see cref="HsFeature.Value"/> field matches the <see cref="Value"/> or <see cref="TargetRange"/>
+        ///  <see cref="AbstractHsDevice.Value"/> field matches the <see cref="Value"/> or <see cref="TargetRange"/>
         ///  on this <see cref="StatusGraphic"/>
         /// </summary>
         public string Graphic {

@@ -14,7 +14,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
     /// <remarks>
     /// Legacy VSPairs used to be able to be defined as either status-only, control-only, or both,
     ///  but this is no longer allowed. All StatusControls are considered both, and a <see cref="StatusGraphic"/>
-    ///  will override the <see cref="AbstractHsDevice.Status"/> on the feature if it is configured for the feature's
+    ///  will override the <see cref="AbstractHsDevice.DisplayedStatus"/> on the feature if it is configured for the feature's
     ///  current <see cref="AbstractHsDevice.Value"/>.
     /// <para>
     ///  If you are looking to add a status-only control to a feature, create a <see cref="StatusGraphic"/> instead.

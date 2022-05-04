@@ -22,7 +22,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         public void New_ValueRange_AssertPass(double min, double max)
         {
             new ValueRange(min, max);
-            Assert.Pass();
         }
 
         [Description("Test the creation of a new value range using bad min and/or max values so an exception is thrown.")]
@@ -48,7 +47,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         {
             var testValueRange = new ValueRange(0, 10);
             testValueRange.Min = min;
-            Assert.Pass();
         }
 
         [Description("Test setting Min when Max is 10 to make sure that an exception is thrown when a number > Max is provided for Min.")]
@@ -90,7 +88,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         {
             var testValueRange = new ValueRange(1, 10);
             testValueRange.Max = max;
-            Assert.Pass();
         }
 
         [Description("Test setting Max when Min is 1 to make sure that an exception is thrown when a number < Min is provided for Max.")]
@@ -137,7 +134,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         {
             var testValueRange = new ValueRange(0, 1);
             testValueRange.Offset = offset;
-            Assert.Pass();
         }
 
         [Description("Test getting the offset to make sure it returns the same number it was set to.")]
@@ -171,7 +167,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         {
             var testValueRange = new ValueRange(0, 1);
             testValueRange.DecimalPlaces = decimalPlaces;
-            Assert.Pass();
         }
 
         [Description("Test setting Decimal Places to make sure an exception is thrown when trying to set it to a value less than 0.")]
@@ -207,7 +202,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         {
             var testValueRange = new ValueRange(0, 1);
             testValueRange.Prefix = prefix;
-            Assert.Pass();
         }
 
         [Description("Test getting Prefix to make sure it returns the same value it was set to or empty string if set to null or whitespace.")]
@@ -236,7 +230,6 @@ namespace HomeSeer.PluginSdkTests.Devices.Tests
         {
             var testValueRange = new ValueRange(0, 1);
             testValueRange.Suffix = suffix;
-            Assert.Pass();
         }
 
         [Description("Test getting Suffix to make sure it returns the same value it was set to or empty string if set to null or whitespace.")]

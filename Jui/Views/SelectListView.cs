@@ -37,10 +37,28 @@ namespace HomeSeer.Jui.Views {
         /// The index of the currently selected option in the list. This is the value for this view.
         /// </summary>
         /// <remarks>
-        /// Set this to -1 to display a default "Choose an Option" text
+        /// Set this to -1 to display a default "Select an option" text
         /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the selection is set to an index that does not work for the current <see cref="Options"/></exception>
         [JsonProperty("selection")]
-        public int Selection { get; set; } = -1;
+        public int Selection { 
+            get => _selection;
+            set {
+                if (value < -1 || value >= Options?.Count ){
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                _selection = value;
+            }
+        }
+
+        private int _selection = -1;
+
+		/// <summary>
+		/// The text displayed when <see cref="Selection"/> equals -1. If this property is null or empty, "Select an option" is displayed. 
+		/// </summary>
+        /// <remarks>This property is not used when <see cref="Style"/> is <see cref="ESelectListType.RadioList"/></remarks>
+		[JsonProperty("default_selection_text")]
+		public string DefaultSelectionText { get; set; }
 
 		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
@@ -146,7 +164,7 @@ namespace HomeSeer.Jui.Views {
 		/// <returns>The text of the option at the index specified by <see cref="Selection"/>.</returns>
 		public string GetSelectedOption() {
 			if (Options == null || Selection >= Options.Count || Selection == -1) {
-				return "";
+				return string.Empty;
 			}
 			
 			return Options[Selection];
@@ -158,11 +176,11 @@ namespace HomeSeer.Jui.Views {
 		/// <returns>The key of the option at the index specified by <see cref="Selection"/>.</returns>
 		public string GetSelectedOptionKey() {
 			if (Options == null || Selection >= Options.Count || Selection == -1) {
-				return "";
+				return string.Empty;
 			}
 			
 			if (OptionKeys == null || Selection >= OptionKeys.Count || Selection == -1) {
-				return "";
+				return string.Empty;
 			}
 
 			return OptionKeys[Selection];
@@ -179,15 +197,18 @@ namespace HomeSeer.Jui.Views {
 			//Add the select list
 			switch (Style) {
 				case ESelectListType.DropDown:
-					//Add the title
-					sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
+                case ESelectListType.SearchableDropDown:
+                    //Add the title
+                    sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
 					sb.Append(Environment.NewLine);
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\">");
+					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\" {(Style== ESelectListType.SearchableDropDown ? "searchable=\"Search...\"" : "")}>");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
-					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>Select an option</option>");
+					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>");
+					sb.Append($"{(string.IsNullOrEmpty(DefaultSelectionText) ? "Select an option" : DefaultSelectionText)}");
+					sb.Append("</option>");
 					sb.Append(Environment.NewLine);
 					for (var i = 0; i < Options.Count; i++) {
 						var option = Options[i];

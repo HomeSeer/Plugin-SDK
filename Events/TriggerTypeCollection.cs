@@ -162,7 +162,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called by HomeSeer when a user updates the configuration of a trigger and those changes
         ///  are in need of processing.
         /// </summary>
-        /// <param name="postData">A <see cref="Dictionary"/> of changes to the trigger configuration</param>
+        /// <param name="postData">A <see cref="Dictionary{TKey,TValue}"/> of changes to the trigger configuration</param>
         /// <param name="trigInfo">The trigger being configured</param>
         /// <returns>
         /// An <see cref="EventUpdateReturnData"/> describing the new state of the trigger that will be saved by HomeSeer.
