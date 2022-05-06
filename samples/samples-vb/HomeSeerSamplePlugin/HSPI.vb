@@ -3,6 +3,8 @@ Imports HomeSeer.Jui.Types
 Imports HomeSeer.Jui.Views
 Imports HomeSeer.PluginSdk
 Imports HomeSeer.PluginSdk.Devices
+Imports HomeSeer.PluginSdk.Devices.Controls
+Imports HomeSeer.PluginSdk.Devices.Identification
 Imports HomeSeer.PluginSdk.Logging
 Imports Newtonsoft.Json
 
@@ -140,7 +142,8 @@ Public Class HSPI
         'Add a ViewGroup containing all of the ToggleViews to the page
         settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId, Constants.Settings.Sp1PageToggleGroupName, pageToggles)
         settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go To Devices", "/devices.html"))
-        settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add New Device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
+        settingsPage1.WithView(New NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add a new sample device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
+
         'Add the first page to the list of plugin settings pages
         Settings.Add(settingsPage1.Page)
 
@@ -165,7 +168,7 @@ Public Class HSPI
         'Add a text area to the page
         settingsPage2.WithTextArea(Constants.Settings.Sp2TextAreaId, Constants.Settings.Sp2TextAreaName, 3)
         'Add a time span to the page
-         settingsPage2.WithTimeSpan(Constants.Settings.Sp2SampleTimeSpanId, Constants.Settings.Sp2SampleTimeSpanName)
+        settingsPage2.WithTimeSpan(Constants.Settings.Sp2SampleTimeSpanId, Constants.Settings.Sp2SampleTimeSpanName)
         'Add the second page to the list of plugin settings pages
         Settings.Add(settingsPage2.Page)
 
@@ -186,6 +189,10 @@ Public Class HSPI
         settingsPage3.WithInput(Constants.Settings.Sp3SampleInput5Id, Constants.Settings.Sp3SampleInput5Name, EInputType.Password)
         'Add a decimal InputView to the page
         settingsPage3.WithInput(Constants.Settings.Sp3SampleInput6Id, Constants.Settings.Sp3SampleInput6Name, EInputType.Decimal)
+        'Add a date InputView to the page
+        settingsPage3.WithInput(Constants.Settings.Sp3SampleInput7Id, Constants.Settings.Sp3SampleInput7Name, EInputType.Date)
+        'Add a time InputView to the page
+        settingsPage3.WithInput(Constants.Settings.Sp3SampleInput8Id, Constants.Settings.Sp3SampleInput8Name, EInputType.Time)
         'Add the third page to the list of plugin settings pages
         Settings.Add(settingsPage3.Page)
     End Sub
@@ -294,6 +301,20 @@ Public Class HSPI
             inputValue = inputSavedValue
         End If
 
+        Dim dateInputSavedValue As String = GetExtraData(deviceRef, DeviceConfigDateInputId)
+        Dim dateInputValue As String = DeviceConfigDateInputValue
+
+        If Not String.IsNullOrEmpty(dateInputSavedValue) Then
+            dateInputValue = dateInputSavedValue
+        End If
+
+        Dim timeInputSavedValue As String = GetExtraData(deviceRef, DeviceConfigTimeInputId)
+        Dim timeInputValue As String = DeviceConfigTimeInputValue
+
+        If Not String.IsNullOrEmpty(timeInputSavedValue) Then
+            timeInputValue = timeInputSavedValue
+        End If
+
         Dim textAreaSavedValue As String = GetExtraData(deviceRef, DeviceConfigTextAreaId)
         Dim textAreaValue As String = ""
 
@@ -314,8 +335,12 @@ Public Class HSPI
         deviceConfigPage.WithDropDownSelectList(DeviceConfigSelectListId, DeviceConfigSelectListName, DeviceConfigSelectListOptions, dropdownValue)
         deviceConfigPage.WithRadioSelectList(DeviceConfigRadioSlId, DeviceConfigRadioSlName, DeviceConfigSelectListOptions, radioSelectValue)
         deviceConfigPage.WithInput(DeviceConfigInputId, DeviceConfigInputName, inputValue)
+        deviceConfigPage.WithInput(DeviceConfigDateInputId, DeviceConfigDateInputName, dateInputValue, EInputType.Date)
+        deviceConfigPage.WithInput(DeviceConfigTimeInputId, DeviceConfigTimeInputName, timeInputValue, EInputType.Time)
         deviceConfigPage.WithTextArea(DeviceConfigTextAreaId, DeviceConfigTextAreaName, textAreaValue)
         deviceConfigPage.WithTimeSpan(DeviceConfigTimeSpanId, DeviceConfigTimeSpanName, timeSpanValue, True, False)
+        deviceConfigPage.WithView(New NavigateButtonView(DeviceConfigNavButton1Id, "Go to Devices", "/devices.html"))
+        deviceConfigPage.WithView(New NavigateButtonView(DeviceConfigNavButton2Id, "Add a new sample device", "/HomeSeerSamplePluginVB/add-sample-device.html"))
         Return deviceConfigPage.Page.ToJsonString()
     End Function
 
@@ -351,6 +376,18 @@ Public Class HSPI
 
                 If v IsNot Nothing Then
                     SetExtraData(deviceRef, DeviceConfigInputId, v.Value)
+                End If
+            ElseIf view.Id = DeviceConfigDateInputId Then
+                Dim v As InputView = TryCast(view, InputView)
+
+                If v IsNot Nothing Then
+                    SetExtraData(deviceRef, DeviceConfigDateInputId, v.Value)
+                End If
+            ElseIf view.Id = DeviceConfigTimeInputId Then
+                Dim v As InputView = TryCast(view, InputView)
+
+                If v IsNot Nothing Then
+                    SetExtraData(deviceRef, DeviceConfigTimeInputId, v.Value)
                 End If
             ElseIf view.Id = DeviceConfigTextAreaId Then
                 Dim v As TextAreaView = TryCast(view, TextAreaView)
@@ -443,7 +480,7 @@ Public Class HSPI
                         response = JsonConvert.SerializeObject(postData.Device)
                     Else
                         Dim deviceData = postData.Device
-                        Dim device = deviceData.BuildDevice(Id)
+                        Dim device = deviceData.BuildDevice(Id, HomeSeerSystem)
                         Dim devRef = HomeSeerSystem.CreateDevice(device)
                         deviceData.Ref = devRef
                         response = JsonConvert.SerializeObject(deviceData)
@@ -628,6 +665,132 @@ Public Class HSPI
         Return list
     End Function
 
+    Public Overrides Sub SetIOMulti(ByVal controlEvents As List(Of ControlEvent))
+        For Each controlEvent In controlEvents
+            If HomeSeerSystem.IsRefDevice(controlEvent.TargetRef) Then Continue For
+            Dim feat As HsFeature = HomeSeerSystem.GetFeatureByRef(controlEvent.TargetRef)
+            Dim devRef As Integer = -1
 
+            If feat.AssociatedDevices IsNot Nothing AndAlso feat.AssociatedDevices.Count = 1 Then
+                devRef = feat.AssociatedDevices.Single()
+            Else
+
+                If LogDebug Then
+                    Console.WriteLine($"Cannot get parent device for feature {controlEvent.TargetRef}")
+                End If
+
+                Continue For
+            End If
+
+            Dim dev As HsDevice = HomeSeerSystem.GetDeviceByRef(devRef)
+
+            If dev.TypeInfo.Type = CInt(EDeviceType.Thermostat) Then
+
+                If feat.TypeInfo.Type = CInt(EFeatureType.ThermostatControl) Then
+                    Dim useCelsius As Boolean = Not Convert.ToBoolean(HomeSeerSystem.GetINISetting("Settings", "gGlobalTempScaleF", "True", "settings.ini"))
+
+                    Select Case feat.TypeInfo.SubType
+                        Case CInt(EThermostatControlFeatureSubType.HeatingSetPoint), CInt(EThermostatControlFeatureSubType.CoolingSetPoint)
+
+                            If controlEvent.ControlValue = Devices.ThermostatSetpointDecrement Then
+                                Dim newValue As Double = feat.Value - (If(useCelsius, 0.5, 1))
+                                HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue)
+                            ElseIf controlEvent.ControlValue = Devices.ThermostatSetpointIncrement Then
+                                Dim newValue As Double = feat.Value + (If(useCelsius, 0.5, 1))
+                                HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue)
+                            Else
+                                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue)
+                            End If
+
+                        Case CInt(EThermostatControlFeatureSubType.ModeSet)
+                            HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue)
+                        Case CInt(EThermostatControlFeatureSubType.FanModeSet)
+                            HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue)
+                    End Select
+
+                    SimulateThermostatUpdate(dev.Ref)
+                End If
+            Else
+                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue)
+            End If
+        Next
+    End Sub
+
+    Private Sub SimulateThermostatUpdate(ByVal devRef As Integer)
+        Dim dev As HsDevice = HomeSeerSystem.GetDeviceWithFeaturesByRef(devRef)
+        Dim ambientTempFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatStatus),
+            .SubType = CInt(EThermostatStatusFeatureSubType.Temperature)
+        })
+        Dim heatingSetpointFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatControl),
+            .SubType = CInt(EThermostatControlFeatureSubType.HeatingSetPoint)
+        })
+        Dim coolingSetpointFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatControl),
+            .SubType = CInt(EThermostatControlFeatureSubType.CoolingSetPoint)
+        })
+        Dim hvacModeFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatControl),
+            .SubType = CInt(EThermostatControlFeatureSubType.ModeSet)
+        })
+        Dim hvacStatusFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatStatus),
+            .SubType = CInt(EThermostatStatusFeatureSubType.OperatingState)
+        })
+        Dim fanModeFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatControl),
+            .SubType = CInt(EThermostatControlFeatureSubType.FanModeSet)
+        })
+        Dim fanStatusFeat As HsFeature = dev.GetFeatureByType(New TypeInfo() With {
+            .ApiType = EApiType.Feature,
+            .Type = CInt(EFeatureType.ThermostatStatus),
+            .SubType = CInt(EThermostatStatusFeatureSubType.FanStatus)
+        })
+        Dim ambientTemp As Double = If(ambientTempFeat?.Value, 0)
+        Dim heatingSetpoint As Double = If(heatingSetpointFeat?.Value, 0)
+        Dim coolingSetpoint As Double = If(coolingSetpointFeat?.Value, 0)
+        Dim hvacMode As Integer = CInt((If(hvacModeFeat?.Value, 0)))
+        Dim fanMode As Integer = CInt((If(fanModeFeat?.Value, 0)))
+
+        If hvacMode = Devices.ThermostatHvacModeOff Then
+            HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle)
+        ElseIf hvacMode = Devices.ThermostatHvacModeHeat OrElse hvacMode = Devices.ThermostatHvacModeAuxHeat Then
+
+            If ambientTemp < heatingSetpoint Then
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusHeating)
+            Else
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle)
+            End If
+        ElseIf hvacMode = Devices.ThermostatHvacModeCool Then
+
+            If ambientTemp > coolingSetpoint Then
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusCooling)
+            Else
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle)
+            End If
+        ElseIf hvacMode = Devices.ThermostatHvacModeAuto Then
+
+            If ambientTemp > coolingSetpoint Then
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusCooling)
+            ElseIf ambientTemp < heatingSetpoint Then
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusHeating)
+            Else
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle)
+            End If
+        End If
+
+        If fanMode = Devices.ThermostatFanModeOn Then
+            HomeSeerSystem.UpdateFeatureValueByRef(fanStatusFeat.Ref, Devices.ThermostatFanStatusOn)
+        ElseIf fanMode = Devices.ThermostatFanModeAuto Then
+            HomeSeerSystem.UpdateFeatureValueByRef(fanStatusFeat.Ref, Devices.ThermostatFanStatusOff)
+        End If
+    End Sub
 
 End Class
