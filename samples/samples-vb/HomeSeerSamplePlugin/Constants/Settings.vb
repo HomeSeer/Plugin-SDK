@@ -61,13 +61,12 @@
                 Return $"{SettingsPage1Id}-violet"
             End Get
         End Property
-        
         Public ReadOnly Property Sp1NavButton1Id As String
             Get
                 Return $"{SettingsPage1Id}-but-devices"
             End Get
         End Property
-        
+
         Public ReadOnly Property Sp1NavButton2Id As String
             Get
                 Return $"{SettingsPage1Id}-but-add-device"
@@ -254,6 +253,21 @@
         End Property
 
         Public Const Sp3SampleInput6Name As String = "Sample Decimal Input"
+
+        Public ReadOnly Property Sp3SampleInput7Id As String
+            Get
+                Return $"{SettingsPage3Id}-sampleinput7"
+            End Get
+        End Property
+
+        Public Const Sp3SampleInput8Name As String = "Sample Time Input"
+        Public ReadOnly Property Sp3SampleInput8Id As String
+            Get
+                Return $"{SettingsPage3Id}-sampleinput8"
+            End Get
+        End Property
+
+        Public Const Sp3SampleInput7Name As String = "Sample Date Input"
 
     End Module
 End Namespace
