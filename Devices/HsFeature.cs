@@ -561,6 +561,32 @@ namespace HomeSeer.PluginSdk.Devices {
             _displayPriority = index;
         }
 
+        /// <summary>
+        /// Determine if the feature has a <see cref="StatusControl"/> with a specific <see cref="EControlUse"/>
+        /// </summary>
+        /// <param name="controlUse">The <see cref="EControlUse"/> value to look for </param>
+        /// <returns>
+        /// TRUE if the feature has a <see cref="StatusControl"/> with this specific <see cref="EControlUse"/>,
+        ///  FALSE if it does not.
+        /// </returns>
+        public bool HasControlForUse(EControlUse controlUse) {
+
+            var currentStatusControls = StatusControls ?? new StatusControlCollection();
+
+            return currentStatusControls.HasControlForUse(controlUse);
+        }
+
+        /// <summary>
+        /// Get a <see cref="StatusControl"/> associated with the feature that has a specific <see cref="EControlUse"/>
+        /// </summary>
+        /// <param name="controlUse">The <see cref="EControlUse"/> value to look for</param>
+        /// <returns>null if no such <see cref="StatusControl"/> exists, the first one found otherwise</returns>
+        public StatusControl GetFirstControlForUse(EControlUse controlUse) {
+            var currentStatusControls = StatusControls ?? new StatusControlCollection();
+
+            return currentStatusControls.GetFirstControlForUse(controlUse);
+        }
+
     }
 
 }

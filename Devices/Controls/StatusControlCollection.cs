@@ -196,7 +196,35 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         public void RemoveAll() {
             _statusControls = new SortedDictionary<double, StatusControl>();
         }
-  
+
+        /// <summary>
+        /// Determine if the collection contains a <see cref="StatusControl"/> with a specific <see cref="EControlUse"/>
+        /// </summary>
+        /// <param name="controlUse">The <see cref="EControlUse"/> value to look for </param>
+        /// <returns>TRUE if the collection contains such a <see cref="StatusControl"/>, FALSE if it does not</returns>
+        public bool HasControlForUse(EControlUse controlUse) {
+            foreach(var control in _statusControls.Values) {
+                if(control.ControlUse == controlUse) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get a <see cref="StatusControl"/> in the collection which has a specific <see cref="EControlUse"/>
+        /// </summary>
+        /// <param name="controlUse">The <see cref="EControlUse"/> value to look for </param>
+        /// <returns>null if no such <see cref="StatusControl"/> exists in the collection, the first one found otherwise</returns>
+        public StatusControl GetFirstControlForUse(EControlUse controlUse) {
+            foreach (var control in _statusControls.Values) {
+                if (control.ControlUse == controlUse) {
+                    return control;
+                }
+            }
+            return null;
+        }
+
     }
 
 }
