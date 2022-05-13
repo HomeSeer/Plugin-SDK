@@ -6,7 +6,10 @@ using HomeSeer.Jui.Types;
 using HomeSeer.Jui.Views;
 using HomeSeer.PluginSdk;
 using HomeSeer.PluginSdk.Devices;
+using HomeSeer.PluginSdk.Devices.Controls;
+using HomeSeer.PluginSdk.Devices.Identification;
 using HomeSeer.PluginSdk.Logging;
+using HSPI_HomeSeerSamplePlugin.Constants;
 using HSPI_HomeSeerSamplePlugin.Features;
 using Newtonsoft.Json;
 
@@ -125,10 +128,13 @@ namespace HSPI_HomeSeerSamplePlugin {
             settingsPage1.WithGroup(Constants.Settings.Sp1PageToggleGroupId,
                                     Constants.Settings.Sp1PageToggleGroupName,
                                     pageToggles);
+
+            //Add navigate buttons to the page
             settingsPage1.WithView(new NavigateButtonView(Constants.Settings.Sp1NavButton1Id, "Go to Devices",
                 "/devices.html"));
             settingsPage1.WithView(new NavigateButtonView(Constants.Settings.Sp1NavButton2Id, "Add a new sample device",
                 "/HomeSeerSamplePlugin/add-sample-device.html"));
+
             //Add the first page to the list of plugin settings pages
             Settings.Add(settingsPage1.Page);
             
@@ -167,6 +173,9 @@ namespace HSPI_HomeSeerSamplePlugin {
                                          
             //Add a time span to the page
             settingsPage2.WithTimeSpan(Constants.Settings.Sp2SampleTimeSpanId, Constants.Settings.Sp2SampleTimeSpanName);
+
+            
+
             
             //Add the second page to the list of plugin settings pages
             Settings.Add(settingsPage2.Page);
@@ -199,6 +208,17 @@ namespace HSPI_HomeSeerSamplePlugin {
             settingsPage3.WithInput(Constants.Settings.Sp3SampleInput6Id,
                                     Constants.Settings.Sp3SampleInput6Name,
                                     EInputType.Decimal);
+
+            //Add a date InputView to the page
+            settingsPage3.WithInput(Constants.Settings.Sp3SampleInput7Id,
+                                    Constants.Settings.Sp3SampleInput7Name,
+                                    EInputType.Date);
+
+            //Add a time InputView to the page
+            settingsPage3.WithInput(Constants.Settings.Sp3SampleInput8Id,
+                                    Constants.Settings.Sp3SampleInput8Name,
+                                    EInputType.Time);
+
             //Add the third page to the list of plugin settings pages
             Settings.Add(settingsPage3.Page);
         }
@@ -308,6 +328,18 @@ namespace HSPI_HomeSeerSamplePlugin {
             {
                 inputValue = inputSavedValue;
             }
+            string dateInputSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigDateInputId);
+            string dateInputValue = Constants.Devices.DeviceConfigDateInputValue;
+            if (!string.IsNullOrEmpty(dateInputSavedValue))
+            {
+                dateInputValue = dateInputSavedValue;
+            }
+            string timeInputSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigTimeInputId);
+            string timeInputValue = Constants.Devices.DeviceConfigTimeInputValue;
+            if (!string.IsNullOrEmpty(timeInputSavedValue))
+            {
+                timeInputValue = timeInputSavedValue;
+            }
             string textAreaSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigTextAreaId);
             string textAreaValue = "";
             if (!string.IsNullOrEmpty(textAreaSavedValue))
@@ -352,6 +384,16 @@ namespace HSPI_HomeSeerSamplePlugin {
                                        Constants.Devices.DeviceConfigInputName,
                                        inputValue);
 
+            //Add a date InputView to the page
+            deviceConfigPage.WithInput(Constants.Devices.DeviceConfigDateInputId,
+                                       Constants.Devices.DeviceConfigDateInputName,
+                                       dateInputValue, EInputType.Date);
+
+            //Add a time InputView to the page
+            deviceConfigPage.WithInput(Constants.Devices.DeviceConfigTimeInputId,
+                                       Constants.Devices.DeviceConfigTimeInputName,
+                                       timeInputValue, EInputType.Time);
+
             //Add a text area to the page
             deviceConfigPage.WithTextArea(Constants.Devices.DeviceConfigTextAreaId,
                                        Constants.Devices.DeviceConfigTextAreaName,
@@ -363,6 +405,16 @@ namespace HSPI_HomeSeerSamplePlugin {
                                        timeSpanValue,
                                        true,
                                        false);
+
+            //Add navigate buttons to the page
+            deviceConfigPage.WithView(new NavigateButtonView(Constants.Devices.DeviceConfigNavButton1Id,
+                                                            "Go to Devices",
+                                                            "/devices.html"));
+
+            //Add navigate buttons to the page
+            deviceConfigPage.WithView(new NavigateButtonView(Constants.Devices.DeviceConfigNavButton2Id,
+                                                            "Add a new sample device",
+                                                            "/HomeSeerSamplePlugin/add-sample-device.html"));
                                        
             return deviceConfigPage.Page.ToJsonString();
         }
@@ -410,6 +462,22 @@ namespace HSPI_HomeSeerSamplePlugin {
                     if (v != null)
                     {
                         SetExtraData(deviceRef, Constants.Devices.DeviceConfigInputId, v.Value);
+                    }
+                }
+                else if (view.Id == Constants.Devices.DeviceConfigDateInputId)
+                {
+                    InputView v = view as InputView;
+                    if (v != null)
+                    {
+                        SetExtraData(deviceRef, Constants.Devices.DeviceConfigDateInputId, v.Value);
+                    }
+                }
+                else if (view.Id == Constants.Devices.DeviceConfigTimeInputId)
+                {
+                    InputView v = view as InputView;
+                    if (v != null)
+                    {
+                        SetExtraData(deviceRef, Constants.Devices.DeviceConfigTimeInputId, v.Value);
                     }
                 }
                 else if (view.Id == Constants.Devices.DeviceConfigTextAreaId)
@@ -512,7 +580,7 @@ namespace HSPI_HomeSeerSamplePlugin {
                         }
                         else {
                             var deviceData = postData.Device;
-                            var device = deviceData.BuildDevice(Id);
+                            var device = deviceData.BuildDevice(Id, HomeSeerSystem);
                             var devRef = HomeSeerSystem.CreateDevice(device);
                             deviceData.Ref = devRef;
                             response = JsonConvert.SerializeObject(deviceData);
@@ -656,6 +724,135 @@ namespace HSPI_HomeSeerSamplePlugin {
             }
             extraData[key] = value;
             HomeSeerSystem.UpdatePropertyByRef(deviceRef, EProperty.PlugExtraData, extraData);
+        }
+
+        public override void SetIOMulti(List<ControlEvent> controlEvents) {
+            foreach (var controlEvent in controlEvents) {
+                if (HomeSeerSystem.IsRefDevice(controlEvent.TargetRef))
+                    continue;
+
+                HsFeature feat = HomeSeerSystem.GetFeatureByRef(controlEvent.TargetRef);
+                int devRef = -1;
+                if (feat.AssociatedDevices != null && feat.AssociatedDevices.Count == 1) {
+                    devRef = feat.AssociatedDevices.Single();
+                }
+                else {
+                    if (LogDebug) {
+                        Console.WriteLine($"Cannot get parent device for feature {controlEvent.TargetRef}");
+                    }
+                    continue;
+                }
+                HsDevice dev = HomeSeerSystem.GetDeviceByRef(devRef);
+
+                if (dev.TypeInfo.Type == (int)EDeviceType.Thermostat) {
+                    if (feat.TypeInfo.Type == (int)EFeatureType.ThermostatControl) {
+                        bool useCelsius = !Convert.ToBoolean(HomeSeerSystem.GetINISetting("Settings", "gGlobalTempScaleF", "True", "settings.ini"));
+
+                        switch (feat.TypeInfo.SubType) {
+                            case (int)EThermostatControlFeatureSubType.HeatingSetPoint:
+                            case (int)EThermostatControlFeatureSubType.CoolingSetPoint:
+                                if (controlEvent.ControlValue == Devices.ThermostatSetpointDecrement) {
+                                    double newValue = feat.Value - (useCelsius ? 0.5 : 1);
+                                    HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue);
+                                } else if (controlEvent.ControlValue == Devices.ThermostatSetpointIncrement) {
+                                    double newValue = feat.Value + (useCelsius ? 0.5 : 1);
+                                    HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue);
+                                } else {
+                                    HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                                }
+                                break;
+                            case (int)EThermostatControlFeatureSubType.ModeSet:
+                                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                                break;
+                            case (int)EThermostatControlFeatureSubType.FanModeSet:
+                                HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                                break;
+
+                        }
+                        SimulateThermostatUpdate(dev.Ref);
+                    }
+                }
+                else {
+                    HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);
+                }
+
+            }
+        }
+
+        private void SimulateThermostatUpdate(int devRef) {
+            HsDevice dev = HomeSeerSystem.GetDeviceWithFeaturesByRef(devRef);
+
+            HsFeature ambientTempFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatStatus,
+                SubType = (int)EThermostatStatusFeatureSubType.Temperature
+            });
+            HsFeature heatingSetpointFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.HeatingSetPoint,
+            });
+            HsFeature coolingSetpointFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.CoolingSetPoint,
+            });
+            HsFeature hvacModeFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.ModeSet,
+            });
+            HsFeature hvacStatusFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatStatus,
+                SubType = (int)EThermostatStatusFeatureSubType.OperatingState,
+            });
+            HsFeature fanModeFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatControl,
+                SubType = (int)EThermostatControlFeatureSubType.FanModeSet,
+            });
+            HsFeature fanStatusFeat = dev.GetFeatureByType(new TypeInfo() {
+                ApiType = EApiType.Feature,
+                Type = (int)EFeatureType.ThermostatStatus,
+                SubType = (int)EThermostatStatusFeatureSubType.FanStatus,
+            });
+            double ambientTemp = ambientTempFeat?.Value ?? 0;
+            double heatingSetpoint = heatingSetpointFeat?.Value ?? 0;
+            double coolingSetpoint = coolingSetpointFeat?.Value ?? 0;
+            int hvacMode = (int)(hvacModeFeat?.Value ?? 0);
+            int fanMode = (int)(fanModeFeat?.Value ?? 0);
+
+            //Update HVAC status based on HVAC mode, setpoints and ambient temperature
+            if (hvacMode == Devices.ThermostatHvacModeOff) {
+                HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+            else if (hvacMode == Devices.ThermostatHvacModeHeat || hvacMode == Devices.ThermostatHvacModeAuxHeat) {
+                if (ambientTemp < heatingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusHeating);
+                else
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+            else if (hvacMode == Devices.ThermostatHvacModeCool) {
+                if (ambientTemp > coolingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusCooling);
+                else
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+            else if (hvacMode == Devices.ThermostatHvacModeAuto) {
+                if (ambientTemp > coolingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusCooling);
+                else if (ambientTemp < heatingSetpoint)
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusHeating);
+                else
+                    HomeSeerSystem.UpdateFeatureValueByRef(hvacStatusFeat.Ref, Devices.ThermostatHvacStatusIdle);
+            }
+
+            //Update Fan status based on Fan mode
+            if (fanMode == Devices.ThermostatFanModeOn)
+                HomeSeerSystem.UpdateFeatureValueByRef(fanStatusFeat.Ref, Devices.ThermostatFanStatusOn);
+            else if (fanMode == Devices.ThermostatFanModeAuto)
+                HomeSeerSystem.UpdateFeatureValueByRef(fanStatusFeat.Ref, Devices.ThermostatFanStatusOff);
         }
 
     }
