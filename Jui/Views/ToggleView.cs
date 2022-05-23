@@ -29,7 +29,7 @@ namespace HomeSeer.Jui.Views {
 		[JsonProperty("toggle_style")]
 		public EToggleType ToggleType { get; set; }
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a toggle with an ID and Name
 		/// </summary>
@@ -43,7 +43,7 @@ namespace HomeSeer.Jui.Views {
 			ToggleType = EToggleType.Switch;
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.Update"/>
 		/// <summary>
 		/// Update the view to the new state.  This will change the enabled state
 		/// </summary>
@@ -58,7 +58,7 @@ namespace HomeSeer.Jui.Views {
 			IsEnabled = updatedToggleView.IsEnabled;
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.UpdateValue"/>
 		/// <exception cref="FormatException">Thrown when the value is not in the correct format</exception>
 		public override void UpdateValue(string value) {
 
@@ -71,18 +71,18 @@ namespace HomeSeer.Jui.Views {
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		public override string GetStringValue() {
 			return IsEnabled.ToString();
 		}
 
-		/// <inheritdoc/>
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 			
 			var sb = new StringBuilder();
 			sb.Append(GetIndentStringFromNumber(indent));
 			//Open the containing div
-			sb.Append($"<div id=\"{Id}.par\" class=\"jui-view jui-toggle\">");
+			sb.Append($"<div id=\"{Id}-par\" class=\"jui-view jui-toggle\">");
 			sb.Append(Environment.NewLine);
 			//Add the text
 			sb.Append(GetIndentStringFromNumber(indent+1));

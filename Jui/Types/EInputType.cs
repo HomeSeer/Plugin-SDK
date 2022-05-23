@@ -29,11 +29,20 @@ namespace HomeSeer.Jui.Types {
 		/// <summary>
 		/// Used for decimal numbers
 		/// </summary>
-		Decimal = 5
-		/*Color = 6,
+		Decimal = 5,
+		/// <summary>
+		/// Used for date only pickers
+		/// </summary>
 		Date = 7,
-		DateTime = 8,
-		Time = 9*/
+		/// <summary>
+		/// Used for time only pickers
+		/// </summary>
+		Time = 8,
+		/// <summary>
+		/// Used for date and time multi pickers
+		/// </summary>
+		DateTime = 9,
+		/*Color = 10,*/
 
 	}
 

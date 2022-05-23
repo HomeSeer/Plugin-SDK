@@ -18,13 +18,34 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SDKDEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;SDKDEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -34,16 +55,24 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PluginDev|AnyCPU' ">
-    <OutputPath>bin\PluginDev\</OutputPath>
-    <DocumentationFile>bin\PluginDev\PluginSdk.xml</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\Docs\</OutputPath>
+    <DocumentationFile>bin\Docs\PluginSdk.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HSCF">
-      <HintPath>..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">.\HSCF.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -54,14 +83,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractPlugin.cs" />
-    <Compile Include="Devices\AbstractStatus.cs" />
     <Compile Include="Devices\Controls\ControlLocation.cs" />
     <Compile Include="Devices\Controls\ControlEvent.cs" />
+    <Compile Include="Devices\Controls\EControlFlag.cs" />
     <Compile Include="Devices\Controls\EControlType.cs" />
     <Compile Include="Devices\Controls\EControlUse.cs" />
     <Compile Include="Devices\Controls\StatusControl.cs" />
     <Compile Include="Devices\Controls\StatusControlCollection.cs" />
     <Compile Include="Devices\DeviceFactory.cs" />
+    <Compile Include="Devices\EFeatureDisplayType.cs" />
     <Compile Include="Devices\EMiscFlag.cs" />
     <Compile Include="Devices\EProperty.cs" />
     <Compile Include="Devices\EPollResponse.cs" />
@@ -88,10 +118,10 @@
     <Compile Include="Devices\PlugExtraData.cs" />
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
-    <Compile Include="EHsSystemEvent.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
+    <Compile Include="Events\BaseTypeCollection.cs" />
     <Compile Include="Events\EEventFlag.cs" />
     <Compile Include="Events\EventData.cs" />
     <Compile Include="Events\EventGroupData.cs" />
@@ -103,11 +133,45 @@
     <Compile Include="Energy\EnergyGraph.cs" />
     <Compile Include="Energy\EnergyGraphData.cs" />
     <Compile Include="Events\TriggerTypeCollection.cs" />
+    <Compile Include="Features\AbstractFeaturePage.cs" />
+    <Compile Include="Features\JsonRequest.cs" />
+    <Compile Include="Features\GenericJsonData.cs" />
+    <Compile Include="Features\IFeaturePage.cs" />
+    <Compile Include="Features\Responses\JsonError.cs" />
+    <Compile Include="Features\Responses\JsonResponse.cs" />
+    <Compile Include="Features\Responses\PageActions\EPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\FeaturePageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\CallbackPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\HidePageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\NextStepPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\PageActionExtensions.cs" />
+    <Compile Include="Features\Responses\PageActions\PageActionResponse.cs" />
+    <Compile Include="Features\Responses\PageActions\PreviousStepPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetHtmlPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetStepPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetTextPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetValuePageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\ShowPageAction.cs" />
     <Compile Include="IHsController.cs" />
+    <Compile Include="Jui\Types\ELabelType.cs" />
+    <Compile Include="Jui\Views\EColSize.cs" />
+    <Compile Include="Jui\Views\GridView.cs" />
+    <Compile Include="Jui\Views\GridRow.cs" />
+    <Compile Include="Jui\Views\GridRowItem.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
+    <Compile Include="Jui\Views\TimeSpanView.cs" />
+    <Compile Include="Jui\Views\TextAreaView.cs" />
     <Compile Include="Logging\ELogType.cs" />
     <Compile Include="Speech\EMediaOperation.cs" />
     <Compile Include="Speech\AbstractSpeakerClient.cs" />
+    <Compile Include="Speech\ESpeakErrorValue.cs" />
+    <Compile Include="Speech\ESpeakTypeValue.cs" />
+    <Compile Include="Systems\EConfigChangeTarget.cs" />
+    <Compile Include="Systems\EConfigChangeAction.cs" />
+    <Compile Include="Systems\EHsSystemEvent.cs" />
+    <Compile Include="Types\EAccessLevel.cs" />
+    <Compile Include="Types\EOsType.cs" />
+    <Compile Include="Types\ERegistrationMode.cs" />
     <None Include="Logging\LogEntry.cs" />
     <Compile Include="PluginStatus.cs" />
     <Compile Include="IPlugin.cs" />
@@ -117,7 +181,7 @@
     <Compile Include="Jui\Types\EToggleType.cs" />
     <Compile Include="Jui\Types\EViewType.cs" />
     <Compile Include="Jui\Views\AbstractView.cs" />
-    <None Include="Jui\Views\ButtonView.cs" />
+    <Compile Include="Jui\Views\NavigateButtonView.cs" />
     <Compile Include="Jui\Views\InputView.cs" />
     <Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
     <Compile Include="Jui\Views\JsonDataException.cs" />
@@ -150,4 +214,10 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
+  <Target Name="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <ItemGroup>
+      <CopyNewtonsoft Include="packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CopyNewtonsoft)" DestinationFolder="$(TargetDir)\" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

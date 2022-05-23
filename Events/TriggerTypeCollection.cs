@@ -21,13 +21,8 @@ namespace HomeSeer.PluginSdk.Events {
     ///  and signature of the trigger type do not match.
     /// </para>
     /// </remarks>
-    public class TriggerTypeCollection {
+    public class TriggerTypeCollection : BaseTypeCollection<AbstractTriggerType> {
 
-        /// <summary>
-        /// The number of trigger types that are supported by the plugin
-        /// </summary>
-        public int Count => _triggerTypes?.Count ?? 0;
-        
         /// <summary>
         /// Used to enable/disable internal logging to the console
         /// <para>
@@ -38,15 +33,34 @@ namespace HomeSeer.PluginSdk.Events {
 
         private ITriggerTypeListener _listener;
 
-        private List<Type> _triggerTypes = new List<Type>();
-        private HashSet<string> _triggerTypeNames = new HashSet<string>();
-
         /// <summary>
         /// Initialize a new instance of an <see cref="TriggerTypeCollection"/> with the specified listener
         /// </summary>
         /// <param name="listener">An <see cref="ITriggerTypeListener"/> that will be passed to trigger types</param>
         public TriggerTypeCollection(ITriggerTypeListener listener) {
             _listener = listener;
+            MatchAllSignatures = false;
+            ConstructorSignatures = new List<Type[]>();
+            //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug
+            var paramTypes = new[] {
+                                       typeof(int),
+                                       typeof(int),
+                                       typeof(int),
+                                       typeof(byte[]),
+                                       typeof(ITriggerTypeListener),
+                                       typeof(bool)
+                                   };
+            ConstructorSignatures.Add(paramTypes);
+            //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener
+            paramTypes = new[] {
+                                       typeof(int),
+                                       typeof(int),
+                                       typeof(int),
+                                       typeof(byte[]),
+                                       typeof(ITriggerTypeListener)
+                                   };
+            ConstructorSignatures.Add(paramTypes);
+            
         }
 
         /// <summary>
@@ -57,20 +71,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// </param>
         /// <exception cref="ArgumentException">Thrown when the specified class type will not work as a trigger</exception>
         public void AddTriggerType(Type triggerType) {
-            if (triggerType?.FullName == null) {
-                throw new ArgumentException(nameof(triggerType));
-            }
-            if (!triggerType.IsSubclassOf(typeof(AbstractTriggerType))) {
-                throw new ArgumentException($"{triggerType} is not derived from AbstractTriggerType", nameof(triggerType));
-            }
-            AssertTypeHasConstructors(triggerType);
-            if (_triggerTypeNames.Contains(triggerType.FullName)) {
-                throw new ArgumentException($"{triggerType.FullName} has already been added to the collection.");
-            }
-
-            if (_triggerTypeNames.Add(triggerType.FullName)) {
-                _triggerTypes.Add(triggerType);
-            }
+            AddItemType(triggerType);
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called by HomeSeer when a user updates the configuration of a trigger and those changes
         ///  are in need of processing.
         /// </summary>
-        /// <param name="postData">A <see cref="Dictionary"/> of changes to the trigger configuration</param>
+        /// <param name="postData">A <see cref="Dictionary{TKey,TValue}"/> of changes to the trigger configuration</param>
         /// <param name="trigInfo">The trigger being configured</param>
         /// <returns>
         /// An <see cref="EventUpdateReturnData"/> describing the new state of the trigger that will be saved by HomeSeer.
@@ -286,14 +287,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called by HomeSeer to determine if a particular trigger can be used as a condition or not.
         ///  A condition is a trigger that operates in conjunction with another trigger in an AND/OR pattern.
         /// </summary>
-        /// <param name="triggerIndex">The index of the trigger type to check</param>
+        /// <param name="triggerIndex">The 1 based index of the trigger type to check</param>
         /// <returns>
         /// TRUE if the trigger can be used as a condition,
         ///  FALSE if it can not.
         /// </returns>
         public bool TriggerCanBeCondition(int triggerIndex) {
             try {
-                var targetTrig = GetObjectFromInfo(triggerIndex);
+                var targetTrig = GetObjectFromInfo(triggerIndex - 1);
                 return targetTrig.CanBeCondition;
             }
             catch (Exception exception) {
@@ -305,74 +306,17 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         private AbstractTriggerType GetObjectFromTrigInfo(TrigActInfo trigInfo) {
-            return GetObjectFromInfo(trigInfo.TANumber-1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0]);
+            //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug
+            if (TypeHasConstructor(trigInfo.TANumber - 1, 0)) {
+                return GetObjectFromInfo(trigInfo.TANumber-1, 0, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug);
+            }
+            //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener
+            if (TypeHasConstructor(trigInfo.TANumber - 1, 1)) {
+                return GetObjectFromInfo(trigInfo.TANumber-1, 1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener);
+            }
+            throw new TypeLoadException("Trigger instance cannot be created because no constructor was found that takes TrigActInfo data");
         }
 
-        private AbstractTriggerType GetObjectFromInfo(int trigNumber, params object[] trigInfoParams) {
-            if (_triggerTypes.Count < trigNumber) {
-                throw new KeyNotFoundException("No trigger type exists with that number");
-            }
-
-            var targetType = _triggerTypes[trigNumber];
-            var paramTypes = new List<Type>();
-            foreach (var infoParam in trigInfoParams) {
-                paramTypes.Add(infoParam.GetType());
-            }
-            var constructorParams = new List<object>(trigInfoParams);
-            if (paramTypes.Count > 0) {
-                paramTypes.Add(typeof(ITriggerTypeListener));
-                constructorParams.Add(_listener);
-                paramTypes.Add(typeof(bool));
-                constructorParams.Add(LogDebug);
-            }
-            
-            var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
-                                                            null,
-                                                            CallingConventions.Standard,
-                                                            paramTypes.ToArray(),
-                                                            null);
-
-            if (typeConstructor == null) {
-                throw new TypeLoadException("Cannot find the correct constructor for this trigger type");
-            }
-
-            //new object[] { actInfo.UID, actInfo.evRef, actInfo.DataIn };
-            if (!(typeConstructor.Invoke(constructorParams.ToArray()) is AbstractTriggerType curTrig)) {
-                throw new TypeLoadException("This constructor did not produce a class derived from AbstractTriggerType");
-            }
-            
-            return curTrig;
-        }
-
-        private static void AssertTypeHasConstructors(Type targetType) {
-            var paramTypes = new[] {
-                                       typeof(int),
-                                       typeof(int),
-                                       typeof(int),
-                                       typeof(byte[]),
-                                       typeof(ITriggerTypeListener),
-                                       typeof(bool)
-                                   };
-            var typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
-                                                            null,
-                                                            CallingConventions.Standard,
-                                                            paramTypes,
-                                                            null);
-            if (typeConstructor == null) {
-                throw new TypeLoadException("Type does not have a constructor with parameters (int id, int eventRef, byte[] dataIn, ITriggerTypeListener listener, bool logDebug)");
-            }
-
-            paramTypes = new Type[0];
-            typeConstructor = targetType.GetConstructor(BindingFlags.Instance | BindingFlags.Public,
-                                                        null,
-                                                        CallingConventions.Standard,
-                                                        paramTypes, 
-                                                        null);
-            if (typeConstructor == null) {
-                throw new TypeLoadException("Type does not have a constructor with parameters ()");
-            }
-        }
-        
         /// <summary>
         /// The base implementation of a trigger type interface that facilitates communication between
         ///  <see cref="AbstractTriggerType"/>s and the <see cref="AbstractPlugin"/> that owns them.

@@ -1,5 +1,10 @@
 namespace HomeSeer.PluginSdk.Events {
 
+    /// <summary>
+    /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+    ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+    ///  Please use with caution.
+    /// </summary>
     public enum EEventFlag : uint {
 
         Enabled = 0x10,
@@ -8,7 +13,15 @@ namespace HomeSeer.PluginSdk.Events {
         Delayed = 0x80,
         IncludeInPowerfail = 0x160,
         Security = 0x320,
-        Priority = 0x640
+        Priority = 0x640,
+        /// <summary>
+        /// Expose this event to Google cloud services
+        /// </summary>
+        GoogleDiscoveryEnabled = 0x800,
+        /// <summary>
+        /// Expose this event to Amazon cloud services.
+        /// </summary>
+        AmazonDiscoveryEnabled = 0x1000
 
     }
 

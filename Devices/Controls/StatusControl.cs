@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices.Controls {
 
@@ -13,7 +14,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
     /// <remarks>
     /// Legacy VSPairs used to be able to be defined as either status-only, control-only, or both,
     ///  but this is no longer allowed. All StatusControls are considered both, and a <see cref="StatusGraphic"/>
-    ///  will override the <see cref="AbstractHsDevice.Status"/> on the feature if it is configured for the feature's
+    ///  will override the <see cref="AbstractHsDevice.DisplayedStatus"/> on the feature if it is configured for the feature's
     ///  current <see cref="AbstractHsDevice.Value"/>.
     /// <para>
     ///  If you are looking to add a status-only control to a feature, create a <see cref="StatusGraphic"/> instead.
@@ -30,9 +31,9 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         private List<string> _controlStates = new List<string>();
         private double _targetValue;
         private bool _isRange;
-        private bool _hasAdditionalData;
         private ValueRange _targetRange = new ValueRange(0,0);
         private ControlLocation _location = new ControlLocation();
+        private uint _flags;
 
         /// <summary>
         /// Initialize a new StatusControl of the specified type
@@ -61,6 +62,8 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                 case EControlType.ButtonScript:
                     break;
                 case EControlType.ColorPicker:
+                    break;
+                case EControlType.Values:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, "You must specify a valid control type");
@@ -137,8 +140,15 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         ///  in <see cref="HsFeature.AdditionalStatusData"/>
         /// </summary>
         public bool HasAdditionalData {
-            get => _hasAdditionalData;
-            set => _hasAdditionalData = value;
+            get => ContainsFlag(EControlFlag.HasAdditionalData);
+            set {
+                if (value) {
+                    AddFlag(EControlFlag.HasAdditionalData);
+                }
+                else {
+                    RemoveFlag(EControlFlag.HasAdditionalData);
+                }
+            }
         }
 
         /// <summary>
@@ -160,6 +170,26 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         public ControlLocation Location {
             get => _location;
             set => _location = value;
+        }
+
+        /// <summary>
+        /// Whether the StatusControl should be available as a status target for events and other platform integrations
+        /// </summary>
+        /// <returns>
+        /// FALSE if the StatusControl is a valid status target,
+        ///  TRUE if it is not.
+        /// </returns>
+        /// See also: <seealso cref="EControlFlag.InvalidStatusTarget"/>
+        public bool IsInvalidStatusTarget {
+            get => ContainsFlag(EControlFlag.InvalidStatusTarget);
+            set {
+                if (value) {
+                    AddFlag(EControlFlag.InvalidStatusTarget);
+                }
+                else {
+                    RemoveFlag(EControlFlag.InvalidStatusTarget);
+                }
+            }
         }
 
         /// <summary>
@@ -241,6 +271,12 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return true;
         }
 
+        /// <summary>
+        /// Create a <see cref="ControlEvent"/> from this <see cref="StatusControl"/> for a given <paramref name="devRef"/>.
+        ///  This uses the <see cref="TargetValue"/> for the <see cref="ControlEvent.ControlValue"/>
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> being controlled.</param>
+        /// <returns>A <see cref="ControlEvent"/></returns>
         public ControlEvent CreateControlEvent(int devRef) {
             var dce = new ControlEvent(devRef)
                       {
@@ -253,6 +289,15 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             return dce;
         }
 
+        /// <summary>
+        /// Create a <see cref="ControlEvent"/> from this <see cref="StatusControl"/> for a given
+        ///  <paramref name="value"/> and <paramref name="devRef"/>.
+        /// </summary>
+        /// <remarks>Use this when the <see cref="StatusControl"/> is a range and a specific value must by chosen within that range.</remarks>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> being controlled.</param>
+        /// <param name="value">The target <see cref="AbstractHsDevice.Value"/> for the <see cref="HsFeature"/></param>
+        /// <returns>A <see cref="ControlEvent"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="value"/> is not targeted by the <see cref="StatusControl"/></exception>
         public ControlEvent CreateControlEvent(int devRef, double value) {
             var dce = new ControlEvent(devRef)
                       {
@@ -278,7 +323,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_targetValue - value) < 0.01D;
+            return Math.Abs(_targetValue - value) < 1E-15;
         }
         
         private string ReplaceAdditionalData(string label, string[] additionalData) {
@@ -291,8 +336,53 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
 
             return finalLabel;
         }
+        
+        /// <summary>
+        /// Add the specified <see cref="EControlFlag"/> to the StatusControl
+        /// </summary>
+        /// <param name="controlFlag">The <see cref="EControlFlag"/> to add</param>
+        private void AddFlag(EControlFlag controlFlag) {
+            
+            var currentFlags = _flags | (uint) controlFlag;
+            _flags = currentFlags;
+        }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Determine if the StatusControl contains the specified <see cref="EControlFlag"/>
+        /// </summary>
+        /// <param name="controlFlag">The <see cref="EControlFlag"/> to look for</param>
+        /// <returns>
+        /// TRUE if the StatusControl contains the <see cref="EControlFlag"/>,
+        ///  FALSE if it does not.
+        /// </returns>
+        private bool ContainsFlag(EControlFlag controlFlag) {
+
+            return (_flags & (uint) controlFlag) != 0;
+        }
+
+        /// <summary>
+        /// Remove the specified <see cref="EControlFlag"/> from the StatusControl
+        /// </summary>
+        /// <param name="controlFlag">The <see cref="EControlFlag"/> to remove</param>
+        private void RemoveFlag(EControlFlag controlFlag) {
+            
+            var currentFlags = _flags ^ (uint) controlFlag;
+            _flags = currentFlags;
+        }
+
+        /// <summary>
+        /// Clear all <see cref="EControlFlag"/>s on the StatusControl.
+        /// </summary>
+        private void ClearFlags() {
+            
+            _flags = 0;
+        }
+
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns><see langword="true"/> if they are equal, <see langword="false"/> if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -314,7 +404,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             if (_controlType != otherStatusControl._controlType) {
                 return false;
             }
-            if (_targetValue != otherStatusControl._targetValue) {
+            if (Math.Abs(_targetValue - otherStatusControl._targetValue) > 1E-15) {
                 return false;
             }
             if (_location != otherStatusControl._location) {
@@ -326,11 +416,17 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
             if (_targetRange != otherStatusControl._targetRange) {
                 return false;
             }
+            if (_flags != otherStatusControl._flags) {
+                return false;
+            }
 
             return true;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="ValueRange.Min"/> of <see cref="TargetRange"/> if <see cref="IsRange"/> is <see langword="true"/> or <see cref="TargetValue"/> if it is <see langword="false"/>.</returns>
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _targetValue.GetHashCode();
         }

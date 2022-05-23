@@ -79,7 +79,7 @@ namespace HomeSeer.PluginSdk.Events {
         ///  derives from this type is added to its list.
         /// </para>
         /// <para>
-        /// You MUST implement this constructor in any class that derives from <see cref="AbstractTriggerType"/>
+        /// You MUST implement one of these constructor signatures in any class that derives from <see cref="AbstractTriggerType"/>
         /// </para>
         /// </summary>
         /// <param name="id">The unique ID of this trigger in HomeSeer</param>
@@ -93,6 +93,31 @@ namespace HomeSeer.PluginSdk.Events {
             _inData = dataIn;
             TriggerListener = listener;
             LogDebug = logDebug;
+            InflateTriggerFromData();
+        }
+        
+        /// <summary>
+        /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, and Data byte array.
+        ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="TriggerTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructor signatures in any class that derives from <see cref="AbstractTriggerType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="id">The unique ID of this trigger in HomeSeer</param>
+        /// <param name="eventRef">The event reference ID that this trigger is associated with in HomeSeer</param>
+        /// <param name="selectedSubTriggerIndex">The 0 based index of the sub-trigger type selected for this trigger</param>
+        /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener) {
+            _id                     = id;
+            _eventRef               = eventRef;
+            SelectedSubTriggerIndex = selectedSubTriggerIndex;
+            _inData                 = dataIn;
+            TriggerListener         = listener;
             InflateTriggerFromData();
         }
 
@@ -145,7 +170,7 @@ namespace HomeSeer.PluginSdk.Events {
         }
         
         /// <summary>
-        /// A <see cref="List"/> of names for the available sub-trigger types users can select from for this trigger type.
+        /// A <see cref="List{T}"/> of names for the available sub-trigger types users can select from for this trigger type.
         ///  Leave this list empty if the trigger type does not support any subtypes.
         /// </summary>
         protected virtual List<string> SubTriggerTypeNames { get; set; } = new List<string>();
@@ -327,23 +352,9 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        /// <summary>
-        /// Deserialize the trigger data to a <see cref="HomeSeer.Jui.Views.Page"/>.
-        /// <para>
-        /// Override this if you need to support legacy triggers. Convert the UI to the new format and save it in
-        ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
-        ///  serialize the ConfigPage to byte[].  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
-        ///  deserialize the data using the legacy method.
-        /// </para>
-        /// </summary>
-        /// <param name="inData">A byte array describing the current trigger configuration.</param>
-        /// <returns>
-        /// A byte array describing the current trigger configuration.
-        /// </returns>
-        protected virtual byte[] ProcessData(byte[] inData) {
+        private byte[] ProcessData(byte[] inData) {
             //Is data null/empty?
             if (inData == null || inData.Length == 0) {
-                
                 return new byte[0];
             }
             
@@ -352,15 +363,37 @@ namespace HomeSeer.PluginSdk.Events {
                 var pageJson = Encoding.UTF8.GetString(inData);
                 //Deserialize to page
                 ConfigPage = Page.FromJsonString(pageJson);
-
+                //Save the data
                 return inData;
             }
             catch (Exception exception) {
+                //Exception is expected if the data is of a legacy type
                 if (LogDebug) {
-                    Console.WriteLine(exception);
+                    Console.WriteLine($"Exception while trying to execute ProcessData on trigger data, possibly legacy data - {exception.Message}");
                 }
             }
-            
+
+            //If deserialization failed, try to convert legacy data to new format
+            return ConvertLegacyData(inData);
+        }
+
+        /// <summary>
+        /// Called when legacy trigger data needs to be converted to the new format
+        /// <para>
+        /// Override this if you need to support legacy triggers. Convert the UI to the new format and save it in
+        ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
+        ///  serialize the ConfigPage to byte[].  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
+        ///  deserialize the data using the legacy method.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is also called if there was an error while trying to deserialize the modern data format as a fallback
+        /// </remarks>
+        /// <param name="inData">A byte array describing the current trigger configuration in legacy format.</param>
+        /// <returns>
+        /// A byte array describing the current trigger configuration in new format.
+        /// </returns>
+        protected virtual byte[] ConvertLegacyData(byte[] inData) {
             return new byte[0];
         }
 

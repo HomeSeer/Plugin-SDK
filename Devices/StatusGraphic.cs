@@ -1,5 +1,6 @@
 using System;
 using HomeSeer.PluginSdk.Devices.Controls;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -55,10 +56,13 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// The text displayed when the associated <see cref="HsFeature"/>'s <see cref="HsFeature.Value"/> field matches
+        /// The text displayed when the associated <see cref="HsFeature"/>'s <see cref="AbstractHsDevice.Value"/> field matches
         ///  the <see cref="Value"/> or <see cref="TargetRange"/>.
         /// <para>
         /// Leaving this blank will cause the StatusControl's Label field to be used instead
+        /// </para>
+        /// <para>
+        /// Set this to a single space " " to ensure that the corresponding status is left blank when displayed
         /// </para>
         /// </summary>
         public string Label {
@@ -78,7 +82,7 @@ namespace HomeSeer.PluginSdk.Devices {
 
         /// <summary>
         /// The path to an image displayed by the associated <see cref="HsFeature"/> when its
-        ///  <see cref="HsFeature.Value"/> field matches the <see cref="Value"/> or <see cref="TargetRange"/>
+        ///  <see cref="AbstractHsDevice.Value"/> field matches the <see cref="Value"/> or <see cref="TargetRange"/>
         ///  on this <see cref="StatusGraphic"/>
         /// </summary>
         public string Graphic {
@@ -145,6 +149,34 @@ namespace HomeSeer.PluginSdk.Devices {
             get => _value;
             set => _value = value;
         }
+
+        /// <summary>
+        /// Create a deep copy of this <see cref="StatusGraphic"/>
+        /// </summary>
+        /// <returns>The deep copy of this <see cref="StatusGraphic"/></returns>
+        public StatusGraphic Clone()
+        {
+            var clone = new StatusGraphic(Graphic, Value)
+                        {
+                            TargetRange = TargetRange.Clone(),
+                            IsRange = IsRange,
+                            Label = Label,
+                            ControlUse = ControlUse,
+                            HasAdditionalData = HasAdditionalData
+                        };
+            return clone;
+        }
+
+        /// <summary>
+        /// Get the target value of the <see cref="StatusGraphic"/> based on whether it is a range or not
+        /// </summary>
+        /// <returns>
+        /// Returns <see cref="StatusGraphic.RangeMin"/> if it is a range and returns <see cref="StatusGraphic.Value"/> if it isn't
+        /// </returns>
+        public double GetTargetValue()
+        {
+            return IsRange ? RangeMin : Value;
+        }
         
         /// <summary>
         /// Get the label for the specified value correctly formatted according to the <see cref="StatusGraphic"/>'s
@@ -158,6 +190,16 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <returns>The value as a string formatted according to the <see cref="TargetRange"/> configuration.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not targeted by the <see cref="StatusGraphic"/></exception>
         public string GetLabelForValue(double value, string[] additionalData = null) {
+            var label = _label;
+            if (!string.IsNullOrEmpty(label)) {
+                //If there is a label defined
+                if (additionalData == null || !_hasAdditionalData) {
+                    return label;
+                }
+                label = ReplaceAdditionalData(label, additionalData);
+                return label;
+            }
+            //No label is defined
             if (!_isRange) {
                 return additionalData == null || !_hasAdditionalData ? 
                     _label : 
@@ -187,29 +229,36 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if the value is not valid for this <see cref="StatusGraphic"/> or there is no label defined.
         /// </returns>
         public bool TryGetLabelForValue(out string label, double value, string[] additionalData = null) {
-
-            if (!_isRange || _targetRange == null) {
+            
+            if (!string.IsNullOrEmpty(_label)) {
+                //If there is a label defined
                 label = _label;
-                if (string.IsNullOrWhiteSpace(_label)) {
-                    return false;
-                }
                 if (additionalData == null || !_hasAdditionalData) {
                     return true;
                 }
-
                 label = ReplaceAdditionalData(label, additionalData);
                 return true;
             }
+            //No label is defined
+            if (!_isRange || _targetRange == null) {
+                //If the graphic is for one value
+                label = null;
+                //Label is null or empty based on previous condition
+                return false;
+            }
+            //No label is defined and it is a range
             if (!_targetRange.IsValueInRange(value)) {
+                //Value is not in range so the label is null
                 label = null;
                 return false;
             }
-
+            //No label is defined, it is a range, and the current value is in that range
             label = _targetRange.GetStringForValue(value);
             if (additionalData == null || !_hasAdditionalData) {
+                //Additional data is not being used - return as is
                 return true;
             }
-
+            //Additional data is being used
             label = ReplaceAdditionalData(label, additionalData);
             return true;
         }
@@ -227,7 +276,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _targetRange.IsValueInRange(value);
             }
 
-            return Math.Abs(_value - value) < 0.01D;
+            return Math.Abs(_value - value) < 1E-15;
         }
 
         private string ReplaceAdditionalData(string label, string[] additionalData) {
@@ -241,7 +290,11 @@ namespace HomeSeer.PluginSdk.Devices {
             return finalLabel;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns>True if they are equal, False if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -257,7 +310,7 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_graphicPath != otherSg._graphicPath) {
                 return false;
             }
-            if (_value != otherSg._value) {
+            if (Math.Abs(_value - otherSg._value) > 1E-15) {
                 return false;
             }
             if (_targetRange != otherSg._targetRange) {
@@ -267,7 +320,10 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="ValueRange.Min"/> of <see cref="TargetRange"/> if <see cref="IsRange"/> is true or <see cref="Value"/> if it is false.</returns>
         public override int GetHashCode() {
             return _isRange ? _targetRange.Min.GetHashCode() : _value.GetHashCode();
         }

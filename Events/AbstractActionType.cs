@@ -57,6 +57,37 @@ namespace HomeSeer.PluginSdk.Events {
         ///  a user can select from on the events page.
         /// </summary>
         public string Name => GetName();
+        /// <summary>
+        /// The currently selected sub-action index
+        /// </summary>
+        /// <remarks>
+        /// -1 if it is not set
+        /// </remarks>
+        protected int SelectedSubActionIndex { get; private set; } = -1;
+        
+        /// <summary>
+        /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
+        ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="ActionTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructors in any class that derives from <see cref="AbstractActionType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="id">The unique ID of this action in HomeSeer</param>
+        /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
+        /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        protected AbstractActionType(int id, int subTypeNumber, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener) {
+            _id                    = id;
+            SelectedSubActionIndex = subTypeNumber;
+            _eventRef              = eventRef;
+            _inData                = dataIn;
+            ActionListener         = listener;
+            InflateActionFromData();
+        }
 
         /// <summary>
         /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
@@ -79,6 +110,29 @@ namespace HomeSeer.PluginSdk.Events {
             _inData = dataIn;
             ActionListener = listener;
             LogDebug = logDebug;
+            InflateActionFromData();
+        }
+        
+        /// <summary>
+        /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
+        ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="ActionTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructors in any class that derives from <see cref="AbstractActionType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="id">The unique ID of this action in HomeSeer</param>
+        /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
+        /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        protected AbstractActionType(int id, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener) {
+            _id            = id;
+            _eventRef      = eventRef;
+            _inData        = dataIn;
+            ActionListener = listener;
             InflateActionFromData();
         }
 
@@ -260,23 +314,9 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        /// <summary>
-        /// Deserialize the action data to a <see cref="HomeSeer.Jui.Views.Page"/>.
-        /// <para>
-        /// Override this if you need to support legacy actions. Convert the UI to the new format and save it in
-        ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
-        ///  serialize the ConfigPage to byte[].  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
-        ///  deserialize the data using the legacy method.
-        /// </para>
-        /// </summary>
-        /// <param name="inData">A byte array describing the current action configuration.</param>
-        /// <returns>
-        /// A byte array describing the current action configuration.
-        /// </returns>
-        protected virtual byte[] ProcessData(byte[] inData) {
+        private byte[] ProcessData(byte[] inData) {
             //Is data null/empty?
             if (inData == null || inData.Length == 0) {
-                
                 return new byte[0];
             }
             
@@ -285,20 +325,43 @@ namespace HomeSeer.PluginSdk.Events {
                 var pageJson = Encoding.UTF8.GetString(inData);
                 //Deserialize to page
                 ConfigPage = Page.FromJsonString(pageJson);
-
+                //Save the data
                 return inData;
             }
             catch (Exception exception) {
+                //Exception is expected if the data is of a legacy type
                 if (LogDebug) {
-                    Console.WriteLine(exception);
+                    Console.WriteLine($"Exception while trying to execute ProcessData on action data, possibly legacy data - {exception.Message}");
                 }
             }
             
+            //If deserialization failed, try to convert legacy data to new format
+            return ConvertLegacyData(inData);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Called when legacy action data needs to be converted to the new format.
+        /// </para>
+        /// <para>
+        /// Override this if you need to support legacy actions. Convert the UI to the new format and save it in
+        ///  the <see cref="ConfigPage"/>. Finally, return <see cref="Data"/> to automatically
+        ///  serialize the ConfigPage to byte[].  Use <see cref="TrigActInfo.DeserializeLegacyData"/> to
+        ///  deserialize the data using the legacy method.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is also called if there was an error while trying to deserialize the modern data format as a fallback
+        /// </remarks>
+        /// <param name="inData">A byte array describing the current action configuration in legacy format.</param>
+        /// <returns>
+        /// A byte array describing the current action configuration in new format.
+        /// </returns>
+        protected virtual byte[] ConvertLegacyData(byte[] inData) {
             return new byte[0];
         }
 
         private void InflateActionFromData() {
-
             try {
                 var processedData = ProcessData(_inData);
                 if (processedData.Length == 0) {
@@ -324,7 +387,6 @@ namespace HomeSeer.PluginSdk.Events {
             return Encoding.UTF8.GetBytes(pageJson);
         }
 
-        /// <inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -349,7 +411,6 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        /// <inheritdoc/>
         public override int GetHashCode() {
             return 271828 * _id.GetHashCode() * _eventRef.GetHashCode();
         }

@@ -32,11 +32,6 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         Image                     = 12,
         /// <summary>
-        /// <see cref="AbstractHsDevice.ProductImage"/>
-        /// </summary>
-        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
-        ProductImage              = 13,
-        /// <summary>
         /// <see cref="AbstractHsDevice.Interface"/>
         /// </summary>
         Interface                 = 14,
@@ -90,6 +85,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// <see cref="AbstractHsDevice.Status"/>
         /// </summary>
+        [Obsolete("This is being replaced by DisplayedStatus and StatusString", false)]
         Status                    = 36,
         /// <summary>
         /// <see cref="HsFeature.StatusControls"/>
@@ -108,9 +104,21 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         InvalidValue              = 40,
         /// <summary>
-        /// <see cref="HsDevice.FeaturePriority"/>
+        /// <see cref="HsDevice.FeatureDisplayPriority"/>
         /// </summary>
-        FeaturePriority           = 41
+        FeatureDisplayPriority    = 41,
+        /// <summary>
+        /// <see cref="HsFeature.DisplayType"/>
+        /// </summary>
+        FeatureDisplayType        = 42,
+        /// <summary>
+        /// <see cref="AbstractHsDevice.DisplayedStatus"/>
+        /// </summary>
+        DisplayedStatus = 44,
+        /// <summary>
+        /// <see cref="AbstractHsDevice.StatusString"/>
+        /// </summary>
+        StatusString = 45,
 
     }
 

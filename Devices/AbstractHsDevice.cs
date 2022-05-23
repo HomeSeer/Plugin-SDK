@@ -39,7 +39,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// The unique identifier for this device/feature. This is the primary key for devices and features in HomeSeer.
         /// </summary>
-        public int Ref { get; } = -1;
+        public int Ref { get; private set; } = -1;
 
         #region Public
         
@@ -49,6 +49,39 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Use this to store a unique identifier for the physical device this device/feature is associated with.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Since v1.2.5.0, this field is overloaded with the legacy Code field for backwards compatibility.
+        ///  If you are accessing a device/feature that was created using this API then you can safely ignore this remark.
+        ///  If you are accessing a device/feature that was created using the HS3 legacy API you may note that this field
+        ///  now includes the Code value if it exists. You can get the Code directly by using the <see cref="Code"/> field.
+        /// </para>
+        /// <para>
+        /// This table shows the return value of <see cref="Address"/> based on the value stored in the HS database.
+        /// <list type="table">
+        ///  <listheader>
+        ///   <term>Address Value</term>
+        ///   <description>Returns</description>
+        ///  </listheader>
+        ///  <item>
+        ///   <term>Address Only</term>
+        ///   <description>Address</description>
+        ///  </item>
+        ///  <item>
+        ///   <term>Code Only</term>
+        ///   <description>Code</description>
+        ///  </item>
+        ///  <item>
+        ///   <term>Address and Code</term>
+        ///   <description>Address-Code</description>
+        ///  </item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// You can use <see cref="GetAddressFromAddressString"/> and <see cref="GetCodeFromAddressString"/> to pull
+        ///  the address and code, respectively, from this value.
+        /// </para>
+        /// </remarks>
         public string Address {
             get {
                 if (Changes.ContainsKey(EProperty.Address)) {
@@ -59,7 +92,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
 
-                if (value == _address) {
+                if (_cacheChanges && value == _address) {
                     Changes.Remove(EProperty.Address);
                     return;
                 }
@@ -91,7 +124,7 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
 
-                if (value == _assDevices) {
+                if (_cacheChanges && value == _assDevices) {
                     Changes.Remove(EProperty.AssociatedDevices);
                     return;
                 }
@@ -111,6 +144,58 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
+        /// Get the code stored in the <see cref="Address"/> string.
+        /// </summary>
+        /// <remarks>
+        /// This field is only used for legacy support and grabs a value from the <see cref="Address"/> field directly.
+        ///  The code is grabbed from the <see cref="Address"/> field by using <see cref="GetCodeFromAddressString"/>
+        /// </remarks>
+        public string Code {
+            get {
+                if (Changes.ContainsKey(EProperty.Address)) {
+                    var addressCode = (string) Changes[EProperty.Address];
+                    return GetCodeFromAddressString(addressCode);
+                }
+
+                return GetCodeFromAddressString(_address) ?? "";
+            }
+        }
+        
+        /// <summary>
+        /// The current status of the device/feature
+        /// <para>
+        /// This is the exact string that users see in the UI
+        /// </para>
+        /// </summary>
+        /// <seealso cref="StatusString"/>
+        public string DisplayedStatus {
+            get {
+                if (Changes.ContainsKey(EProperty.DisplayedStatus)) {
+                    return (string) Changes[EProperty.DisplayedStatus];
+                }
+                
+                return _displayedStatus;
+            }
+            set {
+                if (_cacheChanges && value == _displayedStatus) {
+                    Changes.Remove(EProperty.DisplayedStatus);
+                    return;
+                }
+                if (Changes.ContainsKey(EProperty.DisplayedStatus)) {
+                    Changes[EProperty.DisplayedStatus] = value;
+                }
+                else {
+                    Changes.Add(EProperty.DisplayedStatus, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _displayedStatus = value ?? "";
+            }
+        }
+
+        /// <summary>
         /// The address of an image that represents the current status of the device/feature
         /// </summary>
         public string Image {
@@ -122,7 +207,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _image;
             }
             set {
-                if (value == _image) {
+                if (_cacheChanges && value == _image) {
                     Changes.Remove(EProperty.Image);
                     return;
                 }
@@ -153,7 +238,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _interface;
             }
             set {
-                if (value == _interface) {
+                if (_cacheChanges && value == _interface) {
                     Changes.Remove(EProperty.Interface);
                     return;
                 }
@@ -188,7 +273,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _invalidValue || !IsValueValid();
             }
             set {
-                if (value == _invalidValue) {
+                if (_cacheChanges && value == _invalidValue) {
                     Changes.Remove(EProperty.InvalidValue);
                     return;
                 }
@@ -218,7 +303,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _lastChange;
             }
             set {
-                if (value == _lastChange) {
+                if (_cacheChanges && value == _lastChange) {
                     Changes.Remove(EProperty.LastChange);
                     return;
                 }
@@ -256,7 +341,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _location;
             }
             set {
-                if (value == _location) {
+                if (_cacheChanges && value == _location) {
                     Changes.Remove(EProperty.Location);
                     return;
                 }
@@ -294,7 +379,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _location2;
             }
             set {
-                if (value == _location2) {
+                if (_cacheChanges && value == _location2) {
                     Changes.Remove(EProperty.Location2);
                     return;
                 }
@@ -329,7 +414,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _misc;
             }
             set {
-                if (value == _misc) {
+                if (_cacheChanges && value == _misc) {
                     Changes.Remove(EProperty.Misc);
                     return;
                 }
@@ -366,7 +451,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _name;
             }
             set {
-                if (value == _name) {
+                if (_cacheChanges && value == _name) {
                     Changes.Remove(EProperty.Name);
                     return;
                 }
@@ -401,10 +486,6 @@ namespace HomeSeer.PluginSdk.Devices {
             }
             set {
                 
-                if (value == _plugExtraData) {
-                    Changes.Remove(EProperty.PlugExtraData);
-                    return;
-                }
                 if (Changes.ContainsKey(EProperty.PlugExtraData)) {
                     Changes[EProperty.PlugExtraData] = value;
                 }
@@ -416,37 +497,6 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _plugExtraData = value;
-            }
-        }
-        
-        /// <summary>
-        /// The address of an image of the physical device this HomeSeer device/feature is associated with
-        /// </summary>
-        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
-        public string ProductImage {
-            get {
-                if (Changes.ContainsKey(EProperty.ProductImage)) {
-                    return (string) Changes[EProperty.ProductImage];
-                }
-
-                return _productImage;
-            }
-            set {
-                if (value == _productImage) {
-                    Changes.Remove(EProperty.ProductImage);
-                    return;
-                }
-                if (Changes.ContainsKey(EProperty.ProductImage)) {
-                    Changes[EProperty.ProductImage] = value;
-                }
-                else {
-                    Changes.Add(EProperty.ProductImage, value);
-                }
-                
-                if (_cacheChanges) {
-                    return;
-                }
-                _productImage = value ?? "";
             }
         }
 
@@ -476,7 +526,7 @@ namespace HomeSeer.PluginSdk.Devices {
                     throw new DeviceRelationshipException("Please clear this devices association with other devices before changing its relationship type.");
                 }
                 
-                if (value == _relationship) {
+                if (_cacheChanges && value == _relationship) {
                     Changes.Remove(EProperty.Relationship);
                     return;
                 }
@@ -495,11 +545,10 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
-        /// The current status of the device/feature.
-        /// <para>
-        /// This is the primary piece of information that users will look at.
-        /// </para>
+        /// The current status of the device/feature. (incorrect - the raw, unformatted status string)
+        /// <para>WARNING - This property is being replaced by <see cref="StatusString"/> and <see cref="DisplayedStatus"/></para>
         /// </summary>
+        [Obsolete("This property is being replaced by StatusString and DisplayedStatus", false)]
         public string Status {
             get {
                 if (Changes.ContainsKey(EProperty.Status)) {
@@ -509,7 +558,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _status;
             }
             set {
-                if (value == _status) {
+                if (_cacheChanges && value == _status) {
                     Changes.Remove(EProperty.Status);
                     return;
                 }
@@ -524,6 +573,40 @@ namespace HomeSeer.PluginSdk.Devices {
                     return;
                 }
                 _status = value ?? "";
+            }
+        }
+        
+        /// <summary>
+        /// The raw, unformatted status of the device/feature.
+        /// <para>
+        /// This is combined with a string returned from a <see cref="StatusGraphic"/> or <see cref="StatusControl"/>
+        ///  that matches the current <see cref="Value"/> to produce the <see cref="DisplayedStatus"/>
+        /// </para>
+        /// </summary>
+        public string StatusString {
+            get {
+                if (Changes.ContainsKey(EProperty.StatusString)) {
+                    return (string) Changes[EProperty.StatusString];
+                }
+                
+                return _statusString;
+            }
+            set {
+                if (_cacheChanges && value == _statusString) {
+                    Changes.Remove(EProperty.StatusString);
+                    return;
+                }
+                if (Changes.ContainsKey(EProperty.StatusString)) {
+                    Changes[EProperty.StatusString] = value;
+                }
+                else {
+                    Changes.Add(EProperty.StatusString, value);
+                }
+                
+                if (_cacheChanges) {
+                    return;
+                }
+                _statusString = value ?? "";
             }
         }
         
@@ -545,7 +628,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _typeInfo;
             }
             set {
-                if (value == _typeInfo) {
+                if (_cacheChanges && value == _typeInfo) {
                     Changes.Remove(EProperty.DeviceType);
                     return;
                 }
@@ -568,6 +651,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// A string representation of the HomeSeer user access rights for this device/feature
         /// </summary>
+        /// <remarks>This is typically configured by users and can be safely ignored when creating a <see cref="HsDevice"/> or <see cref="HsFeature"/></remarks>
         public string UserAccess {
             get {
                 if (Changes.ContainsKey(EProperty.UserAccess)) {
@@ -577,7 +661,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _userAccess;
             }
             set {
-                if (value == _userAccess) {
+                if (_cacheChanges && value == _userAccess) {
                     Changes.Remove(EProperty.UserAccess);
                     return;
                 }
@@ -598,6 +682,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// Notes attached to this device/feature by users
         /// </summary>
+        /// <remarks>This is typically configured by users and can be safely ignored when creating a <see cref="HsDevice"/> or <see cref="HsFeature"/></remarks>
         public string UserNote {
             get {
                 if (Changes.ContainsKey(EProperty.UserNote)) {
@@ -607,7 +692,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _userNote;
             }
             set {
-                if (value == _userNote) {
+                if (_cacheChanges && value == _userNote) {
                     Changes.Remove(EProperty.UserNote);
                     return;
                 }
@@ -646,7 +731,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _value;
             }
             set {
-                if (Math.Abs(value - _value) < 0.001) {
+                if (_cacheChanges && Math.Abs(value - _value) < 0.001) {
                     Changes.Remove(EProperty.Value);
                     return;
                 }
@@ -678,7 +763,7 @@ namespace HomeSeer.PluginSdk.Devices {
                 return _voiceCommand ?? "";
             }
             set {
-                if (value == _voiceCommand) {
+                if (_cacheChanges && value == _voiceCommand) {
                     Changes.Remove(EProperty.VoiceCommand);
                     return;
                 }
@@ -704,7 +789,16 @@ namespace HomeSeer.PluginSdk.Devices {
         protected string         _address           = "";
         /// <inheritdoc cref="AssociatedDevices"/>
         protected HashSet<int>   _assDevices        = new HashSet<int>();
-        protected bool           _cacheChanges      = false;
+        /// <summary>
+        /// Flag used to indicate whether to cache changes in <see cref="Changes"/> when setting properties and not adjust
+        ///  the underlying value or to cache changes in <see cref="Changes"/> and adjust the underlying value.
+        /// </summary>
+        /// <remarks>
+        /// Setting this to TRUE allows you to quickly revert changes made by discarding <see cref="Changes"/>
+        /// </remarks>
+        protected bool                       _cacheChanges           = false;
+        /// <inheritdoc cref="DisplayedStatus"/>
+        protected string _displayedStatus = "";
         /// <inheritdoc cref="Image"/>
         protected string         _image             = "";
         /// <inheritdoc cref="Interface"/>
@@ -723,13 +817,12 @@ namespace HomeSeer.PluginSdk.Devices {
         protected string         _name              = "";
         /// <inheritdoc cref="PlugExtraData"/>
         protected PlugExtraData  _plugExtraData     = new PlugExtraData();
-        /// <inheritdoc cref="ProductImage"/>
-        [Obsolete("This property is no longer being supported and will be removed as of the next release.", true)]
-        protected string         _productImage      = "";
         /// <inheritdoc cref="Relationship"/>
         protected ERelationship  _relationship      = ERelationship.NotSet;
         /// <inheritdoc cref="Status"/>
         protected string         _status            = "";
+        /// <inheritdoc cref="StatusString"/>
+        protected string _statusString = "";
         /// <inheritdoc cref="TypeInfo"/>
         protected TypeInfo       _typeInfo          = new TypeInfo();
         /// <inheritdoc cref="UserAccess"/>
@@ -745,10 +838,17 @@ namespace HomeSeer.PluginSdk.Devices {
 
         #endregion
 
-        internal AbstractHsDevice() {}
+        /// <summary>
+        /// Create a new AbstractHsDevice with default properties
+        /// </summary>
+        protected AbstractHsDevice() {}
 
-        internal AbstractHsDevice(int featureRef) {
-            Ref = featureRef;
+        /// <summary>
+        /// Create a new AbstractHsDevice with a specific uniqueRef
+        /// </summary>
+        /// <param name="uniqueRef">The unique ID as an integer</param>
+        protected AbstractHsDevice(int uniqueRef) {
+            Ref = uniqueRef;
         }
 
         /// <summary>
@@ -852,6 +952,93 @@ namespace HomeSeer.PluginSdk.Devices {
             }
 
             _misc = 0;
+        }
+
+        /// <summary>
+        /// Get the value for any combination of <see cref="EMiscFlag"/>s
+        /// </summary>
+        /// <param name="misc"><see cref="EMiscFlag"/>s to combine</param>
+        /// <returns>A uint representing the combined <see cref="EMiscFlag"/>s</returns>
+        public static uint GetMiscForFlags(params EMiscFlag[] misc) {
+            uint finalMisc = 0;
+            foreach (var flag in misc) {
+                finalMisc |= (uint) flag;
+            }
+
+            return finalMisc;
+        }
+
+        
+        /// <summary>
+        /// Get the address from an address-code string.
+        /// </summary>
+        /// <remarks>
+        /// HS3 supported an Address and Code field, but the Code field has been deprecated. The Address and Code fields
+        ///  used to also be combined into a single string with the format of ${ADDRESS}-${CODE}.
+        ///  The pseudocode for this is "${ADDRESS}-${CODE}".Trim('-');
+        ///  To maintain backwards compatibility support, the Address field will be overloaded with the Code for
+        ///  devices created using HS3. Use this method to get the address from the returned address-code string.
+        /// </remarks>
+        /// <param name="addressString">The <see cref="Address"/>-Code value string to parse</param>
+        /// <returns>The Address value from the string</returns>
+        public static string GetAddressFromAddressString(string addressString) {
+            if (string.IsNullOrWhiteSpace(addressString)) {
+                //Return null or empty address strings as empty
+                return "";
+            }
+
+            if (!addressString.Contains("-")) {
+                //Return the whole address string because it is probably just an address when it doesn't contain a -
+                return addressString;
+            }
+
+            var addressParts = addressString.Split('-');
+            if (addressParts.Length < 2) {
+                //Return the address string trimmed of - if splitting it at - does not produce 2 or more strings.
+                // This means that the string likely has the - at the beginning or the end of the string.
+                // We don't know if it was just an address or just a code.
+                return addressString.Trim('-');
+            }
+
+            //Return the first element in the address parts because the address is the string before the -
+            // IE ADDRESS-CODE
+            return addressParts[0];
+        }
+        
+        /// <summary>
+        /// Get the code from an address-code string.
+        /// </summary>
+        /// <remarks>
+        /// HS3 supported an Address and Code field, but the Code field has been deprecated. The Address and Code fields
+        ///  used to also be combined into a single string with the format of ${ADDRESS}-${CODE}.
+        ///  The pseudocode for this is "${ADDRESS}-${CODE}".Trim('-');
+        ///  To maintain backwards compatibility support, the Address field will be overloaded with the Code for
+        ///  devices created using HS3. Use this method to get the address from the returned address-code string.
+        /// </remarks>
+        /// <param name="addressString">The <see cref="Address"/>-Code value string to parse</param>
+        /// <returns>The Code value from the string</returns>
+        public static string GetCodeFromAddressString(string addressString) {
+            if (string.IsNullOrWhiteSpace(addressString)) {
+                //Return null or empty address strings as empty
+                return "";
+            }
+
+            if (!addressString.Contains("-")) {
+                //Return an empty string because it is probably just an address when it doesn't contain a -
+                return "";
+            }
+
+            var addressParts = addressString.Split('-');
+            if (addressParts.Length < 2) {
+                //Return the address string trimmed of - if splitting it at - does not produce 2 or more strings.
+                // This means that the string likely has the - at the beginning or the end of the string.
+                // We don't know if it was just an address or just a code.
+                return addressString.Trim('-');
+            }
+
+            //Return the second element in the address parts because the code is the string after the -
+            // IE ADDRESS-CODE
+            return addressParts[1];
         }
 
     }

@@ -1,13 +1,16 @@
 using System;
+using HomeSeer.PluginSdk.Systems;
 
 namespace HomeSeer.PluginSdk {
 
     public class Constants {
         
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public const int eDeviceType_GenericRoot = 999;
-
-        // editions is the type of software features enabled
-        // license ID determines which edition we are running
+        
+        /// <summary>
+        /// editions is the type of software features enabled. license ID determines which edition we are running
+        /// </summary>
         public enum editions {
             HS3STANDARD = 1,
             HS3PRO = 2,
@@ -17,6 +20,7 @@ namespace HomeSeer.PluginSdk {
             HS3ZEES2 = 6
         }
     
+        [Obsolete("This will be removed in a future release.  Please use Types.ERegistrationMode as of v1.0.8.1", false)]
         public enum REGISTRATION_MODES {
             REG_UNKNOWN = 0,
             REG_UNREG = 1,
@@ -32,21 +36,20 @@ namespace HomeSeer.PluginSdk {
             CallbackOnce = 4,
             CallbackTimer = 5
         }
-    
-        public enum DeviceScriptChange {
-            DevValue = 1,
-            DevString = 2,
-            Both = 3
-        }
-    
+
         public enum enumVCMDType {
             Disabled = 0,
             Microphone = 1,
             Telephone = 2,
             Both = 3
         }
-    
-        // For HSEvent callbacks
+        
+        /// <summary>
+        /// For HSEvent callbacks
+        ///
+        /// <para>WARNING - This is being deprecated. Please use the values provided by <see cref="EHsSystemEvent"/>.</para>
+        /// </summary>
+        [Obsolete("This is being deprecated. Please use the values provided by Types.EHsSystemEvent.", false)]
         public enum HSEvent {
             // X10 = 1
             LOG = 2,
@@ -66,42 +69,99 @@ namespace HomeSeer.PluginSdk {
             RUN_SCRIPT_SPECIAL = 0x4000,
             GENERIC = 0x8000        // RVCT added 3/10/08, 2.2.0.76ish
         }
-    
-        public enum CAPIControlButtonImage {
-            Not_Specified = 0,
-            Use_Status_Value = 1,
-            Use_Custom = 2
-        }
 
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceType_Energy {
             Watts = 1,
             Amps = 2,
             Volts = 3,
-            KWH = 4,             // kwh used
-            Graphing = 5        // HS graphing device
+            /// <summary>
+            /// kwh used
+            /// </summary>
+            KWH = 4,
+            /// <summary>
+            /// HS graphing device
+            /// </summary>
+            Graphing = 5
         }
 
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceType_Security {
-            Alarm = 1,                           // Alarm status & control (shows alarms that have occurred and can also invoke an alarm - e.g. Duress)
-            Arming = 10,                        // Arming status & control (shows the state of the security arming and can set arming state)
-            Keypad = 20,                       // Keypad status & control
-            Zone_Perimeter = 30,            // A perimeter zone
-            Zone_Perimeter_Delay = 31,   // A perimeter zone with a violation alarm delay
-            Zone_Interior = 32,               // An interior zone (not normally armed in stay mode)
-            Zone_Interior_Delay = 33,      // An interior zone (with a violation alarm delay when armed)
-            Zone_Auxiliary = 34,              // An aux zone, not usually included in any arming mode
-            Zone_Other = 35,                 // A zone that does not fit any other zone description
-            Zone_Safety_Smoke = 40,     // A smoke detector zone (not allowed to be bypassed)
-            Zone_Safety_CO = 41,          // A Carbon Monoxide zone (not allowed to be bypassed)
-            Zone_Safety_CO2 = 42,         // A Carbon Dioxide zone (not allowed to be bypassed)
-            Zone_Safety_Other = 43,       // A zone for some other safety sensor that cannot be bypassed
-            Output_Relay = 50,               // A general purpose output relay
-            Output_Other = 51,               // A general purpose output (could be virtual as in a 'flag' output)
-            Communicator = 60,              // Communicator status and (if available) control
-            Siren = 70,                          // Siren output - status usually - control follows alarm state.
-            Root = 99,                           // Indicates a root device of a root/child grouping.
+            /// <summary>
+            /// Alarm status control (shows alarms that have occurred and can also invoke an alarm - e.g. Duress)
+            /// </summary>
+            Alarm = 1,
+            /// <summary>
+            /// Arming status control (shows the state of the security arming and can set arming state)
+            /// </summary>
+            Arming = 10,
+            /// <summary>
+            /// Keypad status control
+            /// </summary>
+            Keypad = 20,
+            /// <summary>
+            /// A perimeter zone
+            /// </summary>
+            Zone_Perimeter = 30,
+            /// <summary>
+            /// A perimeter zone with a violation alarm delay
+            /// </summary>
+            Zone_Perimeter_Delay = 31,
+            /// <summary>
+            /// An interior zone (not normally armed in stay mode)
+            /// </summary>
+            Zone_Interior = 32,
+            /// <summary>
+            /// An interior zone (with a violation alarm delay when armed)
+            /// </summary>
+            Zone_Interior_Delay = 33,
+            /// <summary>
+            /// An aux zone, not usually included in any arming mode
+            /// </summary>
+            Zone_Auxiliary = 34,
+            /// <summary>
+            /// A zone that does not fit any other zone description
+            /// </summary>
+            Zone_Other = 35,
+            /// <summary>
+            /// A smoke detector zone (not allowed to be bypassed)
+            /// </summary>
+            Zone_Safety_Smoke = 40,
+            /// <summary>
+            /// A Carbon Monoxide zone (not allowed to be bypassed)
+            /// </summary>
+            Zone_Safety_CO = 41,
+            /// <summary>
+            /// A Carbon Dioxide zone (not allowed to be bypassed)
+            /// </summary>
+            Zone_Safety_CO2 = 42,
+            /// <summary>
+            /// A zone for some other safety sensor that cannot be bypassed
+            /// </summary>
+            Zone_Safety_Other = 43,
+            /// <summary>
+            /// A general purpose output relay
+            /// </summary>
+            Output_Relay = 50,
+            /// <summary>
+            /// A general purpose output (could be virtual as in a 'flag' output)
+            /// </summary>
+            Output_Other = 51,
+            /// <summary>
+            /// Communicator status and (if available) control
+            /// </summary>
+            Communicator = 60,
+            /// <summary>
+            /// Siren output - status usually - control follows alarm state.
+            /// </summary>
+            Siren = 70,
+            /// <summary>
+            /// Indicates a root device of a root/child grouping.
+            /// </summary>
+            Root = 99,
         }
         
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceSubType_SecurityArea {
             Invalid = 0,
             PRIMARY = 1,
@@ -115,6 +175,7 @@ namespace HomeSeer.PluginSdk {
             Area_Partition_9 = 9
         }
         
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceType_Thermostat {
             Operating_State = 1,
             Temperature = 2,
@@ -128,8 +189,10 @@ namespace HomeSeer.PluginSdk {
             Additional_Temperature = 10,
             Setback = 11,
             Filter_Remind = 12,
-            Root = 99                           // Indicates a root device of a root/child grouping.
+            Root = 99
         }
+        
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceSubType_Setpoint {
             Invalid = 0,
             Heating_1 = 1,
@@ -142,6 +205,8 @@ namespace HomeSeer.PluginSdk {
             Energy_Save_Cool = 12,
             Away_Heating = 13
         }
+        
+        [Obsolete("Do not use this Enum. This is only available to aid in upgrading legacy plugins. Use Devices.Identification instead", false)]
         public enum eDeviceSubType_Temperature {
             Temperature = 0,
             Temperature_1 = 1,
@@ -162,12 +227,27 @@ namespace HomeSeer.PluginSdk {
             OpenConnectionHStouch  = 7,
             DataHSTouch            = 8,
             CloseConnectionHSTouch = 9,
-            ErrorMessage           = 10, // data contains the error message
+            /// <summary>
+            /// data contains the error message
+            /// </summary>
+            ErrorMessage           = 10,
             ErrorMessageHSTouch = 11,
-            CreateHSTouchUser   = 12, // create a user/pass that is the MyHS user pass so HSTouch allows connections with these credentials
-            RequestLicID = 13, // tunnel requests license ID from HS after HS connects
-            DeviceChange = 14, // HS device has changed value, new value sent to tunned (mainly for IFTTT)
-            UseBOISSerialization = 15, // use compact serialization
+            /// <summary>
+            /// create a user/pass that is the MyHS user pass so HSTouch allows connections with these credentials
+            /// </summary>
+            CreateHSTouchUser   = 12,
+            /// <summary>
+            /// tunnel requests license ID from HS after HS connects
+            /// </summary>
+            RequestLicID = 13,
+            /// <summary>
+            /// HS device has changed value, new value sent to tunned (mainly for IFTTT)
+            /// </summary>
+            DeviceChange = 14,
+            /// <summary>
+            /// use compact serialization
+            /// </summary>
+            UseBOISSerialization = 15,
             DeviceChangeAll = 16
         }
         
@@ -178,51 +258,164 @@ namespace HomeSeer.PluginSdk {
             All_Failed    = 3
         }
 
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         public enum enumEnergyDirection {
             Consumed = 1,
             Produced = 2
         }
         
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         public enum enumEnergyDevice {
-            _Undefined_ = 0,                   // Not defined
-            Light_Small = 1,                    // A small light
-            Light_Large = 2,                    // A large light or several lights
-            Appliance = 10,                     // Any appliance
-            Appliance_Small = 11,             // A small appliance such as a toaster
-            Appliance_Large = 12,            // A large appliance such as an oven
-            Utility = 20,                          // A utility device
-            Utility_Small = 21,                  // A small utility device such as a water filter
-            Utility_Large = 22,                  // A large utility device such as a well pump
-            Entertainment = 30,                // An entertainment device
-            Entertainment_Small = 31,       // A small entertainment device such as a radio
-            Entertainment_Large = 32,       // A large entertainment device such as a home theatre system
-            HVAC = 40,                           // An HVAC device
-            Electric_AC = 41,                   // An Air Conditioning device
-            Electric_Heat = 42,                 // An electric heating device
-            Panel = 51,                           // An electrical panel providing several branches of electrical service to the home.
-            Panel_A = 52,                        // 
-            Panel_B = 53,                        // 
-            Panel_C = 54,                        // 
-            Panel_D = 55,                        // 
-            Panel_E = 56,                        // 
-            Panel_F = 57,                        // 
-            Meter = 61,                           // An electric meter measuring usage for an unspecified or general purpose.
-            Meter_Service = 62,               // An electric meter measuring usage for electrical service such as a house service entrance.
-            Meter_Device = 63,                // An electric meter measuring usage for a single device.
-            Generator = 71,                     // An electricity producing generator.
-            Solar_Panel = 72,                   // An electricity producing solar panel.
-            Wind_Turbine = 73,                // An electricity producing wind turbine.
-            Water_Turbine = 74,              // An electricity producing water (wave) turbine.
-            Root = 98,                       // The root device for child energy devices.
-            Other = 99                          // A device (consumer or producer) that does not fit any other device type.
+            /// <summary>
+            /// Not defined
+            /// </summary>
+            _Undefined_ = 0,
+            /// <summary>
+            /// A small light
+            /// </summary>
+            Light_Small = 1,
+            /// <summary>
+            /// A large light or several lights
+            /// </summary>
+            Light_Large = 2,
+            /// <summary>
+            /// Any appliance
+            /// </summary>
+            Appliance = 10,
+            /// <summary>
+            /// A small appliance such as a toaster
+            /// </summary>
+            Appliance_Small = 11,                       
+            /// <summary>
+            /// A large appliance such as an oven
+            /// </summary>
+            Appliance_Large = 12,                       
+            /// <summary>
+            /// A utility device
+            /// </summary>
+            Utility = 20,
+            /// <summary>
+            /// A small utility device such as a water filter
+            /// </summary>
+            Utility_Small = 21,
+            /// <summary>
+            /// A large utility device such as a well pump
+            /// </summary>
+            Utility_Large = 22,
+            /// <summary>
+            /// An entertainment device
+            /// </summary>
+            Entertainment = 30,
+            /// <summary>
+            /// A small entertainment device such as a radio
+            /// </summary>
+            Entertainment_Small = 31,
+            /// <summary>
+            /// A large entertainment device such as a home theatre system
+            /// </summary>
+            Entertainment_Large = 32,
+            /// <summary>
+            /// An HVAC device
+            /// </summary>
+            HVAC = 40,
+            /// <summary>
+            /// An Air Conditioning device
+            /// </summary>
+            Electric_AC = 41,
+            /// <summary>
+            /// An electric heating device
+            /// </summary>
+            Electric_Heat = 42,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel = 51,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel_A = 52,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel_B = 53,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel_C = 54,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel_D = 55,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel_E = 56,
+            /// <summary>
+            /// An electrical panel providing several branches of electrical service to the home.
+            /// </summary>
+            Panel_F = 57,
+            /// <summary>
+            /// An electric meter measuring usage for an unspecified or general purpose.
+            /// </summary>
+            Meter = 61,
+            /// <summary>
+            /// An electric meter measuring usage for electrical service such as a house service entrance.
+            /// </summary>
+            Meter_Service = 62,
+            /// <summary>
+            /// An electric meter measuring usage for a single device.
+            /// </summary>
+            Meter_Device = 63,
+            /// <summary>
+            /// An electricity producing generator.
+            /// </summary>
+            Generator = 71,
+            /// <summary>
+            /// An electricity producing solar panel.
+            /// </summary>
+            Solar_Panel = 72,
+            /// <summary>
+            /// An electricity producing wind turbine.
+            /// </summary>
+            Wind_Turbine = 73,
+            /// <summary>
+            /// An electricity producing water (wave) turbine.
+            /// </summary>
+            Water_Turbine = 74,
+            /// <summary>
+            /// The root device for child energy devices.
+            /// </summary>
+            Root = 98,
+            /// <summary>
+            /// A device (consumer or producer) that does not fit any other device type.
+            /// </summary>
+            Other = 99
         }
         
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         public enum eGraphType {
             Line,
             Bar,
             Pie
         }
         
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         public enum eGraphInterval {
             Minute,
             Hour,
@@ -233,18 +426,40 @@ namespace HomeSeer.PluginSdk {
             Year
         }
         
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
+        [Obsolete("This will be removed in a future release. Please use Speech.ESpeakErrorValue as of v1.0.8.1", false)]
         public enum speak_error_values {
             SPEAK_NO_ERROR      = 1,
             SPEAK_NO_CLIENTS    = 2,
             SPEAK_ERROR_SENDING = 3
         }
 
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
+        [Obsolete("This will be removed in a future release. Please use Speech.ESpeakTypeValue as of v1.0.8.1", false)]
         public enum speak_type_values {
-            SPEAK_TTS = 1, // TTS voice
-            SPEAK_MESSAGE = 2, // Text message
-            SPEAK_WAVEFILE = 3 // Play a wave file
+            /// <summary>
+            /// TTS voice
+            /// </summary>
+            SPEAK_TTS = 1,
+            /// <summary>
+            /// Text message
+            /// </summary>
+            SPEAK_MESSAGE = 2,
+            /// <summary>
+            /// Play a wave file
+            /// </summary>
+            SPEAK_WAVEFILE = 3
         }
 
+        [Obsolete("This will be removed in a future release.  Please use Types.EOsType as of v1.0.8.1", false)]
         public enum EOsType {
             Windows = 0,
             Linux   = 1

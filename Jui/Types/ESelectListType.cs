@@ -12,8 +12,12 @@ namespace HomeSeer.Jui.Types {
 		/// <summary>
 		/// Displays the select list as a collection of radio buttons
 		/// </summary>
-		RadioList = 1
+		RadioList = 1,
+        /// <summary>
+        /// Displays the select list as a searchable drop down list
+        /// </summary>
+        SearchableDropDown = 2
 
-	}
+    }
 
 }

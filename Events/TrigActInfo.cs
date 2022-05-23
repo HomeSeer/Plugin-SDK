@@ -4,6 +4,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HomeSeer.PluginSdk.Events {
 
+    /// <summary>
+    /// The internal data stored by HomeSeer describing a particular event action or trigger.
+    ///  Instances of this class are created and managed by HomeSeer and are passed through the <see cref="AbstractPlugin"/>
+    ///  to the <see cref="ActionTypeCollection"/> and <see cref="TriggerTypeCollection"/> respectively.
+    ///  You shouldn't need to work with this class directly and can rely on the decoded pieces exposed through the
+    ///  <see cref="AbstractActionType"/> and <see cref="AbstractTriggerType"/> classes in most situations.
+    /// </summary>
     [System.Reflection.Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Serializable]
     public class TrigActInfo {
@@ -61,13 +68,13 @@ namespace HomeSeer.PluginSdk.Events {
     public string Instance;
     
     /// <summary>
-    /// Deserialize the specified byte array to an object of type <see cref="TOutObject"/> using the legacy
+    /// Deserialize the specified byte array to an object of type <typeparamref name="TOutObject"/> using the legacy
     ///  HomeSeer method for deserializing trigger/action data.
     /// </summary>
     /// <param name="inData">The byte array to deserialize.</param>
     /// <param name="willLog">Whether the method should write log messages to the console.</param>
     /// <typeparam name="TOutObject">The type of object to deserialize the data to. Must be a class.</typeparam>
-    /// <returns>An object of type <see cref="TOutObject"/> or null if it was unsuccessful.</returns>
+    /// <returns>An object of type <typeparamref name="TOutObject"/> or null if it was unsuccessful.</returns>
     public static TOutObject DeserializeLegacyData<TOutObject>(byte[] inData, bool willLog = false) where TOutObject : class {
         if (inData == null || inData.Length == 0) {
             return null;

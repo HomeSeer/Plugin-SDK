@@ -275,24 +275,42 @@ namespace HomeSeer.Jui.Views {
 
 			switch (value) {
 				case string valueString:
-					if (type == (int) EViewType.SelectList) {
-						try {
+					if (type == (int)EViewType.SelectList)
+					{
+						try
+						{
 							var intValue = int.Parse(valueString);
-							if (intValue < 0) {
+							if (intValue < 0)
+							{
 								throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
 							}
 							var selectListOptions = new List<string>();
-							for (var i = 0; i <= intValue; i++) {
+							for (var i = 0; i <= intValue; i++)
+							{
 								selectListOptions.Add(i.ToString());
 							}
 							view = new SelectListView(id, id, selectListOptions, ESelectListType.DropDown, intValue);
 							break;
 						}
-						catch (Exception exception) {
+						catch (Exception exception)
+						{
 							throw new ArgumentException("Value type does not match the view type", exception);
 						}
 					}
-					
+					else if (type == (int)EViewType.TimeSpan)
+					{
+						if (!TimeSpan.TryParse(valueString, out TimeSpan timeSpanValue))
+						{
+							throw new ArgumentException("The view type does not match the value type");
+						}
+						view = new TimeSpanView(id, id, timeSpanValue);
+						break;
+					}
+					else if (type == (int)EViewType.TextArea)
+                    {
+						view = new TextAreaView(id, id, valueString);
+						break;
+                    }
 					if (type != (int) EViewType.Input) {
 						if (!bool.TryParse(valueString, out var boolValue)) {
 							throw new ArgumentException("The view type does not match the value type");
@@ -388,6 +406,22 @@ namespace HomeSeer.Jui.Views {
 			return ViewCollectionHelper.GetViewById(viewId, ref _views, ref _viewIds);
 		}
 		
+		/// <summary>
+		/// Get the view with a specific ID from a collection cast as the target type
+		/// </summary>
+		/// <param name="viewId">The ID of the view to get</param>
+		/// <returns>
+		/// The view with the specified ID cast as the target type.
+		/// </returns>
+		/// <exception cref="ArgumentNullException">An invalid view ID was entered</exception>
+		/// <exception cref="ArgumentException">No views are on the page to get</exception>
+		/// <exception cref="IndexOutOfRangeException">The ID was found, but the view was not.  The page is probably malformed and should be recreated.</exception>
+		/// <exception cref="KeyNotFoundException">No views with that ID were found</exception>
+		public TViewType GetViewById<TViewType>(string viewId) where TViewType : AbstractView {
+			
+			return ViewCollectionHelper.GetViewById<TViewType>(viewId, ref _views, ref _viewIds);
+		}
+		
 		#endregion
 		
 		#region Update
@@ -424,12 +458,11 @@ namespace HomeSeer.Jui.Views {
 			
 			ViewCollectionHelper.RemoveAllViews(out _views, out _viewIds);
 		}
-		
-		#endregion
-		
+
 		#endregion
 
-		/// <inheritdoc />
+		#endregion
+
 		/// <summary>
 		/// Compares the Id, Name, and the number of views
 		/// </summary>
@@ -457,7 +490,6 @@ namespace HomeSeer.Jui.Views {
 			return true;
 		}
 
-		/// <inheritdoc />
 		/// <summary>
 		/// Compares the Id, Name, and the number of views
 		/// </summary>

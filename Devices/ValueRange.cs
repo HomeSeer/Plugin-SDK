@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using HomeSeer.PluginSdk.Devices.Controls;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace HomeSeer.PluginSdk.Devices {
 
@@ -27,7 +28,11 @@ namespace HomeSeer.PluginSdk.Devices {
         /// </summary>
         /// <param name="min">The smallest value permitted</param>
         /// <param name="max">The largest value permitted</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="min"/> is less than <paramref name="max"/></exception>
         public ValueRange(double min, double max) {
+            if (min > max) {
+                throw new ArgumentException($"Min {min} must be less than Max {max}");
+            }
             _min = min;
             _max = max;
 
@@ -112,8 +117,26 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
+        /// Create a deep copy of this <see cref="ValueRange"/>
+        /// </summary>
+        /// <returns>The deep copy of this <see cref="ValueRange"/></returns>
+        public ValueRange Clone()  {
+            var clone = new ValueRange(Min, Max) 
+                        {
+                            DecimalPlaces = DecimalPlaces, 
+                            Offset = Offset, 
+                            Prefix = Prefix, 
+                            Suffix = Suffix
+                        };
+            return clone;
+        }
+
+        /// <summary>
         /// Obtain the string representation of the specified value according to the range's configuration
         /// </summary>
+        /// <remarks>
+        /// This returns <c>$"{_prefix}{(value - _offset).ToString($"F{_decimalPlaces}")}{_suffix}"</c>
+        /// </remarks>
         /// <param name="value">The value to use in the string</param>
         /// <returns>The value correctly formatted according to the range</returns>
         public string GetStringForValue(double value) {
@@ -131,10 +154,14 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if it is not
         /// </returns>
         public bool IsValueInRange(double value) {
-            return value >= _min && value <= _max;
+            return (_min - value) < 1E-15 && (value - _max) < 1E-15;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compare this object with another to see if they are equal
+        /// </summary>
+        /// <param name="obj">The object to compare</param>
+        /// <returns>True if they are equal, False if they are not</returns>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -144,10 +171,10 @@ namespace HomeSeer.PluginSdk.Devices {
                 return false;
             }
 
-            if (_min != otherValueRange._min) {
+            if (Math.Abs(_min - otherValueRange._min) > 1E-15) {
                 return false;
             }
-            if (_max != otherValueRange._max) {
+            if (Math.Abs(_max - otherValueRange._max) > 1E-15) {
                 return false;
             }
             if (_prefix != otherValueRange._prefix) {
@@ -169,7 +196,10 @@ namespace HomeSeer.PluginSdk.Devices {
             return true;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Get the hash code
+        /// </summary>
+        /// <returns>A hash code based on the <see cref="Min"/> and <see cref="Max"/> value</returns>
         public override int GetHashCode() {
             return _min.GetHashCode() * _max.GetHashCode();
         }

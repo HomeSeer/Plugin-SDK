@@ -25,6 +25,7 @@ namespace HomeSeer.PluginSdk {
         /// The current version of the HomeSeer Plugin API
         /// </summary>
         double APIVersion { get; }
+        
         /// <summary>
         /// The number of devices connected to the HomeSeer system
         /// </summary>
@@ -154,61 +155,503 @@ namespace HomeSeer.PluginSdk {
         #region Read
         
         //Both
+        
+        /// <summary>
+        /// Get a list of device/feature references that are associated with the specified plugin interface
+        /// </summary>
+        /// <param name="interfaceName">The ID of the plugin interface to get devices and features for</param>
+        /// <param name="deviceOnly"> Whether to get refs for devices or both devices and features</param>
+        /// <returns>A list of device/feature reference IDs</returns>
         List<int> GetRefsByInterface(string interfaceName, bool deviceOnly = false);
+        
+        /// <summary>
+        /// Get a map containing the value of a specific property for every device owned by a particular plugin
+        /// </summary>
+        /// <param name="interfaceName">The ID of the plugin that owns the devices</param>
+        /// <param name="property">The EProperty type to read</param>
+        /// <param name="deviceOnly">Whether the result should only contain devices or both devices and features</param>
+        /// <returns>A Dictionary of device/feature refs and the value of the EProperty requested</returns>
         Dictionary<int, object> GetPropertyByInterface(string interfaceName, EProperty property, bool deviceOnly = false);
+        
+        /// <summary>
+        /// Get the name of a specific device/feature by its <see cref="AbstractHsDevice.Ref"/>
+        /// </summary>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The name of the device/feature with the matching <see cref="AbstractHsDevice.Ref"/></returns>
         string GetNameByRef(int devOrFeatRef);
+        
+        /// <summary>
+        /// Determine if a specific device/feature <see cref="AbstractHsDevice.Ref"/> exists in the HomeSeer system
+        /// </summary>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>TRUE if the <see cref="AbstractHsDevice.Ref"/> exists, FALSE if it does not</returns>
         bool DoesRefExist(int devOrFeatRef);
+        
+        /// <summary>
+        /// Get the value of the <see cref="EProperty"/> for the <see cref="AbstractHsDevice"/> with the specified <see cref="AbstractHsDevice.Ref"/> 
+        /// </summary>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="property">The <see cref="EProperty"/> to read</param>
+        /// <returns>The value of the requested <see cref="EProperty"/> of the <see cref="AbstractHsDevice"/></returns>
         object GetPropertyByRef(int devOrFeatRef, EProperty property);
+        
+        /// <summary>
+        /// Determine if a <see cref="EMiscFlag"/> is turned on for a particular <see cref="AbstractHsDevice"/>
+        /// </summary>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="miscFlag">The <see cref="EMiscFlag"/> to read</param>
+        /// <returns>TRUE if the <see cref="AbstractHsDevice"/> found contains the specified <see cref="EMiscFlag"/>, FALSE if it doesn't</returns>
         bool IsFlagOnRef(int devOrFeatRef, EMiscFlag miscFlag);
+        
+        /// <summary>
+        /// Determine if the <see cref="AbstractHsDevice"/> with the specified <see cref="AbstractHsDevice.Ref"/> is a <see cref="HsDevice"/> or a <see cref="HsFeature"/> of a device
+        /// </summary>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>TRUE if the <see cref="AbstractHsDevice"/> found is a <see cref="HsDevice"/>, FALSE if it is a <see cref="HsFeature"/></returns>
         bool IsRefDevice(int devOrFeatRef);
         
+        /// <summary>
+        /// Get a list of all of the device and feature refs present in the HomeSeer system
+        /// <para>
+        /// To get just a list of devices, call <see cref="GetAllDeviceRefs"/>
+        ///  or to get a list of features, call <see cref="GetAllFeatureRefs"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the device and feature refs managed by the HomeSeer system</returns>
+        List<int> GetAllRefs();
+        
         //Devices
+        /// <summary>
+        /// Get the <see cref="AbstractHsDevice"/> as a <see cref="HsDevice"/> with the specified <see cref="AbstractHsDevice.Ref"/>.
+        ///  The <see cref="HsDevice.Features"/> property will be empty. To include <see cref="HsFeature"/>s use <see cref="GetDeviceWithFeaturesByRef"/>
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Ref"/> of a <see cref="HsFeature"/> may have adverse effects.
+        /// </remarks>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsDevice"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsDevice GetDeviceByRef(int devRef);
+        
+        /// <summary>
+        /// Get the <see cref="AbstractHsDevice"/> as a <see cref="HsDevice"/> with the specified <see cref="AbstractHsDevice.Ref"/>.
+        ///  The <see cref="HsDevice.Features"/> property will be populated with associated features.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Ref"/> of a <see cref="HsFeature"/> may have adverse effects.
+        /// </remarks>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsDevice"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsDevice GetDeviceWithFeaturesByRef(int devRef);
+        
+        /// <summary>
+        /// Get the <see cref="AbstractHsDevice"/> as a <see cref="HsDevice"/> with the specified <see cref="AbstractHsDevice.Address"/>.
+        ///  The <see cref="HsDevice.Features"/> property will be empty. To include <see cref="HsFeature"/>s use <see cref="GetDeviceWithFeaturesByRef"/>
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Address"/> of a <see cref="HsFeature"/> may have adverse effects.
+        /// </remarks>
+        /// <param name="devAddress">The <see cref="AbstractHsDevice.Address"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsDevice"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsDevice GetDeviceByAddress(string devAddress);
         
+        /// <summary>
+        /// Get the first <see cref="AbstractHsDevice"/> found as a <see cref="HsDevice"/> with the specified Code.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Address"/> of a <see cref="HsFeature"/> may have adverse effects.
+        /// </remarks>
+        /// <remarks>
+        /// The Code field was used in HS3 and has been deprecated since. This method is for backwards compatibility support.
+        /// </remarks>
+        /// <param name="devCode">The Code of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsDevice"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
+        /// <seealso cref="AbstractHsDevice.GetCodeFromAddressString"/>
+        HsDevice GetDeviceByCode(string devCode);
+
+        /// <summary>
+        /// Get a list of all of the device refs present in the HomeSeer system
+        /// <para>
+        /// This does not include refs for features. To get those in addition to these, use <see cref="GetAllRefs"/>
+        ///  or call <see cref="GetAllFeatureRefs"/> to get a list of just features
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the device refs managed by the HomeSeer system</returns>
+        List<int> GetAllDeviceRefs();
+        
+        /// <summary>
+        /// Get a list of all of the devices managed by the HomeSeer system without associated features.
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="withFeatures">
+        /// TRUE if associated features should be attached to their devices,
+        ///  or FALSE if features should be left out.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system with or without associated features linked.
+        /// </returns>
+        List<HsDevice> GetAllDevices(bool withFeatures);
+        
+#if BETA
+        
+        /// <summary>
+        /// Get a list of all of the device refs present in the HomeSeer system that match the specified pattern
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match devices to. Create an instance of <see cref="HsDevice"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>
+        /// A list of integers corresponding to the device refs managed by the HomeSeer system that match
+        ///  the specified pattern.
+        /// </returns>
+        List<int> GetAllMatchingDeviceRefs(Dictionary<EProperty, object> matchPattern);
+        
+        /// <summary>
+        /// Get a list of all of the devices present in the HomeSeer system that match the specified pattern
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match devices to. Create an instance of <see cref="HsDevice"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <param name="withFeatures">
+        /// TRUE if associated features should be attached to their devices,
+        ///  or FALSE if features should be left out.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="HsDevice"/>s managed by the HomeSeer system that match the specified pattern.
+        /// </returns>
+        List<HsDevice> GetAllMatchingDevices(Dictionary<EProperty, object> matchPattern, bool withFeatures);
+
+#endif
+        
         //Features
+        /// <summary>
+        /// Get the <see cref="AbstractHsDevice"/> as a <see cref="HsFeature"/> with the specified <see cref="AbstractHsDevice.Ref"/>.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Ref"/> of a <see cref="HsDevice"/> may have adverse effects.
+        /// </remarks>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsFeature"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsFeature GetFeatureByRef(int featRef);
+        
+        /// <summary>
+        /// Get the <see cref="AbstractHsDevice"/> as a <see cref="HsFeature"/> with the specified <see cref="AbstractHsDevice.Address"/>.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Address"/> of a <see cref="HsDevice"/> may have adverse effects.
+        /// </remarks>
+        /// <param name="featAddress">The <see cref="AbstractHsDevice.Address"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsFeature"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
         HsFeature GetFeatureByAddress(string featAddress);
+
+        /// <summary>
+        /// Get the first <see cref="AbstractHsDevice"/> found as a <see cref="HsFeature"/> with the specified Code.
+        /// </summary>
+        /// <remarks>
+        /// Calling this using the <see cref="AbstractHsDevice.Address"/> of a <see cref="HsDevice"/> may have adverse effects.
+        /// </remarks>
+        /// <remarks>
+        /// The Code field was used in HS3 and has been deprecated since. This method is for backwards compatibility support.
+        /// </remarks>
+        /// <param name="featCode">The Code of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>A <see cref="HsFeature"/> whether it is a <see cref="Devices.Identification.ERelationship.Device"/> or <see cref="Devices.Identification.ERelationship.Feature"/></returns>
+        /// <seealso cref="AbstractHsDevice.GetCodeFromAddressString"/>
+        HsFeature GetFeatureByCode(string featCode);
+        
+        /// <summary>
+        /// Determine if the current status value of a <see cref="HsFeature"/> is considered valid.
+        ///  This calls <see cref="HsFeature.IsValueValid"/> on the <see cref="HsFeature"/> to determine validity.
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to read</param>
+        /// <returns>The result of <see cref="HsFeature.IsValueValid"/></returns>
         bool IsFeatureValueValid(int featRef);
 
+        /// <summary>
+        /// Get a list of all of the feature refs present in the HomeSeer system
+        /// <para>
+        /// This does not include refs for devices. To get those in addition to these, use <see cref="GetAllRefs"/>
+        ///  or call <see cref="GetAllDeviceRefs"/> to get a list of just devices
+        /// </para>
+        /// </summary>
+        /// <returns>A list of integers corresponding to the feature refs managed by the HomeSeer system</returns>
+        List<int> GetAllFeatureRefs();
+
+#if BETA
+        
+        /// <summary>
+        /// Get a list of all of the feature refs present in the HomeSeer system that match the specified pattern
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match features to. Create an instance of <see cref="HsFeature"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>
+        /// A list of integers corresponding to the feature refs managed by the HomeSeer system that match
+        ///  the specified pattern.
+        /// </returns>
+        List<int> GetAllMatchingFeatureRefs(Dictionary<EProperty, object> matchPattern);
+        
+        /// <summary>
+        /// Get a list of all of the features present in the HomeSeer system that match the specified pattern
+        /// <para>
+        /// WARNING - this is an expensive method to execute and it should be used with the utmost discretion
+        /// </para>
+        /// </summary>
+        /// <param name="matchPattern">
+        /// The property state to match features to. Create an instance of <see cref="HsFeature"/> and use
+        ///  <see cref="AbstractHsDevice.Changes"/> for this parameter.
+        /// </param>
+        /// <returns>A list of features managed by the HomeSeer system that match the specified pattern.</returns>
+        List<HsFeature> GetAllMatchingFeatures(Dictionary<EProperty, object> matchPattern);
+
+#endif
+
+        /// <summary>
+        /// Get the <see cref="StatusControl"/> for a value on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="value">The <see cref="AbstractHsDevice.Value"/> managed by the <see cref="StatusControl"/></param>
+        /// <returns>A <see cref="StatusControl"/> that manages the value specified for the <see cref="HsFeature"/></returns>
         StatusControl GetStatusControlForValue(int featRef, double value);
+        
+        /// <summary>
+        /// Get the <see cref="StatusControl"/> for a <see cref="StatusControl.Label"/> on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="label">The <see cref="StatusControl.Label"/> used by the <see cref="StatusControl"/></param>
+        /// <returns>A <see cref="StatusControl"/> with the specified <see cref="StatusControl.Label"/> for the <see cref="HsFeature"/></returns>
         StatusControl GetStatusControlForLabel(int featRef, string label);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusControl"/>s for a range of values on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="min">The minimum value of the range</param>
+        /// <param name="max">The maximum value of the range</param>
+        /// <returns>A list  of <see cref="StatusControl"/>s for a range of values on the <see cref="HsFeature"/></returns>
         List<StatusControl> GetStatusControlsForRange(int featRef, double min, double max);
+
+        /// <summary>
+        /// Get the number of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The number of <see cref="StatusControl"/>s for the <see cref="HsFeature"/></returns>
         int GetStatusControlCountByRef(int featRef);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The list of <see cref="StatusControl"/>s for the <see cref="HsFeature"/></returns>
         List<StatusControl> GetStatusControlsByRef(int featRef);
 
+        /// <summary>
+        /// Get the <see cref="StatusControlCollection"/> describing all of the <see cref="StatusControl"/>s associated with
+        ///  an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The <see cref="StatusControlCollection"/> for the <see cref="HsFeature"/></returns>
         StatusControlCollection GetStatusControlCollectionByRef(int featRef);
         
+        /// <summary>
+        /// Get the <see cref="StatusGraphic"/> for a value on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="value">The <see cref="AbstractHsDevice.Value"/> managed by the <see cref="StatusGraphic"/></param>
+        /// <returns>A <see cref="StatusGraphic"/> that manages the value specified for the <see cref="HsFeature"/></returns>
         StatusGraphic GetStatusGraphicForValue(int featRef, double value);
-        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
-        int GetStatusGraphicCountByRef(int featRef);
-        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
-                
-        #endregion
-        
-        #region Update
-        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
-        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
-        //HsFeature UpdateFeatureValueByRef(int featRef, double value);
 
+        /// <summary>
+        /// Get a list of <see cref="StatusGraphic"/>s for a range of values on an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <param name="min">The minimum value of the range</param>
+        /// <param name="max">The maximum value of the range</param>
+        /// <returns></returns>
+        List<StatusGraphic> GetStatusGraphicsForRange(int featRef, double min, double max);
+
+        /// <summary>
+        /// Get the number of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The number of <see cref="StatusGraphic"/>s for the <see cref="HsFeature"/></returns>
+        int GetStatusGraphicCountByRef(int featRef);
+
+        /// <summary>
+        /// Get a list of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to read</param>
+        /// <returns>The list of <see cref="StatusGraphic"/>s for the <see cref="HsFeature"/></returns>
+        List<StatusGraphic> GetStatusGraphicsByRef(int featRef);
+
+        #endregion
+
+        #region Update
+        /// <summary>
+        /// <para>
+        /// Update some properties on a device
+        /// </para>
+        /// <para>
+        /// The collection of changes passed as parameter is usually <see cref="AbstractHsDevice.Changes"/>
+        /// </para>
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> to update</param>
+        /// <param name="changes">A collection of <see cref="EProperty"/> with their new values</param>
+        /// <returns>The updated <see cref="HsDevice"/></returns>
+        HsDevice UpdateDeviceByRef(int devRef, Dictionary<EProperty, object> changes);
+
+        /// <summary>
+        /// <para>
+        /// Update some properties on a feature
+        /// </para>
+        /// <para>
+        /// The collection of changes passed as parameter is usually <see cref="AbstractHsDevice.Changes"/>
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Do not use this method to update <see cref="EProperty.StatusControls"/> or <see cref="EProperty.StatusGraphics"/>.
+        /// Instead, use <see cref="AddStatusControlToFeature"/>, <see cref="DeleteStatusControlByValue"/>, <see cref="ClearStatusControlsByRef"/>,
+        /// <see cref="AddStatusGraphicToFeature"/>, <see cref="DeleteStatusGraphicByValue"/>, <see cref="ClearStatusGraphicsByRef"/>
+        /// </remarks>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="changes">A collection of <see cref="EProperty"/> with their new values</param>
+        /// <returns>The updated <see cref="HsFeature"/></returns>
+        HsFeature UpdateFeatureByRef(int featRef, Dictionary<EProperty, object> changes);
+
+        /// <summary>
+        /// <para>
+        /// Update one property on a device or a feature
+        /// </para>
+        /// <para>
+        /// When used with <see cref="EProperty.Value"/>, this is the same as the legacy method SetDeviceValueByRef(Integer, Double, False).
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// Do not use this method to update <see cref="EProperty.StatusControls"/> or <see cref="EProperty.StatusGraphics"/>.
+        /// Instead, use <see cref="AddStatusControlToFeature"/>, <see cref="DeleteStatusControlByValue"/>, <see cref="ClearStatusControlsByRef"/>,
+        /// <see cref="AddStatusGraphicToFeature"/>, <see cref="DeleteStatusGraphicByValue"/>, <see cref="ClearStatusGraphicsByRef"/>
+        /// </remarks>
+        /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="AbstractHsDevice"/> to update</param>
+        /// <param name="property">The <see cref="EProperty"/> to update</param>
+        /// <param name="value">The new value for this property</param>
         void UpdatePropertyByRef(int devOrFeatRef, EProperty property, object value);
-        
+
+        /// <summary>
+        /// <para>
+        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
+        /// </para>
+        /// <para>
+        /// To update the value without triggering HomeSeer to process the update, call
+        ///  <see cref="UpdatePropertyByRef"/>
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueByRef(int featRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
+        ///  accordingly
+        /// </para>
+        /// <para>
+        /// This does not fire a control event to the owning <see cref="AbstractHsDevice.Interface"/>.
+        ///  Use <see cref="SendControlForFeatureByValue"/> to control a device you do not own.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
+        /// </remarks>
+        /// <param name="featRef">The unique reference of the feature to control</param>
+        /// <param name="value">The new value to set on the feature</param>
+        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
+        bool UpdateFeatureValueStringByRef(int featRef, string value);
+
+        /// <summary>
+        /// Add a <see cref="StatusControl"/> to the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="statusControl">The <see cref="StatusControl"/> to add</param>
         void AddStatusControlToFeature(int featRef, StatusControl statusControl);
+
+        /// <summary>
+        /// Delete a <see cref="StatusControl"/> in the collection of <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="value">The value of the <see cref="StatusControl"/> to delete</param>
+        /// <returns>true if the deletion succeeded, otherwise false</returns>
         bool DeleteStatusControlByValue(int featRef, double value);
+
+        /// <summary>
+        /// Delete all <see cref="StatusControl"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
         void ClearStatusControlsByRef(int featRef);
-        
+
+        /// <summary>
+        /// Add a <see cref="StatusGraphic"/> to the collection of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="statusGraphic">The <see cref="StatusGraphic"/> to add</param>
         void AddStatusGraphicToFeature(int featRef, StatusGraphic statusGraphic);
+
+        /// <summary>
+        /// Delete a <see cref="StatusGraphic"/> in the collection of <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
+        /// <param name="value">The value of the <see cref="StatusGraphic"/> to delete</param>
+        /// <returns>true if the deletion succeeded, otherwise false</returns>
         bool DeleteStatusGraphicByValue(int featRef, double value);
+
+        /// <summary>
+        /// Delete all <see cref="StatusGraphic"/>s associated with an <see cref="HsFeature"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to update</param>
         void ClearStatusGraphicsByRef(int featRef);
-        
-        
 
         #endregion
         
         #region Delete
         
+        /// <summary>
+        /// Delete the <see cref="HsDevice"/> with the specified <see cref="AbstractHsDevice.Ref"/> and all
+        ///  other <see cref="AbstractHsDevice"/>s associated with it.
+        /// </summary>
+        /// <param name="devRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsDevice"/> to delete</param>
+        /// <returns>
+        /// TRUE if the <see cref="HsDevice"/> was deleted, FALSE if there was an error.
+        ///  Check the HS logs for more info on the error.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the specified <paramref name="devRef"/> refers to a <see cref="HsFeature"/> and
+        ///  not a <see cref="HsDevice"/>.
+        /// </exception>
         bool DeleteDevice(int devRef);
+        
+        /// <summary>
+        /// Delete the <see cref="HsFeature"/> with the specified <see cref="AbstractHsDevice.Ref"/>
+        /// </summary>
+        /// <param name="featRef">The <see cref="AbstractHsDevice.Ref"/> of the <see cref="HsFeature"/> to delete</param>
+        /// <returns>
+        /// TRUE if the <see cref="HsFeature"/> was deleted, FALSE if there was an error.
+        ///  Check the HS logs for more info on the error.
+        /// </returns>
         bool DeleteFeature(int featRef);
 
         /// <summary>
@@ -226,32 +669,71 @@ namespace HomeSeer.PluginSdk {
         #region Control
 
         /// <summary>
-        /// Set the value on a feature and trigger HomeSeer to process the update to update the status accordingly.
         /// <para>
-        /// To update the value without triggering HomeSeer to process the update, call
-        ///  <see cref="UpdatePropertyByRef"/>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
+        /// </para> 
+        /// </summary>
+        /// <remarks>
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// </remarks>
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="value">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> to send a control event for
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByValue(int devOrFeatRef, double value);
+
+        /// <summary>
+        /// <para>
+        /// Send a control request through HomeSeer to the <see cref="AbstractPlugin.SetIOMulti"/> implementation for
+        ///  the <see cref="AbstractHsDevice.Interface"/> that owns the device.
+        ///  This is different than <see cref="SendControlForFeatureByValue"/> because the value that describes the
+        ///  desired control outcome is encoded into a string and cannot be described by a double.
+        /// </para>
+        /// <para>
+        /// If you own the device being controlled, you should be calling <see cref="UpdateFeatureValueByRef"/>,
+        ///  <see cref="UpdateFeatureValueStringByRef"/>, or <see cref="UpdatePropertyByRef"/> respectively.
         /// </para>
         /// </summary>
         /// <remarks>
-        /// This is the same as the legacy method SetDeviceValueByRef(Integer, Double, True).
+        /// This is the same as the legacy method CAPIControlHandler(CAPIControl)
+        /// <para>
+        /// Most simple features use a single value within a range of decimal numbers to control their state.
+        /// These situations can easily be hardcoded as <see cref="StatusControl"/>s allowing HomeSeer to automatically
+        ///  handle processing control requests tied to these values. IE A dimmable light uses a value of 0-100
+        ///  to determine what state it is in. This usually requires 3 <see cref="StatusControl"/>s:
+        ///  one for off (0), one for a variable on state (1-99), and one for full brightness (100)
+        /// This does not work well for values that cannot be described by a range of decimal numbers or require more
+        ///  than a handful of <see cref="StatusControl"/>s.
+        /// When a more complex data value is required to describe the desired state to set the feature to,
+        ///  a string is used. IE the color of a light uses a value from 0-16777216.
+        /// That requires 16777216 different <see cref="StatusControl"/>s. It is more efficient to send the raw value
+        ///  to the handling plugin for processing.
+        /// </para> 
         /// </remarks>
-        /// <param name="featRef">The unique reference of the feature to control</param>
-        /// <param name="value">The new value to set on the feature</param>
-        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool UpdateFeatureValueByRef(int featRef, double value);
-        /// <summary>
-        /// Set the value on a feature by string and trigger HomeSeer to process the update to update the status
-        ///  accordingly
-        /// </summary>
-        /// <remarks>
-        /// This is the same as the legacy method SetDeviceString(Integer, String, True)
-        /// </remarks>
-        /// <param name="featRef">The unique reference of the feature to control</param>
-        /// <param name="value">The new value to set on the feature</param>
-        /// <returns>TRUE if the control sent correctly, FALSE if there was a problem</returns>
-        bool UpdateFeatureValueStringByRef(int featRef, string value);
-
-        //bool SendControlForFeatureByValue(int featRef, double value);
+        /// <param name="devOrFeatRef">
+        /// The <see cref="AbstractHsDevice.Ref"/> of the device or feature to control. You should only be pointing at
+        ///  <see cref="HsDevice"/> instead of its <see cref="HsFeature"/> for legacy devices.
+        /// </param>
+        /// <param name="controlValue">
+        /// The value corresponding with the <see cref="StatusControl.TargetValue"/> or
+        ///  <see cref="StatusControl.TargetRange"/> of the <see cref="StatusControl"/> to select
+        ///  and include in the <see cref="ControlEvent"/> being sent to the owning plugin.
+        /// </param>
+        /// <param name="controlString">
+        /// The desired value to send to the control for processing. This is passed to <see cref="ControlEvent.ControlString"/>
+        /// </param>
+        /// <returns>True if the control event succeeded, False if an error was reported</returns>
+        bool SendControlForFeatureByString(int devOrFeatRef, double controlValue, string controlString);
         
         #endregion
 
@@ -261,79 +743,586 @@ namespace HomeSeer.PluginSdk {
         
         #region Create
         
+        /// <summary>
+        /// Create a new event with a specific name in a particular group
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="name">The name of the new event</param>
+        /// <param name="group">The group to add the event to</param>
+        /// <returns>The Ref of the new event</returns>
         int CreateEventWithNameInGroup(string name, string group);
         
         #endregion
         
         #region Read
         
+        /// <summary>
+        /// Get the name of the event with the specific Ref
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="eventRef">The Ref of the event to read</param>
+        /// <returns>The name of the event</returns>
         string GetEventNameByRef(int eventRef);
+        
+        /// <summary>
+        /// Get the DateTime of the last time a specific event was triggered
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evRef">The Ref of the event to read</param>
+        /// <returns>The DateTime the event was last triggered</returns>
         DateTime GetEventTriggerTime(int evRef);
+        
+        /// <summary>
+        /// Get the voice command attached to an event
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evRef">The Ref of the event to read</param>
+        /// <returns>The voice command string set on the event</returns>
         string GetEventVoiceCommand(int evRef);
-        int GetEventRefByName(string event_name);
-        int GetEventRefByNameAndGroup(string event_name, string event_group);
-        EventGroupData GetEventGroupById(int GroupRef);
+        
+        /// <summary>
+        /// Get the Ref of an event by name
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="eventName">The name of the event to read</param>
+        /// <returns>The Ref of the event</returns>
+        int GetEventRefByName(string eventName);
+        
+        /// <summary>
+        /// Get the Ref of an event by its name and the group it is in
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="eventName">The name of the event</param>
+        /// <param name="eventGroup">The name of the group</param>
+        /// <returns>The Ref of the event</returns>
+        int GetEventRefByNameAndGroup(string eventName, string eventGroup);
+        
+        /// <summary>
+        /// Get the data for an event group
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="groupRef">The Ref of the group</param>
+        /// <returns>The data of the event group</returns>
+        EventGroupData GetEventGroupById(int groupRef);
+        
+        /// <summary>
+        /// Get the data for all event groups
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <returns>A list of all of the event groups</returns>
         List<EventGroupData> GetAllEventGroups();
+        
+        /// <summary>
+        /// Get the data for an event
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="eventRef">The Ref of the event</param>
+        /// <returns>The data of the event</returns>
         EventData GetEventByRef(int eventRef);
+        
+        /// <summary>
+        /// Get the data for all of the events
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <returns>A list of all of the events</returns>
         List<EventData> GetAllEvents();
-        List<EventData> GetEventsByGroup(int GroupId);
+        
+        /// <summary>
+        /// Get all of the events in a particular group
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="groupId">The Ref of the event group</param>
+        /// <returns>A list of all of the events in the event group</returns>
+        List<EventData> GetEventsByGroup(int groupId);
+        
+        /// <summary>
+        /// Get all of the event actions managed by a specific plugin
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a actiona owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
+        /// </param>
+        /// <returns>A list of all of the actions managed by the plugin</returns>
         List<TrigActInfo> GetActionsByInterface(string pluginId);
+        
+        /// <summary>
+        /// Determine if logging is enabled on an event
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="eventRef">The Ref of the event</param>
+        /// <returns>TRUE if logging is enabled for the event</returns>
         bool IsEventLoggingEnabledByRef(int eventRef);
+        
+        /// <summary>
+        /// Determine if an event is enabled or not
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evRef">The Ref of the event</param>
+        /// <returns>TRUE if the event is enabled</returns>
         bool EventEnabled(int evRef);
+        
+        /// <summary>
+        /// The number of events configured on the HomeSeer system
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         int EventCount { get; }
+        
+        /// <summary>
+        /// Determine if an event with a particular Ref exists
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evRef">The Ref of the event</param>
+        /// <returns>TRUE if an event with the specified Ref exists</returns>
         bool EventExistsByRef(int evRef);
         
+        /// <summary>
+        /// Get all of the triggers managed by a specific plugin
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
+        /// </param>
+        /// <returns>An array of triggers managed by the plugin</returns>
         TrigActInfo[] GetTriggersByInterface(string pluginId);
         
         #endregion
         
         #region Update
         
+        /// <summary>
+        /// Run an event causing it to execute its actions
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="eventRef">The Ref of the event</param>
+        /// <returns>TRUE if the event run started successfully. This does not indicate that the actions succeeded.</returns>
         bool TriggerEventByRef(int eventRef);
+        
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         string AddDeviceActionToEvent(int evRef, ControlEvent CC);
+        
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         bool EventSetTimeTrigger(int evRef, DateTime DT);
+        
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         bool EventSetRecurringTrigger(int evRef, TimeSpan Frequency, bool Once_Per_Hour, bool Reference_To_Hour);
+        
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         void AddActionRunScript(int @ref, string script, string method, string parms);
-        void DisableEventByRef(int evref);
+        
+        /// <summary>
+        /// Disable an event
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evRef">The Ref of the event to disable</param>
+        void DisableEventByRef(int evRef);
+        
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         void DeleteAfterTrigger_Set(int evRef);
+        
+        /// <summary>
+        /// Enable an event
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evref">The Ref of the event to enable</param>
         void EnableEventByRef(int evref);
+        
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
         void DeleteAfterTrigger_Clear(int evRef);
 
-        string UpdatePlugAction(string plugName, int evRef, TrigActInfo actInfo);
+        //TODO Unable to point to a specific action on an event with multiple actions
+        /// <summary>
+        /// Update the data saved to an event action
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="plugId">The ID of the plugin that owns the action
+        /// <remarks>If you are targeting an action owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="plugId"/></remarks>
+        /// </param>
+        /// <param name="evRef">The Ref of the event</param>
+        /// <param name="actInfo">The data to save to the event action</param>
+        /// <returns>A message describing the result. Empty if it was successful</returns>
+        string UpdatePlugAction(string plugId, int evRef, TrigActInfo actInfo);
+
+        /// <summary>
+        /// Update an existing plugin trigger in an event
+        /// </summary>
+        /// <param name="plugId">The ID of the plugin that owns the trigger
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="plugId"/></remarks>
+        /// </param>
+        /// <param name="evRef">Reference # of the event to modify</param>
+        /// <param name="trigInfo">The TrigActInfo that is to replace the existing trigger. The UID 
+        /// in this structure must match the UID in the original trigger</param>
+        /// <returns>Returns an empty string on success or an error message</returns>
+        string UpdatePlugTrigger(string plugId, int evRef, TrigActInfo trigInfo);
         
         #endregion
         
         #region Delete
         
+        /// <summary>
+        /// Delete an event
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evRef">The Ref of the event to delete</param>
         void DeleteEventByRef(int evRef);
         
         #endregion
         
-        void RegisterGenericEventCB(string GenericType, string pluginId);
-        void UnRegisterGenericEventCB(string GenericType, string pluginId);
-        void RaiseGenericEventCB(string GenericType, object[] Parms, string pluginId);
-        void RegisterEventCB(Constants.HSEvent evType, string pluginId);
+        /// <summary>
+        /// HomeSeer has the ability to raise events in applications and plug-ins when one of a list of specific
+        ///  events in HomeSeer occurs (See RegisterEventCB).  RegisterGenericEventCB allows an application or
+        ///  plug-in writer the opportunity to have custom events raised and to enable other applications and plug-ins
+        ///  to receive those callbacks. To remove the callback script, call UnRegisterGenericEventCB.
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="genericType">
+        /// This is a string that identifies the callback.  For example, a type of "MyPlugEvent" would mean that calls
+        ///  to RaiseGenericEventCB using something other than "MyPlugEvent" would be ignored. This string should be
+        ///  unique, and should be provided to all applications wishing to register to receive these callbacks.
+        ///  A special value of a single asterisk (*) can be used to indicate that you wish to receive ALL generic
+        ///  type callbacks from other plug-ins/applications.
+        /// </param>
+        /// <param name="pluginId">The ID of the plugin to call</param>
+        void RegisterGenericEventCB(string genericType, string pluginId);
         
+        /// <summary>
+        /// This will remove an application or plug-in from the list that should receive generic event callbacks
+        ///  for the type indicated (See RegisterGenericEventCB).
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="genericType">This is the generic type string that was used to register the callback with RegisterGenericEventCB.</param>
+        /// <param name="pluginId">The ID of the plugin remove from the callback listen</param>
+        void UnRegisterGenericEventCB(string genericType, string pluginId);
+        
+        /// <summary>
+        /// When an application or plug-in registers to receive specific types of generic HSEvent callbacks,
+        ///  this procedure is used to raise those callbacks and send information to that application.
+        ///  See RegisterGenericEventCB , UnRegisterGenericEventCB ,and HSEvent  information for more details.
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="genericType">
+        /// This is the generic type name that was used when the receiving plug-in or application called RegisterGenericEventCB.
+        ///  If you know that the plug-in or application that you wish to raise the generic event with used an asterisk
+        ///  as the Generic Type, then you can use any text here as that plug-in will receive all generic event callbacks.
+        /// </param>
+        /// <param name="parms">
+        /// These are parameters that you wish to be passed to the receiving application.
+        ///  As an array of objects, it can contain strings, integers, other objects, etc.
+        /// </param>
+        /// <param name="pluginId">The ID of the plugin</param>
+        void RaiseGenericEventCB(string genericType, object[] parms, string pluginId);
+        
+        /// <summary>
+        /// Call this function when your plugin initializes to notify HomeSeer that you want to be called when a
+        ///  specific event happens. The normal use for this is to be notified when a device changes value or
+        ///  it's displayed string changes. You will be notified about any device change, not just changes to
+        ///  your own devices. However, if your device is controlled and your SetIOMulti() call is made, after you
+        ///  call back with hs.SetDeviceValueByRef you will get an HSEvent notifying you about the value change.
+        ///  Since the change is to your device, this notification should be ignored. When an event is detected that
+        ///  has beenn registered by your plug-in, call is made to the HSEvent function in your plug-in.
+        ///  You can then handle the event. See HSEvent  for more information and an example.
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="evType">The type of event to register a callback for</param>
+        /// <param name="pluginId">The ID of the plugin that should be called</param>
+        void RegisterEventCB(Constants.HSEvent evType, string pluginId);
+
         //This doesn't exist in the legacy API?
         //void UnRegisterEventCB(Constants.HSEvent evType, string pluginId);
 
-        TrigActInfo[] TriggerMatches(string pluginName, int trigId, int subTrigId);
-        TrigActInfo[] GetTriggersByType(string pluginName, int trigId);
-        void TriggerFire(string pluginName, TrigActInfo trigInfo);
+        /// <summary>
+        /// This function returns an array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
+        ///  sub-trigger number provided.  GetTriggers returns all triggers, so use TriggerMatches when you only
+        ///  want to know if there are triggers in events for a specific plug-in's trigger.
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
+        /// </param>
+        /// <param name="trigId">The ID of the trigger</param>
+        /// <param name="subTrigId">The ID of the subtrigger</param>
+        /// <returns>An array of <see cref="TrigActInfo"/> which matches the given plug-in, trigger number, and
+        ///  sub-trigger number provided</returns>
+        TrigActInfo[] TriggerMatches(string pluginId, int trigId, int subTrigId);
+
+        /// <summary>
+        /// Get all of the triggers of a particular type
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="pluginId">The ID of the plugin that owns the trigger type
+        /// <remarks>If you are targeting triggers owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
+        /// </param>
+        /// <param name="trigId">The ID of the trigger type</param>
+        /// <returns>An array of trigger data</returns>
+        TrigActInfo[] GetTriggersByType(string pluginId, int trigId);
+        
+        /// <summary>
+        /// This function is a callback function and is called when a plugin detects that a trigger condition is true.
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: This was ported directly from the legacy HS3 API and has not been fully reviewed to ensure
+        ///  proper compatibility and support through this SDK.  This may undergo significant change in the near future.
+        ///  Please use with caution.
+        /// </remarks>
+        /// <param name="pluginId">The ID of the plugin
+        /// <remarks>If you are targeting a trigger owned by a legacy plugin, use the IPlugInAPI.Name of the plugin for <paramref name="pluginId"/></remarks>
+        /// </param>
+        /// <param name="trigInfo">The data of the trigger to fire</param>
+        void TriggerFire(string pluginId, TrigActInfo trigInfo);
 
         #endregion
         
         #region System
         
+        /// <summary>
+        /// Get the current version of HomeSeer that is running
+        /// </summary>
+        /// <returns>The version string for HomeSeer in the format of MAJOR.MINOR.PATCH.BUILD</returns>
         string Version();
+        
+        //TODO PSDK-60 IHsController.GetHsEdition() is out of date
+        /// <summary>
+        /// Get the current edition of HomeSeer that is running
+        /// </summary>
+        /// <returns>The edition of HomeSeer currently running</returns>
         Constants.editions GetHSEdition();
-        string GetUsers();        
+        
+        /// <summary>
+        /// Get a list of users and their rights
+        /// </summary>
+        /// <returns>a list of users in this format: username|rights,username2|rights2...</returns>
+        string GetUsers();
+        
+        /// <summary>
+        /// Determine if the HomeSeer system is licensed using any license, including a trial
+        /// </summary>
+        /// <returns>TRUE if the HomeSeer system is licensed</returns>
         bool IsLicensed();
+        
+        /// <summary>
+        /// Determine if the HomeSeer system is registered using a paid license
+        /// </summary>
+        /// <returns>TRUE if the HomeSeer system is registered with a paid license</returns>
         bool IsRegistered();
+        
+        /// <summary>
+        /// Determine if Location1 is used first on devices/features.
+        /// </summary>
+        /// <remarks>
+        /// By default, Location2 is used as the first logical location when organizing devices/features.
+        ///  For this reason, it is important to check which location is marked as the first location before working
+        ///  with locations.
+        /// </remarks>
+        /// <returns>TRUE if Location1 is used first, FALSE if Location2 is used first</returns>
+        bool IsLocation1First();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of Location1 strings
+        /// </summary>
+        /// <returns>A SortedList of Location1 location strings</returns>
         System.Collections.SortedList GetLocationsList();
+        
+        /// <summary>
+        /// Get the name of the Location1 location
+        /// </summary>
+        /// <returns>The user defined name of Location1</returns>
+        string GetLocation1Name();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of Location2 strings
+        /// </summary>
+        /// <returns>A SortedList of Location2 location strings</returns>
         System.Collections.SortedList GetLocations2List();
-        int CheckRegistrationStatus(string piname);
+        
+        /// <summary>
+        /// Get the name of the Location2 location
+        /// </summary>
+        /// <returns>The user defined name of Location2</returns>
+        string GetLocation2Name();
 
+        /// <summary>
+        /// Get the name of the first location.
+        /// <para>
+        /// This is the name of the location that is marked as first according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>The name of the first location</returns>
+        string GetFirstLocationName();
+        
+        /// <summary>
+        /// Get the name of the second location.
+        /// <para>
+        /// This is the name of the location that is marked as second according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>The name of the second location</returns>
+        string GetSecondLocationName();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of the location strings marked as first
+        /// <para>
+        /// This is the list of location strings that are marked as first according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A List of the first location strings</returns>
+        List<string> GetFirstLocationList();
+        
+        /// <summary>
+        /// Get an alpha-sorted list of the location strings marked as second
+        /// <para>
+        /// This is the list of location strings that are marked as second according to <see cref="IsLocation1First"/>
+        /// </para>
+        /// </summary>
+        /// <returns>A List of the second location strings</returns>
+        List<string> GetSecondLocationList();
+        
+        /// <summary>
+        /// Get the <see cref="Types.ERegistrationMode"/> of a plugin
+        /// </summary>
+        /// <param name="pluginId">The ID of the plugin to read</param>
+        /// <returns>The <see cref="Types.ERegistrationMode"/> of the plugin with the specified ID</returns>
+        int CheckRegistrationStatus(string pluginId);
+
+        /// <summary>
+        /// Get the type of OS HomeSeer is running on as <see cref="Types.EOsType"/>
+        /// </summary>
+        /// <returns>0 = windows, 1 = linux</returns>
+        /// <seealso cref="Types.EOsType"/>
         int GetOsType();
         
         /// <summary>
@@ -342,10 +1331,59 @@ namespace HomeSeer.PluginSdk {
         /// <returns>A string representation of the IP address HomeSeer is running on</returns>
         string GetIpAddress();
         
+        /// <summary>
+        /// Shutdown the HS system
+        /// </summary>
+        void ShutDown();
+
+        /// <summary>
+        /// Shutdown and restart the HS system. This restarts the hardware
+        /// </summary>
+        void RestartSystem();
+
+        /// <summary>
+        /// Shut down HS and shutdown the hardware system
+        /// </summary>
+        void WindowsShutdownSystem();
+
+        /// <summary>
+        /// Shut down HS and reboot the hardware system
+        /// </summary>
+        void WindowsRebootSystem();
+
+        /// <summary>
+        /// Logs off the active user and closes all processes running under the user
+        /// </summary>
+        void WindowsLogoffSystem();
+
+        /// <summary>
+        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
+        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
+        ///  in HomeSeer's help file.
+        /// </summary>
+        /// <param name="strIn">A string with the replacement variables</param>
+        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
+        string ReplaceVariables(string strIn);
+
+        /// <summary>
+        /// Returns the path to the HS executable. Some plugins need this when running remotely
+        /// </summary>
+        /// <returns>The path to the HomeSeer executable</returns>
+        string GetAppPath();
+
         #region DateTime
-        
+
+        /// <summary>
+        /// Get the DateTime for Solar Noon from the HomeSeer system
+        /// </summary>
         DateTime SolarNoon { get; }
+        /// <summary>
+        /// Get the DateTime for Sunrise from the HomeSeer system
+        /// </summary>
         DateTime Sunrise   { get; }
+        /// <summary>
+        /// Get the DateTime for Sunset from the HomeSeer system
+        /// </summary>
         DateTime Sunset    { get; }
         
         #endregion
@@ -361,19 +1399,20 @@ namespace HomeSeer.PluginSdk {
         //int HSModules();
         //int HSThreads();
         //void PowerFailRecover();
-        //void RestartSystem();
-        //void ShutDown();
         //string SystemUpTime();
         //TimeSpan SystemUpTimeTS();
-        //void WindowsLockSystem();
-        //void WindowsLogoffSystem();
-        //void WindowsShutdownSystem();
-        //void WindowsRebootSystem();
 
         #endregion
         
         #region Logging
 
+        /// <summary>
+        /// Write a message to the HomeSeer logs
+        /// </summary>
+        /// <param name="logType">The <see cref="ELogType"/> to write</param>
+        /// <param name="message">The message to write to the log</param>
+        /// <param name="pluginName">The name of your plugin, used to mark the source of the log message</param>
+        /// <param name="color">The color code to use. NOTE: Legacy HS3 API implementation</param>
         void WriteLog(ELogType logType, string message, string pluginName, string color = "");
         
         #endregion
@@ -381,40 +1420,161 @@ namespace HomeSeer.PluginSdk {
         #region Energy
 
         //Create
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         string Energy_AddCalculator(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         string Energy_AddCalculatorEvenDay(int dvRef, string Name, TimeSpan Range, TimeSpan StartBack);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         bool Energy_AddData(int dvRef, EnergyData Data);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         bool Energy_AddDataArray(int dvRef, EnergyData[] colData);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         bool Energy_SetEnergyDevice(int dvRef, Constants.enumEnergyDevice DeviceType);
         
         //Read
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         int Energy_CalcCount(int dvRef);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         SortedList<int, string> Energy_GetGraphDataIDs();
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         SortedList<int, string> Energy_GetEnergyRefs(bool GetParentRefs);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         System.Drawing.Image Energy_GetGraph(int id, string dvRefs, int width, int height, string format);        
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         List<EnergyData> Energy_GetData(int dvRef,DateTime dteStart,DateTime dteEnd);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         List<EnergyData> Energy_GetArchiveData(int dvRef, DateTime dteStart, DateTime dteEnd);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         List<EnergyData> Energy_GetArchiveDatas(string dvRefs, DateTime dteStart, DateTime dteEnd);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         EnergyCalcData Energy_GetCalcByName(int dvRef, string Name);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         EnergyCalcData Energy_GetCalcByIndex(int dvRef, int Index);
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         EnergyGraphData Energy_GetGraphData(int ID);
         
         //Update
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         int Energy_SaveGraphData(EnergyGraphData Data);
         
         //Delete
+        /// <summary>
+        /// PLEASE NOTE: Code related to the Energy components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Energy API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </summary>
         int Energy_RemoveData(int dvRef, DateTime dteStart);
-        
+
         #endregion
-        
+
         #region Speech
-        
+
+        /// <summary>
+        /// This function speaks some text
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </remarks>
+        /// <param name="speechDevice">
+        /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
+        ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
+        ///  for HomeSeer Phone (device - 100 = phone line), or the WAV audio device to use.
+        ///  Although this is still used for HomeSeer Phone, speaks for HomeSeer phone are never proxied and so
+        ///  values >= 100 should never been seen in the device parameter.
+        /// </param>
+        /// <param name="spokenText">
+        /// This is the text to be spoken, or if it is a WAV file to be played, then the characters ":\" will be
+        ///  found starting at position 2 of the string as playing a WAV file with the speak command in HomeSeer
+        ///  REQUIRES a fully qualified path and filename of the WAV file to play.
+        /// </param>
+        /// <param name="wait">
+        /// This parameter tells HomeSeer whether to continue processing commands immediately or to wait until
+        ///  the speak command is finished.
+        /// </param>
+        /// <param name="host">
+        /// This is a list of host:instances to speak or play the WAV file on.
+        ///  An empty string or a single asterisk (*) indicates all connected speaker clients on all hosts.
+        /// </param>
+        void Speak(int speechDevice, string spokenText, bool wait, string host = "");
+
+
         /// <summary>
         /// This procedure is used to cause HomeSeer to speak something when a speak proxy is registered and active.
         ///  Since speak commands when a speak proxy plug-in is registered are trapped and passed to the SpeakIn
         ///  procedure of the speak proxy plug-in, this command is used when the speak proxy plug-in is ready to do
         ///  the real speaking.
         /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </remarks>
         /// <param name="speechDevice">
         /// This is the device that is to be used for the speaking.  In older versions of HomeSeer, this value was
         ///  used to indicate the sound card to use, and if it was over 100, then it indicated that it was speaking
@@ -438,8 +1598,62 @@ namespace HomeSeer.PluginSdk {
         ///  Normally this parameter is passed to SpeakProxy unchanged.
         /// </param>
         void SpeakProxy(int speechDevice, string spokenText, bool wait, string host = "");
+
+        /// <summary>
+        /// Sends TTS to a file using the system voice
+        /// </summary>
+        /// <remarks>
+        /// PLEASE NOTE: Code related to the Speech components in HomeSeer were ported from the HS3 plugin API and
+        ///  have not been fully tested to verify full functionality from the new SDK. The Speech API may undergo
+        ///  significant changes in the near future. Please use with caution.
+        /// </remarks>
+        /// <param name="Text">The text to speak</param>
+        /// <param name="Voice">The voice to use, SAPI only on Windows</param>
+        /// <param name="FileName">Filename to send the speech to</param>
+        /// <returns></returns>
+        bool SpeakToFile(string Text, string Voice, string FileName);
         
-        #if WIP
+        /// <summary>
+        /// Plays audio from passed file to a specific speaker client
+        /// </summary>
+        /// <param name="FileName">The filename can be the full path to the file,
+        /// or just the name of file that is located in one of the following folders
+        /// in the HomeSeer root directory: wave/Mdia/scripts</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        /// <param name="Wait">If True, this function will not return until speaking has finished.
+        /// If False, the function returns immediately and the speaking is queued
+        /// </param>
+        void PlayWavFile(string FileName, string Host, bool Wait);
+
+        /// <summary>
+        /// Set the volume on a speaker client
+        /// </summary>
+        /// <param name="level">Volume level in the range of 0-100</param>
+        /// <param name="Host">The speaker host to speak to in the format host:instance</param>
+        void SetVolume(int level, string Host);
+
+        /// <summary>
+        /// Get the volume on a speaker client
+        /// </summary>
+        /// <param name="host">The speaker host to speak to in the format host:instance</param>
+        /// <returns>Volume level in the range of 0-100</returns>
+        int GetVolume(string host);
+
+        /// <summary>
+        /// This function can let you know if a specific speaker client (host or host:instance) is currently busy speaking or playing WAV audio.
+        /// </summary>
+        /// <param name="host">Leaving this a null string will return the busy status for the first instance HomeSeer finds, 
+        /// otherwise use the hostname of the computer you are interested in determining the busy status of. 
+        /// If more than one instance of the Speaker application is running on "host" then you may need to specify the instance as well in the format host:instance.</param>
+        /// <returns> TRUE indicates that the speaker application instance is busy</returns>
+        bool IsSpeakerBusy(string host);
+
+        /// <summary>
+        /// This function retrieves a comma separated list of host:instance names for Speaker client instances currently connected to HomeSeer.
+        /// </summary>
+        /// <returns>The returned instance list is a comma separated list of host:instance pairs</returns>
+        string GetSpeakerInstanceList();
+
         /// <summary>
         /// Register your plug-in as a Speak Proxy plug-in.
         /// <para>
@@ -461,24 +1675,18 @@ namespace HomeSeer.PluginSdk {
         /// </summary>
         /// <param name="pluginId">The Id of your plugin</param>
         void UnRegisterProxySpeakPlug(string pluginId);
-        #endif
-        
+
         #endregion
 
+        #region Media
         /// <summary>
-        /// HomeSeer supports the use of replacement variables, which is the use of special tags to indicate where
-        ///  HomeSeer should replace the tag with text information.  A full list of replacement variables is listed
-        ///  in HomeSeer's help file.
+        /// This function checks if the media player is currently playing a selection
         /// </summary>
-        /// <param name="strIn">A string with the replacement variables</param>
-        /// <returns>A string with the replacement variables removed with the indicated values put in their place</returns>
-        string ReplaceVariables(string strIn);
-
-        /// <summary>
-        /// Returns the path to the HS executable. Some plugins need this when running remotely
-        /// </summary>
-        /// <returns>The path to the HomeSeer executable</returns>
-        string GetAppPath();
+        /// <param name="host">Leaving this a null string will apply the command to the first instance HomeSeer finds, otherwise use the hostname of the computer for this command.  
+        /// If more than one instance of the Speaker application is running on "host" then you may need to specify the instance as well in the format host:instance.</param>
+        /// <returns>TRUE if a media selection is currently playing and the sound card is most likely busy, FALSE if a media selection is not playing and the sound is most likely free.</returns>
+        bool IsMediaPlaying(string host);
+        #endregion
         
         #region Images
 
@@ -539,29 +1747,327 @@ namespace HomeSeer.PluginSdk {
         bool DeleteImageFile(string targetFile);
 
         #endregion
-
-        #region Not Implemented
-
+        
         #region Scripts
+        
+        /// <summary>
+        /// Run a script file
+        /// </summary>
+        /// <param name="scr">Filename of the script to run. Script must be located in the scripts folder.</param>
+        /// <param name="Wait">If True, function does not return until script finishes, if false, the script is run in the background.</param>
+        /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
+        /// <returns></returns>
+        object RunScript(string scr, bool Wait, bool SingleInstance);
+
+        /// <summary>
+        /// Run a script file calling the given function in the file
+        /// </summary>
+        /// <param name="scr">Filename of the script to run. Script must be located in the scripts folder.</param>
+        /// <param name="func">The name of the function to run. Normally the function "Main" is run if no function is specified.</param>
+        /// <param name="param">The parameter(s) to be passed to the function. This is an object and can be a single
+        /// parameter such as a string, or multiple parameters in an array</param>
+        /// <param name="Wait">If True, function does not return until script finishes, if false, the script is run in the background.</param>
+        /// <param name="SingleInstance">If true, the script will not run if it is already running. If false, multiple copies of the same script can run.</param>
+        /// <returns></returns>
+        object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
+
+        /// <summary>
+        /// This function indicates if a specified script is currently running.
+        /// </summary>
+        /// <param name="scr">Filename of the script to check.</param>
+        /// <returns>TRUE if the specified script is currently running and FALSE if it doesn't.</returns>
+        bool IsScriptRunning(string scr);
 
         //TODO Script methods
-        //object PluginFunction(string plugname, string pluginstance, string func,object[] parms);
-        //object PluginPropertyGet(string plugname, string pluginstance, string func,object[] parms);
-        //void PluginPropertySet(string plugname, string pluginstance, string prop,object value);
         //int SendMessage(string message, string host, bool showballoon);
         //int Launch(string Name, string @params, string direc, int LaunchPri);
         //bool RegisterStatusChangeCB(string script, string func);
         //void UnRegisterStatusChangeCB(string script);
         //string GetScriptPath();
         //string InstallScript(string scr_name, object param);
-        //bool IsScriptRunning(string scr);
-        //object RunScript(string scr, bool Wait, bool SingleInstance);
-        //object RunScriptFunc(string scr, string func, object param, bool Wait, bool SingleInstance);
         //string ScriptsRunning();
         //int ValidateScriptLicense(string LicenseID, string ProductID);
         //int ValidateScriptLicenseDisplay(string LicenseID, string ProductID, bool bDisplay);
 
         #endregion
+
+        #region Cross-Plugin
+
+        /// <summary>
+        /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
+        /// </summary>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the function</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the function</param>
+        /// <param name="procName">The name of the function</param>
+        /// <param name="params">An array of parameters to pass to the function being called</param>
+        /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either the <paramref name="plugName"/> or <paramref name="procName"/> parameters are null or whitespace</exception>
+        /// <exception cref="AggregateException">Thrown when there was an error trying to execute the function. Check the enclosed exception for details.</exception>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginFunction"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        object LegacyPluginFunction(string plugName, string plugInstance, string procName, object[] @params);
+
+        /// <summary>
+        /// Execute a specific function declared within a plugin installed on the HomeSeer system. This calls <see cref="IPlugin.PluginFunction"/> on the target plugin.
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin that owns the function</param>
+        /// <param name="procName">The name of the function</param>
+        /// <param name="params">An array of parameters to pass to the function being called</param>
+        /// <returns>An object that contains the return value from the function called. You are on your own when it comes to casting this to the right type.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either the <paramref name="pluginId"/> or <paramref name="procName"/> parameters are null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
+        /// <exception cref="AggregateException">Thrown when there was an error trying to execute the function. Check the enclosed exception for details.</exception>
+        object PluginFunction(string pluginId, string procName, object[] @params);
+        
+        /// <summary>
+        /// Get the version of a particular plugin by its name. For interfacing with legacy plugins.
+        /// </summary>
+        /// <param name="pluginName">The <see cref="IPlugin.Name"/> of the plugin</param>
+        /// <returns>The version of the main dll for the plugin</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="pluginName"/> parameter is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified name is not found in the list of installed plugins</exception>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="GetPluginVersionById"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        string GetPluginVersionByName(string pluginName);
+        
+        /// <summary>
+        /// Get the version of a particular plugin by its <see cref="IPlugin.Id"/>. Do not use this for legacy plugins; it will not work.
+        /// </summary>
+        /// <param name="pluginId">The <see cref="IPlugin.Id"/> of the plugin</param>
+        /// <returns>The version of the main dll for the plugin</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="pluginId"/> parameter is null or whitespace</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when a plugin with the specified ID is not found in the list of installed plugins</exception>
+        string GetPluginVersionById(string pluginId);
+
+        /// <summary>
+        /// Get a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
+        /// </summary>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginPropertyGet"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the property</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <returns>An object representing the value of the target property</returns>
+        object LegacyPluginPropertyGet(string plugName, string plugInstance, string propName);
+        
+        /// <summary>
+        /// Get a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
+        /// </summary>
+        /// <param name="plugId">The <see cref="IPlugin.Id"/> of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <returns>An object representing the value of the target property</returns>
+        object PluginPropertyGet(string plugId, string propName);
+
+        /// <summary>
+        /// Set a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertySet"/> on the target plugin
+        /// </summary>
+        /// <remarks>
+        /// This is useful for interacting with Legacy plugins that used a name-instance pair for identification
+        ///  instead of a unique ID. You should use <see cref="PluginPropertySet"/> if you are trying to
+        ///  interface with HS4 plugins.
+        /// </remarks>
+        /// <param name="plugName">The <see cref="IPlugin.Name"/> of the plugin that owns the property</param>
+        /// <param name="plugInstance">The instance name of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <param name="propValue">The value of the property to set.
+        ///  Its type must exactly match the type defined in the plugin.</param>
+        void LegacyPluginPropertySet(string plugName, string plugInstance, string propName, object propValue);
+        
+        /// <summary>
+        /// Set a specific property declared within a plugin installed on the HomeSeer system.
+        ///  This calls <see cref="IPlugin.PluginPropertySet"/> on the target plugin
+        /// </summary>
+        /// <param name="plugId">The <see cref="IPlugin.Id"/> of the plugin that owns the property</param>
+        /// <param name="propName">The exact name of the property</param>
+        /// <param name="propValue">The value of the property to set.
+        ///  Its type must exactly match the type defined in the plugin.</param>
+        void PluginPropertySet(string plugId, string propName, object propValue);
+
+        #endregion
+
+        #region Categories
+
+        /// <summary>
+        /// Create a new category with the specified name and image path
+        /// </summary>
+        /// <param name="name">The display name of the category</param>
+        /// <param name="image">The path to the image for the category. Use the files in /html/images/Categories/</param>
+        /// <returns>The ID of the newly created category</returns>
+        /// <exception cref="ArgumentException">Thrown when the name is already in use by another category</exception>
+        string CreateCategory(string name, string image);
+
+        /// <summary>
+        /// Get a Dictionary of all categories on the HomeSeer system where the key is the ID and the value is the name of each category
+        /// </summary>
+        /// <returns>A Dictionary of category names by ID</returns>
+        Dictionary<string, string> GetAllCategories();
+        
+        /// <summary>
+        /// Get the name of a category by its ID
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <returns>The name of the category. Null or empty string if the category does not exist</returns>
+        string GetCategoryNameById(string id);
+
+        /// <summary>
+        /// Get the image path of a category by its ID
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <returns>The image path of the category. Null if the category doesn't exist. Empty string if there is no image path for that category</returns>
+        string GetCategoryImageById(string id);
+
+        /// <summary>
+        /// Get a list of <see cref="AbstractHsDevice.Ref"/>s of devices and features included in the category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <returns>
+        /// A List of <see cref="AbstractHsDevice.Ref"/>s of devices and features included in the category.
+        ///  Null if the category doesn't exist. Empty list if no devices or features are included in the category.
+        /// </returns>
+        List<int> GetRefsByCategoryId(string id);
+
+        /// <summary>
+        /// Set the image path for a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="image">The path to the image for the category. Use /html/images/Categories/</param>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        void SetImageForCategoryById(string id, string image);
+
+        /// <summary>
+        /// Set the name for a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="name">The new name for the category</param>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        void SetNameForCategoryById(string id, string name);
+        
+        /// <summary>
+        /// Set the list of refs for a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRefs">The new list of refs for the category</param>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        void SetRefsForCategoryById(string id, List<int> devRefs);
+        
+        /// <summary>
+        /// Add a ref to a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRef">The ref to add to the category</param>
+        /// <returns>The current list of refs on the category after adding the one specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> AddRefToCategory(string id, int devRef);
+        
+        /// <summary>
+        /// Add a collection of refs to a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRefs">A list of refs to add to the category</param>
+        /// <returns>The current list of refs on the category after adding the ones specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> AddRefsToCategory(string id, List<int> devRefs);
+        
+        /// <summary>
+        /// Remove a ref from a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRef">The ref to remove from the category</param>
+        /// <returns>The current list of refs on the category after removing the one specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> RemoveRefFromCategory(string id, int devRef);
+
+        /// <summary>
+        /// Remove a list of refs from a category
+        /// </summary>
+        /// <param name="id">The ID of the category</param>
+        /// <param name="devRefs">The refs to remove from the category</param>
+        /// <returns>The current list of refs on the category after removing the ones specified</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if a category with that ID isn't found</exception>
+        List<int> RemoveRefsFromCategory(string id, List<int> devRefs);
+
+        /// <summary>
+        /// Delete a category by ID
+        /// </summary>
+        /// <param name="id">The ID of the category to delete</param>
+        void DeleteCategoryById(string id);
+
+        #endregion
+
+        #region Global Variables
+        
+        /// <summary>
+        /// Create a new global variable
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <returns>An empty string no error occured, or an error string if one did occur.</returns>
+        string CreateVar(string name);
+
+        /// <summary>
+        /// Delete a global variable
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        void DeleteVar(string name);
+
+        /// <summary>
+        /// Find the global variable associated with the name parameter and return it.
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <returns>The global variable saved.</returns>
+        object GetVar(string name);
+
+        /// <summary>
+        /// Save the global variable contained in the obj parameter. 
+        /// The parameter may be any variable type such as a string or integer, or it may be a reference to an object created with CreateObject
+        /// </summary>
+        /// <param name="name">The name of the global variable</param>
+        /// <param name="obj">The object to be saved</param>
+        /// <returns>An empty string no error occured, or an error string if one did occur.</returns>
+        string SaveVar(string name, object obj);
+        
+        #endregion
+        
+        #region Encryption
+        /// <summary>
+        /// Decrypt a string using a decryption password that you specify.
+        /// </summary>
+        /// <param name="text">The text to decrypt</param>
+        /// <param name="password">The user-created text string to decrypt the text with</param>
+        /// <param name="keyModifier">The modifier used with the password to create the decryption key. 
+        /// If EncryptString was used with a key modifier was, you must specify the same key modifier here.</param>
+        /// <returns>A string containing a decrypted form of the text parameter, decrypted using password (and keyModifier if provided)</returns>
+        string DecryptString(string text, string password, string keyModifier = "");
+        #endregion
+
+        #region Email
+        /// <summary>
+        /// Send an Email message
+        /// </summary>
+        /// <param name="to">The address you are sending the email to</param>
+        /// <param name="from">The adress you are sending from.  Note that some ISPs will not allow you to put just anything in this field.  
+        /// You may be required to put your real E-mail address here. If you are using MAPI to handle your E-mail, 
+        /// MAPI will enter your E-mail address that is associated with your default E-mail account.  In that case, this field will be ignored.</param>
+        /// <param name="cc">The CC address</param>
+        /// <param name="bcc">The BCC address</param>
+        /// <param name="subject">The subject of the email</param>
+        /// <param name="message">The body of the email</param>
+        /// <param name="attach">The abosulte path to the file to be attached to the email.</param>
+        void SendEmail(string to, string from, string cc, string bcc, string subject, string message, string attach);
+        #endregion
+
+        #region Not Implemented
 
         #region COM
 
@@ -596,7 +2102,7 @@ namespace HomeSeer.PluginSdk {
         #region AppCallback
 
         //TODO AppCallback methods
-        
+
         #endregion
 
         //TODO other methods

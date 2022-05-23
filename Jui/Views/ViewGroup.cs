@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace HomeSeer.Jui.Views {
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="AbstractView"/>
 	/// <summary>
 	/// View groups define a vertical sub-grouping of views with a header.
 	/// </summary>
@@ -49,10 +49,10 @@ namespace HomeSeer.Jui.Views {
 		private Dictionary<string, int> _viewIds = new Dictionary<string, int>();
 
 		#endregion
-		
+
 		#region Constructors
-		
-		/// <inheritdoc />
+
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a view group with an ID
 		/// </summary>
@@ -63,7 +63,7 @@ namespace HomeSeer.Jui.Views {
 			_views = new List<AbstractView>();
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a view group with an ID and Name
 		/// </summary>
@@ -84,7 +84,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// Add a view to the group
 		/// </summary>
-        public void AddView(AbstractView view) {
+        public virtual void AddView(AbstractView view) {
 
 			ViewCollectionHelper.AddView(view, ref _views, ref _viewIds, true);
 		}
@@ -93,7 +93,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// Add multiple views to the group
 		/// </summary>
-		public void AddViews(IEnumerable<AbstractView> views) {
+		public virtual void AddViews(IEnumerable<AbstractView> views) {
 			
 			ViewCollectionHelper.AddViews(views, ref _views, ref _viewIds, true);
 		}
@@ -102,7 +102,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// Set the list of views in this group
 		/// </summary>
-		public void SetViews(IEnumerable<AbstractView> views) {
+		public virtual void SetViews(IEnumerable<AbstractView> views) {
 
 			ViewCollectionHelper.SetViews(views, ref _views, ref _viewIds, true);
 		}
@@ -123,7 +123,23 @@ namespace HomeSeer.Jui.Views {
 			return ViewCollectionHelper.GetViewById(viewId, ref _views, ref _viewIds);
 		}
 		
-		/// <inheritdoc/>
+		/// <summary>
+		/// Get the view with a specific ID from a collection cast as the target type
+		/// </summary>
+		/// <param name="viewId">The ID of the view to get</param>
+		/// <returns>
+		/// The view with the specified ID cast as the target type.
+		/// </returns>
+		/// <exception cref="ArgumentNullException">An invalid view ID was entered</exception>
+		/// <exception cref="ArgumentException">No views are in the group to get</exception>
+		/// <exception cref="IndexOutOfRangeException">The ID was found, but the view was not.  The group is probably malformed and should be recreated.</exception>
+		/// <exception cref="KeyNotFoundException">No views with that ID were found</exception>
+		public TViewType GetViewById<TViewType>(string viewId) where TViewType : AbstractView {
+			
+			return ViewCollectionHelper.GetViewById<TViewType>(viewId, ref _views, ref _viewIds);
+		}
+
+		/// <inheritdoc cref="AbstractView.GetStringValue"/>
 		/// <exception cref="InvalidOperationException">Thrown to indicate that this ViewGroup contains other views</exception>
 		public override string GetStringValue() {
 			if (_views.Count > 0) {
@@ -155,7 +171,7 @@ namespace HomeSeer.Jui.Views {
 			ViewCollectionHelper.MapViewIds(_views, out _viewIds, true);
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc cref="AbstractView.Update"/>
 		/// <summary>
 		/// Not used by ViewGroups
 		/// </summary>
@@ -168,15 +184,16 @@ namespace HomeSeer.Jui.Views {
 		#region Delete
 
 		/// <inheritdoc cref="ViewCollectionHelper.RemoveAllViews"/>
-		public void RemoveAllViews() {
+		public virtual void RemoveAllViews() {
 			
 			ViewCollectionHelper.RemoveAllViews(out _views, out _viewIds);
 		}
-		
-		#endregion
-		
+
 		#endregion
 
+		#endregion
+
+		/// <inheritdoc cref="AbstractView.ToHtml"/>
 		public override string ToHtml(int indent = 0) {
 
 			var sb = new StringBuilder();
