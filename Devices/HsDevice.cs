@@ -30,7 +30,6 @@ namespace HomeSeer.PluginSdk.Devices {
         public List<HsFeature> Features { get; } = new List<HsFeature>();
 
         /// <summary>
-        /// <para> NOTE - THIS IS PREVIEW MATERIAL AND WILL NOT FUNCTION UNTIL HS v4.2.0.0 </para>
         /// <para>
         /// A list of <see cref="AbstractHsDevice.Ref"/>s indicating the order of importance for the features of a
         ///  device where 1 is the most important. This helps HomeSeer determine how to display features in the UI.

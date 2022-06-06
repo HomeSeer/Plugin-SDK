@@ -6,17 +6,50 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         
         public static List<string> SampleDeviceTypeList => new List<string> {
                                                                     "Line-powered switch",
-                                                                    "Line-powered sensor"
+                                                                    "Line-powered sensor",
+                                                                    "Battery-powered sensor",
+                                                                    "Thermostat"
                                                                 };
         
         public static List<string[]> SampleDeviceTypeFeatures => new List<string[]>
                                                                      {
                                                                          LinePoweredSwitchFeatures,
-                                                                         LinePoweredSensorFeatures
+                                                                         LinePoweredSensorFeatures,
+                                                                         BatteryPoweredSensorFeatures,
+                                                                         ThermostatFeatures
                                                                      };
         
         public static string[] LinePoweredSwitchFeatures => new []{ "On-Off control feature" };
         public static string[] LinePoweredSensorFeatures => new []{ "Open-Close status feature" };
+        public static string[] BatteryPoweredSensorFeatures => new[] { "Open-Close status feature", "Battery status feature" };
+        public static string[] ThermostatFeatures => new[] { "Ambient Temperature feature", 
+                                                             "Heating Setpoint feature",
+                                                             "Cooling Setpoint feature",
+                                                             "HVAC Mode feature",
+                                                             "HVAC Status feature",
+                                                             "Fan Mode feature",
+                                                             "Fan Status feature",
+                                                             "Humidity feature"
+                                                            };
+
+        public const int ThermostatHvacModeHeat = 1;
+        public const int ThermostatHvacModeCool = 2;
+        public const int ThermostatHvacModeAuto = 3;
+        public const int ThermostatHvacModeAuxHeat = 4;
+        public const int ThermostatHvacModeOff = 5;
+
+        public const int ThermostatHvacStatusIdle = 0;
+        public const int ThermostatHvacStatusHeating = 1;
+        public const int ThermostatHvacStatusCooling = 2;
+
+        public const int ThermostatFanModeAuto = 1;
+        public const int ThermostatFanModeOn = 2;
+
+        public const int ThermostatFanStatusOff = 0;
+        public const int ThermostatFanStatusOn = 1;
+
+        public const int ThermostatSetpointDecrement = 1000;
+        public const int ThermostatSetpointIncrement = 1001;
 
         public const string DeviceConfigPageId = "device-config-page";
         public const string DeviceConfigPageName = "Sample Device Config";
@@ -42,12 +75,21 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         public static string DeviceConfigInputId => $"{DeviceConfigPageId}-sampleinput";
         public const string DeviceConfigInputName = "Sample Text Input";
         public const string DeviceConfigInputValue = "This is a text input";
+        public static string DeviceConfigDateInputId => $"{DeviceConfigPageId}-sampledateinput";
+        public const string DeviceConfigDateInputName = "Sample Date Input";
+        public const string DeviceConfigDateInputValue = "";
+        public static string DeviceConfigTimeInputId => $"{DeviceConfigPageId}-sampletimeinput";
+        public const string DeviceConfigTimeInputName = "Sample Time Input";
+        public const string DeviceConfigTimeInputValue = "";
 
         public static string DeviceConfigTextAreaId => $"{DeviceConfigPageId}-sampletextarea";
         public const string DeviceConfigTextAreaName = "Sample Text Area";
         
         public static string DeviceConfigTimeSpanId => $"{DeviceConfigPageId}-sampletimespan";
         public const string DeviceConfigTimeSpanName = "Sample Time Span";
+
+        public static string DeviceConfigNavButton1Id => $"{DeviceConfigPageId}-samplenavbutton1";
+        public static string DeviceConfigNavButton2Id => $"{DeviceConfigPageId}-samplenavbutton2";
 
     }
 

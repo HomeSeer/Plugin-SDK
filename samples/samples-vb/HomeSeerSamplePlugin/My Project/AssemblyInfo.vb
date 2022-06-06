@@ -10,9 +10,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("HomeSeerSamplePluginVB")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyCompany("HomeSeer Technologies LLC")>
 <Assembly: AssemblyProduct("HomeSeerSamplePluginVB")>
-<Assembly: AssemblyCopyright("Copyright ©  2019")>
+<Assembly: AssemblyCopyright("Copyright HomeSeer Technologies © 2022")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.0.3.0")>
-<Assembly: AssemblyFileVersion("1.0.3.0")>
+<Assembly: AssemblyVersion("1.0.4.1")>
+<Assembly: AssemblyFileVersion("1.0.4.1")>
