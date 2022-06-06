@@ -85,7 +85,11 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         public const string Sp3SampleInput5Name = "Sample Password Input";
         public static string Sp3SampleInput6Id => $"{SettingsPage3Id}-sampleinput6";
         public const string Sp3SampleInput6Name = "Sample Decimal Input";
-        
+        public static string Sp3SampleInput7Id => $"{SettingsPage3Id}-sampleinput7";
+        public const string Sp3SampleInput7Name = "Sample Date Input";
+        public static string Sp3SampleInput8Id => $"{SettingsPage3Id}-sampleinput8";
+        public const string Sp3SampleInput8Name = "Sample Time Input";
+
     }
 
 }
