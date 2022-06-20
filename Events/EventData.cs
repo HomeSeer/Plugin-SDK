@@ -26,6 +26,18 @@ namespace HomeSeer.PluginSdk.Events {
         public bool                       Flag_Include_in_Powerfail;
         public bool                       Flag_Security;
         public bool                       Flag_Priority_Event;
+        /// <summary>
+        /// Event can be controlled by voice using the event name or the voice command override, must be set if Amazon or Google is set
+        /// </summary>
+        public bool FlagVoiceCommand;
+        /// <summary>
+        /// Event can be discovered by Google Home
+        /// </summary>
+        public bool FlagGoogleDiscoveryEnabled;
+        /// <summary>
+        /// Event can be discovered by Amazon alexa
+        /// </summary>
+        public bool FlagAlexaDiscoveryEnabled;
         public int                        Action_Count;
         public string[]                   Actions;
         public int                        Trigger_Count;
