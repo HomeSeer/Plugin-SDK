@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Devices\Controls\StatusControlCollectionTests.cs" />
     <Compile Include="Devices\FeatureFactoryTests.cs" />
     <Compile Include="Devices\PlugExtraDataTests.cs" />
     <Compile Include="Devices\Tests\StatusGraphicTests.cs" />
