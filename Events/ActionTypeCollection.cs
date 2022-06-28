@@ -259,7 +259,29 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
 
-        private AbstractActionType GetObjectFromActInfo(TrigActInfo actInfo) {
+        /// <summary>
+        /// Get an instance of an <see cref="AbstractActionType"/> from a <see cref="TrigActInfo"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <see cref="TrigActInfo.TANumber"/> is used to identify which of the
+        ///  <see cref="AbstractActionType">AbstractActionTypes</see> is used.
+        /// </para>
+        /// </remarks>
+        /// <param name="actInfo">An instance of <see cref="TrigActInfo"/> that represents an action.</param>
+        /// <returns>
+        /// An instance of an <see cref="AbstractActionType"/>. This will be one of the types in the <see cref="ActionTypes"/> list.
+        /// </returns>
+        /// <exception cref="TypeLoadException">
+        /// Thrown if the <see cref="AbstractActionType"/> that is referenced by <see cref="TrigActInfo.TANumber"/>
+        ///  does not have the proper constructor.
+        /// <list type="bullet">
+        /// <item><see cref="AbstractActionType(int,int,int,System.Byte[],IActionTypeListener)"/></item>
+        /// <item><see cref="AbstractActionType(int,int,System.Byte[],IActionTypeListener,bool)"/></item>
+        /// <item><see cref="AbstractActionType(int,int,System.Byte[],IActionTypeListener)"/></item>
+        /// </list>
+        /// </exception>
+        public AbstractActionType GetObjectFromActInfo(TrigActInfo actInfo) {
             //actInfo.UID, actInfo.SubTANumber, actInfo.evRef, actInfo.DataIn, _listener
             if (TypeHasConstructor(actInfo.TANumber - 1, 0)) {
                 return GetObjectFromInfo(actInfo.TANumber-1, 0, actInfo.UID, actInfo.SubTANumber, actInfo.evRef, actInfo.DataIn ?? new byte[0], _listener);
