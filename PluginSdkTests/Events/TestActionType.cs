@@ -2,6 +2,9 @@ using HomeSeer.Jui.Views;
 
 namespace HomeSeer.PluginSdk.Events {
 
+    /// <summary>
+    /// A test action that can be used to evaluate the functionality of the <see cref="AbstractActionType"/> class.
+    /// </summary>
     public sealed class TestActionType : AbstractActionType {
 
         public const string ACTION_NAME = "Test Action";
