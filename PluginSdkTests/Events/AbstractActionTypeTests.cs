@@ -94,7 +94,7 @@ namespace HomeSeer.PluginSdk.Events {
             var data = Encoding.UTF8.GetBytes(
                 PageFactory.CreateEventActionPage(
                     $"{evRef}-{uId}",
-                    TestTriggerType.TRIGGER_NAME).Page.ToJsonString());
+                    TestActionType.ACTION_NAME).Page.ToJsonString());
             yield return new object[] {
                 new TestActionType(uId, evRef, data, null),
                 new TestActionType(uId, evRef, data, null)
@@ -119,7 +119,7 @@ namespace HomeSeer.PluginSdk.Events {
             var data = Encoding.UTF8.GetBytes(
                 PageFactory.CreateEventActionPage(
                     $"1-1",
-                    TestTriggerType.TRIGGER_NAME).Page.ToJsonString());
+                    TestActionType.ACTION_NAME).Page.ToJsonString());
             yield return new object[] {
                 new TestActionType(1, 2, data, null),
                 new TestActionType(2, 2, data, null)
