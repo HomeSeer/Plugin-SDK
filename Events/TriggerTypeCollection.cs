@@ -30,6 +30,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// </para>
         /// </summary>
         public bool LogDebug { get; set; }
+        
+        /// <summary>
+        /// <see cref="List{T}"/> of <see cref="Type">Types</see> that are a subclass of <see cref="AbstractTriggerType"/>
+        /// </summary>
+        /// <remarks>
+        /// These represent the types of <see cref="AbstractTriggerType"/> that are available for users
+        /// </remarks>
+        public List<Type> TriggerTypes => _itemTypes;
 
         private ITriggerTypeListener _listener;
 

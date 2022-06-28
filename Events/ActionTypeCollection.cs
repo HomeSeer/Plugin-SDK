@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HomeSeer.PluginSdk.Devices;
+using System.Linq;
 
 namespace HomeSeer.PluginSdk.Events {
 
@@ -29,6 +30,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// </para>
         /// </summary>
         public bool LogDebug { get; set; }
+
+        /// <summary>
+        /// <see cref="List{T}"/> of <see cref="Type">Types</see> that are a subclass of <see cref="AbstractActionType"/>
+        /// </summary>
+        /// <remarks>
+        /// These represent the types of <see cref="AbstractActionType"/> that are available for users
+        /// </remarks>
+        public List<Type> ActionTypes => _itemTypes;
 
         private IActionTypeListener _listener;
 
