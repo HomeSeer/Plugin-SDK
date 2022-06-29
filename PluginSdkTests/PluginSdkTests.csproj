@@ -56,6 +56,7 @@
     <Compile Include="Events\TestActionType.cs" />
     <Compile Include="Events\TestTriggerType.cs" />
     <Compile Include="Events\TrigActInfoTests.cs" />
+    <Compile Include="Events\TriggerTypeCollectionTests.cs" />
     <Compile Include="Jui\Tests\SerializationTests.cs" />
     <Compile Include="Jui\Tests\ViewTests.cs" />
     <Compile Include="Jui\Views\AbstractJuiViewTestFixture.cs" />
