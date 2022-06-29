@@ -133,7 +133,7 @@ namespace HomeSeer.Jui.Views {
             }
 
             if (_pages.ContainsKey(page.Id)) {
-                throw new ArgumentException("A page with that ID already exists in the collection", nameof(page));
+                throw new ArgumentException($"A page with an ID={page.Id} already exists in the collection", nameof(page));
             }
             
             _pages.Add(page.Id, page);
@@ -153,7 +153,7 @@ namespace HomeSeer.Jui.Views {
 	        }
 
 	        if (!ContainsPageId(pageId)) {
-		        throw new KeyNotFoundException("A page with that ID was not found in the collection");
+		        throw new KeyNotFoundException($"A page with an ID={pageId} was not found in the collection");
 	        }
 
 	        Console.WriteLine($"Hiding page with ID {pageId}");
@@ -185,7 +185,7 @@ namespace HomeSeer.Jui.Views {
 	        }
 
 	        if (!ContainsPageId(pageId)) {
-		        throw new KeyNotFoundException("A page with that ID was not found in the collection");
+		        throw new KeyNotFoundException($"A page with an ID={pageId} was not found in the collection");
 	        }
 	        
 	        Console.WriteLine($"Showing page with ID {pageId}");
@@ -217,7 +217,7 @@ namespace HomeSeer.Jui.Views {
 	            }
 	            
 	            if (!_hiddenPages.ContainsKey(pageId)) {
-	                throw new KeyNotFoundException();
+	                throw new KeyNotFoundException($"A page with an ID={pageId} was not found in the collection");
                 }
                 
 	            return _hiddenPages[pageId];
@@ -230,7 +230,7 @@ namespace HomeSeer.Jui.Views {
                 }
 
                 if (!_hiddenPages.ContainsKey(pageId)) {
-	                throw new KeyNotFoundException();
+	                throw new KeyNotFoundException($"A page with an ID={pageId} was not found in the collection");
                 }
                 
                 _hiddenPages[pageId] = value;
@@ -251,7 +251,7 @@ namespace HomeSeer.Jui.Views {
             }
 
             if (!ContainsPageId(pageId)) {
-                throw new KeyNotFoundException("A page with that ID was not found in the collection");
+                throw new KeyNotFoundException($"A page with an ID={pageId} was not found in the collection");
             }
             
             return _pageOrder.IndexOf(pageId);
@@ -321,7 +321,7 @@ namespace HomeSeer.Jui.Views {
             }
 
             if (!ContainsPageId(pageId)) {
-                throw new KeyNotFoundException("A page with that ID was not found in the collection");
+                throw new KeyNotFoundException($"A page with an ID={pageId} was not found in the collection");
             }
 
             _pages.Remove(pageId);
