@@ -127,7 +127,7 @@ namespace HomeSeer.PluginSdk.Events {
                 return targetTrig.GetSubTriggerName(subTriggerIndex-1);
             }
             catch (ArgumentOutOfRangeException) {
-                return "No sub-trigger type for that index";
+                return "No sub-trigger type for that index"; //TODO : make this a constant
             }
             catch (Exception exception) {
                 if (LogDebug) {
