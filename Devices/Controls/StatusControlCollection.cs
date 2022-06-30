@@ -184,6 +184,9 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// </remarks>
         /// <param name="statusControl">A <see cref="StatusControl"/> to remove</param>
         public void Remove(StatusControl statusControl) {
+            if (statusControl == null) {
+                return;
+            }
             var itemKey = statusControl.IsRange ? statusControl.TargetRange.Min : statusControl.TargetValue;
             var itemToDelete = this[itemKey];
             
