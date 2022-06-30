@@ -570,21 +570,53 @@ namespace HomeSeer.PluginSdk.Devices {
         ///  FALSE if it does not.
         /// </returns>
         public bool HasControlForUse(EControlUse controlUse) {
+            if (StatusControls == null || StatusControls.Count == 0) {
+                //No controls, so no control for this use
+                return false;
+            }
 
-            var currentStatusControls = StatusControls ?? new StatusControlCollection();
-
-            return currentStatusControls.HasControlForUse(controlUse);
+            return StatusControls.HasControlForUse(controlUse);
         }
 
         /// <summary>
         /// Get a <see cref="StatusControl"/> associated with the feature that has a specific <see cref="EControlUse"/>
         /// </summary>
         /// <param name="controlUse">The <see cref="EControlUse"/> value to look for</param>
-        /// <returns>null if no such <see cref="StatusControl"/> exists, the first one found otherwise</returns>
+        /// <returns>
+        /// The first <see cref="StatusControl"/> found that has the specified <paramref name="controlUse"/>.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if no element is found with the specified <paramref name="controlUse"/>
+        /// </exception>
         public StatusControl GetFirstControlForUse(EControlUse controlUse) {
-            var currentStatusControls = StatusControls ?? new StatusControlCollection();
+            if (StatusControls == null || StatusControls.Count == 0) {
+                //No controls, so no control for this use
+                throw new InvalidOperationException("No controls found for this use");
+            }
 
-            return currentStatusControls.GetFirstControlForUse(controlUse);
+            return StatusControls.GetFirstControlForUse(controlUse);
+        }
+        
+        /// <summary>
+        /// Get all <see cref="StatusControl">StatusControls</see> in the collection which have a specific <see cref="EControlUse"/>
+        /// </summary>
+        /// <param name="controlUse">The <see cref="EControlUse"/> value to look for</param>
+        /// <returns>
+        /// A List of <see cref="StatusControl">StatusControls</see> found that have the specified <paramref name="controlUse"/>.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// If no <see cref="StatusControl">StatusControls</see> are found with the specified <paramref name="controlUse"/>,
+        /// an empty List is returned.
+        /// </para>
+        /// </remarks>
+        public List<StatusControl> GetControlsForUse(EControlUse controlUse) {
+            if (StatusControls == null || StatusControls.Count == 0) {
+                //No controls, so no controls for this use
+                return new List<StatusControl>();
+            }
+
+            return StatusControls.GetControlsForUse(controlUse);
         }
 
     }

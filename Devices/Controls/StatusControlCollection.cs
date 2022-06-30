@@ -215,14 +215,43 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// Get a <see cref="StatusControl"/> in the collection which has a specific <see cref="EControlUse"/>
         /// </summary>
         /// <param name="controlUse">The <see cref="EControlUse"/> value to look for </param>
-        /// <returns>null if no such <see cref="StatusControl"/> exists in the collection, the first one found otherwise</returns>
+        /// <returns>
+        /// The first <see cref="StatusControl"/> found that has the specified <paramref name="controlUse"/>.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if no element is found with the specified <paramref name="controlUse"/>
+        /// </exception>
         public StatusControl GetFirstControlForUse(EControlUse controlUse) {
             foreach (var control in _statusControls.Values) {
                 if (control.ControlUse == controlUse) {
                     return control;
                 }
             }
-            return null;
+
+            throw new InvalidOperationException($"No control found for use {controlUse}");
+        }
+        
+        /// <summary>
+        /// Get all <see cref="StatusControl">StatusControls</see> in the collection which have a specific <see cref="EControlUse"/>
+        /// </summary>
+        /// <param name="controlUse">The <see cref="EControlUse"/> value to look for</param>
+        /// <returns>
+        /// A List of <see cref="StatusControl">StatusControls</see> found that have the specified <paramref name="controlUse"/>.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// If no <see cref="StatusControl">StatusControls</see> are found with the specified <paramref name="controlUse"/>,
+        /// an empty List is returned.
+        /// </para>
+        /// </remarks>
+        public List<StatusControl> GetControlsForUse(EControlUse controlUse) {
+            var controls = new List<StatusControl>();
+            foreach (var control in _statusControls.Values) {
+                if (control.ControlUse == controlUse) {
+                    controls.Add(control);
+                }
+            }
+            return controls;
         }
 
     }
