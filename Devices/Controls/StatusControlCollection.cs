@@ -27,6 +27,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="statusControl">A <see cref="StatusControl"/> to add. It must not target a value that is already handled by the collection.</param>
         /// <exception cref="ArgumentException">Thrown if the <paramref name="statusControl"/> targets a value that is already handled in the collection.</exception>
         public void Add(StatusControl statusControl) {
+            //TODO : Handle null statusControl
             if (Contains(statusControl)) {
                 throw new ArgumentException("A status control covering all or a portion of that value range already exists");
             }
@@ -40,7 +41,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="statusControls">A collection of <see cref="StatusControl"/>s to add. Make sure there is only one <see cref="StatusControl"/> handling each value.</param>
         /// <exception cref="ArgumentException">Thrown if any element in <paramref name="statusControls"/> targets a value that is already handled in the collection.</exception>
         public void AddRange(List<StatusControl> statusControls) {
-
+            //TODO : Handle null statusControls
             foreach (var statusControl in statusControls) {
                 if (Contains(statusControl)) {
                     var valRangeText = statusControl.IsRange ? $"{statusControl.TargetRange.Min}-{statusControl.TargetRange.Max}" : $"{statusControl.TargetValue}";
@@ -99,6 +100,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <param name="statusControl">The <see cref="StatusControl"/> to search for</param>
         /// <returns><see langword="True"/> if the <paramref name="statusControl"/> is in the collection, <see langword="False"/> if it is not</returns>
         public bool Contains(StatusControl statusControl) {    
+            //TODO : Handle all values in a range
             return ContainsValue(statusControl.IsRange ? statusControl.TargetRange.Min : statusControl.TargetValue);
         }
 
