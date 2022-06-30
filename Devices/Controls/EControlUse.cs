@@ -80,7 +80,7 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// <remarks>This is for thermostat devices</remarks>
         /// <seealso cref="EThermostatControlFeatureSubType"/>
         /// <seealso cref="EThermostatControlFeatureSubType.HeatingSetPoint"/>
-        HeatSetPoint    = 12, //RJH these are added so we can support IFTTT for now until they change their API
+        HeatSetPoint    = 12,
         /// <summary>
         /// This control is used to set the desired temperature when cooling.
         /// </summary>
@@ -222,7 +222,17 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// </summary>
         /// <remarks>This is for media devices</remarks>
         /// <seealso cref="EMediaFeatureSubType"/>
-        Volume          = 33
+        Volume          = 33,
+        /// <summary>
+        /// This control is used to increment the value of a feature.
+        /// </summary>
+        /// <remarks>This can be used for example for thermostat setpoints or media volume</remarks>
+        IncrementValue = 34,
+        /// <summary>
+        /// This control is used to decrement the value of a feature.
+        /// </summary>
+        /// <remarks>This can be used for example for thermostat setpoints or media volume</remarks>
+        DecrementValue = 35
 
     }
 
