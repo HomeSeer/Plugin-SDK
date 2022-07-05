@@ -49,7 +49,7 @@
     <Compile Include="Devices\Controls\StatusControlCollectionTests.cs" />
     <Compile Include="Devices\FeatureFactoryTests.cs" />
     <Compile Include="Devices\PlugExtraDataTests.cs" />
-    <Compile Include="Devices\Tests\ValueRangeTests.cs" />
+    <Compile Include="Devices\ValueRangeTests.cs" />
     <Compile Include="Events\AbstractActionTypeTests.cs" />
     <Compile Include="Events\AbstractTriggerTypeTests.cs" />
     <Compile Include="Events\ActionTypeCollectionTests.cs" />
