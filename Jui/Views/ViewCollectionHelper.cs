@@ -34,7 +34,7 @@ namespace HomeSeer.Jui.Views {
             }
 
             if (viewIds.ContainsKey(view.Id)) {
-                throw new ArgumentException("A view with that ID already exists in the collection");
+                throw new ArgumentException($"A view with an ID={view.Id} already exists in the collection");
             }
             
             var viewIndex = viewList.Count;
@@ -131,7 +131,7 @@ namespace HomeSeer.Jui.Views {
 			try {
 				var viewIndex = viewIds[viewId];
 				if (viewIndex >= viewList.Count) {
-					throw new IndexOutOfRangeException("That ID points to a view that does not exist in the collection.");
+					throw new IndexOutOfRangeException($"ID={viewId} points to a view that does not exist in the collection.");
 				}
 				
 				return true;
@@ -168,7 +168,7 @@ namespace HomeSeer.Jui.Views {
 			try {
 				var viewIndex = viewIds[viewId];
 				if (viewIndex >= viewList.Count) {
-					throw new IndexOutOfRangeException("That ID points to a view that does not exist in the collection.");
+					throw new IndexOutOfRangeException($"ID={viewId} points to a view that does not exist in the collection.");
 				}
 				
 				var foundView = viewList[viewIndex];
@@ -187,10 +187,10 @@ namespace HomeSeer.Jui.Views {
 				
 			}
 			catch (KeyNotFoundException exception) {
-				throw new ViewNotFoundException("There are no views with that ID in the collection", exception);
+				throw new ViewNotFoundException($"There are no views with an ID={viewId} in the collection", exception);
 			}
 
-			throw new ViewNotFoundException("There are no views with that ID in the collection");
+			throw new ViewNotFoundException($"There are no views with an ID={viewId} in the collection");
         }
         
         /// <summary>
@@ -220,7 +220,7 @@ namespace HomeSeer.Jui.Views {
 			try {
 				var viewIndex = viewIds[viewId];
 				if (viewIndex >= viewList.Count) {
-					throw new IndexOutOfRangeException("That ID points to a view that does not exist in the collection.");
+					throw new IndexOutOfRangeException($"ID={viewId} points to a view that does not exist in the collection.");
 				}
 				
 				var foundView = viewList[viewIndex];
@@ -246,10 +246,10 @@ namespace HomeSeer.Jui.Views {
 				
 			}
 			catch (KeyNotFoundException exception) {
-				throw new ViewNotFoundException("There are no views with that ID in the collection", exception);
+				throw new ViewNotFoundException($"There are no views with an ID={viewId} in the collection", exception);
 			}
 
-			throw new ViewNotFoundException("There are no views with that ID in the collection");
+			throw new ViewNotFoundException($"There are no views with an ID={viewId} in the collection");
         }
 		
 		#endregion
@@ -281,7 +281,7 @@ namespace HomeSeer.Jui.Views {
 			try {
 				var viewIndex = viewIds[view.Id];
 				if (viewIndex >= viewList.Count) {
-					throw new IndexOutOfRangeException("That ID points to a view that does not exist in the collection.");
+					throw new IndexOutOfRangeException($"ID={view.Id} points to a view that does not exist in the collection.");
 				}
 				
 				var foundView = viewList[viewIndex];
@@ -302,10 +302,10 @@ namespace HomeSeer.Jui.Views {
 
 			}
 			catch (KeyNotFoundException exception) {
-				throw new ViewNotFoundException("There are no views with that ID in the collection", exception);
+				throw new ViewNotFoundException($"There are no views with an ID={view.Id} in the collection", exception);
 			}
 
-			throw new ViewNotFoundException("There are no views with that ID in the collection");
+			throw new ViewNotFoundException($"There are no views with an ID={view.Id} in the collection");
 		}
 
 		internal static void UpdateViewValueById(string id, 
@@ -320,7 +320,7 @@ namespace HomeSeer.Jui.Views {
 			try {
 				var viewIndex = viewIds[id];
 				if (viewIndex >= viewList.Count) {
-					throw new IndexOutOfRangeException("That ID points to a view that does not exist in the collection.");
+					throw new IndexOutOfRangeException($"ID={id} points to a view that does not exist in the collection.");
 				}
 				
 				var foundView = viewList[viewIndex];
@@ -341,10 +341,10 @@ namespace HomeSeer.Jui.Views {
 
 			}
 			catch (KeyNotFoundException exception) {
-				throw new ViewNotFoundException("There are no views with that ID in the collection", exception);
+				throw new ViewNotFoundException($"There are no views with an ID={id} in the collection", exception);
 			}
 
-			throw new ViewNotFoundException("There are no views with that ID in the collection");
+			throw new ViewNotFoundException($"There are no views with an ID={id} in the collection");
 			
 		}
 		
