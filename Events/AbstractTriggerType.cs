@@ -423,6 +423,34 @@ namespace HomeSeer.PluginSdk.Events {
             var pageJson = ConfigPage.ToJsonString();
             return Encoding.UTF8.GetBytes(pageJson);
         }
+        
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+
+            if (!(obj is AbstractTriggerType otherTriggerType)) {
+                return false;
+            }
+
+            if (_id != otherTriggerType._id) {
+                return false;
+            }
+
+            if (_eventRef != otherTriggerType._eventRef) {
+                return false;
+            }
+
+            if (_data != otherTriggerType._data) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode() {
+            return 271828 * _id.GetHashCode() * _eventRef.GetHashCode();
+        }
 
     }
 
