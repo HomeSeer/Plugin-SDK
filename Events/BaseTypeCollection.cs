@@ -30,9 +30,15 @@ namespace HomeSeer.PluginSdk.Events {
         /// </summary>
         protected bool MatchAllSignatures { get; set; }
         
-        //Collection of Types
-        private List<Type>      _itemTypes     = new List<Type>();
-        //Collection of Names
+        /// <summary>
+        /// <see cref="List{T}"/> of <see cref="Type">Types</see> that are a subclass of <typeparamref name="TBaseItemType"/>
+        /// </summary>
+        /// <see cref="AddItemType"/>
+        protected List<Type>      _itemTypes     = new List<Type>();
+        
+        /// <summary>
+        /// <see cref="HashSet{T}"/> of class names representing the <see cref="Type">Types</see> in <see cref="_itemTypes"/>
+        /// </summary>
         private HashSet<string> _itemTypeNames = new HashSet<string>();
 
         /// <summary>

@@ -7,6 +7,9 @@ using NUnit.Framework;
 
 namespace HomeSeer.PluginSdkTests.Jui.Tests {
 
+    /// <summary>
+    /// A collection of tests for JUI Views. These tests do not adhere to the new test format, but are kept here for reference for now.
+    /// </summary>
     [TestFixture]
     public class ViewTests {
         

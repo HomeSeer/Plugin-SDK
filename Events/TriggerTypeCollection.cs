@@ -30,6 +30,14 @@ namespace HomeSeer.PluginSdk.Events {
         /// </para>
         /// </summary>
         public bool LogDebug { get; set; }
+        
+        /// <summary>
+        /// <see cref="List{T}"/> of <see cref="Type">Types</see> that are a subclass of <see cref="AbstractTriggerType"/>
+        /// </summary>
+        /// <remarks>
+        /// These represent the types of <see cref="AbstractTriggerType"/> that are available for users
+        /// </remarks>
+        public List<Type> TriggerTypes => _itemTypes;
 
         private ITriggerTypeListener _listener;
 
@@ -127,7 +135,7 @@ namespace HomeSeer.PluginSdk.Events {
                 return targetTrig.GetSubTriggerName(subTriggerIndex-1);
             }
             catch (ArgumentOutOfRangeException) {
-                return "No sub-trigger type for that index";
+                return "No sub-trigger type for that index"; //TODO : make this a constant
             }
             catch (Exception exception) {
                 if (LogDebug) {
@@ -305,14 +313,35 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
 
-        private AbstractTriggerType GetObjectFromTrigInfo(TrigActInfo trigInfo) {
+        /// <summary>
+        /// Get an instance of an <see cref="AbstractTriggerType"/> from a <see cref="TrigActInfo"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <see cref="TrigActInfo.TANumber"/> is used to identify which of the
+        ///  <see cref="AbstractTriggerType">AbstractTriggerTypes</see> is used.
+        /// </para>
+        /// </remarks>
+        /// <param name="trigInfo">An instance of <see cref="TrigActInfo"/> that represents a trigger.</param>
+        /// <returns>
+        /// An instance of an <see cref="AbstractTriggerType"/>. This will be one of the types in the <see cref="TriggerTypes"/> list.
+        /// </returns>
+        /// <exception cref="TypeLoadException">
+        /// Thrown if the <see cref="AbstractTriggerType"/> that is referenced by <see cref="TrigActInfo.TANumber"/>
+        ///  does not have the proper constructor.
+        /// <list type="bullet">
+        /// <item><see cref="AbstractTriggerType(int,int,int,System.Byte[],ITriggerTypeListener)"/></item>
+        /// <item><see cref="AbstractTriggerType(int,int,int,System.Byte[],ITriggerTypeListener,bool)"/></item>
+        /// </list>
+        /// </exception>
+        public AbstractTriggerType GetObjectFromTrigInfo(TrigActInfo trigInfo) {
             //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug
             if (TypeHasConstructor(trigInfo.TANumber - 1, 0)) {
-                return GetObjectFromInfo(trigInfo.TANumber-1, 0, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug);
+                return GetObjectFromInfo(trigInfo.TANumber-1, 0, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? Array.Empty<byte>(), _listener, LogDebug);
             }
             //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener
             if (TypeHasConstructor(trigInfo.TANumber - 1, 1)) {
-                return GetObjectFromInfo(trigInfo.TANumber-1, 1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener);
+                return GetObjectFromInfo(trigInfo.TANumber-1, 1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? Array.Empty<byte>(), _listener);
             }
             throw new TypeLoadException("Trigger instance cannot be created because no constructor was found that takes TrigActInfo data");
         }
