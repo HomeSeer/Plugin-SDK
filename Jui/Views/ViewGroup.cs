@@ -39,7 +39,7 @@ namespace HomeSeer.Jui.Views {
 		/// <summary>
 		/// The views to display within this group.
 		/// </summary>
-		[JsonProperty("views")] 
+		[JsonProperty("views", ItemIsReference = true)] 
 		private List<AbstractView> _views;
 		
 		/// <summary>

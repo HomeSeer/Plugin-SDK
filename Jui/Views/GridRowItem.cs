@@ -20,7 +20,7 @@ namespace HomeSeer.Jui.Views
 		/// <summary>
 		/// The view to display.
 		/// </summary>
-		[JsonProperty("view")] 
+		[JsonProperty("view", IsReference = true)] 
 		public AbstractView View { get; set; }
 
 		/// <summary>
