@@ -294,9 +294,9 @@ namespace HomeSeer.PluginSdk.Events {
                     continue;
                 }
 
-                var viewType = ConfigPage.GetViewById(viewId).Type;
+                var originalView = ConfigPage.GetViewById(viewId);
                 try {
-                    pageChanges.AddViewDelta(viewId, (int) viewType, changes[viewId]);
+                    pageChanges.AddViewDelta(originalView, changes[viewId]);
                 }
                 catch (Exception exception) {
                     //Failed to add view change
