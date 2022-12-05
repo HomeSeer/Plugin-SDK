@@ -119,7 +119,9 @@
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
+    <Compile Include="Events\AbstractActionType2.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
+    <Compile Include="Events\AbstractTriggerType2.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
     <Compile Include="Events\BaseTypeCollection.cs" />
     <Compile Include="Events\EEventFlag.cs" />
