@@ -52,11 +52,13 @@
     <Compile Include="Devices\ValueRangeTests.cs" />
     <Compile Include="Events\AbstractActionType2Tests.cs" />
     <Compile Include="Events\AbstractActionTypeTests.cs" />
+    <Compile Include="Events\AbstractTriggerType2Tests.cs" />
     <Compile Include="Events\AbstractTriggerTypeTests.cs" />
     <Compile Include="Events\ActionTypeCollectionTests.cs" />
     <Compile Include="Events\TestActionType.cs" />
     <Compile Include="Events\TestActionType2.cs" />
     <Compile Include="Events\TestTriggerType.cs" />
+    <Compile Include="Events\TestTriggerType2.cs" />
     <Compile Include="Events\TrigActInfoTests.cs" />
     <Compile Include="Events\TriggerTypeCollectionTests.cs" />
     <Compile Include="Jui\Tests\SerializationTests.cs" />
