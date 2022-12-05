@@ -232,7 +232,7 @@ namespace HomeSeer.Jui.Views {
 		}
 
 		/// <inheritdoc cref="ViewCollectionHelper.MapViewIds"/>
-		private void MapViewIds() {
+		internal void MapViewIds() {
 			
 			ViewCollectionHelper.MapViewIds(_views, out _viewIds);
 		}
@@ -249,7 +249,64 @@ namespace HomeSeer.Jui.Views {
 			ViewCollectionHelper.AddView(view, ref _views, ref _viewIds);
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Add a view change to the page
+        /// <para>
+        /// Used to log value changes for views on settings, device config, event trigger and event action pages.
+        /// This method performs a shallow copy of the original view and update it with the new value before adding it to the page.
+        /// </para>
+        /// </summary>
+        /// <param name="originalView">The original view before the change</param>
+        /// <param name="newValue">The new value for the view</param>
+        /// <exception cref="ArgumentNullException">A valid original view was not specified</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The type or integer value is invalid</exception>
+        /// <exception cref="ArgumentException">The value type doesn't match the view type</exception>
+        public void AddViewDelta(AbstractView originalView, object newValue) {
+
+            if (originalView == null) {
+                throw new ArgumentNullException(nameof(originalView));
+            }
+            AbstractView view = null;
+
+            switch (newValue) {
+                case string valueString:
+                    view = originalView.ShallowCopy();
+                    view.UpdateValue(valueString);
+                    break;
+
+                case int valueInt:
+
+                    //Not sure if this case is still needed because it seems that changes from SelectList are always received as strings
+                    if (originalView.Type != EViewType.SelectList) {
+                        throw new ArgumentException("The view type does not match the value type");
+                    }
+
+                    if (valueInt < 0) {
+                        throw new ArgumentOutOfRangeException(nameof(newValue), "Selection index must be greater than or equal to 0.");
+                    }
+
+                    view = originalView.ShallowCopy();
+                    view.UpdateValue(valueInt.ToString());
+                    break;
+
+                case bool valueBool:
+                    if (originalView.Type != EViewType.Toggle) {
+                        throw new ArgumentException("The view type does not match the value type");
+                    }
+
+                    view = originalView.ShallowCopy();
+                    view.UpdateValue(valueBool.ToString());
+                    break;
+            }
+
+            if (view == null) {
+                throw new ArgumentException("Unable to build a view from the data provided");
+            }
+
+            AddView(view);
+        }
+
+        /// <summary>
 		/// Add a view change to the page
 		/// <para>
 		/// Used to log value changes for views on settings pages.  All names are left blank
@@ -263,109 +320,101 @@ namespace HomeSeer.Jui.Views {
 		/// <exception cref="ArgumentException">The value type doesn't match the view type</exception>
 		public void AddViewDelta(string id, int type, object value) {
 
-			if (string.IsNullOrWhiteSpace(id)) {
-				throw new ArgumentNullException(nameof(id), "ID cannot be blank");
-			}
+            if (string.IsNullOrWhiteSpace(id)) {
+                throw new ArgumentNullException(nameof(id), "ID cannot be blank");
+            }
 
-			if (type < 0) {
-				throw new ArgumentOutOfRangeException(nameof(type));
-			}
+            if (type < 0) {
+                throw new ArgumentOutOfRangeException(nameof(type));
+            }
 
-			AbstractView view = null;
+            AbstractView view = null;
 
-			switch (value) {
-				case string valueString:
-					if (type == (int)EViewType.SelectList)
-					{
-						try
-						{
-							var intValue = int.Parse(valueString);
-							if (intValue < 0)
-							{
-								throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
-							}
-							var selectListOptions = new List<string>();
-							for (var i = 0; i <= intValue; i++)
-							{
-								selectListOptions.Add(i.ToString());
-							}
-							view = new SelectListView(id, id, selectListOptions, ESelectListType.DropDown, intValue);
-							break;
-						}
-						catch (Exception exception)
-						{
-							throw new ArgumentException("Value type does not match the view type", exception);
-						}
-					}
-					else if (type == (int)EViewType.TimeSpan)
-					{
-						if (!TimeSpan.TryParse(valueString, out TimeSpan timeSpanValue))
-						{
-							throw new ArgumentException("The view type does not match the value type");
-						}
-						view = new TimeSpanView(id, id, timeSpanValue);
-						break;
-					}
-					else if (type == (int)EViewType.TextArea)
-                    {
-						view = new TextAreaView(id, id, valueString);
-						break;
+            switch (value) {
+                case string valueString:
+                    if (type == (int)EViewType.SelectList) {
+                        try {
+                            var intValue = int.Parse(valueString);
+                            if (intValue < 0) {
+                                throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
+                            }
+                            var selectListOptions = new List<string>();
+                            for (var i = 0; i <= intValue; i++) {
+                                selectListOptions.Add(i.ToString());
+                            }
+                            view = new SelectListView(id, id, selectListOptions, ESelectListType.DropDown, intValue);
+                            break;
+                        }
+                        catch (Exception exception) {
+                            throw new ArgumentException("Value type does not match the view type", exception);
+                        }
                     }
-					if (type != (int) EViewType.Input) {
-						if (!bool.TryParse(valueString, out var boolValue)) {
-							throw new ArgumentException("The view type does not match the value type");
-						}
+                    else if (type == (int)EViewType.TimeSpan) {
+                        if (!TimeSpan.TryParse(valueString, out TimeSpan timeSpanValue)) {
+                            throw new ArgumentException("The view type does not match the value type");
+                        }
+                        view = new TimeSpanView(id, id, timeSpanValue);
+                        break;
+                    }
+                    else if (type == (int)EViewType.TextArea) {
+                        view = new TextAreaView(id, id, valueString);
+                        break;
+                    }
+                    if (type != (int)EViewType.Input) {
+                        if (!bool.TryParse(valueString, out var boolValue)) {
+                            throw new ArgumentException("The view type does not match the value type");
+                        }
 
-						if (type != (int) EViewType.Toggle) {
-							throw new ArgumentException("The view type does not match the value type");
-						}
-						
-						view = new ToggleView(id, id, boolValue);
-						break;
-					}
-					
-					view = new InputView(id, id, valueString);
-					break;
-				
-				case int valueInt:
-					
-					if (type != (int) EViewType.SelectList) {
-						throw new ArgumentException("The view type does not match the value type");
-					}
-					
-					if (valueInt < 0) {
-						throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
-					}
+                        if (type != (int)EViewType.Toggle) {
+                            throw new ArgumentException("The view type does not match the value type");
+                        }
 
-					var options = new List<string>();
-					for (var i = 0; i <= valueInt; i++) {
-						options.Add(i.ToString());
-					}
-					
-					view = new SelectListView(id, id, options, ESelectListType.DropDown, valueInt);
-					break;
-				
-				case bool valueBool:
-					if (type != (int) EViewType.Toggle) {
-						throw new ArgumentException("The view type does not match the value type");
-					}
-            
-					view = new ToggleView(id, id, valueBool);
-					break;
-			}
+                        view = new ToggleView(id, id, boolValue);
+                        break;
+                    }
 
-			if (view == null) {
-				throw new ArgumentException("Unable to build a view from the data provided");
-			}
-			
-			AddView(view);
-		}
+                    view = new InputView(id, id, valueString);
+                    break;
 
-		/// <inheritdoc cref="ViewCollectionHelper.AddViews"/>
-		/// <summary>
-		/// Add multiple views to the page
-		/// </summary>
-		public void AddViews(IEnumerable<AbstractView> views) {
+                case int valueInt:
+
+                    if (type != (int)EViewType.SelectList) {
+                        throw new ArgumentException("The view type does not match the value type");
+                    }
+
+                    if (valueInt < 0) {
+                        throw new ArgumentOutOfRangeException(nameof(value), "Selection index must be greater than or equal to 0.");
+                    }
+
+                    var options = new List<string>();
+                    for (var i = 0; i <= valueInt; i++) {
+                        options.Add(i.ToString());
+                    }
+
+                    view = new SelectListView(id, id, options, ESelectListType.DropDown, valueInt);
+                    break;
+
+                case bool valueBool:
+                    if (type != (int)EViewType.Toggle) {
+                        throw new ArgumentException("The view type does not match the value type");
+                    }
+
+                    view = new ToggleView(id, id, valueBool);
+                    break;
+            }
+
+            if (view == null) {
+                throw new ArgumentException("Unable to build a view from the data provided");
+            }
+
+            AddView(view);
+        }
+
+        /// <inheritdoc cref="ViewCollectionHelper.AddViews"/>
+        /// <summary>
+        /// Add multiple views to the page
+        /// </summary>
+        public void AddViews(IEnumerable<AbstractView> views) {
 			
 			ViewCollectionHelper.AddViews(views, ref _views, ref _viewIds);
 		}

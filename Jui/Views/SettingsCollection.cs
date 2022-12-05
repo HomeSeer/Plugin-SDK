@@ -366,6 +366,9 @@ namespace HomeSeer.Jui.Views {
 		                                                       new JsonSerializerSettings
 		                                                       { TypeNameHandling = TypeNameHandling.Auto }
 		                                                      );
+                foreach(var page in collection.AllPages) {
+                    page.MapViewIds();
+                }
 				
 		        return collection;
 	        }
