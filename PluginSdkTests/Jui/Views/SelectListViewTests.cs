@@ -12,9 +12,9 @@ namespace HomeSeer.Jui.Views {
     public class SelectListViewTests : AbstractJuiViewTestFixture {
 
         private static readonly List<string> _defaultOptionKeys = new List<string> {
-            "1", 
-            "2", 
-            "3"
+            "k1", 
+            "k2", 
+            "k3"
         };
         
         private static readonly List<string> _defaultOptions = new List<string> {
@@ -38,7 +38,13 @@ namespace HomeSeer.Jui.Views {
             yield return 1;
             yield return 2;
         }
-        
+
+        private static IEnumerable<string> ValidOptionKeysTestCaseSource() {
+            yield return _defaultOptionKeys[0];
+            yield return _defaultOptionKeys[1];
+            yield return _defaultOptionKeys[2];
+        }
+
         private static IEnumerable<int> InvalidSelectionTestCaseSource() {
             yield return -2;
             yield return 3;
@@ -245,14 +251,23 @@ namespace HomeSeer.Jui.Views {
         }
 
         [TestCaseSource(nameof(ValidSelectionTestCaseSource))]
-        [Description("Call UpdateValue with a valid value and expect Selection to be set.")]
+        [Description("Call UpdateValue  with a valid value and expect Selection to be set.")]
         [Author("JLW")]
         public void UpdateValue_ValidValue_SetsSelection(int selection) {
             SelectListView view = GetDefaultView();
             view.UpdateValue(selection.ToString());
             Assert.AreEqual(selection, view.Selection);
         }
-        
+
+        [TestCaseSource(nameof(ValidOptionKeysTestCaseSource))]
+        [Description("Call UpdateValue for a view with UseOptionKeyAsSelectionValue=true with a valid value and expect Selection to be set.")]
+        public void UpdateValue_ValidValue_UseOptionKeyAsSelectionValue(string optionKey) {
+            SelectListView view = GetDefaultView();
+            view.UseOptionKeyAsSelectionValue = true;
+            view.UpdateValue(optionKey);
+            Assert.AreEqual(optionKey, view.OptionKeys[view.Selection]);
+        }
+
         [TestCaseSource(nameof(InvalidValueTestCaseSource))]
         [Description("Call UpdateValue with an invalid value and expect an exception to be thrown.")]
         [Author("JLW")]
@@ -271,7 +286,16 @@ namespace HomeSeer.Jui.Views {
             view.Selection = selection;
             Assert.AreEqual(selection.ToString(), view.GetStringValue());
         }
-        
+
+        [TestCaseSource(nameof(ValidSelectionTestCaseSource))]
+        [Description("Call GetStringValue for a view with UseOptionKeyAsSelectionValue=true and expect selected option key to be returned.")]
+        public void GetStringValue_UseOptionKeyAsSelectionValue_ReturnsSelectedOptionKey(int selection) {
+            SelectListView view = GetDefaultView();
+            view.UseOptionKeyAsSelectionValue = true;
+            view.Selection = selection;
+            Assert.AreEqual(view.GetSelectedOptionKey(), view.GetStringValue());
+        }
+
         [TestCaseSource(nameof(ValidSelectionOptionTestCaseSource))]
         [Description("Call GetSelectedOption when the selection is valid and expect the correct option to be returned.")]
         [Author("JLW")]

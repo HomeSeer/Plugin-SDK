@@ -60,6 +60,13 @@ namespace HomeSeer.Jui.Views {
 		[JsonProperty("default_selection_text")]
 		public string DefaultSelectionText { get; set; }
 
+        /// <summary>
+        /// When this property is true, <see cref="GetStringValue"/>  returns the selected option key instead of the selected option index,
+        /// and <see cref="UpdateValue"/> expects an option key as parameter instead of an option index.
+        /// </summary>
+        [JsonProperty("use_option_key_as_selection_value")]
+        public bool UseOptionKeyAsSelectionValue { get; set; } = false;
+
 		/// <inheritdoc cref="AbstractView"/>
 		/// <summary>
 		/// Create a new instance of a select list with the default, drop down style, an ID, Name, and the specified list of options
@@ -137,32 +144,47 @@ namespace HomeSeer.Jui.Views {
 			Selection = updatedSelectListView.Selection;
 		}
 
-		/// <inheritdoc cref="AbstractView.UpdateValue"/>
-		/// <exception cref="FormatException">Thrown when the value is not in the correct format</exception>
-		public override void UpdateValue(string value) {
+        /// <inheritdoc cref="AbstractView.UpdateValue"/>
+        /// <exception cref="FormatException">Thrown when the value is not in the correct format</exception>
+        public override void UpdateValue(string value) {
 
-			try {
-				Selection = int.Parse(value);
-			}
-			catch (Exception exception) {
-				Console.WriteLine(exception);
-				throw new FormatException("Value is not in the correct format", exception);
-			}
-		}
+            if (UseOptionKeyAsSelectionValue) {
+                if (OptionKeys != null) {
+                    Selection = OptionKeys.FindIndex(x => x == value);
+                }
+                else {
+                    Selection = -1;
+                }
+            }
+            else {
+                try {
+                    Selection = int.Parse(value);
+                }
+                catch (Exception exception) {
+                    Console.WriteLine(exception);
+                    throw new FormatException("Value is not in the correct format", exception);
+                }
+            }
+        }
 
-		/// <inheritdoc cref="AbstractView.GetStringValue"/>
-		/// <remarks>
-		/// Get the selected index as a string
-		/// </remarks>
-		public override string GetStringValue() {
-			return Selection.ToString();
-		}
+        /// <inheritdoc cref="AbstractView.GetStringValue"/>
+        /// <remarks>
+        /// Returns the selected option key if <see cref="UseOptionKeyAsSelectionValue"/> is true, else returns the selected index as a string
+        /// </remarks>
+        public override string GetStringValue() {
+            if (UseOptionKeyAsSelectionValue) {
+                return GetSelectedOptionKey();
+            }
+            else {
+                return Selection.ToString();
+            }
+        }
 
-		/// <summary>
-		/// Get the currently selected option text.
-		/// </summary>
-		/// <returns>The text of the option at the index specified by <see cref="Selection"/>.</returns>
-		public string GetSelectedOption() {
+        /// <summary>
+        /// Get the currently selected option text.
+        /// </summary>
+        /// <returns>The text of the option at the index specified by <see cref="Selection"/>.</returns>
+        public string GetSelectedOption() {
 			if (Options == null || Selection >= Options.Count || Selection == -1) {
 				return string.Empty;
 			}
@@ -198,12 +220,16 @@ namespace HomeSeer.Jui.Views {
 			switch (Style) {
 				case ESelectListType.DropDown:
                 case ESelectListType.SearchableDropDown:
+                    string originalValue = Selection.ToString();
+                    if (UseOptionKeyAsSelectionValue && OptionKeys != null && Selection < OptionKeys.Count) {
+                        originalValue = OptionKeys[Selection];
+                    }
                     //Add the title
                     sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
 					sb.Append(Environment.NewLine);
 					//Add the button
 					sb.Append(GetIndentStringFromNumber(indent+1));
-					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{Selection}\" {(Style== ESelectListType.SearchableDropDown ? "searchable=\"Search...\"" : "")}>");
+					sb.Append($"<select class=\"mdb-select md-form jui-input jui-select\" id=\"{Id}\" jui-orig-val=\"{originalValue}\" {(Style== ESelectListType.SearchableDropDown ? "searchable=\"Search...\"" : "")}>");
 					sb.Append(Environment.NewLine);
 					sb.Append(GetIndentStringFromNumber(indent+2));
 					sb.Append($"<option value=\"\" disabled {(Selection == -1 ? "selected" : "")}>");
@@ -212,8 +238,12 @@ namespace HomeSeer.Jui.Views {
 					sb.Append(Environment.NewLine);
 					for (var i = 0; i < Options.Count; i++) {
 						var option = Options[i];
+                        string optionValue = i.ToString();
+                        if (UseOptionKeyAsSelectionValue && OptionKeys != null && i < OptionKeys.Count) {
+                            optionValue = OptionKeys[i];
+                        }
 						sb.Append(GetIndentStringFromNumber(indent+2));
-						sb.Append($"<option value=\"{i}\"{(i == Selection ? " selected" : "")}>{option}</option>");
+						sb.Append($"<option value=\"{optionValue}\"{(i == Selection ? " selected" : "")}>{option}</option>");
 						sb.Append(Environment.NewLine);
 					}
 					sb.Append(GetIndentStringFromNumber(indent+1));
@@ -257,7 +287,11 @@ namespace HomeSeer.Jui.Views {
 					for (var optionNum = 0; optionNum < Options.Count; optionNum++) {
 						var option = Options[optionNum];
 						var optionId = $"{Id}-{optionNum}";
-						sb.Append(GetIndentStringFromNumber(indent+2));
+                        string optionValue = optionNum.ToString();
+                        if (UseOptionKeyAsSelectionValue && OptionKeys != null && optionNum < OptionKeys.Count) {
+                            optionValue = OptionKeys[optionNum];
+                        }
+                        sb.Append(GetIndentStringFromNumber(indent+2));
 						sb.Append("<div class=\"jui-toggle jui-selectlist-radio-option\">");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
@@ -265,7 +299,7 @@ namespace HomeSeer.Jui.Views {
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+3));
 						sb.Append("<span class=\"form-check jui-toggle-control\">");
-						sb.Append($"<input type=\"radio\" id=\"{optionId}\" par-id=\"{Id}-par\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionNum}\">");
+						sb.Append($"<input type=\"radio\" id=\"{optionId}\" par-id=\"{Id}-par\" class=\"form-check-input jui-input\" name=\"{Id}\" {(optionNum == Selection ? "checked" : "")} value=\"{optionValue}\">");
 						sb.Append($"<label class=\"form-check-label jui-toggle-checkbox-label\" for=\"{optionId}\"/></span>");
 						sb.Append(Environment.NewLine);
 						sb.Append(GetIndentStringFromNumber(indent+2));
