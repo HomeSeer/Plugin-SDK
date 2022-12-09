@@ -220,9 +220,17 @@ namespace HomeSeer.Jui.Views {
 			switch (Style) {
 				case ESelectListType.DropDown:
                 case ESelectListType.SearchableDropDown:
-                    string originalValue = Selection.ToString();
-                    if (UseOptionKeyAsSelectionValue && OptionKeys != null && Selection < OptionKeys.Count) {
-                        originalValue = OptionKeys[Selection];
+                    string originalValue;
+                    if (UseOptionKeyAsSelectionValue) {
+                        if (OptionKeys != null && Selection >= 0 && Selection < OptionKeys.Count) {
+                            originalValue = OptionKeys[Selection];
+                        }
+                        else {
+                            originalValue = "";
+                        }
+                    }
+                    else {
+                        originalValue = Selection.ToString();
                     }
                     //Add the title
                     sb.Append($"<label class=\"jui-select-label\">{Name}</label>");
