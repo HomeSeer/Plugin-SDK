@@ -81,6 +81,7 @@
     <Compile Include="Features\SampleGuidedProcessData.cs" />
     <Compile Include="Features\TriggerOptionItem.cs" />
     <Compile Include="HSPI.cs" />
+    <Compile Include="LogDevicePEDActionType.cs" />
     <Compile Include="SampleTriggerType.cs" />
     <Compile Include="SpeakerClient.cs" />
     <Compile Include="WriteLogSampleActionType.cs" />

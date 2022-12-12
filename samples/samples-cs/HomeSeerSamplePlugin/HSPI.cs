@@ -9,6 +9,7 @@ using HomeSeer.PluginSdk.Devices;
 using HomeSeer.PluginSdk.Devices.Controls;
 using HomeSeer.PluginSdk.Devices.Identification;
 using HomeSeer.PluginSdk.Logging;
+using HomeSeer.PluginSdk.Systems;
 using HSPI_HomeSeerSamplePlugin.Constants;
 using HSPI_HomeSeerSamplePlugin.Features;
 using Newtonsoft.Json;
@@ -28,12 +29,15 @@ namespace HSPI_HomeSeerSamplePlugin {
     /// </para>
     /// </remarks>
     // ReSharper disable once InconsistentNaming
-    public class HSPI : AbstractPlugin, WriteLogSampleActionType.IWriteLogActionListener {
+    public class HSPI : AbstractPlugin, WriteLogSampleActionType.IWriteLogActionListener, LogDevicePEDActionType.ILogDevicePEDActionListener {
 
         // Local vars
 
         // speaker client instance
         private SpeakerClient _speakerClient;
+
+        // devices cache
+        private Dictionary<int, string> _deviceNamesCache = new Dictionary<int, string>();
 
         #region Properties
 
@@ -78,6 +82,7 @@ namespace HSPI_HomeSeerSamplePlugin {
             
             //Or adding an event action or trigger type definition to the list of types supported by your plugin
             ActionTypes.AddActionType(typeof(WriteLogSampleActionType));
+            ActionTypes.AddActionType(typeof(LogDevicePEDActionType));
             TriggerTypes.AddTriggerType(typeof(SampleTriggerType));
         }
 
@@ -247,6 +252,11 @@ namespace HSPI_HomeSeerSamplePlugin {
             // and can be selected as a target for speech and audio in event actions.
             // When the system speaks to your client, your SpeakText function is called in SpeakerClient class
             _speakerClient.Connect("default", "default");
+
+            // Load all the device anmes in the system to a cache
+            LoadDeviceNamesCache();
+            // Register to the CONFIG_CHANGE event, so that the plugin is notified in the HsEvent method when a device is added, removed or changed.
+            HomeSeerSystem.RegisterEventCB(HomeSeer.PluginSdk.Constants.HSEvent.CONFIG_CHANGE, Id);
 
             Console.WriteLine("Initialized");
             Status = PluginStatus.Ok();
@@ -703,6 +713,88 @@ namespace HSPI_HomeSeerSamplePlugin {
         public void WriteLog(ELogType logType, string message) {
             
             HomeSeerSystem.WriteLog(logType, message, Name);
+        }
+
+        public void WriteDevicePEDToLog(int deviceRef) {
+            PlugExtraData extraData = (PlugExtraData)HomeSeerSystem.GetPropertyByRef(deviceRef, EProperty.PlugExtraData);
+
+            WriteLog(ELogType.Info, $"Plugin Extra Data for device #{deviceRef}:");
+            if (extraData != null) {
+                WriteLog(ELogType.Info, $"Unnamed items:");
+                for (int i = 0; i < extraData.UnNamedCount; i++) {
+                    WriteLog(ELogType.Info, extraData[i]);
+                }
+                WriteLog(ELogType.Info, $"Named items:");
+                foreach (string key in extraData.NamedKeys) {
+                    WriteLog(ELogType.Info, $"{key} = {extraData[key]}");
+                }
+            } 
+        }
+
+        private void LoadDeviceNamesCache() {
+            List<HsDevice> devices = HomeSeerSystem.GetAllDevices(false);
+
+            foreach (HsDevice device in devices) {
+                _deviceNamesCache.Add(device.Ref, $"{device.Location2} {device.Location} {device.Name}");
+            }
+        }
+
+        private string GetDeviceFullName(int deviceRef) {
+            string deviceFullName = "";
+            HsDevice device = HomeSeerSystem.GetDeviceByRef(deviceRef);
+            if (device != null) {
+                deviceFullName = $"{device.Location2} {device.Location} {device.Name}";
+            }
+            return deviceFullName;
+        }
+
+        public override void HsEvent(HomeSeer.PluginSdk.Constants.HSEvent eventType, object[] parms) {
+            try {
+                EHsSystemEvent systemEvent = (EHsSystemEvent)eventType;
+
+                switch (systemEvent) {
+                    case EHsSystemEvent.ConfigChange:
+                        EConfigChangeTarget target = (EConfigChangeTarget)(int)parms[1];
+
+                        //If a device has been added, removed or if its name or location has changed then update the cache
+                        if(target == EConfigChangeTarget.Device) {
+                            int dvRef = (int)parms[3];
+                            EConfigChangeAction action = (EConfigChangeAction)(int)parms[4];
+
+                            switch (action) {
+                                case EConfigChangeAction.Add:
+                                    if (HomeSeerSystem.IsRefDevice(dvRef)) {
+                                        _deviceNamesCache.Add(dvRef, GetDeviceFullName(dvRef));
+                                    }
+                                    break;
+                                case EConfigChangeAction.Delete:
+                                    //Cannot use HomeSeerSystem.IsRefDevice here because the device is already deleted
+                                    if (_deviceNamesCache.ContainsKey(dvRef)) {
+                                        _deviceNamesCache.Remove(dvRef);
+                                    }
+                                    break;
+                                case EConfigChangeAction.Change:
+                                    if (HomeSeerSystem.IsRefDevice(dvRef)) {
+                                        string whatChanged = (string)parms[5];
+                                        if (whatChanged.Contains("Name") || whatChanged.Contains("Location")) {
+                                            _deviceNamesCache[dvRef] = GetDeviceFullName(dvRef);
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex) {
+                if (LogDebug) {
+                    Console.WriteLine(ex);
+                }
+            }
+        }
+
+        public Dictionary<int, string> GetAllDeviceNames() {
+            return _deviceNamesCache;
         }
 
         private string GetExtraData(int deviceRef, string key)
