@@ -157,11 +157,11 @@
     <Compile Include="IHsController.cs" />
     <Compile Include="Jui\Types\ELabelType.cs" />
     <Compile Include="Jui\Views\EColSize.cs" />
-    <Compile Include="Jui\Views\EHorizontalAlignment.cs" />
-    <Compile Include="Jui\Views\EVerticalAlignment.cs" />
     <Compile Include="Jui\Views\GridView.cs" />
     <Compile Include="Jui\Views\GridRow.cs" />
     <Compile Include="Jui\Views\GridRowItem.cs" />
+    <Compile Include="Jui\Views\Grid\EHorizontalAlignment.cs" />
+    <Compile Include="Jui\Views\Grid\EVerticalAlignment.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
     <Compile Include="Jui\Views\TimeSpanView.cs" />
     <Compile Include="Jui\Views\TextAreaView.cs" />
