@@ -119,7 +119,9 @@
     <Compile Include="Devices\ValueRange.cs" />
     <Compile Include="Devices\StatusGraphic.cs" />
     <Compile Include="Events\AbstractActionType.cs" />
+    <Compile Include="Events\AbstractActionType2.cs" />
     <Compile Include="Events\AbstractTriggerType.cs" />
+    <Compile Include="Events\AbstractTriggerType2.cs" />
     <Compile Include="Events\ActionTypeCollection.cs" />
     <Compile Include="Events\BaseTypeCollection.cs" />
     <Compile Include="Events\EEventFlag.cs" />
@@ -155,6 +157,8 @@
     <Compile Include="IHsController.cs" />
     <Compile Include="Jui\Types\ELabelType.cs" />
     <Compile Include="Jui\Views\EColSize.cs" />
+    <Compile Include="Jui\Views\EHorizontalAlignment.cs" />
+    <Compile Include="Jui\Views\EVerticalAlignment.cs" />
     <Compile Include="Jui\Views\GridView.cs" />
     <Compile Include="Jui\Views\GridRow.cs" />
     <Compile Include="Jui\Views\GridRowItem.cs" />
