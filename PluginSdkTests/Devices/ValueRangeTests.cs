@@ -237,10 +237,33 @@ namespace HomeSeer.PluginSdk.Devices {
 
         //TODO invalid suffix values
 
+        //Divisor tests
+
+        [Description("Test setting the divisor to make sure no exceptions are thrown.")]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(10)]
+        public void Divisor_Set_AssertPass(int divisor) {
+            var testValueRange = new ValueRange(0, 1);
+            testValueRange.Divisor = divisor;
+        }
+
+        [Description(
+            "Test setting the divisor to make sure an exception is thrown when trying to set it to a value less than or equal to 0.")]
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void Divisor_SetLessThanEqual0_Throws(int divisor) {
+            var testValueRange = new ValueRange(0, 1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => testValueRange.Divisor = divisor);
+        }
+
         //GetStringForValue tests
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 0.")]
+            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, divisor is 1, and decimal places is 0.")]
         [TestCase(-2, "-2")]
         [TestCase(0, "0")]
         [TestCase(1, "1")]
@@ -260,7 +283,7 @@ namespace HomeSeer.PluginSdk.Devices {
         };
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 1.")]
+            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, divisor is 1, and decimal places is 1.")]
         [TestCaseSource("_GetStringForValue_Min0Max100_ValOnly1Dec_TestCases")]
         public void GetStringForValue_Min0Max100_ValOnly1Dec(double value, string expected) {
             var testValueRange = new ValueRange(0, 100);
@@ -275,7 +298,7 @@ namespace HomeSeer.PluginSdk.Devices {
         };
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 2.")]
+            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, divisor is 1, and decimal places is 2.")]
         [TestCaseSource("_GetStringForValue_Min0Max100_ValOnly2Dec_TestCases")]
         public void GetStringForValue_Min0Max100_ValOnly2Dec(double value, string expected) {
             var testValueRange = new ValueRange(0, 100);
@@ -284,7 +307,7 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, offset is 0, decimal places is 0, and prefix and suffix are both set to test.")]
+            "Test GetStringForValue when Min is 0, Max is 100, offset is 0, decimal places is 0, divisor is 1, and prefix and suffix are both set to test.")]
         [TestCase(-2, "test-2test")]
         [TestCase(0, "test0test")]
         [TestCase(1, "test1test")]
@@ -306,7 +329,7 @@ namespace HomeSeer.PluginSdk.Devices {
         };
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 100, and decimal places is 1.")]
+            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 100, divisor is 1, and decimal places is 1.")]
         [TestCaseSource("_GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec_TestCases")]
         public void GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec(double value, string expected) {
             var testValueRange = new ValueRange(0, 100);
@@ -323,12 +346,66 @@ namespace HomeSeer.PluginSdk.Devices {
         };
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, offset is 100, decimal places is 1, and prefix and suffix are both set to test.")]
+            "Test GetStringForValue when Min is 0, Max is 100, offset is 100, decimal places is 1, divisor is 1, and prefix and suffix are both set to test.")]
         [TestCaseSource("_GetStringForValue_Min0Max100_ReturnExpected_TestCases")]
         public void GetStringForValue_Min0Max100_ReturnExpected(double value, string expected) {
             var testValueRange = new ValueRange(0, 100);
             testValueRange.Offset = 100;
             testValueRange.DecimalPlaces = 1;
+            testValueRange.Prefix = "test";
+            testValueRange.Suffix = "test";
+            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
+        }
+
+        //Added GetStringForValue tests for divisors
+        [Description(
+    "Test GetStringForValue when Min is 0, Max is 100, offset is 0, decimal places is 0, divisor is 2, and prefix and suffix are both set to test.")]
+        [TestCase(-2, "test-1test")]
+        [TestCase(0, "test0test")]
+        [TestCase(1, "test1test")]
+        [TestCase(1.1, "test1test")]
+        [TestCase(1.111, "test1test")]
+        [TestCase(10, "test5test")]
+        [TestCase(50, "test25test")]
+        public void GetStringForValue_Min0Max100_NoOffNoDecDiv2(double value, string expected) {
+            var testValueRange = new ValueRange(0, 100);
+            testValueRange.Prefix = "test";
+            testValueRange.Suffix = "test";
+            testValueRange.Divisor = 2;
+            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
+        }
+
+        private static readonly object[] _GetStringForValue_Min0Max100_Off100NoPreNoSuf1DecDiv2_TestCases = {
+            new object[] { -2, $"-51{ds}0" }, new object[] { 0, $"-50{ds}0" }, new object[] { 1, $"-49{ds}5" },
+            new object[] { 1.1, $"-49{ds}5" }, new object[] { 1.111, $"-49{ds}4" }, new object[] { 10, $"-45{ds}0" },
+            new object[] { 50, $"-25{ds}0" },
+        };
+
+        [Description(
+            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 100, divisor is 2, and decimal places is 1.")]
+        [TestCaseSource("_GetStringForValue_Min0Max100_Off100NoPreNoSuf1DecDiv2_TestCases")]
+        public void GetStringForValue_Min0Max100_Off100NoPreNoSuf1DecDiv2(double value, string expected) {
+            var testValueRange = new ValueRange(0, 100);
+            testValueRange.Offset = 100;
+            testValueRange.DecimalPlaces = 1;
+            testValueRange.Divisor = 2;
+            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
+        }
+
+        private static readonly object[] _GetStringForValue_Min0Max100Off1001DecDiv2_ReturnExpected_TestCases = {
+            new object[] { -2, $"test-51{ds}0test" }, new object[] { 0, $"test-50{ds}0test" }, new object[] { 1, $"test-49{ds}5test" },
+            new object[] { 1.1, $"test-49{ds}5test" }, new object[] { 1.111, $"test-49{ds}4test" }, new object[] { 10, $"test-45{ds}0test" },
+            new object[] { 50, $"test-25{ds}0test" },
+        };
+
+        [Description(
+            "Test GetStringForValue when Min is 0, Max is 100, offset is 100, decimal places is 1, divisor is 2, and prefix and suffix are both set to test.")]
+        [TestCaseSource("_GetStringForValue_Min0Max100Off1001DecDiv2_ReturnExpected_TestCases")]
+        public void GetStringForValue_Min0Max100Off1001DecDiv2_ReturnExpected(double value, string expected) {
+            var testValueRange = new ValueRange(0, 100);
+            testValueRange.Offset = 100;
+            testValueRange.DecimalPlaces = 1;
+            testValueRange.Divisor = 2;
             testValueRange.Prefix = "test";
             testValueRange.Suffix = "test";
             Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
