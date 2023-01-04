@@ -64,7 +64,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// -1 if it is not set
         /// </remarks>
         protected int SelectedSubActionIndex { get; private set; } = -1;
-        
+
         /// <summary>
         /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
         ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
@@ -78,8 +78,10 @@ namespace HomeSeer.PluginSdk.Events {
         /// </para>
         /// </summary>
         /// <param name="id">The unique ID of this action in HomeSeer</param>
+        /// <param name="subTypeNumber">The action subtype number</param>
         /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
         protected AbstractActionType(int id, int subTypeNumber, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener) {
             _id                    = id;
             SelectedSubActionIndex = subTypeNumber;
@@ -104,6 +106,8 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="id">The unique ID of this action in HomeSeer</param>
         /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
+        /// <param name="logDebug">If true debug messages will be written to the console</param>
         protected AbstractActionType(int id, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener, bool logDebug = false) {
             _id           = id;
             _eventRef     = eventRef;
@@ -112,7 +116,7 @@ namespace HomeSeer.PluginSdk.Events {
             LogDebug = logDebug;
             InflateActionFromData();
         }
-        
+
         /// <summary>
         /// Initialize a new <see cref="AbstractActionType"/> with the specified ID, Event Ref, and Data byte array.
         ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
@@ -128,6 +132,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="id">The unique ID of this action in HomeSeer</param>
         /// <param name="eventRef">The event reference ID that this action is associated with in HomeSeer</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
         protected AbstractActionType(int id, int eventRef, byte[] dataIn, ActionTypeCollection.IActionTypeListener listener) {
             _id            = id;
             _eventRef      = eventRef;
@@ -294,9 +299,9 @@ namespace HomeSeer.PluginSdk.Events {
                     continue;
                 }
 
-                var viewType = ConfigPage.GetViewById(viewId).Type;
+                var originalView = ConfigPage.GetViewById(viewId);
                 try {
-                    pageChanges.AddViewDelta(viewId, (int) viewType, changes[viewId]);
+                    pageChanges.AddViewDelta(originalView, changes[viewId]);
                 }
                 catch (Exception exception) {
                     //Failed to add view change
@@ -314,7 +319,7 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        private byte[] ProcessData(byte[] inData) {
+        internal virtual byte[] ProcessData(byte[] inData) {
             //Is data null/empty?
             if (inData == null || inData.Length == 0) {
                 return new byte[0];
@@ -382,11 +387,12 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
 
-        private byte[] GetData() {
+        internal virtual byte[] GetData() {
             var pageJson = ConfigPage.ToJsonString();
             return Encoding.UTF8.GetBytes(pageJson);
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -411,6 +417,7 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
+        /// <inheritdoc />
         public override int GetHashCode() {
             return 271828 * _id.GetHashCode() * _eventRef.GetHashCode();
         }

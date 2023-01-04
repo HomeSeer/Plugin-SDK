@@ -71,7 +71,7 @@ namespace HomeSeer.PluginSdk.Events {
         private readonly byte[] _inData;
 
         /// <summary>
-        /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, and Data byte array.
+        /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, Data byte array, listener, and logDebug flag.
         ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
         ///  the array is empty.
         /// <para>
@@ -86,6 +86,8 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="eventRef">The event reference ID that this trigger is associated with in HomeSeer</param>
         /// <param name="selectedSubTriggerIndex">The 0 based index of the sub-trigger type selected for this trigger</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
+        /// <param name="logDebug">If true debug messages will be written to the console</param>
         protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener, bool logDebug = false) {
             _id           = id;
             _eventRef     = eventRef;
@@ -95,9 +97,9 @@ namespace HomeSeer.PluginSdk.Events {
             LogDebug = logDebug;
             InflateTriggerFromData();
         }
-        
+
         /// <summary>
-        /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, and Data byte array.
+        /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, Data byte array and listener.
         ///  The byte array will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
         ///  the array is empty.
         /// <para>
@@ -112,6 +114,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="eventRef">The event reference ID that this trigger is associated with in HomeSeer</param>
         /// <param name="selectedSubTriggerIndex">The 0 based index of the sub-trigger type selected for this trigger</param>
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
+        /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
         protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener) {
             _id                     = id;
             _eventRef               = eventRef;
@@ -121,6 +124,21 @@ namespace HomeSeer.PluginSdk.Events {
             InflateTriggerFromData();
         }
 
+        /// <summary>
+        /// Initialize a new <see cref="AbstractTriggerType"/> from a <see cref="TrigActInfo"/> and with the specified listener, and logDebug flag.
+        ///  The byte array in <paramref name="trigInfo"/> will be automatically parsed for a <see cref="Page"/>, and a new one will be created if
+        ///  the array is empty.
+        /// <para>
+        /// This is called through reflection by the <see cref="TriggerTypeCollection"/> class if a class that
+        ///  derives from this type is added to its list.
+        /// </para>
+        /// <para>
+        /// You MUST implement one of these constructor signatures in any class that derives from <see cref="AbstractTriggerType"/>
+        /// </para>
+        /// </summary>
+        /// <param name="trigInfo">The <see cref="TrigActInfo"/> containing all the trigger information</param>
+        /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
+        /// <param name="logDebug">If true debug messages will be written to the console</param>
         protected AbstractTriggerType(TrigActInfo trigInfo, TriggerTypeCollection.ITriggerTypeListener listener, bool logDebug = false) {
             _id = trigInfo.UID;
             _eventRef = trigInfo.evRef;
@@ -332,9 +350,9 @@ namespace HomeSeer.PluginSdk.Events {
                     continue;
                 }
 
-                var viewType = ConfigPage.GetViewById(viewId).Type;
+                var originalView = ConfigPage.GetViewById(viewId);
                 try {
-                    pageChanges.AddViewDelta(viewId, (int) viewType, changes[viewId]);
+                    pageChanges.AddViewDelta(originalView, changes[viewId]);
                 }
                 catch (Exception exception) {
                     //Failed to add view change
@@ -352,7 +370,7 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
-        private byte[] ProcessData(byte[] inData) {
+        internal virtual byte[] ProcessData(byte[] inData) {
             //Is data null/empty?
             if (inData == null || inData.Length == 0) {
                 return new byte[0];
@@ -419,11 +437,12 @@ namespace HomeSeer.PluginSdk.Events {
             }
         }
 
-        private byte[] GetData() {
+        internal virtual byte[] GetData() {
             var pageJson = ConfigPage.ToJsonString();
             return Encoding.UTF8.GetBytes(pageJson);
         }
-        
+
+        /// <inheritdoc />
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -448,6 +467,7 @@ namespace HomeSeer.PluginSdk.Events {
             return true;
         }
 
+        /// <inheritdoc />
         public override int GetHashCode() {
             return 271828 * _id.GetHashCode() * _eventRef.GetHashCode();
         }

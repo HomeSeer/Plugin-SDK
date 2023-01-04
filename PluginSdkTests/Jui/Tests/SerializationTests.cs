@@ -28,7 +28,26 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
             return sampleSettingsPage.Page;
 		}
 
-		[Test]
+        private static Page MakeTestEventActionPage() {
+
+            var pageId = new StringBuilder("com-homeseer-pluginsdktests-eventaction");
+            var actionEventPage = PageFactory.CreateEventActionPage(pageId.ToString(), "Event Action");
+
+            List<string> options = new List<string>() { "option1", "option2", "option3" };
+
+            GridView gridView = new GridView("gridview");
+            GridRow gridRow = new GridRow();
+            gridRow.AddItem(new SelectListView("sel1", "Sel1", options));
+            gridRow.AddItem(new SelectListView("sel2", "Sel2", options));
+            gridRow.AddItem(new SelectListView("sel3", "Sel3", options));
+            gridView.AddRow(gridRow);
+
+            actionEventPage.WithView(gridView);
+
+            return actionEventPage.Page;
+        }
+
+        [Test]
 		public void ViewTypeSerializationTest() {
 
 			Console.WriteLine("Starting test");
@@ -43,7 +62,32 @@ namespace HomeSeer.PluginSdkTests.Jui.Tests {
 			Assert.IsTrue(deserializedPage.Equals(testPage));
 		}
 
-		[Test]
+        [Test]
+        [Description("Test that serialization/deserialization of a page preserves the object references when the same object is referenced more than once like for GridView")]
+        public void PreservingObjectReferencesTest() {
+
+            Console.WriteLine("Starting test");
+            var testPage = MakeTestEventActionPage();
+
+            Console.WriteLine("Serializing");
+            var serializedPage = testPage.ToJsonString();
+            Console.WriteLine(serializedPage);
+            Console.WriteLine("Deserializing");
+            var deserializedPage = Page.FromJsonString(serializedPage);
+
+            Assert.IsTrue(deserializedPage.Equals(testPage));
+
+            //Update a view value in both the original page and the deserialized page
+            testPage.UpdateViewValueById("sel1", "2");
+            deserializedPage.UpdateViewValueById("sel1", "2");
+            //Serialize both
+            var serializedOriginalPage = testPage.ToJsonString();
+            var serializedDeserializedPage = deserializedPage.ToJsonString();
+
+            Assert.AreEqual(serializedOriginalPage, serializedDeserializedPage);
+        }
+
+        [Test]
 		public void HtmlTest() {
 			
 			Console.WriteLine("Starting test");
