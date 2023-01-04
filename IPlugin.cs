@@ -89,15 +89,6 @@ namespace HomeSeer.PluginSdk {
         bool SupportsConfigDeviceAll { get; }
 
         /// <summary>
-        /// Whether this plugin supports a feature configuration page for all features
-        /// <para>
-        /// TRUE will cause HomeSeer to call GetJuiDeviceConfigPage() for every feature.
-        ///   FALSE means HomeSeer will not call GetJuiDeviceConfigPage() for all features
-        /// </para>
-        /// </summary>
-        bool SupportsConfigFeatureAll { get; }
-
-        /// <summary>
         /// The number of unique event actions the plugin supports
         /// </summary>
         int ActionCount { get; }
@@ -156,7 +147,7 @@ namespace HomeSeer.PluginSdk {
 
         /// <summary>
         /// Called by HomeSeer Core to determine if a device or feature configuration page is available for a particular device or feature.
-        ///  Only called if <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigFeature"/> or <see cref="SupportsConfigDeviceAll"/> or <see cref="SupportsConfigFeatureAll"/> is set to TRUE.
+        ///  Only called if <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigFeature"/> or <see cref="SupportsConfigDeviceAll"/> is set to TRUE.
         /// </summary>
         /// <param name="devOrFeatRef">The <see cref="AbstractHsDevice.Ref"/> of the device</param>
         /// <returns>

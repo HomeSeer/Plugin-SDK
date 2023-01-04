@@ -60,9 +60,6 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.SupportsConfigDeviceAll" />
         public virtual bool SupportsConfigDeviceAll { get; } = false;
 
-        /// <inheritdoc cref="IPlugin.SupportsConfigFeatureAll" />
-        public virtual bool SupportsConfigFeatureAll { get; } = false;
-
         /// <inheritdoc cref="IPlugin.TriggerCount" />
         public int TriggerCount => TriggerTypes?.Count ?? 0;
 
@@ -470,7 +467,7 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.HasJuiDeviceConfigPage" />
         /// <remarks>
         /// Default behavior is to show a configuration page for every device when
-        ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigFeature"/> or <see cref="SupportsConfigDeviceAll"/> or <see cref="SupportsConfigFeatureAll"/> is set to true.
+        ///  <see cref="SupportsConfigDevice"/> or <see cref="SupportsConfigFeature"/> or <see cref="SupportsConfigDeviceAll"/> is set to true.
         ///  Adjust this behavior if the plugin only shows a configuration page for some, but not all, devices.
         /// </remarks>
         public virtual bool HasJuiDeviceConfigPage(int devOrFeatRef) {
