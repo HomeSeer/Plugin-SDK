@@ -67,7 +67,6 @@ namespace HomeSeer.PluginSdk.Devices.Controls {
         /// </para>
         /// </summary>
         /// <seealso href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select">Mozilla Docs - Select Input</seealso>
-        [Obsolete("Due to a lack of ValueRange.Divisor property this type cannot be properly used at this time.", false)]
         ValueRangeDropDown = 6,
         /// <summary>
         /// Rendered as a slider.
