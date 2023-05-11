@@ -12,8 +12,6 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class ValueRange {
         
-        //TODO public int Steps { get; set; } = 10;
-        
         private int    _decimalPlaces;
         private double _min;
         private double _max;
@@ -118,11 +116,11 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <summary>
         /// The amount to divide the value by for display.
         /// <para>
-        /// E.G. A value of 45 will be displayed as 22.5 with an offset of 2
+        /// E.G. A value of 45 will be displayed as 22.5 with a divisor of 2
         /// </para>
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if you try to set the decimal places to a value less than or equal to 0
+        /// Thrown if you try to set the divisor less than or equal to 0
         /// </exception>
         public int Divisor {
             get => _divisor;
@@ -207,9 +205,6 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_divisor != otherValueRange._divisor) {
                 return false;
             }
-            /*if (Steps != otherValueRange.Steps) {
-                return false;
-            }*/
 
             return true;
         }
