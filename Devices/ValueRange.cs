@@ -18,7 +18,7 @@ namespace HomeSeer.PluginSdk.Devices {
         private double _offset;
         private string _prefix = "";
         private string _suffix = "";
-        private int _divisor = 1;
+        private double _divisor = 1;
 
         /// <summary>
         /// Initialize a new range of values
@@ -122,7 +122,7 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if you try to set the divisor less than or equal to 0
         /// </exception>
-        public int Divisor {
+        public double Divisor {
             get => _divisor;
             set {
                 if (value <= 0) throw new ArgumentOutOfRangeException();

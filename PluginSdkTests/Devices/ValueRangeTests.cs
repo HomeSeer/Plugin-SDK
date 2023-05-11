@@ -241,12 +241,13 @@ namespace HomeSeer.PluginSdk.Devices {
 
         [Description("Test setting the divisor to make sure no exceptions are thrown.")]
         [TestCase(1)]
+        [TestCase(1.5)]
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
         [TestCase(5)]
         [TestCase(10)]
-        public void Divisor_Set_AssertPass(int divisor) {
+        public void Divisor_Set_AssertPass(double divisor) {
             var testValueRange = new ValueRange(0, 1);
             testValueRange.Divisor = divisor;
         }
@@ -255,7 +256,8 @@ namespace HomeSeer.PluginSdk.Devices {
             "Test setting the divisor to make sure an exception is thrown when trying to set it to a value less than or equal to 0.")]
         [TestCase(0)]
         [TestCase(-1)]
-        public void Divisor_SetLessThanEqual0_Throws(int divisor) {
+        [TestCase(-1.5)]
+        public void Divisor_SetLessThanEqual0_Throws(double divisor) {
             var testValueRange = new ValueRange(0, 1);
             Assert.Throws<ArgumentOutOfRangeException>(() => testValueRange.Divisor = divisor);
         }
