@@ -134,11 +134,12 @@ namespace HSPI_HomeSeerSamplePlugin {
                     .WithLocation(Location1)
                     .WithLocation2(Location2)
                     .AsType(EFeatureType.ThermostatControl, isCoolSetpoint ? (int)EThermostatControlFeatureSubType.CoolingSetPoint : (int)EThermostatControlFeatureSubType.HeatingSetPoint)
-                    .WithDefaultValue(useCelsius ? 22 : 71);
+                    .WithDefaultValue(useCelsius ? 44 : 71);
 
                 var range = new ValueRange(0, 100) {
-                    DecimalPlaces = 1,
-                    Suffix = useCelsius ? " °C" : " °F"
+                    DecimalPlaces = useCelsius ? 1 : 0,
+                    Suffix = useCelsius ? " °C" : " °F",
+                    Divisor = useCelsius ? 2 : 1
                 };
                 ff.AddValueDropDown(range, new ControlLocation(1, 1), isCoolSetpoint ? EControlUse.CoolSetPoint : EControlUse.HeatSetPoint)
                   .AddButton(Devices.ThermostatSetpointDecrement, "-", new ControlLocation(1, 2))
@@ -149,64 +150,76 @@ namespace HSPI_HomeSeerSamplePlugin {
             }
 
             private void AddTemperatureRangeGraphics(FeatureFactory ff, bool useCelsius) {
-                var sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-00.png", -200, useCelsius ? -18 : 0);
-                sg.TargetRange.DecimalPlaces = 1;
+                var sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-00.png", -200, useCelsius ? -36 : 0);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-10.png", (useCelsius ? -18 : 0) + EPSILON, useCelsius ? -12 : 10);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-10.png", (useCelsius ? -36 : 0) + EPSILON, useCelsius ? -24 : 10);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-20.png", (useCelsius ? -12 : 10) + EPSILON, useCelsius ? -7 : 20);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-20.png", (useCelsius ? -24 : 10) + EPSILON, useCelsius ? -14 : 20);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-30.png", (useCelsius ? -7 : 20) + EPSILON, useCelsius ? -1 : 30);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-30.png", (useCelsius ? -14 : 20) + EPSILON, useCelsius ? -2 : 30);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-40.png", (useCelsius ? -1 : 30) + EPSILON, useCelsius ? 4 : 40);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-40.png", (useCelsius ? -2 : 30) + EPSILON, useCelsius ? 8 : 40);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-50.png", (useCelsius ? 4 : 40) + EPSILON, useCelsius ? 10 : 50);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-50.png", (useCelsius ? 8 : 40) + EPSILON, useCelsius ? 20 : 50);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-60.png", (useCelsius ? 10 : 50) + EPSILON, useCelsius ? 16 : 60);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-60.png", (useCelsius ? 20 : 50) + EPSILON, useCelsius ? 32 : 60);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-70.png", (useCelsius ? 16 : 60) + EPSILON, useCelsius ? 21 : 70);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-70.png", (useCelsius ? 32 : 60) + EPSILON, useCelsius ? 42 : 70);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-80.png", (useCelsius ? 21 : 70) + EPSILON, useCelsius ? 27 : 80);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-80.png", (useCelsius ? 42 : 70) + EPSILON, useCelsius ? 54 : 80);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-90.png", (useCelsius ? 27 : 80) + EPSILON, useCelsius ? 32 : 90);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-90.png", (useCelsius ? 54 : 80) + EPSILON, useCelsius ? 64 : 90);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-100.png", (useCelsius ? 32 : 90) + EPSILON, useCelsius ? 38 : 100);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-100.png", (useCelsius ? 64 : 90) + EPSILON, useCelsius ? 76 : 100);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
 
-                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-110.png", (useCelsius ? 38 : 100) + EPSILON, 200);
-                sg.TargetRange.DecimalPlaces = 1;
+                sg = new StatusGraphic(IMAGES_STATUS_DIR + "Thermometer-110.png", (useCelsius ? 76 : 100) + EPSILON, 200);
+                sg.TargetRange.DecimalPlaces = useCelsius ? 1 : 0;
                 sg.TargetRange.Suffix = useCelsius ? " °C" : " °F";
+                sg.TargetRange.Divisor = useCelsius ? 2 : 1;
                 ff.AddGraphic(sg);
             }
 
@@ -216,7 +229,7 @@ namespace HSPI_HomeSeerSamplePlugin {
                     .WithLocation(Location1)
                     .WithLocation2(Location2)
                     .AsType(EFeatureType.ThermostatStatus, (int)EThermostatStatusFeatureSubType.Temperature)
-                    .WithDefaultValue(useCelsius ? 22 : 71);
+                    .WithDefaultValue(useCelsius ? 44 : 71);
 
                 AddTemperatureRangeGraphics(ff, useCelsius);
 
