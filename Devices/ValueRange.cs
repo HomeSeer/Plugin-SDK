@@ -81,9 +81,13 @@ namespace HomeSeer.PluginSdk.Devices {
             get => _offset;
             set => _offset = value;
         }
-        
+
         /// <summary>
         /// The number of decimal places of accuracy displayed by the range
+        /// <para>
+        /// The displayed value will be the rounded value to the nearest number of decimals. 
+        /// E.G. If <see cref="DecimalPlaces"/> is 1, a value of 7.1589  will be displayed as 7.2
+        /// </para>
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if you try to set the decimal places to a value less than 0
