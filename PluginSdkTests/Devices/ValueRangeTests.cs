@@ -237,100 +237,140 @@ namespace HomeSeer.PluginSdk.Devices {
 
         //TODO invalid suffix values
 
+        //Divisor tests
+
+        [Description("Test setting the divisor to make sure no exceptions are thrown.")]
+        [TestCase(0.5)]
+        [TestCase(1)]
+        [TestCase(1.5)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(10)]
+        public void Divisor_Set_AssertPass(double divisor) {
+            var testValueRange = new ValueRange(0, 1);
+            testValueRange.Divisor = divisor;
+        }
+
+        [Description(
+            "Test setting the divisor to make sure an exception is thrown when trying to set it to a value less than or equal to 0.")]
+        [TestCase(0)]
+        [TestCase(-1)]
+        [TestCase(-1.5)]
+        public void Divisor_SetLessThanEqual0_Throws(double divisor) {
+            var testValueRange = new ValueRange(0, 1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => testValueRange.Divisor = divisor);
+        }
+
+        [Description("Test getting the divisor to make sure it returns the same number it was set to.")]
+        [TestCase(0.5)]
+        [TestCase(1)]
+        [TestCase(1.5)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(10)]
+        public void Divisor_Get_ReturnsSameNumber(double divisor) {
+            var testValueRange = new ValueRange(0, 1);
+            testValueRange.Divisor = divisor;
+            Assert.AreEqual(divisor, testValueRange.Divisor);
+        }
+
         //GetStringForValue tests
 
-        [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 0.")]
-        [TestCase(-2, "-2")]
-        [TestCase(0, "0")]
-        [TestCase(1, "1")]
-        [TestCase(1.1, "1")]
-        [TestCase(1.111, "1")]
-        [TestCase(10, "10")]
-        [TestCase(50, "50")]
-        public void GetStringForValue_Min0Max100_ValOnlyNoDec(double value, string expected) {
-            var testValueRange = new ValueRange(0, 100);
-            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
-        }
-
-        private static readonly object[] _GetStringForValue_Min0Max100_ValOnly1Dec_TestCases = {
-            new object[] { -2, $"-2{ds}0" }, new object[] { 0, $"0{ds}0" }, new object[] { 1, $"1{ds}0" },
-            new object[] { 1.1, $"1{ds}1" }, new object[] { 1.111, $"1{ds}1" }, new object[] { 10, $"10{ds}0" },
-            new object[] { 50, $"50{ds}0" },
+        private static readonly object[] _GetStringForValue_ReturnExpected_TestCases = {
+            //Prefix and Suffix are empty, offset is 0, divisor is 1, and decimal places is 0.
+            new object[] { -2, 0, 0, "", "", 1, $"-2" },
+            new object[] { 0, 0, 0, "", "", 1, $"0" },
+            new object[] { 1, 0, 0, "", "", 1, $"1" },
+            new object[] { 1.1, 0, 0, "", "", 1, $"1" },
+            new object[] { 1.111, 0, 0, "", "", 1, $"1" },
+            new object[] { 1.51, 0, 0, "", "", 1, $"2" },
+            new object[] { 1.99, 0, 0, "", "", 1, $"2" },
+            new object[] { 10, 0, 0, "", "", 1, $"10" },
+            new object[] { 50, 0, 0, "", "", 1, $"50" },
+            //refix and Suffix are empty, offset is 0, divisor is 1, and decimal places is 1.
+            new object[] { -2, 0, 1, "", "", 1, $"-2{ds}0" }, 
+            new object[] { 0, 0, 1, "", "", 1, $"0{ds}0" }, 
+            new object[] { 1, 0, 1, "", "", 1, $"1{ds}0" },
+            new object[] { 1.1, 0, 1, "", "", 1, $"1{ds}1" }, 
+            new object[] { 1.111, 0, 1, "", "", 1, $"1{ds}1" },
+            new object[] { 1.51, 0, 1, "", "", 1, $"1{ds}5" },
+            new object[] { 1.99, 0, 1, "", "", 1, $"2{ds}0" },
+            new object[] { 10, 0, 1, "", "", 1, $"10{ds}0" },
+            new object[] { 50, 0, 1, "", "", 1, $"50{ds}0" },
+            //Prefix and Suffix are empty, offset is 0, divisor is 1, and decimal places is 2.
+            new object[] { -2, 0, 2, "", "", 1, $"-2{ds}00" }, 
+            new object[] { 0, 0, 2, "", "", 1, $"0{ds}00" }, 
+            new object[] { 1, 0, 2, "", "", 1, $"1{ds}00" },
+            new object[] { 1.1, 0, 2, "", "", 1, $"1{ds}10" }, 
+            new object[] { 1.111, 0, 2, "", "", 1, $"1{ds}11" },
+            new object[] { 1.51, 0, 2, "", "", 1, $"1{ds}51" },
+            new object[] { 1.99, 0, 2, "", "", 1, $"1{ds}99" },
+            new object[] { 10, 0, 2, "", "", 1, $"10{ds}00" },
+            new object[] { 50, 0, 2, "", "", 1, $"50{ds}00" },
+            //offset is 0, decimal places is 0, divisor is 1, and prefix and suffix are both set to test.
+            new object[] { -2, 0, 0, "test", "test", 1, "test-2test" },
+            new object[] { 0, 0, 0, "test", "test", 1, "test0test" },
+            new object[] { 1, 0, 0, "test", "test", 1, "test1test" },
+            new object[] { 1.1, 0, 0, "test", "test", 1, "test1test" },
+            new object[] { 1.111, 0, 0, "test", "test", 1, "test1test" },
+            new object[] { 10, 0, 0, "test", "test", 1, "test10test" },
+            new object[] { 50, 0, 0, "test", "test", 1, "test50test" },
+            //Prefix and Suffix are empty, offset is 100, divisor is 1, and decimal places is 1.
+            new object[] { -2, 100, 1, "", "", 1, $"-102{ds}0" }, 
+            new object[] { 0, 100, 1, "", "", 1, $"-100{ds}0" }, 
+            new object[] { 1, 100, 1, "", "", 1, $"-99{ds}0" },
+            new object[] { 1.1, 100, 1, "", "", 1, $"-98{ds}9" }, 
+            new object[] { 1.111, 100, 1, "", "", 1, $"-98{ds}9" }, 
+            new object[] { 10, 100, 1, "", "", 1, $"-90{ds}0" },
+            new object[] { 50, 100, 1, "", "", 1, $"-50{ds}0" },
+            //offset is 100, decimal places is 1, divisor is 1, and prefix and suffix are both set to test.
+            new object[] { -2, 100, 1, "test", "test", 1, $"test-102{ds}0test" }, 
+            new object[] { 0, 100, 1, "test", "test", 1, $"test-100{ds}0test" },
+            new object[] { 1, 100, 1, "test", "test", 1, $"test-99{ds}0test" }, 
+            new object[] { 1.1, 100, 1, "test", "test", 1, $"test-98{ds}9test" },
+            new object[] { 1.111, 100, 1, "test", "test", 1, $"test-98{ds}9test" }, 
+            new object[] { 10, 100, 1, "test", "test", 1, $"test-90{ds}0test" },
+            new object[] { 50, 100, 1, "test", "test", 1, $"test-50{ds}0test" },
+            //decimal places is 0, divisor is 2, and prefix and suffix are both set to test.
+            new object[] { -2, 0, 0, "test", "test", 2, "test-1test" },
+            new object[] { 0, 0, 0, "test", "test", 2, "test0test" },
+            new object[] { 1, 0, 0, "test", "test", 2, "test1test" },
+            new object[] { 1.1, 0, 0, "test", "test", 2, "test1test" },
+            new object[] { 1.111, 0, 0, "test", "test", 2, "test1test" },
+            new object[] { 10, 0, 0, "test", "test", 2, "test5test" },
+            new object[] { 50, 0, 0, "test", "test", 2, "test25test" },
+            //Prefix and Suffix are empty, offset is 100, divisor is 2, and decimal places is 1.
+            new object[] { -2, 100, 1, "", "", 2, $"-51{ds}0" }, 
+            new object[] { 0, 100, 1, "", "", 2, $"-50{ds}0" }, 
+            new object[] { 1, 100, 1, "", "", 2, $"-49{ds}5" },
+            new object[] { 1.1, 100, 1, "", "", 2, $"-49{ds}5" }, 
+            new object[] { 1.111, 100, 1, "", "", 2, $"-49{ds}4" }, 
+            new object[] { 10, 100, 1, "", "", 2, $"-45{ds}0" },
+            new object[] { 50, 100, 1, "", "", 2, $"-25{ds}0" },
+            //offset is 100, decimal places is 1, divisor is 2, and prefix and suffix are both set to test.
+            new object[] { -2, 100, 1, "test", "test", 2, $"test-51{ds}0test" }, 
+            new object[] { 0, 100, 1, "test", "test", 2, $"test-50{ds}0test" }, 
+            new object[] { 1, 100, 1, "test", "test", 2, $"test-49{ds}5test" },
+            new object[] { 1.1, 100, 1, "test", "test", 2, $"test-49{ds}5test" }, 
+            new object[] { 1.111, 100, 1, "test", "test", 2, $"test-49{ds}4test" }, 
+            new object[] { 10, 100, 1, "test", "test", 2, $"test-45{ds}0test" },
+            new object[] { 50, 100, 1, "test", "test", 2, $"test-25{ds}0test" },
         };
 
         [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 1.")]
-        [TestCaseSource("_GetStringForValue_Min0Max100_ValOnly1Dec_TestCases")]
-        public void GetStringForValue_Min0Max100_ValOnly1Dec(double value, string expected) {
+            "Test GetStringForValue when Min is 0, Max is 100, and various values for offset, decimal places, prefix, suffix and divisor.")]
+        [TestCaseSource("_GetStringForValue_ReturnExpected_TestCases")]
+        public void GetStringForValue_ReturnExpected(double value, double offset, int decimalPlaces, string prefix, string suffix, double divisor, string expected) {
             var testValueRange = new ValueRange(0, 100);
-            testValueRange.DecimalPlaces = 1;
-            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
-        }
-
-        private static readonly object[] _GetStringForValue_Min0Max100_ValOnly2Dec_TestCases = {
-            new object[] { -2, $"-2{ds}00" }, new object[] { 0, $"0{ds}00" }, new object[] { 1, $"1{ds}00" },
-            new object[] { 1.1, $"1{ds}10" }, new object[] { 1.111, $"1{ds}11" }, new object[] { 10, $"10{ds}00" },
-            new object[] { 50, $"50{ds}00" },
-        };
-
-        [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 0, and decimal places is 2.")]
-        [TestCaseSource("_GetStringForValue_Min0Max100_ValOnly2Dec_TestCases")]
-        public void GetStringForValue_Min0Max100_ValOnly2Dec(double value, string expected) {
-            var testValueRange = new ValueRange(0, 100);
-            testValueRange.DecimalPlaces = 2;
-            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
-        }
-
-        [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, offset is 0, decimal places is 0, and prefix and suffix are both set to test.")]
-        [TestCase(-2, "test-2test")]
-        [TestCase(0, "test0test")]
-        [TestCase(1, "test1test")]
-        [TestCase(1.1, "test1test")]
-        [TestCase(1.111, "test1test")]
-        [TestCase(10, "test10test")]
-        [TestCase(50, "test50test")]
-        public void GetStringForValue_Min0Max100_NoOffNoDec(double value, string expected) {
-            var testValueRange = new ValueRange(0, 100);
-            testValueRange.Prefix = "test";
-            testValueRange.Suffix = "test";
-            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
-        }
-
-        private static readonly object[] _GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec_TestCases = {
-            new object[] { -2, $"-102{ds}0" }, new object[] { 0, $"-100{ds}0" }, new object[] { 1, $"-99{ds}0" },
-            new object[] { 1.1, $"-98{ds}9" }, new object[] { 1.111, $"-98{ds}9" }, new object[] { 10, $"-90{ds}0" },
-            new object[] { 50, $"-50{ds}0" },
-        };
-
-        [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, Prefix and Suffix are empty, offset is 100, and decimal places is 1.")]
-        [TestCaseSource("_GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec_TestCases")]
-        public void GetStringForValue_Min0Max100_Off100NoPreNoSuf1Dec(double value, string expected) {
-            var testValueRange = new ValueRange(0, 100);
-            testValueRange.Offset = 100;
-            testValueRange.DecimalPlaces = 1;
-            Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
-        }
-
-        private static readonly object[] _GetStringForValue_Min0Max100_ReturnExpected_TestCases = {
-            new object[] { -2, $"test-102{ds}0test" }, new object[] { 0, $"test-100{ds}0test" },
-            new object[] { 1, $"test-99{ds}0test" }, new object[] { 1.1, $"test-98{ds}9test" },
-            new object[] { 1.111, $"test-98{ds}9test" }, new object[] { 10, $"test-90{ds}0test" },
-            new object[] { 50, $"test-50{ds}0test" },
-        };
-
-        [Description(
-            "Test GetStringForValue when Min is 0, Max is 100, offset is 100, decimal places is 1, and prefix and suffix are both set to test.")]
-        [TestCaseSource("_GetStringForValue_Min0Max100_ReturnExpected_TestCases")]
-        public void GetStringForValue_Min0Max100_ReturnExpected(double value, string expected) {
-            var testValueRange = new ValueRange(0, 100);
-            testValueRange.Offset = 100;
-            testValueRange.DecimalPlaces = 1;
-            testValueRange.Prefix = "test";
-            testValueRange.Suffix = "test";
+            testValueRange.Offset = offset;
+            testValueRange.DecimalPlaces = decimalPlaces;
+            testValueRange.Prefix = prefix;
+            testValueRange.Suffix = suffix;
+            testValueRange.Divisor = divisor;
             Assert.AreEqual(expected, testValueRange.GetStringForValue(value));
         }
 
@@ -375,36 +415,36 @@ namespace HomeSeer.PluginSdk.Devices {
         //Equals tests
 
         [Description("Test Equals to make sure that two identical value ranges are correctly evaluated to be equal.")]
-        [TestCase(0, 1, 0, 0, "", "")]
-        [TestCase(0.01, 1.01, 0.01, 0, "-", "-")]
-        [TestCase(0, 1, 0, 2, "°", "°")]
-        [TestCase(1.1111, 2.2222, 5.5555, 4, "", "")]
+        [TestCase(0, 1, 0, 0, "", "", 1)]
+        [TestCase(0.01, 1.01, 0.01, 0, "-", "-", 2)]
+        [TestCase(0, 1, 0, 2, "°", "°", 10)]
+        [TestCase(1.1111, 2.2222, 5.5555, 4, "", "", 1.5)]
         public void Equals_AssertEqual(double min, double max,
             double offset, int decimalPlaces,
-            string prefix, string suffix) {
+            string prefix, string suffix, double divisor) {
             var testValueRange1 = new ValueRange(min, max) {
-                Offset = offset, DecimalPlaces = decimalPlaces, Prefix = prefix, Suffix = suffix
+                Offset = offset, DecimalPlaces = decimalPlaces, Prefix = prefix, Suffix = suffix, Divisor = divisor
             };
             var testValueRange2 = new ValueRange(min, max) {
-                Offset = offset, DecimalPlaces = decimalPlaces, Prefix = prefix, Suffix = suffix
+                Offset = offset, DecimalPlaces = decimalPlaces, Prefix = prefix, Suffix = suffix, Divisor = divisor
             };
             Assert.AreEqual(testValueRange1, testValueRange2);
         }
 
         [Description(
             "Test Equals to make sure that two value ranges are correctly evaluated to be unequal when they are not equal.")]
-        [TestCase(0, 1, 0, 0, "", "")]
-        [TestCase(0.01, 1.01, 0.01, 0, "-", "-")]
-        [TestCase(0, 1, 0, 2, "°", "°")]
-        [TestCase(1.1111, 2.2222, 5.5555, 4, "", "")]
+        [TestCase(0, 1, 0, 0, "", "", 1)]
+        [TestCase(0.01, 1.01, 0.01, 0, "-", "-", 2)]
+        [TestCase(0, 1, 0, 2, "°", "°", 10)]
+        [TestCase(1.1111, 2.2222, 5.5555, 4, "", "", 1.5)]
         public void Equals_AssertNotEqual(double min, double max,
             double offset, int decimalPlaces,
-            string prefix, string suffix) {
+            string prefix, string suffix, double divisor) {
             var testValueRange1 = new ValueRange(min, max) {
-                Offset = offset, DecimalPlaces = decimalPlaces, Prefix = prefix, Suffix = suffix
+                Offset = offset, DecimalPlaces = decimalPlaces, Prefix = prefix, Suffix = suffix, Divisor = divisor
             };
             var testValueRange2 = new ValueRange(0, 1) {
-                Offset = 1, DecimalPlaces = 1, Prefix = "not-equal", Suffix = "not-equal"
+                Offset = 1, DecimalPlaces = 1, Prefix = "not-equal", Suffix = "not-equal", Divisor = 1
             };
             Assert.AreNotEqual(testValueRange1, testValueRange2);
         }
