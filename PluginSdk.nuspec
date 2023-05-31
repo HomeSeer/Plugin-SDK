@@ -13,7 +13,7 @@
         <icon>images\icon-hs-128.png</icon>
         <license type="expression">AGPL-3.0-or-later</license>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <releaseNotes>https://homeseer.github.io/Plugin-SDK-Docs/release_notes/pluginsdk_releasenotes_1_4_3_0.html</releaseNotes>
+        <releaseNotes>https://homeseer.github.io/Plugin-SDK-Docs/release_notes/pluginsdk_releasenotes_1_4_4_0.html</releaseNotes>
         <copyright>Copyright 2022</copyright>
         <tags>HomeSeer Home Seer Plugin pluginsdk hs4 sdk hs api pluginapi plugins smart auto automation control monitor</tags>
         <dependencies>
