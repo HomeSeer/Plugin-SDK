@@ -844,10 +844,10 @@ namespace HSPI_HomeSeerSamplePlugin {
                             case (int)EThermostatControlFeatureSubType.HeatingSetPoint:
                             case (int)EThermostatControlFeatureSubType.CoolingSetPoint:
                                 if (controlEvent.ControlValue == Devices.ThermostatSetpointDecrement) {
-                                    double newValue = feat.Value - (useCelsius ? 0.5 : 1);
+                                    double newValue = feat.Value - 1;
                                     HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue);
                                 } else if (controlEvent.ControlValue == Devices.ThermostatSetpointIncrement) {
-                                    double newValue = feat.Value + (useCelsius ? 0.5 : 1);
+                                    double newValue = feat.Value + 1;
                                     HomeSeerSystem.UpdateFeatureValueByRef(feat.Ref, newValue);
                                 } else {
                                     HomeSeerSystem.UpdateFeatureValueByRef(controlEvent.TargetRef, controlEvent.ControlValue);

@@ -12,16 +12,13 @@ namespace HomeSeer.PluginSdk.Devices {
     [Serializable]
     public class ValueRange {
         
-        //TODO public int Steps { get; set; } = 10;
-        
         private int    _decimalPlaces;
         private double _min;
         private double _max;
         private double _offset;
         private string _prefix = "";
         private string _suffix = "";
-
-        //TODO private int _divisor = 1;
+        private double _divisor = 1;
 
         /// <summary>
         /// Initialize a new range of values
@@ -84,9 +81,13 @@ namespace HomeSeer.PluginSdk.Devices {
             get => _offset;
             set => _offset = value;
         }
-        
+
         /// <summary>
         /// The number of decimal places of accuracy displayed by the range
+        /// <para>
+        /// The displayed value will be the rounded value to the nearest number of decimals. 
+        /// E.G. If <see cref="DecimalPlaces"/> is 1, a value of 7.1589  will be displayed as 7.2
+        /// </para>
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if you try to set the decimal places to a value less than 0
@@ -117,6 +118,24 @@ namespace HomeSeer.PluginSdk.Devices {
         }
 
         /// <summary>
+        /// The amount to divide the value by for display.
+        /// <para>
+        /// E.G. A value of 45 will be displayed as 22.5 with a divisor of 2
+        /// </para>
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if you try to set the divisor less than or equal to 0
+        /// </exception>
+        public double Divisor {
+            get => _divisor;
+            set {
+                if (value <= 0) throw new ArgumentOutOfRangeException();
+
+                _divisor = value;
+            }
+        }
+
+        /// <summary>
         /// Create a deep copy of this <see cref="ValueRange"/>
         /// </summary>
         /// <returns>The deep copy of this <see cref="ValueRange"/></returns>
@@ -126,7 +145,8 @@ namespace HomeSeer.PluginSdk.Devices {
                             DecimalPlaces = DecimalPlaces, 
                             Offset = Offset, 
                             Prefix = Prefix, 
-                            Suffix = Suffix
+                            Suffix = Suffix,
+                            Divisor = Divisor
                         };
             return clone;
         }
@@ -135,12 +155,12 @@ namespace HomeSeer.PluginSdk.Devices {
         /// Obtain the string representation of the specified value according to the range's configuration
         /// </summary>
         /// <remarks>
-        /// This returns <c>$"{_prefix}{(value - _offset).ToString($"F{_decimalPlaces}")}{_suffix}"</c>
+        /// This returns <c>$"{_prefix}{((value - _offset) / _divisor).ToString($"F{_decimalPlaces}")}{_suffix}"</c>
         /// </remarks>
         /// <param name="value">The value to use in the string</param>
         /// <returns>The value correctly formatted according to the range</returns>
         public string GetStringForValue(double value) {
-            var stringValue = $"{_prefix}{(value - _offset).ToString($"F{_decimalPlaces}")}{_suffix}";
+            var stringValue = $"{_prefix}{((value - _offset) / _divisor).ToString($"F{_decimalPlaces}")}{_suffix}";
 
             return stringValue;
         }
@@ -186,12 +206,9 @@ namespace HomeSeer.PluginSdk.Devices {
             if (_decimalPlaces != otherValueRange._decimalPlaces) {
                 return false;
             }
-            /*if (_divisor != otherValueRange._divisor) {
+            if (_divisor != otherValueRange._divisor) {
                 return false;
-            }*/
-            /*if (Steps != otherValueRange.Steps) {
-                return false;
-            }*/
+            }
 
             return true;
         }
