@@ -481,7 +481,6 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="targetRange"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when a control, targeting any of the specified values, already exists.</exception>
         /// <seealso cref="EControlType.ValueRangeDropDown"/>
-        [Obsolete("Due to a lack of ValueRange.Divisor property this control type cannot be properly created at this time.", false)]
         public FeatureFactory AddValueDropDown(ValueRange targetRange, ControlLocation location = null, EControlUse controlUse = EControlUse.NotSpecified) {
 
             if (targetRange == null) {
