@@ -781,10 +781,54 @@ namespace HomeSeer.PluginSdk.Devices {
             }
         }
 
+        /// <summary>
+        /// The version of the internal structure used in HomeSeer Core to represent this device/feature 
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// When loading a device/feature created by a legacy plugin this property is less than or equal to 3.2. 
+        /// When loading a device/feature created by a plugin using this SDK, this property is equal to 4.0 
+        /// </para>
+        /// <para>
+        /// To migrate a device/feature created by a legacy plugin, first clear all its attached  <see cref="StatusControl"/>
+        ///  and <see cref="StatusGraphic"/> using <see cref="IHsController.ClearStatusControlsByRef"/> and <see cref="IHsController.ClearStatusGraphicsByRef"/>,
+        ///  for features only recreate some new <see cref="StatusControl"/>
+        ///  and <see cref="StatusGraphic"/> using methods such as <see cref="IHsController.AddStatusControlToFeature"/> and 
+        ///  <see cref="IHsController.AddStatusGraphicToFeature"/>, then set the Version property to 4.0.
+        /// </para>
+        /// </remarks>
+        public double Version {
+            get {
+                if (Changes.ContainsKey(EProperty.Version)) {
+                    return (double)Changes[EProperty.Version];
+                }
+
+                return _value;
+            }
+            set {
+                if (_cacheChanges && Math.Abs(value - _version) < 0.001) {
+                    Changes.Remove(EProperty.Value);
+                    return;
+                }
+                if (Changes.ContainsKey(EProperty.Version)) {
+                    Changes[EProperty.Version] = value;
+                }
+                else {
+                    Changes.Add(EProperty.Version, value);
+                }
+
+                if (_cacheChanges) {
+                    return;
+                }
+
+                _version = value;
+            }
+        }
+
         #endregion
 
         #region Private
-        
+
         /// <inheritdoc cref="Address"/>
         protected string         _address           = "";
         /// <inheritdoc cref="AssociatedDevices"/>
@@ -833,7 +877,8 @@ namespace HomeSeer.PluginSdk.Devices {
         protected double         _value;            //= 0D;
         /// <inheritdoc cref="VoiceCommand"/>
         protected string         _voiceCommand      = "";
-        
+        /// <inheritdoc cref="Version"/>
+        protected double         _version;            //= 0D;
         #endregion
 
         #endregion
