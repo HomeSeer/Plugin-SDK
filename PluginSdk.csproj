@@ -216,7 +216,7 @@
 	-->
   <Target Name="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <ItemGroup>
-      <CopyNewtonsoft Include="packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll" />
+      <CopyNewtonsoft Include="packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyNewtonsoft)" DestinationFolder="$(TargetDir)\" SkipUnchangedFiles="true" />
   </Target>
