@@ -45,7 +45,7 @@ This SDK is available for your use according to the [GNU Affero General Public L
 [hs-version-url]: https://homeseer.com/
 [distribution-policy]: https://homeseer.com/3rd-party-development-distribution-policy/
 [homeseer-url]: https://homeseer.com/
-[plugin-sdk-docs]: https://docs.homeseer.com/display/HSPI
+[plugin-sdk-docs]: https://docs.homeseer.com/hspi/
 [nuget-package-url]: https://www.nuget.org/packages/HomeSeer-PluginSDK/
 [issues-url]: https://github.com/HomeSeer/Plugin-SDK/issues
 [pull-requests-url]: https://github.com/HomeSeer/Plugin-SDK/pulls
