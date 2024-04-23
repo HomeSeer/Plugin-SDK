@@ -119,6 +119,10 @@ namespace HomeSeer.PluginSdk.Devices {
         /// <see cref="AbstractHsDevice.StatusString"/>
         /// </summary>
         StatusString = 45,
+        /// <summary>
+        /// <see cref="AbstractHsDevice.Version"/>
+        /// </summary>
+        Version = 46,
 
     }
 

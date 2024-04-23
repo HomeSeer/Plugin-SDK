@@ -70,8 +70,8 @@
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">.\HSCF.dll</HintPath>
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <HintPath Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -203,8 +203,6 @@
     <Compile Include="Speech\IFromSpeaker.cs" />
     <Compile Include="Speech\ISpeechAPI.cs" />
     <Compile Include="Speech\RemoteHost.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -220,7 +218,7 @@
 	-->
   <Target Name="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <ItemGroup>
-      <CopyNewtonsoft Include="packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll" />
+      <CopyNewtonsoft Include="packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyNewtonsoft)" DestinationFolder="$(TargetDir)\" SkipUnchangedFiles="true" />
   </Target>
