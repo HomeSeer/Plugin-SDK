@@ -349,6 +349,20 @@ namespace HomeSeer.Jui.Views {
                             throw new ArgumentException("Value type does not match the view type", exception);
                         }
                     }
+                    else if (type == (int)EViewType.MultiSelectList) {
+                        try {
+                            var intValues = new List<int>(Array.ConvertAll(valueString.Split(','), int.Parse));
+                            var selectListOptions = new List<string>();
+                            for (var i = 0; i <= intValues.Count; i++) {
+                                selectListOptions.Add(selectListOptions[i].ToString());
+                            }
+                            view = new MultiSelectListView(id, id, selectListOptions, ESelectListType.DropDown, intValues);
+                            break;
+                        }
+                        catch (Exception exception) {
+                            throw new ArgumentException("Value type does not match the view type", exception);
+                        }
+                    }
                     else if (type == (int)EViewType.TimeSpan) {
                         if (!TimeSpan.TryParse(valueString, out TimeSpan timeSpanValue)) {
                             throw new ArgumentException("The view type does not match the value type");

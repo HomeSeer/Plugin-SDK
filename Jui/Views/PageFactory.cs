@@ -156,6 +156,19 @@ namespace HomeSeer.Jui.Views {
             return this;
         }
 
+        public PageFactory WithDropDownMultiSelectList(string id, string name, List<string> options, List<int> selection = null) {
+            var slv = new MultiSelectListView(id, name, options, ESelectListType.DropDown, selection);
+            Page.AddView(slv);
+            return this;
+        }
+
+        public PageFactory WithDropDownMultiSelectList(string id, string name, List<string> options, List<string> optionKeys,
+                                                  List<int> selection = null) {
+            var slv = new MultiSelectListView(id, name, options, optionKeys, ESelectListType.DropDown, selection);
+            Page.AddView(slv);
+            return this;
+        }
+
         public PageFactory WithToggle(string id, string name, bool isEnabled = false) {
             var tv = new ToggleView(id, name, isEnabled);
             Page.AddView(tv);

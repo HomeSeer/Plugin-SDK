@@ -162,6 +162,7 @@
     <Compile Include="Jui\Views\GridRowItem.cs" />
     <Compile Include="Jui\Views\Grid\EHorizontalAlignment.cs" />
     <Compile Include="Jui\Views\Grid\EVerticalAlignment.cs" />
+    <Compile Include="Jui\Views\MultiSelectListView.cs" />
     <Compile Include="Jui\Views\PageFactory.cs" />
     <Compile Include="Jui\Views\TimeSpanView.cs" />
     <Compile Include="Jui\Views\TextAreaView.cs" />
