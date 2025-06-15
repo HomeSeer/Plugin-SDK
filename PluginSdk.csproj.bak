@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8D2165FA-0DBE-4F59-815C-72157B2401CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HomeSeer.PluginSdk</RootNamespace>
+    <AssemblyName>PluginSdk</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SDKDEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SDKDEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\HomeSeer\HomeSeer\bin\homeseer\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\HomeSeer\HomeSeer\bin\homeseer\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\Docs\</OutputPath>
+    <DocumentationFile>bin\Docs\PluginSdk.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="HSCF">
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">.\HSCF.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">..\HomeSeer\HomeSeer\HSCF.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" '$(Configuration)|$(Platform)' == 'HS-Release|AnyCPU' Or '$(Configuration)|$(Platform)' == 'HS-Debug|AnyCPU' ">..\HomeSeer\HomeSeer\bin\homeseer\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractPlugin.cs" />
+    <Compile Include="Devices\Controls\ControlLocation.cs" />
+    <Compile Include="Devices\Controls\ControlEvent.cs" />
+    <Compile Include="Devices\Controls\EControlFlag.cs" />
+    <Compile Include="Devices\Controls\EControlType.cs" />
+    <Compile Include="Devices\Controls\EControlUse.cs" />
+    <Compile Include="Devices\Controls\StatusControl.cs" />
+    <Compile Include="Devices\Controls\StatusControlCollection.cs" />
+    <Compile Include="Devices\DeviceFactory.cs" />
+    <Compile Include="Devices\EFeatureDisplayType.cs" />
+    <Compile Include="Devices\EMiscFlag.cs" />
+    <Compile Include="Devices\EProperty.cs" />
+    <Compile Include="Devices\EPollResponse.cs" />
+    <Compile Include="Devices\FeatureFactory.cs" />
+    <Compile Include="Devices\AbstractHsDevice.cs" />
+    <Compile Include="Devices\HsFeature.cs" />
+    <Compile Include="Devices\Identification\DeviceRelationshipException.cs" />
+    <Compile Include="Devices\Identification\EMediaFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\EThermostatControlFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\EThermostatStatusFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\TypeInfo.cs" />
+    <Compile Include="Devices\Identification\EApiType.cs" />
+    <Compile Include="Devices\Identification\EDeviceType.cs" />
+    <Compile Include="Devices\Identification\EEnergyFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\EFeatureType.cs" />
+    <Compile Include="Devices\Identification\EGenericDeviceSubType.cs" />
+    <Compile Include="Devices\Identification\EGenericFeatureSubType.cs" />
+    <Compile Include="Devices\Identification\ERelationship.cs" />
+    <Compile Include="Devices\NewDeviceData.cs" />
+    <Compile Include="Devices\NewFeatureData.cs" />
+    <Compile Include="Devices\StatusGraphicCollection.cs" />
+    <Compile Include="Devices\HsDevice.cs" />
+    <Compile Include="Devices\EventUpdateReturnData.cs" />
+    <Compile Include="Devices\PlugExtraData.cs" />
+    <Compile Include="Devices\ValueRange.cs" />
+    <Compile Include="Devices\StatusGraphic.cs" />
+    <Compile Include="Events\AbstractActionType.cs" />
+    <Compile Include="Events\AbstractActionType2.cs" />
+    <Compile Include="Events\AbstractTriggerType.cs" />
+    <Compile Include="Events\AbstractTriggerType2.cs" />
+    <Compile Include="Events\ActionTypeCollection.cs" />
+    <Compile Include="Events\BaseTypeCollection.cs" />
+    <Compile Include="Events\EEventFlag.cs" />
+    <Compile Include="Events\EventData.cs" />
+    <Compile Include="Events\EventGroupData.cs" />
+    <Compile Include="Events\EventTriggerGroupData.cs" />
+    <Compile Include="Events\TrigActInfo.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Energy\EnergyCalcData.cs" />
+    <Compile Include="Energy\EnergyData.cs" />
+    <Compile Include="Energy\EnergyGraph.cs" />
+    <Compile Include="Energy\EnergyGraphData.cs" />
+    <Compile Include="Events\TriggerTypeCollection.cs" />
+    <Compile Include="Features\AbstractFeaturePage.cs" />
+    <Compile Include="Features\JsonRequest.cs" />
+    <Compile Include="Features\GenericJsonData.cs" />
+    <Compile Include="Features\IFeaturePage.cs" />
+    <Compile Include="Features\Responses\JsonError.cs" />
+    <Compile Include="Features\Responses\JsonResponse.cs" />
+    <Compile Include="Features\Responses\PageActions\EPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\FeaturePageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\CallbackPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\HidePageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\NextStepPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\PageActionExtensions.cs" />
+    <Compile Include="Features\Responses\PageActions\PageActionResponse.cs" />
+    <Compile Include="Features\Responses\PageActions\PreviousStepPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetHtmlPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetStepPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetTextPageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\SetValuePageAction.cs" />
+    <Compile Include="Features\Responses\PageActions\ShowPageAction.cs" />
+    <Compile Include="IHsController.cs" />
+    <Compile Include="Jui\Types\ELabelType.cs" />
+    <Compile Include="Jui\Views\EColSize.cs" />
+    <Compile Include="Jui\Views\GridView.cs" />
+    <Compile Include="Jui\Views\GridRow.cs" />
+    <Compile Include="Jui\Views\GridRowItem.cs" />
+    <Compile Include="Jui\Views\Grid\EHorizontalAlignment.cs" />
+    <Compile Include="Jui\Views\Grid\EVerticalAlignment.cs" />
+    <Compile Include="Jui\Views\PageFactory.cs" />
+    <Compile Include="Jui\Views\TimeSpanView.cs" />
+    <Compile Include="Jui\Views\TextAreaView.cs" />
+    <Compile Include="Logging\ELogType.cs" />
+    <Compile Include="Speech\EMediaOperation.cs" />
+    <Compile Include="Speech\AbstractSpeakerClient.cs" />
+    <Compile Include="Speech\ESpeakErrorValue.cs" />
+    <Compile Include="Speech\ESpeakTypeValue.cs" />
+    <Compile Include="Systems\EConfigChangeTarget.cs" />
+    <Compile Include="Systems\EConfigChangeAction.cs" />
+    <Compile Include="Systems\EHsSystemEvent.cs" />
+    <Compile Include="Types\EAccessLevel.cs" />
+    <Compile Include="Types\EOsType.cs" />
+    <Compile Include="Types\ERegistrationMode.cs" />
+    <None Include="Logging\LogEntry.cs" />
+    <Compile Include="PluginStatus.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="Jui\Types\EInputType.cs" />
+    <Compile Include="Jui\Types\EPageType.cs" />
+    <Compile Include="Jui\Types\ESelectListType.cs" />
+    <Compile Include="Jui\Types\EToggleType.cs" />
+    <Compile Include="Jui\Types\EViewType.cs" />
+    <Compile Include="Jui\Views\AbstractView.cs" />
+    <Compile Include="Jui\Views\NavigateButtonView.cs" />
+    <Compile Include="Jui\Views\InputView.cs" />
+    <Compile Include="Jui\Views\InvalidValueForTypeException.cs" />
+    <Compile Include="Jui\Views\JsonDataException.cs" />
+    <Compile Include="Jui\Views\LabelView.cs" />
+    <Compile Include="Jui\Views\Page.cs" />
+    <Compile Include="Jui\Views\SelectListView.cs" />
+    <Compile Include="Jui\Views\SettingsCollection.cs" />
+    <Compile Include="Jui\Views\ToggleView.cs" />
+    <Compile Include="Jui\Views\ViewCollectionHelper.cs" />
+    <Compile Include="Jui\Views\ViewGroup.cs" />
+    <Compile Include="Jui\Views\ViewNotFoundException.cs" />
+    <Compile Include="Jui\Views\ViewTypeMismatchException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Speech\clsLastVR.cs" />
+    <Compile Include="Speech\IFromSpeaker.cs" />
+    <Compile Include="Speech\ISpeechAPI.cs" />
+    <Compile Include="Speech\RemoteHost.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PluginSdk.nuspec" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+		 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <Target Name="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Docs|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Release|AnyCPU' OR '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <ItemGroup>
+      <CopyNewtonsoft Include="packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CopyNewtonsoft)" DestinationFolder="$(TargetDir)\" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
