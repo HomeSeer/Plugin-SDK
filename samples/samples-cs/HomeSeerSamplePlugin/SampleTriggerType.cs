@@ -30,13 +30,13 @@ namespace HSPI_HomeSeerSamplePlugin {
         /// </summary>
         private const string OptionCountSlName = "Number of Options Checked";
         /// <summary>
-        /// The ID of the required option select list
+        /// The ID of the required options multi select list
         /// </summary>
         private string OptionNumSlId => $"{PageId}-optionnumsl";
         /// <summary>
-        /// The name of the required option select list
+        /// The name of the required options multi select list
         /// </summary>
-        private const string OptionNumSlName = "Required Option";
+        private const string OptionNumSlName = "Required Options";
 
         /// <summary>
         /// Determine whether the trigger should fire based on the specified option selections
@@ -54,12 +54,14 @@ namespace HSPI_HomeSeerSamplePlugin {
                     var numRequiredOptions = GetSelectedOptionCount() + 1;
                     return numRequiredOptions != 0 && triggerOptions.Count(triggerOption => triggerOption) == numRequiredOptions;
                 case 1:
-                    var specificRequiredOption = GetSelectedSpecificOptionNum();
-                    if (triggerOptions.Length < specificRequiredOption + 1) {
-                        return false;
+                    List<int> specificRequiredOptions = GetSelectedSpecificOptionNum();
+                    
+                    foreach(var requiredOption in specificRequiredOptions) {
+                        if (!triggerOptions[requiredOption])
+                            return false;
                     }
 
-                    return triggerOptions[specificRequiredOption];
+                    return true;
                 case 2:
                     return !triggerOptions.Any(triggerOption => triggerOption);
                 case 3:
@@ -89,7 +91,7 @@ namespace HSPI_HomeSeerSamplePlugin {
         protected override List<string> SubTriggerTypeNames { get; set; } = new List<string>
                                                                             {
                                                                                 "Button click with X options checked",
-                                                                                "Button click with specific option checked",
+                                                                                "Button click with specific options checked",
                                                                                 "Button click with no options checked",
                                                                                 "Button click with any options checked"
                                                                             };
@@ -128,8 +130,8 @@ namespace HSPI_HomeSeerSamplePlugin {
                     //Check to see if the input for the number of options is valid
                     return GetSelectedOptionCount() >= 0;
                 case 1:
-                    //Check to see if the input for the required option is valid
-                    return GetSelectedSpecificOptionNum() >= 0;
+                    //Check to see if there is at least one required option
+                    return GetSelectedSpecificOptionNum().Count >= 1;
                 default:
                     //The last two sub trigger types do not require any additional configuration
                     return true;
@@ -161,8 +163,10 @@ namespace HSPI_HomeSeerSamplePlugin {
                     }
                 case 1:
                     try {
-                        var optionNumSl = ConfigPage?.GetViewById(OptionNumSlId) as SelectListView;
-                        return $"the button on the Sample Plugin Trigger Feature page is clicked and option number {(optionNumSl?.GetSelectedOption() ?? "???")} is checked";
+                        var optionNumSl = ConfigPage?.GetViewById(OptionNumSlId) as MultiSelectListView;
+                        var selectedOptions = string.Join(",", optionNumSl?.GetSelectedOptions());
+
+                        return $"the button on the Sample Plugin Trigger Feature page is clicked and options number {selectedOptions} are checked";
                     }
                     catch (Exception exception) {
                         if (LogDebug) {
@@ -202,13 +206,13 @@ namespace HSPI_HomeSeerSamplePlugin {
         }
         
         /// <summary>
-        /// Initialize a new <see cref="AbstractTriggerType.ConfigPage"/> for a trigger based on a specific option
+        /// Initialize a new <see cref="AbstractTriggerType.ConfigPage"/> for a trigger based on specific options
         ///  being selected.
         /// </summary>
         /// <returns>A <see cref="PageFactory"/> initialized for the second subtype</returns>
         private PageFactory InitializeSpecificOptionPage() {
             var cpf = InitializeDefaultPage();
-            cpf.WithDropDownSelectList(OptionNumSlId, OptionNumSlName, new[] {"1", "2", "3", "4"}.ToList());
+            cpf.WithDropDownMultiSelectList(OptionNumSlId, OptionNumSlName, new[] {"1", "2", "3", "4"}.ToList(), new[] { "0", "1", "2", "3" }.ToList());
             return cpf;
         }
         
@@ -225,16 +229,19 @@ namespace HSPI_HomeSeerSamplePlugin {
         /// Get the currently selected specific option index
         /// </summary>
         /// <returns>The index of the required specific option</returns>
-        private int GetSelectedSpecificOptionNum() {
+        private List<int> GetSelectedSpecificOptionNum() {
             try {
-                var optionNumSl = ConfigPage?.GetViewById(OptionNumSlId) as SelectListView;
-                return optionNumSl?.Selection ?? -1;
+                var optionsNumSl = ConfigPage?.GetViewById(OptionNumSlId) as MultiSelectListView;
+                List<string> selectedOptionsKeys = optionsNumSl.GetSelectedOptionKeys();
+                List<int> selectedOptionsNum = selectedOptionsKeys.Select(int.Parse).ToList();
+
+                return selectedOptionsNum;
             }
             catch (Exception exception) {
                 if (LogDebug) {
                     Console.WriteLine(exception);
                 }
-                return -1;
+                return new List<int>();
             }
         }
 

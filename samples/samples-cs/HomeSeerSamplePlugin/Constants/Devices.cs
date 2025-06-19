@@ -67,10 +67,19 @@ namespace HSPI_HomeSeerSamplePlugin.Constants {
         public const string DeviceConfigSelectListName = "Sample Dropdown Select List";
         public static string DeviceConfigRadioSlId => $"{DeviceConfigPageId}-sampleselectlist2";
         public const string DeviceConfigRadioSlName = "Sample Radio Select List";
+
+        public static string DeviceConfigMultiSelectListId => $"{DeviceConfigPageId}-samplemultiselectlist1";
+        public const string DeviceConfigMultiSelectListName = "Sample Dropdown Multi Select List";
         public static List<string> DeviceConfigSelectListOptions => new List<string> {
                                                                                 "Option 1",
                                                                                 "Option 2",
                                                                                 "Option 3"
+                                                                            };
+
+        public static List<string> DeviceConfigSelectListOptionKeys => new List<string> {
+                                                                                "key1",
+                                                                                "key2",
+                                                                                "key3"
                                                                             };
         public static string DeviceConfigInputId => $"{DeviceConfigPageId}-sampleinput";
         public const string DeviceConfigInputName = "Sample Text Input";
