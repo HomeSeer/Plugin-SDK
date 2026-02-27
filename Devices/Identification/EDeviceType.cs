@@ -19,34 +19,34 @@ namespace HomeSeer.PluginSdk.Devices.Identification {
         /// <summary>
         /// The <see cref="HsDevice"/> represents a door.
         /// </summary>
-        Door,
+        Door = 1,
         /// <summary>
         /// The <see cref="HsDevice"/> represents a fan.
         /// </summary>
-        Fan,
+        Fan = 2,
         /// <summary>
         /// The <see cref="HsDevice"/> represents a light.
         /// </summary>
-        Light,
+        Light = 3,
         /// <summary>
         /// The <see cref="HsDevice"/> represents a lock.
         /// </summary>
-        Lock,
+        Lock = 4,
         /// <summary>
         /// The <see cref="HsDevice"/> represents an outlet.
         /// </summary>
-        Outlet,
+        Outlet = 5,
         /// <summary>
         /// The <see cref="HsDevice"/> represents an external controller or remote like a hub.
         /// </summary>
-        RemoteControl,
+        RemoteControl = 6,
         /// <summary>
         /// The <see cref="HsDevice"/> represents a switch.
         /// </summary>
         /// <remarks>
         /// This should be used instead of <see cref="Light"/> or <see cref="Fan"/> when a more generic type is needed.
         /// </remarks>
-        Switch,
+        Switch = 7,
         /// <summary>
         /// The <see cref="HsDevice"/> represents a thermostat.
         /// </summary>
