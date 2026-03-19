@@ -35,7 +35,7 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-	  <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -65,6 +65,7 @@
     <Compile Include="Jui\Tests\ViewTests.cs" />
     <Compile Include="Jui\Views\AbstractJuiViewTestFixture.cs" />
     <Compile Include="Jui\Views\AbstractViewTests.cs" />
+    <Compile Include="Jui\Views\MultiSelectListViewTests.cs" />
     <Compile Include="Jui\Views\NavigateButtonViewTests.cs" />
     <Compile Include="Jui\Views\InputViewTests.cs" />
     <Compile Include="Jui\Views\LabelViewTests.cs" />
