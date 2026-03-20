@@ -55,8 +55,11 @@ namespace HomeSeer.Jui.Types {
 		/// <summary>
 		/// A <see cref="HomeSeer.Jui.Views.TimeSpanView"/>
 		/// </summary>
-		TimeSpan = 13
-
-	}
+		TimeSpan = 13,
+        /// <summary>
+        /// A <see cref="HomeSeer.Jui.Views.MultiSelectListView"/>
+        /// </summary>
+        MultiSelectList = 14
+    }
 
 }

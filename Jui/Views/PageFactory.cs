@@ -142,7 +142,14 @@ namespace HomeSeer.Jui.Views {
             Page.AddView(slv);
             return this;
         }
-        
+
+        public PageFactory WithDropDownMultiSelectList(string id, string name, List<string> options, List<string> optionKeys,
+                                          List<string> selectedKeys = null) {
+            var slv = new MultiSelectListView(id, name, options, optionKeys, EMultiSelectListType.DropDown, selectedKeys);
+            Page.AddView(slv);
+            return this;
+        }
+
         public PageFactory WithRadioSelectList(string id, string name, List<string> options, int selection = -1) {
             var slv = new SelectListView(id, name, options, ESelectListType.RadioList, selection);
             Page.AddView(slv);

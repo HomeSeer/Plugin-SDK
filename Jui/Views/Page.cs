@@ -318,6 +318,7 @@ namespace HomeSeer.Jui.Views {
 		/// <exception cref="ArgumentNullException">A valid ID was not specified</exception>
 		/// <exception cref="ArgumentOutOfRangeException">The type or integer value is invalid</exception>
 		/// <exception cref="ArgumentException">The value type doesn't match the view type</exception>
+        [Obsolete("Please use Page.AddViewDelta(AbstractView originalView, object newValue) instead.")]
 		public void AddViewDelta(string id, int type, object value) {
 
             if (string.IsNullOrWhiteSpace(id)) {

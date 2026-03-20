@@ -171,6 +171,12 @@ namespace HSPI_HomeSeerSamplePlugin {
                                          Constants.Settings.Sp2RadioSlName,
                                          Constants.Settings.Sp2SelectListOptions);
 
+            //Add a dropdown multi select list to the page
+            settingsPage2.WithDropDownMultiSelectList(Constants.Settings.Sp2MultiSelectListId,
+                                         Constants.Settings.Sp2MultiSelectListName,
+                                         Constants.Settings.Sp2SelectListOptions,
+                                         Constants.Settings.Sp2SelectListOptionKeys);
+
             //Add a text area to the page
             settingsPage2.WithTextArea(Constants.Settings.Sp2TextAreaId,
                                          Constants.Settings.Sp2TextAreaName,
@@ -332,6 +338,11 @@ namespace HSPI_HomeSeerSamplePlugin {
             {
                 radioSelectValue = Convert.ToInt32(radioSelectSavedValue);
             }
+            string multiSelectSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigMultiSelectListId);
+            List<string> multiSelectValues = null;
+            if (!string.IsNullOrEmpty(multiSelectSavedValue)) {
+                multiSelectValues = multiSelectSavedValue.Split(',').ToList();
+            }
             string inputSavedValue = GetExtraData(deviceRef, Constants.Devices.DeviceConfigInputId);
             string inputValue = Constants.Devices.DeviceConfigInputValue;
             if (!string.IsNullOrEmpty(inputSavedValue))
@@ -388,6 +399,13 @@ namespace HSPI_HomeSeerSamplePlugin {
                                          Constants.Devices.DeviceConfigRadioSlName,
                                          Constants.Devices.DeviceConfigSelectListOptions,
                                          radioSelectValue);
+
+            //Add a drop down multi select list to the page
+            deviceConfigPage.WithDropDownMultiSelectList(Constants.Devices.DeviceConfigMultiSelectListId,
+                                         Constants.Devices.DeviceConfigMultiSelectListName,
+                                         Constants.Devices.DeviceConfigSelectListOptions,
+                                         Constants.Devices.DeviceConfigSelectListOptionKeys,
+                                         multiSelectValues);
 
             //Add a text InputView to the page
             deviceConfigPage.WithInput(Constants.Devices.DeviceConfigInputId,
@@ -464,6 +482,14 @@ namespace HSPI_HomeSeerSamplePlugin {
                     if (v != null)
                     {
                         SetExtraData(deviceRef, Constants.Devices.DeviceConfigRadioSlId, v.Selection.ToString());
+                    }
+                }
+                else if (view.Id == Constants.Devices.DeviceConfigMultiSelectListId) 
+                {
+                    MultiSelectListView v = view as MultiSelectListView;
+                    if (v != null) 
+                    {
+                        SetExtraData(deviceRef, Constants.Devices.DeviceConfigMultiSelectListId, v.GetStringValue());
                     }
                 }
                 else if (view.Id == Constants.Devices.DeviceConfigInputId)
