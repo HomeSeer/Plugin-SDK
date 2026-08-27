@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace HomeSeer.PluginSdk.Events {
@@ -90,7 +91,24 @@ namespace HomeSeer.PluginSdk.Events {
         /// in the future, but, for now, this is an unused field.
         /// </remarks>
         public string Instance;
-        
+
+        /// <summary>
+        /// TRUE when this represents a condition - the "IF" or "AND IF" part of an event, FALSE when it
+        ///  represents a trigger - the "WHEN" or "OR WHEN" part of an event.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This is set by HomeSeer and is meaningless for actions.
+        /// </para>
+        /// <para>
+        /// Use <see cref="AbstractTriggerType.IsCondition"/> instead of reading this directly.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="AbstractTriggerType.IsCondition"/>
+        /// <seealso cref="AbstractTriggerType.CanBeCondition"/>
+        [OptionalField]
+        public bool IsCondition;
+
         //TODO : Add a new field that encapsulates all additional configuration properties for an action/trigger and any helpful references like device/feature refs
 
         /// <summary>
