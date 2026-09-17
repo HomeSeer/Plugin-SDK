@@ -1,4 +1,5 @@
 using HomeSeer.Jui.Views;
+using System;
 using System.Collections.Generic;
 
 namespace HomeSeer.PluginSdk.Events {
@@ -51,7 +52,22 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         public override bool ReferencesDeviceOrFeature(int devOrFeatRef) {
-            return false;
+            return Array.IndexOf(GetReferencedDevicesOrFeatures(), devOrFeatRef) >= 0;
+        }
+
+        /// <summary>
+        /// The refs typed in the input, separated by commas.
+        /// </summary>
+        public override int[] GetReferencedDevicesOrFeatures() {
+            var inputView = ConfigPage.GetViewById<InputView>(InputId);
+            var refs = new List<int>();
+
+            foreach (var part in (inputView.Value ?? "").Split(',')) {
+                if (int.TryParse(part, out var devOrFeatRef)) {
+                    refs.Add(devOrFeatRef);
+                }
+            }
+            return refs.ToArray();
         }
 
     }

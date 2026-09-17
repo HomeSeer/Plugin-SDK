@@ -295,6 +295,28 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         /// <summary>
+        /// Called by HomeSeer when it needs every device/feature referenced by a particular trigger at once.
+        /// </summary>
+        /// <param name="trigInfo">The trigger to check</param>
+        /// <returns>
+        /// The <see cref="AbstractHsDevice.Ref"/>s the trigger references,
+        ///  NULL if the trigger cannot list them or could not be read, in which case HomeSeer falls back on
+        ///  <see cref="TriggerReferencesDeviceOrFeature"/> for each device.
+        /// </returns>
+        public int[] TriggerReferencedDevicesOrFeatures(TrigActInfo trigInfo) {
+            try {
+                var curTrig = GetObjectFromTrigInfo(trigInfo);
+                return curTrig.GetReferencedDevicesOrFeatures();
+            }
+            catch (Exception exception) {
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Called by HomeSeer to determine if a particular trigger can be used as a condition or not.
         ///  A condition is a trigger that operates in conjunction with another trigger in an AND/OR pattern.
         /// </summary>

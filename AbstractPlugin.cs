@@ -542,6 +542,11 @@ namespace HomeSeer.PluginSdk {
             return ActionTypes?.ActionReferencesDeviceOrFeature(dvRef, actInfo) ?? false;
         }
 
+        /// <inheritdoc cref="IPlugin.ActionReferencedDevicesOrFeatures" />
+        public int[] ActionReferencedDevicesOrFeatures(TrigActInfo actInfo) {
+            return ActionTypes?.ActionReferencedDevicesOrFeatures(actInfo);
+        }
+
         /// <inheritdoc cref="IPlugin.ActionBuildUI" />
         public string ActionBuildUI(TrigActInfo actInfo) {
             return ActionTypes?.OnGetActionUi(actInfo) ?? "Plugin returned malformed data";
@@ -601,6 +606,11 @@ namespace HomeSeer.PluginSdk {
         /// <inheritdoc cref="IPlugin.TriggerReferencesDeviceOrFeature" />
         public bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef) {
             return TriggerTypes?.TriggerReferencesDeviceOrFeature(devOrFeatRef, trigInfo) ?? false;
+        }
+
+        /// <inheritdoc cref="IPlugin.TriggerReferencedDevicesOrFeatures" />
+        public int[] TriggerReferencedDevicesOrFeatures(TrigActInfo trigInfo) {
+            return TriggerTypes?.TriggerReferencedDevicesOrFeatures(trigInfo);
         }
 
         /// <inheritdoc cref="IPlugin.TriggerCanBeCondition" />

@@ -260,6 +260,28 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         /// <summary>
+        /// Called by HomeSeer when it needs every device/feature referenced by a particular action at once.
+        /// </summary>
+        /// <param name="actInfo">The action to check</param>
+        /// <returns>
+        /// The <see cref="AbstractHsDevice.Ref"/>s the action references,
+        ///  NULL if the action cannot list them or could not be read, in which case HomeSeer falls back on
+        ///  <see cref="ActionReferencesDeviceOrFeature"/> for each device.
+        /// </returns>
+        public int[] ActionReferencedDevicesOrFeatures(TrigActInfo actInfo) {
+            try {
+                var curAct = GetObjectFromActInfo(actInfo);
+                return curAct.GetReferencedDevicesOrFeatures();
+            }
+            catch (Exception exception) {
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get an instance of an <see cref="AbstractActionType"/> from a <see cref="TrigActInfo"/>.
         /// </summary>
         /// <remarks>

@@ -271,6 +271,23 @@ namespace HomeSeer.PluginSdk.Events {
         public abstract bool ReferencesDeviceOrFeature(int devOrFeatRef);
 
         /// <summary>
+        /// Called by HomeSeer to get every device and feature this action references at once, for example to find
+        ///  which events use which devices.
+        /// <para>
+        /// Override this when the action can list them: HomeSeer then asks once per action instead of calling
+        ///  <see cref="ReferencesDeviceOrFeature"/> for each device of the system, which instantiates this action
+        ///  each time. The list must agree with what <see cref="ReferencesDeviceOrFeature"/> returns.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// The <see cref="AbstractHsDevice.Ref"/>s this action references, empty if it references none;
+        ///  NULL if it cannot list them, which is what this base implementation returns.
+        /// </returns>
+        public virtual int[] GetReferencedDevicesOrFeatures() {
+            return null;
+        }
+
+        /// <summary>
         /// Called by <see cref="ActionTypeCollection"/> when <see cref="IPlugin.ActionBuildUI"/> is called to get
         ///  the HTML to display to the user so they can configure the action.
         /// <para>

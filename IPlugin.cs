@@ -277,6 +277,20 @@ namespace HomeSeer.PluginSdk {
         bool ActionReferencesDevice(TrigActInfo actInfo, int devRef);
 
         /// <summary>
+        /// Called by the HomeSeer system to get every device and feature referenced by a certain action at once.
+        /// <para>
+        /// HomeSeer asks this before asking <see cref="ActionReferencesDevice"/> for each device, which costs one call
+        ///  to the plugin per device.
+        /// </para>
+        /// </summary>
+        /// <param name="actInfo">Object describing the action.</param>
+        /// <returns>
+        /// The reference IDs of the devices and features the action references, empty if it references none;
+        ///  NULL if the action cannot list them, HomeSeer then calls <see cref="ActionReferencesDevice"/> for each device
+        /// </returns>
+        int[] ActionReferencedDevicesOrFeatures(TrigActInfo actInfo);
+
+        /// <summary>
         /// Called by the HomeSeer system when an event is triggered and the plugin needs to carry out a specific action.
         /// </summary>
         /// <param name="actInfo">Object describing the trigger and action.</param>
@@ -353,6 +367,21 @@ namespace HomeSeer.PluginSdk {
         /// <param name="devOrFeatRef">The reference ID of the device or feature to check</param>
         /// <returns>TRUE if the trigger references the device; FALSE if it does not</returns>
         bool TriggerReferencesDeviceOrFeature(TrigActInfo trigInfo, int devOrFeatRef);
+
+        /// <summary>
+        /// Called by the HomeSeer system to get every device and feature referenced by a certain trigger at once.
+        /// <para>
+        /// HomeSeer asks this before asking <see cref="TriggerReferencesDeviceOrFeature"/> for each device, which costs
+        ///  one call to the plugin per device.
+        /// </para>
+        /// </summary>
+        /// <param name="trigInfo">Object describing the trigger.</param>
+        /// <returns>
+        /// The reference IDs of the devices and features the trigger references, empty if it references none;
+        ///  NULL if the trigger cannot list them, HomeSeer then calls <see cref="TriggerReferencesDeviceOrFeature"/>
+        ///  for each device
+        /// </returns>
+        int[] TriggerReferencedDevicesOrFeatures(TrigActInfo trigInfo);
         
         /// <summary>
         /// Called by HomeSeer when a trigger needs to be evaluated as a condition
