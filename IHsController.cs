@@ -1846,6 +1846,16 @@ namespace HomeSeer.PluginSdk {
         string GetPluginVersionById(string pluginId);
 
         /// <summary>
+        /// Get the list of the plugins that are currently running.
+        /// </summary>
+        /// <remarks>
+        /// Each entry reads "name:instance", with an empty instance for the plugins that do not support
+        ///  multiple instances. A plugin that is installed but not running is not in the list.
+        /// </remarks>
+        /// <returns>The plugins that are currently running</returns>
+        string[] GetPluginsList();
+
+        /// <summary>
         /// Get a specific property declared within a plugin installed on the HomeSeer system.
         ///  This calls <see cref="IPlugin.PluginPropertyGet"/> on the target plugin.
         /// </summary>
@@ -2111,7 +2121,6 @@ namespace HomeSeer.PluginSdk {
         //object GetHSPRef();
         //string GetInstanceList();
         //string GetPlugLinks();
-        //string[] GetPluginsList();
         //int GetRemoteTimeout();
         //string GetSource();
         //void Keys(string k, string title, bool waitf);
