@@ -50,6 +50,7 @@
     <Compile Include="Devices\FeatureFactoryTests.cs" />
     <Compile Include="Devices\PlugExtraDataTests.cs" />
     <Compile Include="Devices\ValueRangeTests.cs" />
+    <Compile Include="Events\TriggerConditionTests.cs" />
     <Compile Include="Events\AbstractActionType2Tests.cs" />
     <Compile Include="Events\AbstractActionTypeTests.cs" />
     <Compile Include="Events\AbstractTriggerType2Tests.cs" />

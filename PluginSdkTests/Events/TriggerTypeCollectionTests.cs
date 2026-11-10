@@ -1,4 +1,5 @@
 using HomeSeer.Jui.Views;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
@@ -14,6 +15,11 @@ namespace HomeSeer.PluginSdk.Events {
     public class TriggerTypeCollectionTests {
 
         private static readonly Randomizer RANDOMIZER = Randomizer.CreateRandomizer();
+
+        /// <summary>
+        /// A collection only instantiates its trigger types with a listener, it fails on a NULL one.
+        /// </summary>
+        private class TestTriggerTypeListener : TriggerTypeCollection.ITriggerTypeListener { }
         
         private static IEnumerable<bool> ValidBoolTestCaseSource() {
             yield return false;
@@ -102,7 +108,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Get LogDebug after creating a new TriggerTypeCollection and expect the default value to be returned.")]
         [Author("JLW")]
         public void LogDebug_Get_ReturnsDefault() {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             Assert.AreEqual(false, triggerTypeCollection.LogDebug);
         }
 
@@ -110,7 +116,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Get LogDebug after creating a new TriggerTypeCollection and expect the default value to be returned.")]
         [Author("JLW")]
         public void LogDebug_Set_SetsLogDebug(bool logDebug) {
-            var triggerTypeCollection = new TriggerTypeCollection(null) {
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener()) {
                 LogDebug = logDebug
             };
             Assert.AreEqual(logDebug, triggerTypeCollection.LogDebug);
@@ -127,7 +133,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call AddTriggerType with a valid TriggerTypeCollection and expect no exception to be thrown.")]
         [Author("JLW")]
         public void AddTriggerType_Valid_DoesNotThrow(AbstractTriggerType triggerType) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             Assert.DoesNotThrow(() => triggerTypeCollection.AddTriggerType(triggerType.GetType()));
         }
 
@@ -135,7 +141,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call AddTriggerType with an invalid TriggerTypeCollection and expect an exception to be thrown.")]
         [Author("JLW")]
         public void AddTriggerType_Invalid_Throws(Type triggerType) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             Assert.Throws<ArgumentException>(() => triggerTypeCollection.AddTriggerType(triggerType?.GetType()));
         }
         
@@ -143,7 +149,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call GetName with a valid index and expect the right name to be returned.")]
         [Author("JLW")]
         public void GetName_Valid_ReturnsName(AbstractTriggerType triggerType) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             triggerTypeCollection.AddTriggerType(triggerType.GetType());
             Assert.AreEqual(triggerType.Name, triggerTypeCollection.GetName(1));
         }
@@ -152,7 +158,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call GetName with an invalid index and expect error text to be returned.")]
         [Author("JLW")]
         public void GetName_Invalid_ReturnsError() {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             Assert.AreEqual("Error retrieving trigger name", triggerTypeCollection.GetName(1));
         }
         
@@ -160,7 +166,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call OnGetTriggerUi with a valid TrigActInfo and expect a string that is not empty to be returned.")]
         [Author("JLW")]
         public void OnGetActionUi_Valid_IsNotEmpty(TrigActInfo info) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             triggerTypeCollection.AddTriggerType(typeof(TestTriggerType));
             Assert.IsNotEmpty(triggerTypeCollection.OnGetTriggerUi(info));
         }
@@ -169,7 +175,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call GetSubTriggerCount with valid parameters and expect the correct sub-trigger count to be returned.")]
         [Author("JLW")]
         public void GetSubTriggerCount_Valid_ReturnsExpectedCount(IEnumerable<Type> types, int typeIndex, int expectedCount) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             foreach (Type type in types) {
                 triggerTypeCollection.AddTriggerType(type);
             }
@@ -180,7 +186,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call GetSubTriggerName with valid parameters and expect the correct string to be returned.")]
         [Author("JLW")]
         public void GetSubTriggerName_Valid_ReturnsExpectedName(IEnumerable<Type> types, int typeIndex, int subTypeIndex, string expectedName) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             foreach (Type type in types) {
                 triggerTypeCollection.AddTriggerType(type);
             }
@@ -193,7 +199,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call IsTriggerConfigured with a valid TrigActInfo and expect it to return without any exceptions.")]
         [Author("JLW")]
         public void IsTriggerConfigured_Valid_Returns(TrigActInfo info) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             triggerTypeCollection.AddTriggerType(typeof(TestTriggerType));
             _ = triggerTypeCollection.IsTriggerConfigured(info);
         }
@@ -202,7 +208,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call OnGetTriggerPrettyString with a valid TrigActInfo and expect it to return a string that is not empty.")]
         [Author("JLW")]
         public void OnGetTriggerPrettyString_Valid_IsNotEmpty(TrigActInfo info) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             triggerTypeCollection.AddTriggerType(typeof(TestTriggerType));
             Assert.IsNotEmpty(triggerTypeCollection.OnGetTriggerPrettyString(info));
         }
@@ -211,7 +217,7 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call IsTriggerTrue with a valid TrigActInfo and expect it to return without any exceptions.")]
         [Author("JLW")]
         public void IsTriggerTrue_Valid_Returns(TrigActInfo info) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             triggerTypeCollection.AddTriggerType(typeof(TestTriggerType));
             _ = triggerTypeCollection.IsTriggerTrue(info, RANDOMIZER.NextBool());
         }
@@ -220,16 +226,66 @@ namespace HomeSeer.PluginSdk.Events {
         [Description("Call TriggerReferencesDeviceOrFeature with a valid TrigActInfo and expect it to return without any exceptions.")]
         [Author("JLW")]
         public void TriggerReferencesDeviceOrFeature_Valid_Returns(TrigActInfo info) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             triggerTypeCollection.AddTriggerType(typeof(TestTriggerType));
             _ = triggerTypeCollection.TriggerReferencesDeviceOrFeature(RANDOMIZER.NextShort(), info);
+        }
+
+        private static TrigActInfo TriggerType2Info(string input) {
+            var evRef = RANDOMIZER.NextShort();
+            var uId = RANDOMIZER.NextShort();
+            return new TrigActInfo {
+                evRef = evRef,
+                UID = uId,
+                TANumber = 1,
+                SubTANumber = 1,
+                DataIn = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(
+                    new Dictionary<string, string> { { $"{evRef}-{uId}-input", input } }, Formatting.None))
+            };
+        }
+
+        [TestCaseSource(nameof(ValidTrigActInfoTestCaseSource))]
+        [Description("Call TriggerReferencedDevicesOrFeatures for a trigger that does not list its references and expect NULL, so that HomeSeer asks for each device instead.")]
+        [Author("CP")]
+        public void TriggerReferencedDevicesOrFeatures_NotListed_ReturnsNull(TrigActInfo info) {
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
+            triggerTypeCollection.AddTriggerType(typeof(TestTriggerType));
+            Assert.IsNotNull(triggerTypeCollection.GetObjectFromTrigInfo(info), "the trigger itself has to be read");
+            Assert.IsNull(triggerTypeCollection.TriggerReferencedDevicesOrFeatures(info));
+        }
+
+        [Test]
+        [Description("Call TriggerReferencedDevicesOrFeatures for a trigger that lists its references and expect the refs it lists, the same TriggerReferencesDeviceOrFeature answers for.")]
+        [Author("CP")]
+        public void TriggerReferencedDevicesOrFeatures_Listed_ReturnsRefs() {
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
+            triggerTypeCollection.AddTriggerType(typeof(TestTriggerType2));
+            var info = TriggerType2Info("12,345");
+
+            CollectionAssert.AreEqual(new[] { 12, 345 }, triggerTypeCollection.TriggerReferencedDevicesOrFeatures(info));
+            Assert.IsTrue(triggerTypeCollection.TriggerReferencesDeviceOrFeature(345, info));
+            Assert.IsFalse(triggerTypeCollection.TriggerReferencesDeviceOrFeature(6, info));
+            CollectionAssert.IsEmpty(triggerTypeCollection.TriggerReferencedDevicesOrFeatures(TriggerType2Info("")),
+                                     "a trigger referencing no device lists none, which is not the same as not listing them");
+        }
+
+        [Test]
+        [Description("Call TriggerReferencedDevicesOrFeatures for a trigger type that does not exist and expect NULL, so that HomeSeer falls back on asking for each device.")]
+        [Author("CP")]
+        public void TriggerReferencedDevicesOrFeatures_UnknownType_ReturnsNull() {
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
+            triggerTypeCollection.AddTriggerType(typeof(TestTriggerType2));
+            var info = TriggerType2Info("12");
+            info.TANumber = 5;
+
+            Assert.IsNull(triggerTypeCollection.TriggerReferencedDevicesOrFeatures(info));
         }
         
         [TestCaseSource(nameof(ValidCanBeConditionTestCaseSource))]
         [Description("Call TriggerCanBeCondition with a valid TrigActInfo and expect it to return the correct result.")]
         [Author("JLW")]
         public void TriggerCanBeCondition_Valid_ReturnsExpectedResult(IEnumerable<Type> types, int typeIndex, bool expectedResult) {
-            var triggerTypeCollection = new TriggerTypeCollection(null);
+            var triggerTypeCollection = new TriggerTypeCollection(new TestTriggerTypeListener());
             foreach (Type type in types) {
                 triggerTypeCollection.AddTriggerType(type);
             }

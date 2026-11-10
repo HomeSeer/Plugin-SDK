@@ -56,6 +56,18 @@ namespace HomeSeer.PluginSdk.Events {
         /// </summary>
         public virtual bool CanBeCondition => false;
         /// <summary>
+        /// TRUE when this instance of the trigger type is being used as a condition - the "IF" or "AND IF" part
+        ///  of an event, FALSE when it is being used as a trigger - the "WHEN" or "OR WHEN" part of an event.
+        /// </summary>
+        /// <remarks>
+        /// Unlike <see cref="CanBeCondition"/>, which describes the trigger type, this describes the particular
+        ///  instance of it that a user placed in an event. Use it to word <see cref="GetPrettyString"/> and to
+        ///  adjust the <see cref="ConfigPage"/> according to the role the trigger is playing.
+        /// </remarks>
+        /// <seealso cref="CanBeCondition"/>
+        /// <seealso cref="TrigActInfo.IsCondition"/>
+        public bool IsCondition { get; internal set; }
+        /// <summary>
         /// The number of sub-trigger types this trigger type supports.
         /// </summary>
         public int SubTriggerCount => SubTriggerTypeNames?.Count ?? 0;
@@ -69,6 +81,20 @@ namespace HomeSeer.PluginSdk.Events {
         }
 
         private readonly byte[] _inData;
+
+        /// <summary>
+        /// The role of the trigger that is currently being instantiated by <see cref="TriggerTypeCollection"/>.
+        /// </summary>
+        /// <remarks>
+        /// A trigger builds its <see cref="ConfigPage"/> from its constructor, so it has to know whether it is a
+        ///  condition before the instance exists and <see cref="IsCondition"/> can be assigned. The constructors
+        ///  are invoked through reflection with a fixed set of signatures that cannot be extended without
+        ///  breaking existing plugins, so the flag is handed over out of band. This is thread static because
+        ///  instantiation is synchronous.
+        /// </remarks>
+        /// <seealso cref="IsCondition"/>
+        [ThreadStatic]
+        internal static bool InstantiatingAsCondition;
 
         /// <summary>
         /// Initialize a new <see cref="AbstractTriggerType"/> with the specified ID, Event Ref, Data byte array, listener, and logDebug flag.
@@ -89,6 +115,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
         /// <param name="logDebug">If true debug messages will be written to the console</param>
         protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener, bool logDebug = false) {
+            IsCondition   = InstantiatingAsCondition;
             _id           = id;
             _eventRef     = eventRef;
             SelectedSubTriggerIndex = selectedSubTriggerIndex;
@@ -116,6 +143,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="dataIn">A byte array containing the definition for a <see cref="Page"/></param>
         /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
         protected AbstractTriggerType(int id, int eventRef, int selectedSubTriggerIndex, byte[] dataIn, TriggerTypeCollection.ITriggerTypeListener listener) {
+            IsCondition             = InstantiatingAsCondition;
             _id                     = id;
             _eventRef               = eventRef;
             SelectedSubTriggerIndex = selectedSubTriggerIndex;
@@ -140,6 +168,7 @@ namespace HomeSeer.PluginSdk.Events {
         /// <param name="listener">The listener that facilitates the communication with <see cref="AbstractPlugin"/></param>
         /// <param name="logDebug">If true debug messages will be written to the console</param>
         protected AbstractTriggerType(TrigActInfo trigInfo, TriggerTypeCollection.ITriggerTypeListener listener, bool logDebug = false) {
+            IsCondition = trigInfo.IsCondition;
             _id = trigInfo.UID;
             _eventRef = trigInfo.evRef;
             SelectedSubTriggerIndex = trigInfo.SubTANumber-1;
@@ -304,7 +333,10 @@ namespace HomeSeer.PluginSdk.Events {
         /// Always return TRUE if the trigger cannot be a condition and there is nothing to check when an event is
         ///  manually executed by a user.
         /// </remarks>
-        /// <param name="isCondition">TRUE if the trigger is paired with other triggers, FALSE if it is alone.</param>
+        /// <param name="isCondition">
+        /// Of no use. HomeSeer only calls this for conditions, so it is always TRUE. Read
+        ///  <see cref="IsCondition"/> instead if you need to know the role the trigger is playing.
+        /// </param>
         /// <returns>
         /// TRUE if the trigger's conditions have been met,
         ///  FALSE if they haven't
@@ -321,6 +353,23 @@ namespace HomeSeer.PluginSdk.Events {
         /// </returns>
         public abstract bool ReferencesDeviceOrFeature(int devOrFeatRef);
         
+        /// <summary>
+        /// Called by HomeSeer to get every device and feature this trigger references at once, for example to find
+        ///  which events use which devices.
+        /// <para>
+        /// Override this when the trigger can list them: HomeSeer then asks once per trigger instead of calling
+        ///  <see cref="ReferencesDeviceOrFeature"/> for each device of the system, which instantiates this trigger
+        ///  each time. The list must agree with what <see cref="ReferencesDeviceOrFeature"/> returns.
+        /// </para>
+        /// </summary>
+        /// <returns>
+        /// The <see cref="AbstractHsDevice.Ref"/>s this trigger references, empty if it references none;
+        ///  NULL if it cannot list them, which is what this base implementation returns.
+        /// </returns>
+        public virtual int[] GetReferencedDevicesOrFeatures() {
+            return null;
+        }
+
         /// <summary>
         /// Called by <see cref="TriggerTypeCollection"/> when <see cref="IPlugin.TriggerBuildUI"/> is called to get
         ///  the HTML to display to the user so they can configure the action.

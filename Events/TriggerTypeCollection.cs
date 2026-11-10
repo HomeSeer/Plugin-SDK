@@ -249,7 +249,10 @@ namespace HomeSeer.PluginSdk.Events {
         /// Called by HomeSeer to determine if a trigger's conditions have been met.
         /// </summary>
         /// <param name="trigInfo">The trigger to check</param>
-        /// <param name="isCondition">TRUE if the trigger is paired with other triggers, FALSE if it is alone.</param>
+        /// <param name="isCondition">
+        /// Of no use. HomeSeer only calls this for conditions, so it is always TRUE. Use
+        ///  <see cref="AbstractTriggerType.IsCondition"/> instead.
+        /// </param>
         /// <returns>
         /// TRUE if the trigger's conditions have been met,
         ///  FALSE if they haven't
@@ -288,6 +291,28 @@ namespace HomeSeer.PluginSdk.Events {
                     Console.WriteLine(exception);
                 }
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Called by HomeSeer when it needs every device/feature referenced by a particular trigger at once.
+        /// </summary>
+        /// <param name="trigInfo">The trigger to check</param>
+        /// <returns>
+        /// The <see cref="AbstractHsDevice.Ref"/>s the trigger references,
+        ///  NULL if the trigger cannot list them or could not be read, in which case HomeSeer falls back on
+        ///  <see cref="TriggerReferencesDeviceOrFeature"/> for each device.
+        /// </returns>
+        public int[] TriggerReferencedDevicesOrFeatures(TrigActInfo trigInfo) {
+            try {
+                var curTrig = GetObjectFromTrigInfo(trigInfo);
+                return curTrig.GetReferencedDevicesOrFeatures();
+            }
+            catch (Exception exception) {
+                if (LogDebug) {
+                    Console.WriteLine(exception);
+                }
+                return null;
             }
         }
 
@@ -335,15 +360,27 @@ namespace HomeSeer.PluginSdk.Events {
         /// </list>
         /// </exception>
         public AbstractTriggerType GetObjectFromTrigInfo(TrigActInfo trigInfo) {
-            //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug
-            if (TypeHasConstructor(trigInfo.TANumber - 1, 0)) {
-                return GetObjectFromInfo(trigInfo.TANumber-1, 0, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? Array.Empty<byte>(), _listener, LogDebug);
+            //A trigger builds its config page from its constructor, so it has to know its role before it exists
+            AbstractTriggerType.InstantiatingAsCondition = trigInfo.IsCondition;
+            try {
+                AbstractTriggerType trigger;
+                //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener, LogDebug
+                if (TypeHasConstructor(trigInfo.TANumber - 1, 0)) {
+                    trigger = GetObjectFromInfo(trigInfo.TANumber-1, 0, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? Array.Empty<byte>(), _listener, LogDebug);
+                }
+                //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener
+                else if (TypeHasConstructor(trigInfo.TANumber - 1, 1)) {
+                    trigger = GetObjectFromInfo(trigInfo.TANumber-1, 1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? Array.Empty<byte>(), _listener);
+                }
+                else {
+                    throw new TypeLoadException("Trigger instance cannot be created because no constructor was found that takes TrigActInfo data");
+                }
+                trigger.IsCondition = trigInfo.IsCondition;
+                return trigger;
             }
-            //trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? new byte[0], _listener
-            if (TypeHasConstructor(trigInfo.TANumber - 1, 1)) {
-                return GetObjectFromInfo(trigInfo.TANumber-1, 1, trigInfo.UID, trigInfo.evRef, trigInfo.SubTANumber-1, trigInfo.DataIn ?? Array.Empty<byte>(), _listener);
+            finally {
+                AbstractTriggerType.InstantiatingAsCondition = false;
             }
-            throw new TypeLoadException("Trigger instance cannot be created because no constructor was found that takes TrigActInfo data");
         }
 
         /// <summary>
